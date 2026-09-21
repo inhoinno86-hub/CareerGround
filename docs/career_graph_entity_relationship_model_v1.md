@@ -31,7 +31,8 @@ Examples:
 
 - Implemented target-speed generation logic for NACC.
 - Participated in dataset definition for the DL trajectory-generation project.
-- Validated a feature using SIL and vehicle tests.
+- Performed SIL validation for a feature.
+- Performed vehicle validation for a feature.
 - Did not own the TCN model-selection decision.
 
 A resume bullet may contain multiple Claims and MUST NOT be treated as one indivisible truth unit.
@@ -447,6 +448,7 @@ ACCEPTED EvidenceCandidate
   → create/attach EvidenceItem
   → create/update Claim
   → create EvidenceClaimLink
+  → append ClaimAssessment
   → create ClaimReview
   → increment CareerProfile version
 ```
@@ -598,7 +600,7 @@ Canonical data should preserve append-oriented history rather than destructively
 | Contribution | PRODUCES | Outcome | 1:N |
 | Contribution | VALIDATED_BY | ValidationActivity | N:M |
 | Claim | DESCRIBES | Career entity | N:M |
-| EvidenceItem | SUPPORTS/CONTRADICTS | Claim | N:M |
+| EvidenceItem | SUPPORTS/CONTRADICTS/QUALIFIES/CONTEXTUALIZES | Claim | N:M |
 | ClaimConstraint | BOUNDS | Claim/Career entity | N:M |
 | Artifact | HAS_UNIT | ArtifactUnit | 1:N |
 | ArtifactUnit | DERIVED_FROM | Claim | N:M |
@@ -688,8 +690,8 @@ No shortcut from InterviewTurn to canonical Claim is allowed in v1.
 Before a Claim may be used in a verified resume or signed interview package:
 
 ```text
-1. usage_policy != DO_NOT_CLAIM
-2. consistency_status != CONTRADICTED
+1. usage_policy == ALLOWED
+2. consistency_status == CONSISTENT
 3. knowledge_status is acceptable for artifact policy
 4. eligible EvidenceClaimLink exists
 5. wording is compatible with ownership boundary
@@ -722,11 +724,13 @@ Contributions
 
 Ownership
   level = SUPPORTING_CONTRIBUTOR
-  scope = MODEL_ANALYSIS
+  scope_type = TASK
+  scope_description = Model analysis support only
   decision_authority = CONTRIBUTOR
 
-Allowed Claim
-  "Contributed to dataset and I/O definition for DL trajectory generation."
+Allowed atomic Claims
+  "Contributed to dataset definition for DL trajectory generation."
+  "Contributed to I/O definition for DL trajectory generation."
 
 Constraint
   type = NO_DECISION_OWNERSHIP
@@ -770,3 +774,30 @@ The model is acceptable only if CareerGround can answer deterministically:
 Physical/logical storage is defined in:
 
 `docs/career_graph_schema_v1.md`
+
+
+## 19. Validation clarifications
+
+[Schema §28](career_graph_schema_v1.md#28-fixture-validation-clarifications) defines
+the validated interchange, explicit review, promotion and snapshot rules. ClaimReview
+and ArtifactConstraintLink must be retained for these governance paths, even in MVP.
+
+OWNER does not imply decision authority. Use UNKNOWN until supplied. Team/process
+leadership uses a precise TASK/VALIDATION scope and never implies product implementation.
+A scoped constraint limits its stated proposition, not every fact in the project.
+
+Publication requires CONSISTENT + ALLOWED, eligible SUPPORTS evidence and explicit user
+review of the atomic wording/scope. Other evidence relations or SYSTEM_GENERATED text
+alone do not establish support. Knowledge-status table entries in §14 are conditional
+on these gates. External verification requires a separate policy and is not implied
+by user confirmation. Refer to Profiling Protocol §5 for high-impact review categories.
+
+PENDING/follow-up/rejected/duplicate candidates do not change canonical state. Explicit
+approval creates the assessment/review with the other promoted rows in one version
+change. ACCEPTED replay is idempotent. Accepting conflicting evidence preserves sources
+and constraints, records a reviewed conflict and blocks publication; pending conflicts
+remain in the workspace. Resolving them requires separate explicit review.
+
+Complete immutable version-keyed snapshots retain the context, evidence and boundaries
+used by old artifacts. Missing archive data fails resolution rather than using latest.
+This supplements append-oriented history without adding a new domain entity.

@@ -690,10 +690,11 @@ Promotion should be transactional:
 ```text
 BEGIN
   lock candidate
-  validate transition
+  validate transition, exact reviewed text, explicit user approval and input version
   create EvidenceSource/Item if needed
   create or attach Claim
   create EvidenceClaimLink
+  append ClaimAssessment (knowledge / consistency / usage separately)
   create ClaimReview
   create ProfileChangeSet
   increment profile version
@@ -728,8 +729,12 @@ Prefer stable IDs and explicit relationship arrays over one deeply nested tree.
 {
   "schema_version": "career-graph-v1",
   "profile": {
-    "profile_id": "uuid",
-    "profile_version": 12
+    "id": "uuid",
+    "user_id": "uuid",
+    "current_version": 12,
+    "status": "ACTIVE",
+    "created_at": "2026-09-21T00:00:00Z",
+    "updated_at": "2026-09-21T00:00:00Z"
   },
   "career": {
     "organizations": [],
@@ -746,6 +751,7 @@ Prefer stable IDs and explicit relationship arrays over one deeply nested tree.
   "claims": [],
   "claim_assessments": [],
   "claim_constraints": [],
+  "claim_reviews": [],
   "evidence": {
     "sources": [],
     "items": [],
@@ -905,9 +911,9 @@ Embeddings are retrieval aids, never truth or evidence.
 A Claim cannot be used in a VERIFIED resume when:
 
 ```text
-usage_policy == DO_NOT_CLAIM
-OR consistency_status == CONTRADICTED
-OR knowledge_status in (INFERRED, UNKNOWN)
+usage_policy != ALLOWED
+OR consistency_status != CONSISTENT
+OR knowledge_status not in (USER_CONFIRMED, EXTERNALLY_VERIFIED)
 OR required evidence is missing
 OR a blocking ownership/wording constraint would be violated
 ```
@@ -998,12 +1004,14 @@ claim_context_links
 claim_assessments
 claim_constraints
 constraint_target_links
+claim_reviews
 evidence_sources
 evidence_items
 evidence_claim_links
 artifacts
 artifact_units
 artifact_claim_links
+artifact_constraint_links
 job_descriptions
 jd_requirements
 requirement_claim_maps
@@ -1019,8 +1027,6 @@ responsibilities
 skills / technologies normalization
 outcomes
 validation_activities
-claim_reviews
-artifact_constraint_links
 advanced audit projections
 ```
 
@@ -1029,9 +1035,9 @@ advanced audit projections
 ```text
 001  career_profiles / profile_change_sets / organizations / roles / projects
 002  contributions / ownership_records
-003  claims / contexts / assessments / constraints
+003  claims / contexts / assessments / constraints / claim_reviews
 004  evidence_sources / evidence_items / evidence_claim_links
-005  artifacts / artifact_units / artifact_claim_links
+005  artifacts / artifact_units / artifact_claim_links / artifact_constraint_links
 006  job_descriptions / jd_requirements / requirement_claim_maps
 007  interview_sessions / interview_turns / evidence_candidates
 ```
@@ -1120,3 +1126,83 @@ F. Old resume artifact
 ```
 
 These flows should become CareerGround Core integration tests before Resume, JD, or Voice agents rely on the graph.
+
+
+## 28. Fixture validation clarifications
+
+These clarifications address observed failures in the three validation fixtures;
+see [the validation report](career_graph_schema_v1_validation.md) for before/after evidence.
+
+### 28.1 Interchange and missing relationships
+
+Section 14 is the authoritative export envelope. Its rows use SQL field names (`id`
+and the named foreign keys), including profile.id/current_version. Sections 15–18
+are read projections, not alternative import formats. Flat claim_assessments and
+link arrays are authoritative; do not duplicate embedded assessments/evidence links.
+Claims embed `contexts: [{type, id, role}]` from claim_context_links; constraints embed
+`targets: [{type, id}]` from constraint_target_links. All references must resolve to
+the declared type within the profile. The new claim_reviews array exports the
+existing §8 table; it is required to retain user review authority. Exactly one active
+assessment per Claim per version is allowed in this validation interchange; select
+the latest assessment at or before the requested version.
+
+SQL NOT NULL requirements apply to rows; optional values are omitted or null according
+to SQL nullability. Materialize SQL defaults on export. Text fields without a closed
+enum remain open. Ownership has exactly one primary target. Unknown organization,
+career dates and metrics remain null. OWNER never implies DECIDER; absent an explicit
+answer use UNKNOWN. TASK/VALIDATION scope with a precise description can represent
+team/process ownership without adding a TEAM enum.
+
+Fixture readable IDs are interchange aliases, not SQL UUIDs; production import must
+resolve them consistently to UUIDs. Synthetic audit timestamps are not career dates.
+All fixture testimony/reviews simulate supplied scenarios, not actual user confirmation
+or external evidence. Profile/source titles label them; no new metadata entity is needed.
+
+### 28.2 Publication and review
+
+Publication requires all gates in §20, live SUPPORTS evidence with a source, explicit
+user review of the proposition/scope and compatible wording/constraints. QUALIFIES,
+CONTEXTUALIZES and CONTRADICTS alone do not establish support. SYSTEM_GENERATED text
+alone is ineligible. USER_CONFIRMED never automatically becomes EXTERNALLY_VERIFIED.
+External verification needs a separately adopted policy; reference tests fail closed
+on that status while the policy is open. High-impact categories are in the Profiling
+Protocol §5; a NORMAL importance label cannot bypass review.
+
+A constraint aimed at Project/Ownership restricts the proposition described in its
+text, not every contribution in that scope. Forbidden Claim targets make the fixture
+prohibitions deterministic. Broader wording must be checked against relevant scoped
+constraints even if a positive Claim has evidence. The reference validator permits
+only exact reviewed atomic text concatenated in artifact link order; new wording
+requires semantic review. This is a conservative example policy, not a general NLP
+claim/ownership classifier. Approval of a negative boundary is not confirmation of
+a prohibited positive ownership Claim.
+
+### 28.3 Candidate transition and contradiction
+
+PENDING/NEEDS_FOLLOWUP/REJECTED/DUPLICATE processing changes only interview/candidate
+workspace, never canonical Claims/assessments/profile version. An ACCEPTED candidate
+replay returns its existing promoted IDs without another increment. Changed text
+requires a new candidate and review. Silence is not approval. Approval names the exact
+text, context, user and input profile version. Create EvidenceItem/Claim/link/assessment/
+review/change set and increment version together; DB atomicity remains future work.
+
+Acceptance as evidence is different from factual confirmation. For a statement that
+conflicts with existing data, preserve old SUPPORTS/CONTRADICTS links and constraints,
+append a reviewed DISPUTED/CONTRADICTED assessment and retain DO_NOT_CLAIM or
+REVIEW_REQUIRED. Pending conflicts are flagged only in the workspace. Resolving
+contradiction or removing a boundary needs a separate explicit review/change set;
+never erase the opposing evidence.
+
+### 28.4 Historical reconstruction
+
+Preserve a complete immutable canonical JSON snapshot keyed by (profile ID, version)
+before each accepted change and retain the resulting version too. Include career
+context/ownership, Claims, assessments/reviews, constraints/targets, Evidence sources/
+items/links and artifact trace data. Resolve each old artifact against its archived
+version, not mutable latest rows. Missing snapshot/reference is an error, never a
+fallback to latest. Semantic Claim changes still create a new Claim ID. A version
+number alone is insufficient to reconstruct source content or ownership boundaries.
+
+The reference tests use a version-keyed deep-copied archive outside the live envelope;
+no new canonical entity or storage service is introduced. Production archive storage,
+retention/privacy handling, access control and concurrency remain implementation work.

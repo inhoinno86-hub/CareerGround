@@ -1,0 +1,1041 @@
+{
+  "schema_version": "career-graph-v1",
+  "profile": {
+    "id": "CP-A",
+    "user_id": "USER-SYNTHETIC-A",
+    "display_name": "Synthetic Fixture A — Feature Ownership",
+    "current_version": 12,
+    "status": "ACTIVE",
+    "created_at": "2026-09-21T00:00:00Z",
+    "updated_at": "2026-09-21T00:00:00Z"
+  },
+  "career": {
+    "organizations": [],
+    "roles": [
+      {
+        "id": "R-A",
+        "profile_id": "CP-A",
+        "organization_id": null,
+        "title": "Synthetic role placeholder — feature engineer",
+        "role_type": "SYNTHETIC_FIXTURE",
+        "employment_type": null,
+        "start_date": null,
+        "end_date": null,
+        "summary": "Synthetic schema-validation role derived from request §5 Fixture A; not a real career record.",
+        "created_in_version": 12,
+        "retired_in_version": null
+      }
+    ],
+    "projects": [
+      {
+        "id": "P-A",
+        "profile_id": "CP-A",
+        "role_id": "R-A",
+        "name": "Navigation-Aided Adaptive Cruise Control (synthetic fixture)",
+        "summary": "Synthetic request §5 Fixture A scenario; no company, dates, metrics, or external verification asserted.",
+        "goal": null,
+        "start_date": null,
+        "end_date": null,
+        "created_in_version": 12,
+        "retired_in_version": null
+      }
+    ],
+    "responsibilities": [
+      {
+        "id": "RESP-A-feature",
+        "profile_id": "CP-A",
+        "role_id": null,
+        "project_id": "P-A",
+        "statement": "Own the Navigation-Aided Adaptive Cruise Control feature scope.",
+        "scope": "Feature only; excludes overall ADAS and vehicle ownership.",
+        "created_in_version": 12,
+        "retired_in_version": null
+      }
+    ],
+    "contributions": [
+      {
+        "id": "CT-A-architecture",
+        "profile_id": "CP-A",
+        "role_id": null,
+        "project_id": "P-A",
+        "contribution_type": "DESIGN",
+        "action": "designed",
+        "object_text": "feature architecture",
+        "summary": "Designed architecture for the Navigation-Aided Adaptive Cruise Control feature.",
+        "start_date": null,
+        "end_date": null,
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "CT-A-logic",
+        "profile_id": "CP-A",
+        "role_id": null,
+        "project_id": "P-A",
+        "contribution_type": "IMPLEMENTATION",
+        "action": "implemented",
+        "object_text": "target-speed related logic",
+        "summary": "Implemented target-speed related logic for the Navigation-Aided Adaptive Cruise Control feature.",
+        "start_date": null,
+        "end_date": null,
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "CT-A-calibration",
+        "profile_id": "CP-A",
+        "role_id": null,
+        "project_id": "P-A",
+        "contribution_type": "CALIBRATION",
+        "action": "performed",
+        "object_text": "feature calibration",
+        "summary": "Performed calibration for the Navigation-Aided Adaptive Cruise Control feature.",
+        "start_date": null,
+        "end_date": null,
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "CT-A-sil",
+        "profile_id": "CP-A",
+        "role_id": null,
+        "project_id": "P-A",
+        "contribution_type": "VALIDATION",
+        "action": "performed",
+        "object_text": "SIL validation",
+        "summary": "Performed SIL validation for the Navigation-Aided Adaptive Cruise Control feature.",
+        "start_date": null,
+        "end_date": null,
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "CT-A-hil",
+        "profile_id": "CP-A",
+        "role_id": null,
+        "project_id": "P-A",
+        "contribution_type": "VALIDATION",
+        "action": "performed",
+        "object_text": "HIL validation",
+        "summary": "Performed HIL validation for the Navigation-Aided Adaptive Cruise Control feature.",
+        "start_date": null,
+        "end_date": null,
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "CT-A-vehicle-validation",
+        "profile_id": "CP-A",
+        "role_id": null,
+        "project_id": "P-A",
+        "contribution_type": "VALIDATION",
+        "action": "performed",
+        "object_text": "vehicle validation",
+        "summary": "Performed vehicle validation for the Navigation-Aided Adaptive Cruise Control feature.",
+        "start_date": null,
+        "end_date": null,
+        "created_in_version": 12,
+        "retired_in_version": null
+      }
+    ],
+    "ownership_records": [
+      {
+        "id": "O-A-feature",
+        "profile_id": "CP-A",
+        "contribution_id": null,
+        "responsibility_id": null,
+        "project_id": "P-A",
+        "ownership_level": "OWNER",
+        "scope_type": "FEATURE",
+        "scope_description": "Navigation-Aided Adaptive Cruise Control feature only; excludes overall ADAS and vehicle ownership.",
+        "decision_authority": "UNKNOWN",
+        "execution_responsibility": "Feature architecture, logic, and calibration within the stated feature boundary.",
+        "validation_responsibility": "Feature-level SIL, HIL, and vehicle validation within the stated feature boundary.",
+        "team_context": null,
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "O-A-architecture",
+        "profile_id": "CP-A",
+        "contribution_id": "CT-A-architecture",
+        "responsibility_id": null,
+        "project_id": null,
+        "ownership_level": "DIRECT_CONTRIBUTOR",
+        "scope_type": "FEATURE",
+        "scope_description": "Feature architecture only.",
+        "decision_authority": "UNKNOWN",
+        "execution_responsibility": "Performed feature architecture work.",
+        "validation_responsibility": null,
+        "team_context": null,
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "O-A-logic",
+        "profile_id": "CP-A",
+        "contribution_id": "CT-A-logic",
+        "responsibility_id": null,
+        "project_id": null,
+        "ownership_level": "DIRECT_CONTRIBUTOR",
+        "scope_type": "MODULE",
+        "scope_description": "Target-speed related logic only.",
+        "decision_authority": "UNKNOWN",
+        "execution_responsibility": "Implemented target-speed related logic.",
+        "validation_responsibility": null,
+        "team_context": null,
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "O-A-calibration",
+        "profile_id": "CP-A",
+        "contribution_id": "CT-A-calibration",
+        "responsibility_id": null,
+        "project_id": null,
+        "ownership_level": "DIRECT_CONTRIBUTOR",
+        "scope_type": "TASK",
+        "scope_description": "Feature calibration task only.",
+        "decision_authority": "UNKNOWN",
+        "execution_responsibility": "Performed feature calibration.",
+        "validation_responsibility": null,
+        "team_context": null,
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "O-A-validation",
+        "profile_id": "CP-A",
+        "contribution_id": "CT-A-sil",
+        "responsibility_id": null,
+        "project_id": null,
+        "ownership_level": "DIRECT_CONTRIBUTOR",
+        "scope_type": "VALIDATION",
+        "scope_description": "SIL validation; HIL and vehicle validation remain separate contributions and Claims.",
+        "decision_authority": "UNKNOWN",
+        "execution_responsibility": "Performed SIL validation.",
+        "validation_responsibility": "Executed validation at feature scope.",
+        "team_context": null,
+        "created_in_version": 12,
+        "retired_in_version": null
+      }
+    ],
+    "skills": [],
+    "technologies": [],
+    "outcomes": [],
+    "validation_activities": [
+      {
+        "id": "VA-A-sil",
+        "profile_id": "CP-A",
+        "project_id": "P-A",
+        "contribution_id": "CT-A-sil",
+        "validation_type": "SIL",
+        "statement": "Performed SIL validation for the Navigation-Aided Adaptive Cruise Control feature.",
+        "environment": null,
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "VA-A-hil",
+        "profile_id": "CP-A",
+        "project_id": "P-A",
+        "contribution_id": "CT-A-hil",
+        "validation_type": "HIL",
+        "statement": "Performed HIL validation for the Navigation-Aided Adaptive Cruise Control feature.",
+        "environment": null,
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "VA-A-vehicle",
+        "profile_id": "CP-A",
+        "project_id": "P-A",
+        "contribution_id": "CT-A-vehicle-validation",
+        "validation_type": "VEHICLE",
+        "statement": "Performed vehicle validation for the Navigation-Aided Adaptive Cruise Control feature.",
+        "environment": null,
+        "created_in_version": 12,
+        "retired_in_version": null
+      }
+    ]
+  },
+  "claims": [
+    {
+      "id": "C-A-feature-owner",
+      "profile_id": "CP-A",
+      "claim_type": "OWNERSHIP",
+      "canonical_text": "Owned the Navigation-Aided Adaptive Cruise Control feature scope.",
+      "predicate": "owned",
+      "object_text": "Navigation-Aided Adaptive Cruise Control feature scope",
+      "importance": "HIGH",
+      "created_in_version": 12,
+      "retired_in_version": null,
+      "supersedes_claim_id": null,
+      "created_at": "2026-09-21T00:00:00Z",
+      "contexts": [
+        {
+          "type": "OWNERSHIP",
+          "id": "O-A-feature",
+          "role": "PRIMARY"
+        }
+      ]
+    },
+    {
+      "id": "C-A-architecture",
+      "profile_id": "CP-A",
+      "claim_type": "CONTRIBUTION",
+      "canonical_text": "Designed architecture for the Navigation-Aided Adaptive Cruise Control feature.",
+      "predicate": "designed",
+      "object_text": "feature architecture",
+      "importance": "HIGH",
+      "created_in_version": 12,
+      "retired_in_version": null,
+      "supersedes_claim_id": null,
+      "created_at": "2026-09-21T00:00:00Z",
+      "contexts": [
+        {
+          "type": "CONTRIBUTION",
+          "id": "CT-A-architecture",
+          "role": "PRIMARY"
+        }
+      ]
+    },
+    {
+      "id": "C-A-logic",
+      "profile_id": "CP-A",
+      "claim_type": "CONTRIBUTION",
+      "canonical_text": "Implemented target-speed related logic for the Navigation-Aided Adaptive Cruise Control feature.",
+      "predicate": "implemented",
+      "object_text": "target-speed related logic",
+      "importance": "NORMAL",
+      "created_in_version": 12,
+      "retired_in_version": null,
+      "supersedes_claim_id": null,
+      "created_at": "2026-09-21T00:00:00Z",
+      "contexts": [
+        {
+          "type": "CONTRIBUTION",
+          "id": "CT-A-logic",
+          "role": "PRIMARY"
+        }
+      ]
+    },
+    {
+      "id": "C-A-calibration",
+      "profile_id": "CP-A",
+      "claim_type": "CONTRIBUTION",
+      "canonical_text": "Performed calibration for the Navigation-Aided Adaptive Cruise Control feature.",
+      "predicate": "performed",
+      "object_text": "feature calibration",
+      "importance": "NORMAL",
+      "created_in_version": 12,
+      "retired_in_version": null,
+      "supersedes_claim_id": null,
+      "created_at": "2026-09-21T00:00:00Z",
+      "contexts": [
+        {
+          "type": "CONTRIBUTION",
+          "id": "CT-A-calibration",
+          "role": "PRIMARY"
+        }
+      ]
+    },
+    {
+      "id": "C-A-sil",
+      "profile_id": "CP-A",
+      "claim_type": "VALIDATION",
+      "canonical_text": "Performed SIL validation for the Navigation-Aided Adaptive Cruise Control feature.",
+      "predicate": "performed",
+      "object_text": "SIL validation",
+      "importance": "NORMAL",
+      "created_in_version": 12,
+      "retired_in_version": null,
+      "supersedes_claim_id": null,
+      "created_at": "2026-09-21T00:00:00Z",
+      "contexts": [
+        {
+          "type": "CONTRIBUTION",
+          "id": "CT-A-sil",
+          "role": "PRIMARY"
+        }
+      ]
+    },
+    {
+      "id": "C-A-hil",
+      "profile_id": "CP-A",
+      "claim_type": "VALIDATION",
+      "canonical_text": "Performed HIL validation for the Navigation-Aided Adaptive Cruise Control feature.",
+      "predicate": "performed",
+      "object_text": "HIL validation",
+      "importance": "NORMAL",
+      "created_in_version": 12,
+      "retired_in_version": null,
+      "supersedes_claim_id": null,
+      "created_at": "2026-09-21T00:00:00Z",
+      "contexts": [
+        {
+          "type": "CONTRIBUTION",
+          "id": "CT-A-hil",
+          "role": "PRIMARY"
+        }
+      ]
+    },
+    {
+      "id": "C-A-vehicle-validation",
+      "profile_id": "CP-A",
+      "claim_type": "VALIDATION",
+      "canonical_text": "Performed vehicle validation for the Navigation-Aided Adaptive Cruise Control feature.",
+      "predicate": "performed",
+      "object_text": "vehicle validation",
+      "importance": "NORMAL",
+      "created_in_version": 12,
+      "retired_in_version": null,
+      "supersedes_claim_id": null,
+      "created_at": "2026-09-21T00:00:00Z",
+      "contexts": [
+        {
+          "type": "CONTRIBUTION",
+          "id": "CT-A-vehicle-validation",
+          "role": "PRIMARY"
+        }
+      ]
+    },
+    {
+      "id": "C-A-adas-owner",
+      "profile_id": "CP-A",
+      "claim_type": "OWNERSHIP",
+      "canonical_text": "Owned the entire ADAS system.",
+      "predicate": "owned",
+      "object_text": "entire ADAS system",
+      "importance": "HIGH",
+      "created_in_version": 12,
+      "retired_in_version": null,
+      "supersedes_claim_id": null,
+      "created_at": "2026-09-21T00:00:00Z",
+      "contexts": [
+        {
+          "type": "PROJECT",
+          "id": "P-A",
+          "role": "BOUNDARY_TEST"
+        }
+      ]
+    },
+    {
+      "id": "C-A-vehicle-owner",
+      "profile_id": "CP-A",
+      "claim_type": "OWNERSHIP",
+      "canonical_text": "Owned the entire vehicle.",
+      "predicate": "owned",
+      "object_text": "entire vehicle",
+      "importance": "HIGH",
+      "created_in_version": 12,
+      "retired_in_version": null,
+      "supersedes_claim_id": null,
+      "created_at": "2026-09-21T00:00:00Z",
+      "contexts": [
+        {
+          "type": "PROJECT",
+          "id": "P-A",
+          "role": "BOUNDARY_TEST"
+        }
+      ]
+    }
+  ],
+  "claim_assessments": [
+    {
+      "id": "CA-A-feature-owner",
+      "profile_id": "CP-A",
+      "claim_id": "C-A-feature-owner",
+      "knowledge_status": "USER_CONFIRMED",
+      "consistency_status": "CONSISTENT",
+      "usage_policy": "ALLOWED",
+      "confidence": null,
+      "rationale": "Synthetic USER_CONFIRMED state produced by a simulated fixture review; not a real user review or external verification.",
+      "assessed_by_type": "SIMULATED_USER_REVIEW",
+      "assessed_by_id": null,
+      "profile_version": 12,
+      "assessed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CA-A-architecture",
+      "profile_id": "CP-A",
+      "claim_id": "C-A-architecture",
+      "knowledge_status": "USER_CONFIRMED",
+      "consistency_status": "CONSISTENT",
+      "usage_policy": "ALLOWED",
+      "confidence": null,
+      "rationale": "Synthetic USER_CONFIRMED state produced by a simulated fixture review; not a real user review or external verification.",
+      "assessed_by_type": "SIMULATED_USER_REVIEW",
+      "assessed_by_id": null,
+      "profile_version": 12,
+      "assessed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CA-A-logic",
+      "profile_id": "CP-A",
+      "claim_id": "C-A-logic",
+      "knowledge_status": "USER_CONFIRMED",
+      "consistency_status": "CONSISTENT",
+      "usage_policy": "ALLOWED",
+      "confidence": null,
+      "rationale": "Synthetic USER_CONFIRMED state produced by a simulated fixture review; not a real user review or external verification.",
+      "assessed_by_type": "SIMULATED_USER_REVIEW",
+      "assessed_by_id": null,
+      "profile_version": 12,
+      "assessed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CA-A-calibration",
+      "profile_id": "CP-A",
+      "claim_id": "C-A-calibration",
+      "knowledge_status": "USER_CONFIRMED",
+      "consistency_status": "CONSISTENT",
+      "usage_policy": "ALLOWED",
+      "confidence": null,
+      "rationale": "Synthetic USER_CONFIRMED state produced by a simulated fixture review; not a real user review or external verification.",
+      "assessed_by_type": "SIMULATED_USER_REVIEW",
+      "assessed_by_id": null,
+      "profile_version": 12,
+      "assessed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CA-A-sil",
+      "profile_id": "CP-A",
+      "claim_id": "C-A-sil",
+      "knowledge_status": "USER_CONFIRMED",
+      "consistency_status": "CONSISTENT",
+      "usage_policy": "ALLOWED",
+      "confidence": null,
+      "rationale": "Synthetic USER_CONFIRMED state produced by a simulated fixture review; not a real user review or external verification.",
+      "assessed_by_type": "SIMULATED_USER_REVIEW",
+      "assessed_by_id": null,
+      "profile_version": 12,
+      "assessed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CA-A-hil",
+      "profile_id": "CP-A",
+      "claim_id": "C-A-hil",
+      "knowledge_status": "USER_CONFIRMED",
+      "consistency_status": "CONSISTENT",
+      "usage_policy": "ALLOWED",
+      "confidence": null,
+      "rationale": "Synthetic USER_CONFIRMED state produced by a simulated fixture review; not a real user review or external verification.",
+      "assessed_by_type": "SIMULATED_USER_REVIEW",
+      "assessed_by_id": null,
+      "profile_version": 12,
+      "assessed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CA-A-vehicle-validation",
+      "profile_id": "CP-A",
+      "claim_id": "C-A-vehicle-validation",
+      "knowledge_status": "USER_CONFIRMED",
+      "consistency_status": "CONSISTENT",
+      "usage_policy": "ALLOWED",
+      "confidence": null,
+      "rationale": "Synthetic USER_CONFIRMED state produced by a simulated fixture review; not a real user review or external verification.",
+      "assessed_by_type": "SIMULATED_USER_REVIEW",
+      "assessed_by_id": null,
+      "profile_version": 12,
+      "assessed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CA-A-adas-owner",
+      "profile_id": "CP-A",
+      "claim_id": "C-A-adas-owner",
+      "knowledge_status": "UNKNOWN",
+      "consistency_status": "CONTRADICTED",
+      "usage_policy": "DO_NOT_CLAIM",
+      "confidence": null,
+      "rationale": "Blocked positive ownership overclaim contradicted by the synthetic feature-boundary source.",
+      "assessed_by_type": "SYSTEM_CONSISTENCY_CHECK",
+      "assessed_by_id": null,
+      "profile_version": 12,
+      "assessed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CA-A-vehicle-owner",
+      "profile_id": "CP-A",
+      "claim_id": "C-A-vehicle-owner",
+      "knowledge_status": "UNKNOWN",
+      "consistency_status": "CONTRADICTED",
+      "usage_policy": "DO_NOT_CLAIM",
+      "confidence": null,
+      "rationale": "Blocked positive ownership overclaim contradicted by the synthetic feature-boundary source.",
+      "assessed_by_type": "SYSTEM_CONSISTENCY_CHECK",
+      "assessed_by_id": null,
+      "profile_version": 12,
+      "assessed_at": "2026-09-21T00:00:00Z"
+    }
+  ],
+  "claim_constraints": [
+    {
+      "id": "K-A-no-adas-owner",
+      "profile_id": "CP-A",
+      "constraint_type": "MAX_OWNERSHIP_SCOPE",
+      "text": "Do not expand feature ownership into ownership of the entire ADAS system.",
+      "severity": "BLOCKING",
+      "created_in_version": 12,
+      "retired_in_version": null,
+      "created_at": "2026-09-21T00:00:00Z",
+      "targets": [
+        {
+          "type": "CLAIM",
+          "id": "C-A-adas-owner"
+        },
+        {
+          "type": "OWNERSHIP",
+          "id": "O-A-feature"
+        }
+      ]
+    },
+    {
+      "id": "K-A-no-vehicle-owner",
+      "profile_id": "CP-A",
+      "constraint_type": "DO_NOT_CLAIM",
+      "text": "Do not claim ownership of the entire vehicle.",
+      "severity": "BLOCKING",
+      "created_in_version": 12,
+      "retired_in_version": null,
+      "created_at": "2026-09-21T00:00:00Z",
+      "targets": [
+        {
+          "type": "CLAIM",
+          "id": "C-A-vehicle-owner"
+        },
+        {
+          "type": "PROJECT",
+          "id": "P-A"
+        }
+      ]
+    }
+  ],
+  "evidence": {
+    "sources": [
+      {
+        "id": "ES-A",
+        "profile_id": "CP-A",
+        "source_type": "PROFILE_CONVERSATION",
+        "title": "Synthetic simulated profiling conversation — request §5 Fixture A",
+        "source_uri": null,
+        "object_ref": null,
+        "content_hash": null,
+        "source_owner": "SYNTHETIC_FIXTURE",
+        "captured_at": null,
+        "created_at": "2026-09-21T00:00:00Z"
+      }
+    ],
+    "items": [
+      {
+        "id": "E-A-owner",
+        "profile_id": "CP-A",
+        "source_id": "ES-A",
+        "evidence_type": "SIMULATED_PROFILE_TURN",
+        "content_text": "Synthetic answer: I owned the NACC feature scope, not the whole ADAS system or vehicle.",
+        "locator": {
+          "request_ref": "§5 Fixture A — Feature Ownership",
+          "simulated_turn": 1
+        },
+        "speaker": "SYNTHETIC_USER",
+        "start_ms": null,
+        "end_ms": null,
+        "content_hash": null,
+        "created_in_version": 12,
+        "retired_in_version": null,
+        "created_at": "2026-09-21T00:00:00Z"
+      },
+      {
+        "id": "E-A-work",
+        "profile_id": "CP-A",
+        "source_id": "ES-A",
+        "evidence_type": "SIMULATED_PROFILE_TURN",
+        "content_text": "Synthetic answer: I designed the feature architecture, implemented target-speed related logic, and calibrated the feature.",
+        "locator": {
+          "request_ref": "§5 Fixture A — Feature Ownership",
+          "simulated_turn": 2
+        },
+        "speaker": "SYNTHETIC_USER",
+        "start_ms": null,
+        "end_ms": null,
+        "content_hash": null,
+        "created_in_version": 12,
+        "retired_in_version": null,
+        "created_at": "2026-09-21T00:00:00Z"
+      },
+      {
+        "id": "E-A-validation",
+        "profile_id": "CP-A",
+        "source_id": "ES-A",
+        "evidence_type": "SIMULATED_PROFILE_TURN",
+        "content_text": "Synthetic answer: I performed SIL, HIL, and vehicle validation at feature scope.",
+        "locator": {
+          "request_ref": "§5 Fixture A — Feature Ownership",
+          "simulated_turn": 3
+        },
+        "speaker": "SYNTHETIC_USER",
+        "start_ms": null,
+        "end_ms": null,
+        "content_hash": null,
+        "created_in_version": 12,
+        "retired_in_version": null,
+        "created_at": "2026-09-21T00:00:00Z"
+      }
+    ],
+    "claim_links": [
+      {
+        "id": "ECL-A-owner",
+        "profile_id": "CP-A",
+        "evidence_id": "E-A-owner",
+        "claim_id": "C-A-feature-owner",
+        "relation_type": "SUPPORTS",
+        "support_strength": null,
+        "notes": "Synthetic simulated evidence only; not external verification.",
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "ECL-A-architecture",
+        "profile_id": "CP-A",
+        "evidence_id": "E-A-work",
+        "claim_id": "C-A-architecture",
+        "relation_type": "SUPPORTS",
+        "support_strength": null,
+        "notes": "Atomic claim split from one compound synthetic answer.",
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "ECL-A-logic",
+        "profile_id": "CP-A",
+        "evidence_id": "E-A-work",
+        "claim_id": "C-A-logic",
+        "relation_type": "SUPPORTS",
+        "support_strength": null,
+        "notes": "Atomic claim split from one compound synthetic answer.",
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "ECL-A-calibration",
+        "profile_id": "CP-A",
+        "evidence_id": "E-A-work",
+        "claim_id": "C-A-calibration",
+        "relation_type": "SUPPORTS",
+        "support_strength": null,
+        "notes": "Atomic claim split from one compound synthetic answer.",
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "ECL-A-sil",
+        "profile_id": "CP-A",
+        "evidence_id": "E-A-validation",
+        "claim_id": "C-A-sil",
+        "relation_type": "SUPPORTS",
+        "support_strength": null,
+        "notes": "Atomic validation claim.",
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "ECL-A-hil",
+        "profile_id": "CP-A",
+        "evidence_id": "E-A-validation",
+        "claim_id": "C-A-hil",
+        "relation_type": "SUPPORTS",
+        "support_strength": null,
+        "notes": "Atomic validation claim.",
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "ECL-A-vehicle-validation",
+        "profile_id": "CP-A",
+        "evidence_id": "E-A-validation",
+        "claim_id": "C-A-vehicle-validation",
+        "relation_type": "SUPPORTS",
+        "support_strength": null,
+        "notes": "Atomic validation claim; does not support vehicle ownership.",
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "ECL-A-no-adas-owner",
+        "profile_id": "CP-A",
+        "evidence_id": "E-A-owner",
+        "claim_id": "C-A-adas-owner",
+        "relation_type": "CONTRADICTS",
+        "support_strength": null,
+        "notes": "Feature-boundary statement contradicts the positive whole-ADAS ownership Claim.",
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "ECL-A-no-vehicle-owner",
+        "profile_id": "CP-A",
+        "evidence_id": "E-A-owner",
+        "claim_id": "C-A-vehicle-owner",
+        "relation_type": "CONTRADICTS",
+        "support_strength": null,
+        "notes": "Feature-boundary statement contradicts the positive whole-vehicle ownership Claim.",
+        "created_in_version": 12,
+        "retired_in_version": null
+      }
+    ]
+  },
+  "artifacts": {
+    "items": [
+      {
+        "id": "A-A-resume",
+        "profile_id": "CP-A",
+        "artifact_type": "RESUME",
+        "artifact_version": 1,
+        "profile_version": 12,
+        "title": "Synthetic Fixture A draft resume",
+        "status": "DRAFT",
+        "storage_ref": null,
+        "content_hash": null,
+        "created_at": "2026-09-21T00:00:00Z"
+      }
+    ],
+    "units": [
+      {
+        "id": "AU-A-resume",
+        "artifact_id": "A-A-resume",
+        "unit_type": "RESUME_BULLET",
+        "ordinal": 1,
+        "text": "Designed architecture for the Navigation-Aided Adaptive Cruise Control feature. Implemented target-speed related logic for the Navigation-Aided Adaptive Cruise Control feature. Performed calibration for the Navigation-Aided Adaptive Cruise Control feature. Performed SIL validation for the Navigation-Aided Adaptive Cruise Control feature. Performed HIL validation for the Navigation-Aided Adaptive Cruise Control feature. Performed vehicle validation for the Navigation-Aided Adaptive Cruise Control feature.",
+        "metadata": {
+          "synthetic": true,
+          "composition": "exact canonical_text concatenation in link order"
+        }
+      }
+    ],
+    "claim_links": [
+      {
+        "id": "ACL-A-architecture",
+        "artifact_unit_id": "AU-A-resume",
+        "claim_id": "C-A-architecture",
+        "link_role": "PRIMARY"
+      },
+      {
+        "id": "ACL-A-logic",
+        "artifact_unit_id": "AU-A-resume",
+        "claim_id": "C-A-logic",
+        "link_role": "SUPPORTING"
+      },
+      {
+        "id": "ACL-A-calibration",
+        "artifact_unit_id": "AU-A-resume",
+        "claim_id": "C-A-calibration",
+        "link_role": "SUPPORTING"
+      },
+      {
+        "id": "ACL-A-sil",
+        "artifact_unit_id": "AU-A-resume",
+        "claim_id": "C-A-sil",
+        "link_role": "SUPPORTING"
+      },
+      {
+        "id": "ACL-A-hil",
+        "artifact_unit_id": "AU-A-resume",
+        "claim_id": "C-A-hil",
+        "link_role": "SUPPORTING"
+      },
+      {
+        "id": "ACL-A-vehicle-validation",
+        "artifact_unit_id": "AU-A-resume",
+        "claim_id": "C-A-vehicle-validation",
+        "link_role": "SUPPORTING"
+      }
+    ],
+    "constraint_links": [
+      {
+        "id": "ACK-A-adas",
+        "artifact_unit_id": "AU-A-resume",
+        "constraint_id": "K-A-no-adas-owner",
+        "effect": "WORDING_BOUNDARY"
+      },
+      {
+        "id": "ACK-A-vehicle",
+        "artifact_unit_id": "AU-A-resume",
+        "constraint_id": "K-A-no-vehicle-owner",
+        "effect": "WORDING_BOUNDARY"
+      }
+    ]
+  },
+  "jd": {
+    "items": [
+      {
+        "id": "JD-A",
+        "profile_id": "CP-A",
+        "company_name": null,
+        "job_title": "Synthetic JD placeholder — feature engineer",
+        "source_url": null,
+        "source_document_ref": "request §7 Test C synthetic input",
+        "raw_text": "Synthetic requirement only; no real employer or vacancy.",
+        "content_hash": null,
+        "captured_at": null,
+        "created_at": "2026-09-21T00:00:00Z"
+      }
+    ],
+    "requirements": [
+      {
+        "id": "JDR-A-architecture",
+        "jd_id": "JD-A",
+        "requirement_type": "EXPERIENCE",
+        "text": "Synthetic requirement: feature architecture experience.",
+        "normalized_concept": "feature architecture",
+        "priority_source": "SYNTHETIC_FIXTURE",
+        "ordinal": 1,
+        "metadata": {
+          "synthetic": true
+        }
+      },
+      {
+        "id": "JDR-A-validation",
+        "jd_id": "JD-A",
+        "requirement_type": "EXPERIENCE",
+        "text": "Synthetic requirement: feature validation experience.",
+        "normalized_concept": "feature validation",
+        "priority_source": "SYNTHETIC_FIXTURE",
+        "ordinal": 2,
+        "metadata": {
+          "synthetic": true
+        }
+      }
+    ],
+    "claim_maps": [
+      {
+        "id": "RCM-A-architecture",
+        "requirement_id": "JDR-A-architecture",
+        "claim_id": "C-A-architecture",
+        "mapping_type": "DIRECT",
+        "coverage_level": "PARTIAL",
+        "rationale": "Synthetic relevance mapping; does not change Claim truth status.",
+        "created_by_type": "SYSTEM_FIXTURE",
+        "created_at": "2026-09-21T00:00:00Z"
+      },
+      {
+        "id": "RCM-A-validation",
+        "requirement_id": "JDR-A-validation",
+        "claim_id": "C-A-sil",
+        "mapping_type": "DIRECT",
+        "coverage_level": "PARTIAL",
+        "rationale": "Synthetic relevance mapping; additional HIL and vehicle Claims remain separate.",
+        "created_by_type": "SYSTEM_FIXTURE",
+        "created_at": "2026-09-21T00:00:00Z"
+      }
+    ]
+  },
+  "interviews": {
+    "sessions": [],
+    "turns": [],
+    "evidence_candidates": []
+  },
+  "audit": {
+    "change_sets": []
+  },
+  "claim_reviews": [
+    {
+      "id": "CR-C-A-feature-owner",
+      "profile_id": "CP-A",
+      "claim_id": "C-A-feature-owner",
+      "review_action": "USER_ACCEPTED",
+      "reviewer_type": "USER",
+      "reviewer_id": "USER-SYNTHETIC-A",
+      "notes": "SYNTHETIC review only; confirmed exact proposition/scope: Owned the Navigation-Aided Adaptive Cruise Control feature scope.",
+      "profile_version": 12,
+      "reviewed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CR-C-A-architecture",
+      "profile_id": "CP-A",
+      "claim_id": "C-A-architecture",
+      "review_action": "USER_ACCEPTED",
+      "reviewer_type": "USER",
+      "reviewer_id": "USER-SYNTHETIC-A",
+      "notes": "SYNTHETIC review only; confirmed exact proposition/scope: Designed architecture for the Navigation-Aided Adaptive Cruise Control feature.",
+      "profile_version": 12,
+      "reviewed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CR-C-A-logic",
+      "profile_id": "CP-A",
+      "claim_id": "C-A-logic",
+      "review_action": "USER_ACCEPTED",
+      "reviewer_type": "USER",
+      "reviewer_id": "USER-SYNTHETIC-A",
+      "notes": "SYNTHETIC review only; confirmed exact proposition/scope: Implemented target-speed related logic for the Navigation-Aided Adaptive Cruise Control feature.",
+      "profile_version": 12,
+      "reviewed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CR-C-A-calibration",
+      "profile_id": "CP-A",
+      "claim_id": "C-A-calibration",
+      "review_action": "USER_ACCEPTED",
+      "reviewer_type": "USER",
+      "reviewer_id": "USER-SYNTHETIC-A",
+      "notes": "SYNTHETIC review only; confirmed exact proposition/scope: Performed calibration for the Navigation-Aided Adaptive Cruise Control feature.",
+      "profile_version": 12,
+      "reviewed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CR-C-A-sil",
+      "profile_id": "CP-A",
+      "claim_id": "C-A-sil",
+      "review_action": "USER_ACCEPTED",
+      "reviewer_type": "USER",
+      "reviewer_id": "USER-SYNTHETIC-A",
+      "notes": "SYNTHETIC review only; confirmed exact proposition/scope: Performed SIL validation for the Navigation-Aided Adaptive Cruise Control feature.",
+      "profile_version": 12,
+      "reviewed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CR-C-A-hil",
+      "profile_id": "CP-A",
+      "claim_id": "C-A-hil",
+      "review_action": "USER_ACCEPTED",
+      "reviewer_type": "USER",
+      "reviewer_id": "USER-SYNTHETIC-A",
+      "notes": "SYNTHETIC review only; confirmed exact proposition/scope: Performed HIL validation for the Navigation-Aided Adaptive Cruise Control feature.",
+      "profile_version": 12,
+      "reviewed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CR-C-A-vehicle-validation",
+      "profile_id": "CP-A",
+      "claim_id": "C-A-vehicle-validation",
+      "review_action": "USER_ACCEPTED",
+      "reviewer_type": "USER",
+      "reviewer_id": "USER-SYNTHETIC-A",
+      "notes": "SYNTHETIC review only; confirmed exact proposition/scope: Performed vehicle validation for the Navigation-Aided Adaptive Cruise Control feature.",
+      "profile_version": 12,
+      "reviewed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CR-C-A-adas-owner",
+      "profile_id": "CP-A",
+      "claim_id": "C-A-adas-owner",
+      "review_action": "SYSTEM_FLAGGED",
+      "reviewer_type": "SYSTEM",
+      "reviewer_id": null,
+      "notes": "SYNTHETIC conflict review; retain opposing evidence and publication restriction.",
+      "profile_version": 12,
+      "reviewed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CR-C-A-vehicle-owner",
+      "profile_id": "CP-A",
+      "claim_id": "C-A-vehicle-owner",
+      "review_action": "SYSTEM_FLAGGED",
+      "reviewer_type": "SYSTEM",
+      "reviewer_id": null,
+      "notes": "SYNTHETIC conflict review; retain opposing evidence and publication restriction.",
+      "profile_version": 12,
+      "reviewed_at": "2026-09-21T00:00:00Z"
+    }
+  ]
+}
