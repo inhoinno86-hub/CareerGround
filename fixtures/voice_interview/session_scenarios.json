@@ -1,0 +1,84 @@
+[
+  {
+    "name": "happy_path",
+    "events": [
+      {"event": "BEGIN_PREFLIGHT"},
+      {"event": "ACCEPT_PREFLIGHT", "notices_accepted": true, "input_ready": true},
+      {"event": "START", "package_valid": true, "subject_matches": true, "package_status": "ISSUED", "existing_session": false},
+      {"event": "FINISH", "confirmed_answer_count": 3, "completion_reason": "PLAN_COMPLETED"},
+      {"event": "COMMIT_RESULTS"}
+    ],
+    "expected_state": "COMPLETED"
+  },
+  {
+    "name": "cancel_in_preflight",
+    "events": [
+      {"event": "BEGIN_PREFLIGHT"},
+      {"event": "CANCEL"}
+    ],
+    "expected_state": "ABORTED"
+  },
+  {
+    "name": "pause_and_resume_within_24_hours",
+    "events": [
+      {"event": "BEGIN_PREFLIGHT"},
+      {"event": "ACCEPT_PREFLIGHT", "notices_accepted": true, "input_ready": true},
+      {"event": "START", "package_valid": true, "subject_matches": true, "package_status": "ISSUED", "existing_session": false},
+      {"event": "PAUSE", "at": "2026-09-23T01:00:00Z"},
+      {"event": "RESUME", "at": "2026-09-24T00:59:59Z", "subject_matches": true, "package_status": "ISSUED"}
+    ],
+    "expected_state": "IN_PROGRESS"
+  },
+  {
+    "name": "resume_window_expired",
+    "events": [
+      {"event": "BEGIN_PREFLIGHT"},
+      {"event": "ACCEPT_PREFLIGHT", "notices_accepted": true, "input_ready": true},
+      {"event": "START", "package_valid": true, "subject_matches": true, "package_status": "ISSUED", "existing_session": false},
+      {"event": "PAUSE", "at": "2026-09-23T01:00:00Z"},
+      {"event": "RESUME", "at": "2026-09-24T01:00:01Z", "subject_matches": true, "package_status": "ISSUED"}
+    ],
+    "expected_state": "COMPLETING",
+    "expected_notice": "SESSION_RESUME_EXPIRED"
+  },
+  {
+    "name": "package_revoked_before_start",
+    "events": [
+      {"event": "BEGIN_PREFLIGHT"},
+      {"event": "ACCEPT_PREFLIGHT", "notices_accepted": true, "input_ready": true},
+      {"event": "PACKAGE_REVOKED"}
+    ],
+    "expected_state": "DATA_REVOKED"
+  },
+  {
+    "name": "data_withdrawn_during_session",
+    "events": [
+      {"event": "BEGIN_PREFLIGHT"},
+      {"event": "ACCEPT_PREFLIGHT", "notices_accepted": true, "input_ready": true},
+      {"event": "START", "package_valid": true, "subject_matches": true, "package_status": "ISSUED", "existing_session": false},
+      {"event": "DATA_WITHDRAWN"}
+    ],
+    "expected_state": "DATA_REVOKED"
+  },
+  {
+    "name": "start_from_created_is_invalid",
+    "events": [
+      {"event": "START", "package_valid": true, "subject_matches": true, "package_status": "ISSUED", "existing_session": false}
+    ],
+    "expected_state": "CREATED",
+    "expected_error": "INVALID_SESSION_TRANSITION"
+  },
+  {
+    "name": "completed_session_is_immutable",
+    "events": [
+      {"event": "BEGIN_PREFLIGHT"},
+      {"event": "ACCEPT_PREFLIGHT", "notices_accepted": true, "input_ready": true},
+      {"event": "START", "package_valid": true, "subject_matches": true, "package_status": "ISSUED", "existing_session": false},
+      {"event": "FINISH", "confirmed_answer_count": 1, "completion_reason": "USER_ENDED_EARLY"},
+      {"event": "COMMIT_RESULTS"},
+      {"event": "PAUSE"}
+    ],
+    "expected_state": "COMPLETED",
+    "expected_error": "INVALID_SESSION_TRANSITION"
+  }
+]

@@ -1,0 +1,13 @@
+{
+  "keys": [
+    {
+      "kty": "EC",
+      "crv": "P-256",
+      "use": "sig",
+      "alg": "ES256",
+      "kid": "careerground-test-es256-2026-09",
+      "x": "4N6PEA9QcvLzEgV9fDmtTOG65NCEIvI7JB2NqtHuvrM",
+      "y": "1D6zBnDM6U6-Spfulgfw0BlzDlPolyX4QpL_4LqbbaU"
+    }
+  ]
+}

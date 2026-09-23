@@ -1,0 +1,313 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.careerground.example/interview-package/v1.json",
+  "title": "CareerGround Interview Package v1",
+  "description": "Immutable, signed, same-account handoff from CareerGround Plugin to Voice Interview App.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["payload", "proof"],
+  "properties": {
+    "payload": { "$ref": "#/$defs/payload" },
+    "proof": { "$ref": "#/$defs/proof" }
+  },
+  "$defs": {
+    "stable_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "content_hash": {
+      "description": "Base64url without padding of SHA-256 over RFC 8785 JCS bytes.",
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]{43}$"
+    },
+    "string_id_array": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/stable_id" },
+      "uniqueItems": true
+    },
+    "artifact_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "version", "content_hash"],
+      "properties": {
+        "artifact_id": { "$ref": "#/$defs/stable_id" },
+        "version": { "type": "integer", "minimum": 1 },
+        "content_hash": { "$ref": "#/$defs/content_hash" }
+      }
+    },
+    "profile_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["profile_id", "version", "content_hash"],
+      "properties": {
+        "profile_id": { "$ref": "#/$defs/stable_id" },
+        "version": { "type": "integer", "minimum": 1 },
+        "content_hash": { "$ref": "#/$defs/content_hash" }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["profile", "jd_analysis", "resume", "interview_plan"],
+      "properties": {
+        "profile": { "$ref": "#/$defs/profile_ref" },
+        "jd_analysis": { "$ref": "#/$defs/artifact_ref" },
+        "resume": { "$ref": "#/$defs/artifact_ref" },
+        "interview_plan": { "$ref": "#/$defs/artifact_ref" }
+      }
+    },
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["display_name", "preferred_language"],
+      "properties": {
+        "display_name": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "preferred_language": { "type": "string", "pattern": "^[a-z]{2,3}(-[A-Z]{2})?$" }
+      }
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role_title", "interview_type"],
+      "properties": {
+        "role_title": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "organization_name": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "interview_type": { "enum": ["JD_TARGETED", "GENERAL"] }
+      }
+    },
+    "ownership": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["level", "scope_type", "scope_description", "decision_authority"],
+      "properties": {
+        "level": {
+          "enum": ["OWNER", "CO_OWNER", "DIRECT_CONTRIBUTOR", "SUPPORTING_CONTRIBUTOR", "REVIEWER", "OBSERVER", "UNKNOWN"]
+        },
+        "scope_type": {
+          "enum": ["PROJECT", "SYSTEM", "SUBSYSTEM", "FEATURE", "MODULE", "TASK", "DECISION", "VALIDATION", "DELIVERABLE"]
+        },
+        "scope_description": { "type": "string", "minLength": 1, "maxLength": 600 },
+        "decision_authority": {
+          "enum": ["DECIDER", "CO_DECIDER", "RECOMMENDER", "CONTRIBUTOR", "INFORMED_ONLY", "NONE", "UNKNOWN"]
+        }
+      }
+    },
+    "claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["claim_id", "text", "claim_type", "knowledge_status", "consistency_status", "usage_policy", "ownership", "content_hash"],
+      "properties": {
+        "claim_id": { "$ref": "#/$defs/stable_id" },
+        "text": { "type": "string", "minLength": 1, "maxLength": 1200 },
+        "claim_type": {
+          "enum": ["RESPONSIBILITY", "CONTRIBUTION", "OWNERSHIP", "OUTCOME", "VALIDATION", "SKILL", "TECHNOLOGY", "OTHER"]
+        },
+        "knowledge_status": { "enum": ["EXTERNALLY_VERIFIED", "USER_CONFIRMED"] },
+        "consistency_status": { "const": "CONSISTENT" },
+        "usage_policy": { "const": "ALLOWED" },
+        "ownership": { "$ref": "#/$defs/ownership" },
+        "content_hash": { "$ref": "#/$defs/content_hash" }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evidence_id", "source_type", "excerpt", "source_date", "claim_ids", "support_type", "sensitivity", "content_hash"],
+      "properties": {
+        "evidence_id": { "$ref": "#/$defs/stable_id" },
+        "source_type": {
+          "enum": ["PROFILE_CONVERSATION", "USER_DOCUMENT", "RESUME", "PORTFOLIO", "CERTIFICATE", "INTERVIEW_TRANSCRIPT", "EXTERNAL_RECORD", "MANUAL_ENTRY"]
+        },
+        "excerpt": { "type": "string", "minLength": 1, "maxLength": 600 },
+        "source_date": { "type": "string", "format": "date-time" },
+        "claim_ids": {
+          "allOf": [
+            { "$ref": "#/$defs/string_id_array" },
+            { "minItems": 1, "maxItems": 40 }
+          ]
+        },
+        "support_type": { "enum": ["SUPPORTS", "QUALIFIES"] },
+        "sensitivity": { "enum": ["NORMAL", "SENSITIVE"] },
+        "content_hash": { "$ref": "#/$defs/content_hash" }
+      }
+    },
+    "claim_evidence_link": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["claim_id", "evidence_id", "relation_type"],
+      "properties": {
+        "claim_id": { "$ref": "#/$defs/stable_id" },
+        "evidence_id": { "$ref": "#/$defs/stable_id" },
+        "relation_type": { "enum": ["SUPPORTS", "QUALIFIES"] }
+      }
+    },
+    "constraint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["constraint_id", "type", "target_type", "target_ids", "instruction", "content_hash"],
+      "properties": {
+        "constraint_id": { "$ref": "#/$defs/stable_id" },
+        "type": {
+          "enum": ["DO_NOT_CLAIM", "OWNERSHIP_LIMIT", "METRIC_UNVERIFIED", "CONFLICT_UNRESOLVED", "SENSITIVE_DETAIL", "EVIDENCE_UNAVAILABLE"]
+        },
+        "target_type": { "enum": ["CLAIM", "EVIDENCE", "RESUME_UNIT", "INTERVIEW"] },
+        "target_ids": {
+          "allOf": [
+            { "$ref": "#/$defs/string_id_array" },
+            { "minItems": 1, "maxItems": 40 }
+          ]
+        },
+        "instruction": { "type": "string", "minLength": 1, "maxLength": 600 },
+        "content_hash": { "$ref": "#/$defs/content_hash" }
+      }
+    },
+    "jd_requirement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["requirement_id", "text", "priority", "claim_ids", "content_hash"],
+      "properties": {
+        "requirement_id": { "$ref": "#/$defs/stable_id" },
+        "text": { "type": "string", "minLength": 1, "maxLength": 1000 },
+        "priority": { "enum": ["REQUIRED", "PREFERRED", "CONTEXT"] },
+        "claim_ids": {
+          "allOf": [
+            { "$ref": "#/$defs/string_id_array" },
+            { "maxItems": 40 }
+          ]
+        },
+        "content_hash": { "$ref": "#/$defs/content_hash" }
+      }
+    },
+    "resume_unit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["unit_id", "text", "claim_ids", "evidence_ids", "constraint_ids", "content_hash"],
+      "properties": {
+        "unit_id": { "$ref": "#/$defs/stable_id" },
+        "text": { "type": "string", "minLength": 1, "maxLength": 1200 },
+        "claim_ids": {
+          "allOf": [
+            { "$ref": "#/$defs/string_id_array" },
+            { "minItems": 1, "maxItems": 40 }
+          ]
+        },
+        "evidence_ids": {
+          "allOf": [
+            { "$ref": "#/$defs/string_id_array" },
+            { "minItems": 1, "maxItems": 80 }
+          ]
+        },
+        "constraint_ids": {
+          "allOf": [
+            { "$ref": "#/$defs/string_id_array" },
+            { "maxItems": 40 }
+          ]
+        },
+        "content_hash": { "$ref": "#/$defs/content_hash" }
+      }
+    },
+    "interview_question": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["question_id", "prompt", "goal", "claim_ids", "jd_requirement_ids", "constraint_ids", "time_budget_minutes"],
+      "properties": {
+        "question_id": { "$ref": "#/$defs/stable_id" },
+        "prompt": { "type": "string", "minLength": 1, "maxLength": 1000 },
+        "goal": { "enum": ["EXPLAIN_EXPERIENCE", "VERIFY_SCOPE", "PROBE_EVIDENCE", "CLARIFY_CONFLICT", "PRACTICE_JD"] },
+        "claim_ids": { "$ref": "#/$defs/string_id_array" },
+        "jd_requirement_ids": { "$ref": "#/$defs/string_id_array" },
+        "constraint_ids": { "$ref": "#/$defs/string_id_array" },
+        "time_budget_minutes": { "type": "integer", "minimum": 1, "maximum": 20 }
+      }
+    },
+    "interview_plan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["plan_id", "version", "duration_minutes", "objectives", "follow_up_mode", "core_questions"],
+      "properties": {
+        "plan_id": { "$ref": "#/$defs/stable_id" },
+        "version": { "type": "integer", "minimum": 1 },
+        "duration_minutes": { "type": "integer", "minimum": 5, "maximum": 120 },
+        "objectives": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 10,
+          "items": { "type": "string", "minLength": 1, "maxLength": 300 },
+          "uniqueItems": true
+        },
+        "follow_up_mode": { "const": "EVIDENCE_AWARE" },
+        "core_questions": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 20,
+          "items": { "$ref": "#/$defs/interview_question" }
+        }
+      }
+    },
+    "manifest_entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["object_type", "object_id", "content_hash"],
+      "properties": {
+        "object_type": { "enum": ["PROFILE", "JD_ANALYSIS", "RESUME", "INTERVIEW_PLAN", "CLAIM", "EVIDENCE", "CONSTRAINT", "JD_REQUIREMENT", "RESUME_UNIT"] },
+        "object_id": { "$ref": "#/$defs/stable_id" },
+        "version": { "type": "integer", "minimum": 1 },
+        "content_hash": { "$ref": "#/$defs/content_hash" }
+      }
+    },
+    "payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version", "min_consumer_version", "required_capabilities", "package_id",
+        "issuer", "subject_id", "audience", "purpose", "signature_profile",
+        "issued_at", "not_before", "expires_at", "provenance", "candidate", "target",
+        "claims", "evidence", "claim_evidence_links", "constraints", "jd_requirements",
+        "resume_units", "interview_plan", "integrity_manifest"
+      ],
+      "properties": {
+        "schema_version": { "const": "1.0.0" },
+        "min_consumer_version": { "type": "string", "pattern": "^1\\.[0-9]+\\.[0-9]+$" },
+        "required_capabilities": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 10,
+          "items": { "enum": ["EVIDENCE_AWARE_QUESTIONS", "CONSTRAINT_GUARDS", "ONLINE_STATUS_CHECK", "SINGLE_SESSION_START"] },
+          "uniqueItems": true
+        },
+        "package_id": { "type": "string", "format": "uuid" },
+        "issuer": { "type": "string", "format": "uri", "pattern": "^https://.+$" },
+        "subject_id": { "$ref": "#/$defs/stable_id" },
+        "audience": { "const": "CAREERGROUND_VOICE_APP" },
+        "purpose": { "const": "MOCK_INTERVIEW" },
+        "signature_profile": { "const": "careerground-jcs-detached-jws-v1" },
+        "issued_at": { "type": "string", "format": "date-time" },
+        "not_before": { "type": "string", "format": "date-time" },
+        "expires_at": { "type": "string", "format": "date-time" },
+        "provenance": { "$ref": "#/$defs/provenance" },
+        "candidate": { "$ref": "#/$defs/candidate" },
+        "target": { "$ref": "#/$defs/target" },
+        "claims": { "type": "array", "minItems": 1, "maxItems": 40, "items": { "$ref": "#/$defs/claim" } },
+        "evidence": { "type": "array", "minItems": 1, "maxItems": 80, "items": { "$ref": "#/$defs/evidence" } },
+        "claim_evidence_links": { "type": "array", "minItems": 1, "maxItems": 160, "items": { "$ref": "#/$defs/claim_evidence_link" } },
+        "constraints": { "type": "array", "maxItems": 40, "items": { "$ref": "#/$defs/constraint" } },
+        "jd_requirements": { "type": "array", "maxItems": 30, "items": { "$ref": "#/$defs/jd_requirement" } },
+        "resume_units": { "type": "array", "minItems": 1, "maxItems": 30, "items": { "$ref": "#/$defs/resume_unit" } },
+        "interview_plan": { "$ref": "#/$defs/interview_plan" },
+        "integrity_manifest": { "type": "array", "minItems": 4, "maxItems": 256, "items": { "$ref": "#/$defs/manifest_entry" } }
+      }
+    },
+    "proof": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["format", "canonicalization", "value"],
+      "properties": {
+        "format": { "const": "JWS_COMPACT_DETACHED" },
+        "canonicalization": { "const": "JCS-RFC8785" },
+        "value": { "type": "string", "description": "Detached JWS with the Architecture v1 ES256 protected header and 64-byte JOSE R||S signature", "pattern": "^[A-Za-z0-9_-]+\\.\\.[A-Za-z0-9_-]{86}$" }
+      }
+    }
+  }
+}

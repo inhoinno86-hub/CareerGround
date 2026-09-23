@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CareerGround 진행 현황과 다음 개발 안내</title>
+  <style>
+    :root { --ink:#172033; --muted:#5d6b82; --paper:#f5f7fb; --line:#dbe2ee; --blue:#2356b8; --green:#13795b; --amber:#9a5b00; --red:#b42318; --card:#fff; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--paper); color:var(--ink); font-family:system-ui,-apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif; line-height:1.65; }
+    main { max-width:1080px; margin:0 auto; padding:52px 24px 80px; }
+    header { border-bottom:1px solid var(--line); padding-bottom:28px; margin-bottom:34px; }
+    h1 { font-size:clamp(2rem,5vw,3.4rem); line-height:1.18; margin:0 0 14px; letter-spacing:-.04em; }
+    h2 { font-size:1.7rem; margin:52px 0 16px; letter-spacing:-.03em; }
+    h3 { font-size:1.12rem; margin:0 0 8px; }
+    p { margin:10px 0; }
+    .lead { font-size:1.18rem; max-width:800px; color:#33415c; }
+    .meta { color:var(--muted); font-size:.93rem; }
+    .notice, .card { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:20px; }
+    .notice { border-left:5px solid var(--blue); }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(245px,1fr)); gap:14px; margin:18px 0; }
+    .card p { color:var(--muted); }
+    .status { font-weight:750; font-size:.85rem; letter-spacing:.02em; }
+    .done { color:var(--green); } .todo { color:var(--amber); } .notstarted { color:var(--red); }
+    .progress { height:17px; overflow:hidden; display:flex; background:#e5eaf3; border-radius:999px; margin:12px 0 8px; }
+    .progress .donebar { width:86%; background:var(--green); } .progress .restbar { width:14%; background:#cdd6e5; }
+    table { border-collapse:collapse; width:100%; background:var(--card); border:1px solid var(--line); border-radius:12px; overflow:hidden; margin:18px 0; font-size:.94rem; }
+    th,td { padding:13px 14px; border-bottom:1px solid var(--line); text-align:left; vertical-align:top; }
+    th { background:#eef3fc; } tr:last-child td { border-bottom:0; }
+    code { background:#eef2f7; padding:2px 5px; border-radius:4px; font-size:.9em; }
+    .flow { background:#16233d; color:#edf3ff; border-radius:14px; padding:22px; overflow:auto; white-space:pre; line-height:1.5; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.9rem; }
+    .step { display:grid; grid-template-columns:44px 1fr; gap:14px; margin:16px 0; }
+    .num { width:36px; height:36px; border-radius:50%; background:#dfe9ff; color:var(--blue); display:grid; place-items:center; font-weight:800; }
+    ul { padding-left:22px; } li { margin:6px 0; }
+    .small { font-size:.9rem; color:var(--muted); }
+    a { color:var(--blue); }
+    @media print { body { background:white; } main { max-width:none; padding:24px; } .card,.notice,table { break-inside:avoid; } }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <p class="meta">CareerGround · 2026-09-23 갱신 · 초보 개발자용 현황 설명</p>
+    <h1>CareerGround는 설계의 뼈대를 만들었고,<br>제품을 만들 준비 단계에 있습니다.</h1>
+    <p class="lead">현재까지는 “사용자의 경력을 사실에 근거해 다룰 수 있는가”를 검증했습니다. 아직 사용자가 로그인해서 대화하고, 이력서를 만들고, 음성 면접을 하는 앱은 없습니다. 다음 목표는 이 검증된 설계를 실제 서비스 기능으로 바꾸는 것입니다.</p>
+  </header>
+
+  <section>
+    <h2>Problem</h2>
+    <div class="notice">
+      <strong>만들고 싶은 제품</strong><br>
+      CareerGround는 사용자의 경력을 대화로 정리하고, 그 근거를 보존한 채 JD 분석·이력서·면접 준비·음성 모의 면접까지 이어 주는 서비스입니다.
+    </div>
+    <p>일반 생성형 AI는 문장을 매끄럽게 만들 수 있지만, 사용자가 실제로 하지 않은 일을 더 크게 말하게 만들 수 있습니다. 예를 들어 “기능 개발에 참여했다”는 말이 “프로젝트 전체를 책임졌다”로 바뀌면 이력서와 면접에서 문제가 됩니다.</p>
+    <p>그래서 CareerGround의 핵심 문제는 문장 생성 자체가 아니라 다음 질문에 답하는 것입니다.</p>
+    <ul>
+      <li>이 문장은 어떤 사용자 발언이나 문서에서 왔는가?</li>
+      <li>사용자가 직접 수행한 일, 팀의 책임, 최종 결정권을 구분했는가?</li>
+      <li>확인되지 않았거나 모순된 내용은 이력서에 쓰이지 않도록 막는가?</li>
+      <li>음성 면접에서 새로 나온 이야기는 바로 사실 데이터로 저장하지 않고, 사용자가 검토하도록 하는가?</li>
+    </ul>
+    <p>이 문제를 먼저 해결하지 않으면 GPT 플러그인이나 앱을 빨리 만들어도 신뢰하기 어려운 결과가 나올 수 있습니다.</p>
+  </section>
+
+  <section>
+    <h2>Solution</h2>
+    <p>원래 계획은 공통 기반인 <strong>Career Core</strong>를 먼저 만들고, 그 위에 GPT 플러그인과 음성 면접 앱을 연결하는 구조입니다. Career Core는 경력 사실, 근거, 이력서 문장, JD 연결 정보를 한곳에서 관리하는 백엔드와 데이터 계층입니다.</p>
+    <div class="flow">사용자 발언/이력서
+       │
+       ▼
+경력 프로파일링 ──► Claim(경력 사실 후보) ──► Evidence(근거)
+       │                       │                    │
+       │                       ▼                    ▼
+       │                 검토·승인·금지 경계    버전 기록
+       │                       │
+       ▼                       ▼
+Career Graph(검증된 경력 지도)
+       │
+       ├──► GPT 플러그인: JD 분석 · 이력서 · 예상 질문
+       │
+       └──► Interview Package ──► 음성 면접 앱</div>
+
+    <h3>현재 위치</h3>
+    <p>원래 개발 계획의 “다음 세션 우선순위”는 7개였습니다. 이 가운데 1~6번을 완료했습니다. 따라서 <strong>설계 체크리스트 기준 6/7, 약 86%</strong>입니다. 이 비율은 코드 완성도를 뜻하지 않습니다. 실제 애플리케이션 서비스는 아직 구현 전이며, 지금까지의 성과는 제품이 지켜야 할 규칙과 전달 계약을 문서·스키마·테스트로 확정한 것입니다.</p>
+    <div class="progress" aria-label="설계 우선순위 7개 중 6개 완료"><span class="donebar"></span><span class="restbar"></span></div>
+    <p class="small">초록색: 완료 6개 · 회색: 남은 1개</p>
+
+    <table>
+      <thead><tr><th>원래 순서</th><th>계획했던 결과물</th><th>현재 상태</th><th>실제로 확인된 내용</th></tr></thead>
+      <tbody>
+        <tr><td>1. Career Graph Schema v1</td><td>경력 데이터의 구조 정의</td><td><span class="status done">완료</span></td><td>개체·관계·상태·근거·이력서/JD 연결·버전 규칙을 설계했습니다.</td></tr>
+        <tr><td>2. Profiling Protocol</td><td>AI가 경력을 묻고 확인하는 순서</td><td><span class="status done">완료</span></td><td>14개 대화 상태와 확인·모순·중단 규칙을 정의했습니다.</td></tr>
+        <tr><td>3. Plugin Functional Specification</td><td>GPT 플러그인 기능 계약</td><td><span class="status done">완료</span></td><td>도구별 입력·출력·권한·오류·확인·재시도 계약을 확정했습니다.</td></tr>
+        <tr><td>4. Interview Package Schema</td><td>플러그인→앱 전달 데이터 계약</td><td><span class="status done">완료</span></td><td>JSON Schema, 고정 버전, 최소 데이터, 7일 만료, JCS·ES256 서명, 호환성·취소 규칙과 합성 검증 자료를 작성했습니다.</td></tr>
+        <tr><td>5. Voice Interview Agent Spec</td><td>음성 면접의 대화 규칙</td><td><span class="status done">완료</span></td><td>상태 전이, 질문·follow-up, 전사 수정, 비점수형 평가, 후보 생성, 철회·보관 규칙과 합성 검증을 작성했습니다.</td></tr>
+        <tr><td>6. MVP Architecture</td><td>실제 기술 구조</td><td><span class="status done">완료</span></td><td>모듈형 백엔드, PostgreSQL, MCP·웹 인증 경계, 저장·삭제, AWS 서울 후보, ES256 KMS, 음성 공급자 선정 게이트를 확정했습니다. 공급자 계약과 클라우드 리소스는 아직 없습니다.</td></tr>
+        <tr><td>7. Implementation Task Breakdown</td><td>개발 가능한 작업 목록</td><td><span class="status todo">검토 대기</span></td><td>Epic → Feature → Story → Task와 수용 기준을 담은 초안을 작성했습니다. 사용자 검토·승인 전이므로 아직 완료로 세지 않습니다.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>완료된 작업이 의미하는 것</h3>
+    <div class="grid">
+      <article class="card"><p class="status done">완료: 데이터 모델</p><h3>무엇을 저장할지 정했습니다</h3><p>경력 사실(Claim), 근거(Evidence), 역할과 실제 기여, 책임 범위, 금지 표현, 이력서 문장, JD 요구사항, 면접 중 새로 발견된 후보 정보를 분리해 저장하는 구조를 만들었습니다.</p></article>
+      <article class="card"><p class="status done">완료: 과장 방지 규칙</p><h3>“참여”를 “전체 책임”으로 바꾸지 않습니다</h3><p>소유 범위와 결정권을 별도로 기록합니다. 확인되지 않은 사실, 모순된 사실, 사용 금지 사실은 게시하거나 이력서에 쓰지 못하게 하는 규칙을 정의했습니다.</p></article>
+      <article class="card"><p class="status done">완료: 대화 설계</p><h3>AI가 무엇을 더 물어야 하는지 정했습니다</h3><p>모호한 대답을 받으면 구현·검증·결정권을 나누어 묻고, 중요한 문장은 사용자 확인을 받아야 다음 단계로 넘어가도록 정했습니다.</p></article>
+      <article class="card"><p class="status done">완료: 작은 검증 모델</p><h3>규칙이 깨지는 사례를 검사합니다</h3><p>가상의 경력 3개를 만들고, 근거 추적·이력서 역추적·JD 연결·금지 표현·모순 보존·버전 복원 등을 자동 검사했습니다.</p></article>
+    </div>
+
+    <h3>검증 결과와 경계</h3>
+    <p><code>PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v</code> 기준 <strong>Career Graph 20개, Interview Package 15개, Voice Agent 13개로 총 48개 테스트가 모두 통과</strong>했습니다. 패키지 테스트에는 실제 ES256 합성 서명 검증이, Voice Agent 테스트에는 상태 전이·재개·전사·평가·후보 경계 검증이 포함됩니다. 다만 실제 PostgreSQL, 로그인, 관리형 개인키, GPT 연동, 실제 사용자 경력, 자연어 전체 의미 판정과 음성 통화는 아직 구현·검증하지 않았습니다.</p>
+
+    <h3>구현 전 검증·선정 사항</h3>
+    <table>
+      <thead><tr><th>결정</th><th>왜 먼저 결정해야 하나</th><th>권장 산출물</th></tr></thead>
+      <tbody>
+        <tr><td>구현 작업 분해</td><td>승인된 계약을 실제 개발 순서와 수용 테스트가 있는 Epic/Story/Task 초안으로 옮겼습니다. 검토·승인이 남았습니다.</td><td><a href="../PLAN-2026-09-23-mvp-implementation.md">Step 7 Task Breakdown</a></td></tr>
+        <tr><td>실제 인증·AI 공급자</td><td>OIDC/OAuth 호환성과 음성 중단·한국어·보관·학습 정책을 확인해야 합니다.</td><td>공급자 평가 기록</td></tr>
+        <tr><td>자연어 경계 검토</td><td>의미가 유사한 과장 표현과 소유 범위 오류는 운영 평가셋으로 확인해야 합니다.</td><td>품질 평가셋</td></tr>
+        <tr><td>운영용 서명·삭제 검증</td><td>ES256 KMS 연동, JWKS 회전, 구버전 S3 삭제 및 백업 복원 후 삭제 재적용을 검증해야 합니다.</td><td>통합·복원 테스트</td></tr>
+      </tbody>
+    </table>
+
+    <h3>GPT 플러그인과 앱을 만들기 위한 권장 순서</h3>
+    <div class="step"><div class="num">1</div><div><h3>완료: Plugin Functional Specification</h3><p>도구별 동작, 입력·출력, 오류, 사용자 확인과 권한 계약을 확정했습니다.</p></div></div>
+    <div class="step"><div class="num">2</div><div><h3>완료: Interview Package 실제 계약</h3><p>고정된 프로필·근거·JD·이력서·질문 계획을 전달하는 JSON Schema와 서명·만료·취소·호환성 규칙을 확정했습니다.</p></div></div>
+    <div class="step"><div class="num">3</div><div><h3>완료: Voice Interview Agent 규칙</h3><p>상태 전이, 질문 선택, 동적 follow-up, 답변 평가, 전사 수정, 새 Evidence Candidate 처리와 데이터 철회를 정의했습니다.</p></div></div>
+    <div class="step"><div class="num">4</div><div><h3>완료: MVP 기술 구조와 보안 경계</h3><p>PostgreSQL, 백엔드 API, 인증, 파일 저장소, LLM·음성 경계, ES256 관리형 서명키, 삭제·복원 방식을 설계했습니다. 다음은 개발 작업 분해입니다.</p></div></div>
+    <div class="step"><div class="num">5</div><div><h3>텍스트 MVP를 구현합니다</h3><p>프로파일링 → 사용자 확인 → Career Graph → JD → 근거 연결 이력서의 기본 흐름과 삭제·보관을 완성합니다.</p></div></div>
+    <div class="step"><div class="num">6</div><div><h3>서명된 패키지 handoff를 연결합니다</h3><p>ES256 KMS 서명, 동일 계정 교환, 유효성·취소·1회 시작을 검증합니다.</p></div></div>
+    <div class="step"><div class="num">7</div><div><h3>음성 면접 베타를 연결합니다</h3><p>질문·전사·기본 피드백을 구현하고 새 면접 발언은 검토 대기열로 돌려, 사용자 승인 후에만 프로필에 반영합니다.</p></div></div>
+
+    <h3>첫 제품 범위: 작게 완성할 기능</h3>
+    <p>처음부터 음성, PDF, 자동 지원까지 만들 필요는 없습니다. 아래의 텍스트 중심 흐름을 먼저 실제로 작동시키는 것이 가장 안전하고 검증하기 쉽습니다.</p>
+    <div class="flow">1. 사용자가 경력 한 건을 입력한다
+2. 플러그인이 범위·결정권·근거를 추가 질문한다
+3. 사용자가 정확한 Claim 문구를 확인한다
+4. 서버가 Profile version 1에 Claim/Evidence를 저장한다
+5. 사용자가 JD를 붙여 넣는다
+6. 플러그인이 근거가 있는 Claim만 사용해 Resume 초안을 만든다
+7. 각 Resume 문장에서 Claim과 Evidence를 다시 열어 볼 수 있다
+8. 다음 단계에서 Interview Package를 발급한다</div>
+    <p>1~7단계가 완성되면 텍스트 MVP의 핵심 가설을 실제 사용자와 검증할 수 있습니다. 8단계의 서명 패키지 handoff와 그 뒤 음성 앱은 같은 데이터를 재사용하므로, 별도의 경력 데이터 구조를 다시 만들 필요가 없습니다.</p>
+  </section>
+
+  <section>
+    <h2>Schema changes</h2>
+    <p>이번까지의 작업에서 제품 데이터베이스를 실제로 만들거나 바꾸지는 않았습니다. 대신 앞으로 만들 데이터베이스가 따라야 할 <strong>Schema v1 설계 문서</strong>와 가상 입력 데이터, 검증 코드를 추가했습니다.</p>
+    <table>
+      <thead><tr><th>구분</th><th>현재 만든 것</th><th>아직 만들지 않은 것</th></tr></thead>
+      <tbody>
+        <tr><td>논리 데이터 구조</td><td>Profile, Role, Project, Claim, Evidence, Ownership, Artifact, JD, Interview Candidate 등의 관계와 필드를 정의했습니다.</td><td>실제 PostgreSQL 테이블 생성, migration, ORM 모델, API 입력 검증</td></tr>
+        <tr><td>상태 규칙</td><td>지식 상태, 모순 상태, 사용 허용 상태를 분리했습니다. 예: 사용자 확인은 외부 검증이 아닙니다.</td><td>운영 화면에서 상태를 바꾸는 권한과 실제 승인 워크플로</td></tr>
+        <tr><td>버전과 감사</td><td>프로필 버전, 변경 기록, 이전 이력서 복원 규칙을 정의했습니다.</td><td>불변 archive 저장, 삭제·보존 정책, DB 트랜잭션과 동시성 처리</td></tr>
+        <tr><td>면접 후보</td><td>면접 중 새로 나온 정보는 <code>EvidenceCandidate</code>로 격리하고 승인 후에만 반영하도록 정의했습니다.</td><td>실제 음성/텍스트 면접 세션 저장과 사용자 검토 화면</td></tr>
+      </tbody>
+    </table>
+    <p>즉 “스키마 변경”은 현재 문서·fixture·참조 테스트 단계에서 완료되었고, 운영 데이터베이스에는 아직 적용할 대상이 없습니다. 실제 개발을 시작하면 이 설계를 기준으로 migration과 API 계약을 새로 구현하고 통합 테스트로 확인해야 합니다.</p>
+    <p class="notice"><strong>사용자가 최종적으로 체감할 변화:</strong> 완성된 CareerGround에서는 AI가 예쁜 이력서 문장을 만드는 데서 끝나지 않고, 각 문장이 사용자가 확인한 경력과 근거를 벗어나지 않도록 도와줄 것입니다.</p>
+  </section>
+
+  <footer class="small">
+    근거 문서: <a href="CareerGround_Development_Plan_v0.1.md">기존 개발 계획</a>, <a href="career_graph_schema_v1.md">Career Graph Schema v1</a>, <a href="career_profiling_protocol_v1.md">Profiling Protocol v1</a>, <a href="plugin_functional_spec_v1.md">Plugin Functional Specification v1</a>, <a href="interview_package_schema_v1.json">Interview Package Schema v1</a>, <a href="voice_interview_agent_spec_v1.md">Voice Interview Agent Specification v1</a>, <a href="architecture_v1.md">MVP Architecture v1</a>, <a href="../PLAN-2026-09-23-mvp-implementation.md">Step 7 작업 분해 초안</a>. 본 자료는 2026-09-23 저장소 상태를 기준으로 갱신했습니다.
+  </footer>
+</main>
+</body>
+</html>

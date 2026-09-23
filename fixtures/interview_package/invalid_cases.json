@@ -1,0 +1,38 @@
+[
+  {
+    "name": "expired",
+    "context": {"now": "2026-09-30T00:00:00Z"},
+    "expected_error": "PACKAGE_EXPIRED"
+  },
+  {
+    "name": "subject_mismatch",
+    "context": {"authenticated_subject": "acct-synthetic-other"},
+    "expected_error": "PACKAGE_SUBJECT_MISMATCH"
+  },
+  {
+    "name": "revoked",
+    "context": {"registry_status": "REVOKED"},
+    "expected_error": "PACKAGE_REVOKED"
+  },
+  {
+    "name": "already_used",
+    "context": {"existing_session_id": "SESSION-SYNTHETIC-001"},
+    "expected_error": "PACKAGE_ALREADY_USED"
+  },
+  {
+    "name": "unsupported_major",
+    "mutation": {"path": "payload.schema_version", "value": "2.0.0"},
+    "expected_error": "PACKAGE_SCHEMA_UNSUPPORTED"
+  },
+  {
+    "name": "tampered_payload",
+    "mutation": {"path": "payload.claims.0.text", "value": "전체 자율주행 시스템을 단독 설계했다."},
+    "expected_error": "PACKAGE_SIGNATURE_INVALID"
+  },
+  {
+    "name": "dangling_evidence_link",
+    "mutation": {"path": "payload.claim_evidence_links.0.evidence_id", "value": "EVIDENCE-MISSING"},
+    "resign_for_semantic_test": true,
+    "expected_error": "PACKAGE_REFERENCE_INVALID"
+  }
+]
