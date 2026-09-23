@@ -1,7 +1,7 @@
 # CareerGround 외부 공급자 평가 게이트 v0.1
 
 - 작성일: 2026-09-23
-- 상태: **공식 문서 사전 검토 완료, 실연동 PoC 대기**. 공급자 선정, 계정 생성, 유료 계약 또는 개인정보 전송 승인 아님.
+- 상태: **공식 문서 사전 검토 완료, 실연동 PoC 준비 대기**. 2026-09-23 사용자가 격리 시험 계정·합성 데이터 기반 외부 검증을 승인했으나, 이는 공급자 최종 선정·실사용자 개인정보 전송 승인이 아니다. 과금 한도와 결제 수단이 없으므로 유료 리소스는 생성하지 않는다.
 - 연결 계획: [E00-S03 및 G-I/G-L](../PLAN-2026-09-23-mvp-implementation.md)
 
 ## 1. 인증 공급자 — G-I
@@ -24,7 +24,7 @@ CareerGround는 웹 OIDC 로그인과 MCP OAuth 호출에서 **동일한 `(issue
 4. refresh·logout·revoke·키 교체 시 새 호출 차단 범위와 지연을 기록한다. 삭제 등의 고위험 동작은 별도 step-up 요구를 만족한다.
 5. 요금, 한국 사용자 데이터·로그 처리 리전, 하위 처리자, 보관·삭제 약관과 지원 경로를 실제 계약 기준으로 검토한다.
 
-하나라도 실패하면 해당 공급자에 맞춰 보안 요구를 완화하지 않는다. **인증 공급자 최종 선택과 외부 계정·유료 PoC는 별도 승인 게이트**다.
+하나라도 실패하면 해당 공급자에 맞춰 보안 요구를 완화하지 않는다. **합성 외부 PoC는 승인됐지만, 인증 공급자 최종 선택과 유료 계약은 별도 결정 게이트**다.
 
 ### 사전 검토 결과와 실제 PoC의 경계
 
@@ -38,7 +38,14 @@ CareerGround는 웹 OIDC 로그인과 MCP OAuth 호출에서 **동일한 `(issue
 
 현재 저장소에는 외부 네트워크를 호출하지 않는 `assess_mcp_oauth_metadata` 사전 검사와 합성 테스트가 있다. 이는 discovery 문서의 정확한 issuer, HTTPS endpoint, PKCE S256, 선택한 등록 방식 및 토큰 인증 방법의 **표시값만** 검증한다. 공급자의 `resource` 처리, 실제 토큰 발급/서명, ChatGPT 연결을 검증한 것은 아니다.
 
-실연동 PoC가 승인되면: (1) 합성 사용자만 있는 격리 tenant와 ChatGPT 개발용 플러그인을 준비하고, (2) 실제 metadata/redirect/PKCE/`resource`·scope를 네트워크 기록으로 확인하고, (3) 정상 토큰과 issuer·audience·scope·expiry·subject 변조 토큰의 실패를 검증한다. 결과에는 토큰 원문을 기록하지 않고 claim 이름·합격/실패·타임스탬프만 남긴다. 그 후 비용·개인정보 처리 조건을 검토해 G-I 선정 결정을 요청한다.
+승인된 실연동 PoC의 절차는 (1) 합성 사용자만 있는 격리 tenant와 ChatGPT 개발용 플러그인을 준비하고, (2) 실제 metadata/redirect/PKCE/`resource`·scope를 네트워크 기록으로 확인하고, (3) 정상 토큰과 issuer·audience·scope·expiry·subject 변조 토큰의 실패를 검증하는 것이다. 결과에는 토큰 원문을 기록하지 않고 claim 이름·합격/실패·타임스탬프만 남긴다. 그 후 비용·개인정보 처리 조건을 검토해 G-I 선정 결정을 요청한다.
+
+### 2026-09-23 실행 점검
+
+- 승인된 GitHub 검증 브랜치의 [Foundation CI](https://github.com/inhoinno86-hub/CareerGround/actions/runs/35870819987)는 PostgreSQL 통합 테스트를 포함한 66개 테스트를 skip 없이 통과했다. 이는 Auth0 또는 ChatGPT 실연동 결과가 아니다.
+- 이 실행 환경에는 Auth0 관리 연결, `auth0` CLI 로그인, tenant 도메인/관리 권한, ChatGPT 개발 플러그인 관리 화면 접근이 없다. 연결 가능한 Auth0 앱 플러그인도 발견되지 않았다. 계정 생성·설정 변경은 수행하지 않았다.
+- 현재 백엔드는 `/health/*`만 제공하고 보호된 MCP 리소스 메타데이터, `/mcp`, 인증 도구가 없다. ChatGPT의 실제 callback 정보 역시 연결 화면에서 확인해야 한다. 그러므로 live OAuth 로그인·토큰 검증은 아직 **미실시**다.
+- 다음 실행 조건: 격리 Auth0 tenant 접근(관리 비밀을 저장소에 제공하지 않음), ChatGPT 개발 연결 화면의 client metadata URL/redirect URI, 그리고 합성 전용 공개 HTTPS MCP 테스트 서버. 무료 범위를 벗어나는 설정은 금액 한도 확인 후 별도로 다룬다.
 
 ## 2. 텍스트 LLM 공급자 — G-L
 

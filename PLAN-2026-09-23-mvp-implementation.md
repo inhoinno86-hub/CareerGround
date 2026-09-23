@@ -23,7 +23,7 @@
 | B. 면접 패키지 | 고정 버전의 최소 데이터를 ES256으로 서명해 같은 계정의 면접 앱에 1회 전달한다 | KMS/JWKS 연동, 만료·철회·변조·중복 시작 차단 |
 | C. 음성 면접 베타 | 자막·텍스트 대체와 음성 대화, 전사 확인, 피드백, 신규 경력 후보 검토를 제공한다 | 한국어 품질, 공급자 중단·삭제·보관 검증과 선택 녹음 30일 준수 |
 
-첫 개발 묶음은 로컬 실행 환경과 계약 정리, 인증 공급자 평가, 두 합성 계정의 격리, 기본 DB migration이다. Python 앱·migration·합성 테스트·CI 정의를 추가했고 임시 로컬 PostgreSQL 17에서 migration·계정 격리·전체 테스트를 검증했다. **GitHub CI 서버 실행과 실제 ChatGPT/인증 공급자 연동은 아직 확인 전**이다. 사용자 데이터 수집 전에 삭제·복원 기반을 완성한다. 아직 결정되지 않은 인증·LLM·음성 공급자는 각 단계의 **진입 조건**으로 남긴다.
+첫 개발 묶음은 로컬 실행 환경과 계약 정리, 인증 공급자 평가, 두 합성 계정의 격리, 기본 DB migration이다. Python 앱·migration·합성 테스트·CI를 추가했고 임시 로컬 PostgreSQL 17과 [GitHub CI](https://github.com/inhoinno86-hub/CareerGround/actions/runs/35870819987)에서 migration·계정 격리·전체 66개 테스트를 skip 없이 검증했다. **실제 ChatGPT/인증 공급자 연동은 아직 확인 전**이다. 사용자 데이터 수집 전에 삭제·복원 기반을 완성한다. 아직 결정되지 않은 인증·LLM·음성 공급자는 각 단계의 **진입 조건**으로 남긴다.
 
 ## 1. Goal and source of truth
 
@@ -329,6 +329,7 @@ Not in scope: external/recruiter sharing, payments, automatic job application, h
 | 2026-09-23 | `uv run --locked ruff check`와 `ruff format --check` 통과. `uv run --locked python -m unittest discover -s tests -v`: **58개 실행 대상 중 57개 통과, 실제 PostgreSQL 통합 테스트 1개 skip** (`CAREERGROUND_TEST_DATABASE_URL` 없음). offline Alembic SQL 렌더링 테스트 통과. GitHub Actions는 정의만 추가했으며 서버에서 실행하지 않음. |
 | 2026-09-23 | 후속 구현: 25개 도구의 입력·출력·대표 실패·예정 계약 테스트 ID를 매핑하고 공통 DTO에 Package 오류, bounded idempotency key, 원문 없는 outbox reference를 추가. ChatGPT/MCP 공식 문서에 맞춰 CIMD 우선·DCR 후순위로 공급자 평가를 갱신하고 합성 OAuth discovery metadata 사전 검사를 추가. 이는 live token/ChatGPT PoC가 아님. |
 | 2026-09-23 | Docker 없이 저장소 밖의 임시 PostgreSQL **17.11**에서 빈 DB `alembic upgrade head`, `alembic check`, `downgrade base`→`upgrade head`, 두 합성 계정 소유권 테스트 및 **전체 66개 테스트(66 통과, skip 0)**를 실행. Ruff 검사·포맷 검사 및 `actionlint`로 CI YAML 정적 검사 통과. 임시 서버 종료와 테스트 파일 정리 완료. 실제 GitHub Actions 실행·Auth0/Cognito tenant 연동은 미실시. [검증 기록](docs/CareerGround_First_Slice_Validation_2026-09-23.md) |
+| 2026-09-23 | 사용자가 외부 검증을 승인함. `codex/mvp-foundation-ci-20260923` 브랜치의 commit `1016f91`을 푸시하고 [GitHub Actions run 35870819987](https://github.com/inhoinno86-hub/CareerGround/actions/runs/35870819987)에서 PostgreSQL 17 migration·schema check, Ruff, **66개 테스트(66 통과, skip 0)**를 확인함. Auth0 tenant/ChatGPT 개발 관리 접근과 HTTPS `/mcp` 서버가 없어 실제 OAuth 연결은 미실시; 계정·유료 리소스도 만들지 않음. |
 
 ## 10. Decision log
 
@@ -347,4 +348,4 @@ Not in scope: external/recruiter sharing, payments, automatic job application, h
 2. Which LLM and realtime provider satisfy Korean quality and privacy/stop/deletion requirements? A text provider choice is needed before AI-backed A; realtime may remain open until C.
 3. What exact cloud budget/account, data-transfer terms, key rotation interval and public deletion commitment can be approved? Keep production actions gated.
 
-계획 승인 자체는 완료됐고 로컬 PostgreSQL 17 migration 검증도 통과했다. 다음 게이트는 실제 GitHub CI 실행(커밋·푸시 승인 필요)과 격리된 공급자 tenant·ChatGPT 개발용 플러그인에서의 실연동 PoC(외부 계정·비용 승인 필요)를 확인한 뒤 G-I 선택을 검토하는 것이다. 사용자 데이터 사용·외부 계정 생성·과금·클라우드 구축은 이 계획 승인만으로 시작하지 않는다.
+계획 승인과 첫 로컬·GitHub CI PostgreSQL 검증은 완료됐다. 다음 게이트는 격리 Auth0 tenant와 ChatGPT 개발 관리 접근을 연결하고 합성 전용 HTTPS MCP 테스트 서버를 마련해 실제 PKCE·`resource`·scope·subject 격리를 시험하는 것이다. 사용자는 합성 외부 검증을 승인했으나, 실제 공급자 선정·실사용자 데이터 사용·유료 과금·클라우드 운영 구축은 아직 승인된 결론이 아니다.
