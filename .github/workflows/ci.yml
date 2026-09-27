@@ -36,8 +36,8 @@ jobs:
           enable-cache: false
       - run: uv python install 3.13
       - run: uv sync --locked --group dev
-      - run: uv run --locked ruff check src migrations tests/test_foundation.py tests/test_postgres_foundation.py tests/test_oauth_metadata_preflight.py
-      - run: uv run --locked ruff format --check src migrations tests/test_foundation.py tests/test_postgres_foundation.py tests/test_oauth_metadata_preflight.py
+      - run: uv run --locked ruff check src migrations tests/test_foundation.py tests/test_postgres_foundation.py tests/test_oauth_metadata_preflight.py tests/test_mcp_auth_poc.py tests/test_mcp_product_foundation.py tests/test_deletion_preview.py tests/test_profiling_workspace.py tests/test_profiling_retention.py
+      - run: uv run --locked ruff format --check src migrations tests/test_foundation.py tests/test_postgres_foundation.py tests/test_oauth_metadata_preflight.py tests/test_mcp_auth_poc.py tests/test_mcp_product_foundation.py tests/test_deletion_preview.py tests/test_profiling_workspace.py tests/test_profiling_retention.py
       - run: uv run --locked alembic upgrade head
       - run: uv run --locked alembic check
       - run: uv run --locked python -m unittest discover -s tests -v

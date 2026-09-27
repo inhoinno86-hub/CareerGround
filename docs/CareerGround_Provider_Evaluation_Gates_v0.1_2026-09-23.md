@@ -1,7 +1,7 @@
 # CareerGround 외부 공급자 평가 게이트 v0.1
 
 - 작성일: 2026-09-23
-- 상태: **공식 문서 사전 검토 완료, 실연동 PoC 준비 대기**. 2026-09-23 사용자가 격리 시험 계정·합성 데이터 기반 외부 검증을 승인했으나, 이는 공급자 최종 선정·실사용자 개인정보 전송 승인이 아니다. 과금 한도와 결제 수단이 없으므로 유료 리소스는 생성하지 않는다.
+- 상태 (2026-09-26): **Auth0–ChatGPT 개발용 합성 데이터 PoC의 로그인·토큰 교환·MCP 도구 호출 확인, G-I 최종 선정 보류**. 로그인에는 사용자의 현재 Google 계정을 사용했으므로 인증 제공자는 실제 계정 식별자를 처리한다. 이 검증은 공급자 최종 선정이나 경력·대화 등 제품 개인정보의 외부 전송 승인이 아니다. 과금 한도와 결제 수단이 없으므로 유료 리소스는 생성하지 않는다.
 - 연결 계획: [E00-S03 및 G-I/G-L](../PLAN-2026-09-23-mvp-implementation.md)
 
 ## 1. 인증 공급자 — G-I
@@ -12,7 +12,7 @@ CareerGround는 웹 OIDC 로그인과 MCP OAuth 호출에서 **동일한 `(issue
 
 | 후보 | 공식 문서에서 확인한 점 | 남은 위험·검증 | 현재 판단 |
 | --- | --- | --- | --- |
-| Auth0 | 관리자가 HTTPS CIMD URL을 가져와 클라이언트를 등록할 수 있고 공개 클라이언트는 PKCE를 요구한다. MCP용 `resource` compatibility 설정이 별도로 필요하다. [CIMD 문서](https://auth0.com/docs/get-started/auth0-overview/create-applications/register-applications-with-cimd) | 실제 ChatGPT client metadata/redirect와 수동 CIMD 등록, `resource`→`aud`, 최소 client grant, 메타데이터 갱신, 가격·리전·계약을 실험·검토해야 한다. DCR은 기본 비활성이며 활성화하면 공개 등록이므로 **필요할 때만** 별도 보안 검토한다. [DCR 문서](https://auth0.com/docs/get-started/applications/dynamic-client-registration) | **CIMD 실연동 PoC 1순위**. 문서상 경로가 있으나 실제 tenant 결과 미확인. |
+| Auth0 | 관리자가 HTTPS CIMD URL을 가져와 클라이언트를 등록할 수 있고 제3자 앱은 PKCE를 요구한다. MCP용 `resource` compatibility 설정이 별도로 필요하다. [CIMD 문서](https://auth0.com/docs/get-started/auth0-overview/create-applications/register-applications-with-cimd) | 개발 tenant에서 CIMD 등록, ChatGPT 로그인·토큰 교환, 정확한 리소스 audience와 최소 scope를 요구하는 MCP 호출을 실측했다. 남은 것은 S256 요청 원문, 실제 다중 계정·토큰 만료/철회, 운영 비용·리전·계약과 실사용자 데이터 보호다. DCR은 켜지 않았다. | **개발용 합성 PoC 핵심 경로 통과, G-I 선정 보류**. [실행 기록](CareerGround_Auth_PoC_Server_Runbook_2026-09-24.md) |
 | Amazon Cognito | 사용자 OAuth 요청의 `resource`를 access token `aud`에 반영할 수 있고 custom scope를 제공한다. 이 기능은 managed login의 사용자 authorization-code 경로에 적용된다. [resource binding 문서](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-define-resource-servers.html) | ChatGPT 사전등록 클라이언트 경로가 허용되는지, CIMD/DCR 지원 여부, `code_challenge_methods_supported`와 refresh·logout을 실제 discovery/연동으로 확인해야 한다. | **실연동 PoC 2순위**. AWS 배포와 맞을 수 있지만 ChatGPT 등록 경로 미증명. |
 | Keycloak | 공식 MCP 호환성 표는 현행 MCP 버전의 RFC 8707 `resource` 처리 미지원과 부분 호환을 명시한다. [MCP 안내](https://www.keycloak.org/securing-apps/mcp-authz-server) | scope 기반 우회가 CareerGround의 리소스 audience 요구를 충족하는지 별도 설계·보안 검토가 필요하다. | 현재는 후순위. |
 
@@ -30,22 +30,25 @@ CareerGround는 웹 OIDC 로그인과 MCP OAuth 호출에서 **동일한 `(issue
 
 | 항목 | Auth0 | Cognito | 현재 증거 |
 | --- | --- | --- | --- |
-| ChatGPT에 필요한 CIMD/사전등록 경로 | 문서상 수동 CIMD 등록 가능 | 사전등록 가능성 검증 필요 | 공식 문서만; tenant 없음 |
-| `resource`가 정확한 MCP `aud`가 되는지 | compatibility 설정 후 실측 필요 | managed-login code 경로 문서상 가능 | 토큰 발급 실측 없음 |
-| PKCE S256·discovery·정확한 redirect | tenant metadata와 ChatGPT 관리 화면에서 확인 필요 | 동일 | 실제 연결 없음 |
-| 2개 합성 계정의 웹/MCP 동일 subject와 격리 | 미실시 | 미실시 | 로컬 DB lookup 테스트만 있음 |
+| ChatGPT에 필요한 CIMD/사전등록 경로 | 개발 tenant에서 실제 CIMD 등록·재연결 성공 | 사전등록 가능성 검증 필요 | ChatGPT 클라이언트와 callback 실측 |
+| `resource`가 정확한 MCP `aud`가 되는지 | 개발용 터널 리소스를 audience로 한 인증 도구 성공 | managed-login code 경로 문서상 가능 | 서버가 정확한 `aud`를 요구하는 실제 도구 호출 성공; 토큰 원문 미보관 |
+| PKCE S256·discovery·정확한 redirect | CIMD preflight·strict 제3자 클라이언트·인가 코드 교환 성공 | 동일 | S256 광고와 PKCE 강제는 확인, 개별 요청의 S256 필드는 미캡처 |
+| 2개 합성 계정의 웹/MCP 동일 subject와 격리 | 서버의 서로 다른 합성 subject ID 분리 통과; 실제 2계정 미실시 | 미실시 | 사용자는 실제 Google 계정 하나로 개발 PoC 진행 |
 | 비용·보관·리전·운영 계약 | 미검토 | 미검토 | 공급자 미선정 |
 
-현재 저장소에는 외부 네트워크를 호출하지 않는 `assess_mcp_oauth_metadata` 사전 검사와 합성 테스트가 있다. 이는 discovery 문서의 정확한 issuer, HTTPS endpoint, PKCE S256, 선택한 등록 방식 및 토큰 인증 방법의 **표시값만** 검증한다. 공급자의 `resource` 처리, 실제 토큰 발급/서명, ChatGPT 연결을 검증한 것은 아니다.
+저장소의 `assess_mcp_oauth_metadata` 사전 검사 자체는 외부 네트워크를 호출하지 않으며, 전달된 discovery 문서의 정확한 issuer, HTTPS endpoint, PKCE S256, 선택한 등록 방식 및 토큰 인증 방법의 **표시값만** 검증한다. 이 정적 검사의 한계와 별개로, 아래 2026-09-26 개발용 외부 PoC에서 실제 로그인·토큰 교환·인증 도구 호출을 확인했다.
 
-승인된 실연동 PoC의 절차는 (1) 합성 사용자만 있는 격리 tenant와 ChatGPT 개발용 플러그인을 준비하고, (2) 실제 metadata/redirect/PKCE/`resource`·scope를 네트워크 기록으로 확인하고, (3) 정상 토큰과 issuer·audience·scope·expiry·subject 변조 토큰의 실패를 검증하는 것이다. 결과에는 토큰 원문을 기록하지 않고 claim 이름·합격/실패·타임스탬프만 남긴다. 그 후 비용·개인정보 처리 조건을 검토해 G-I 선정 결정을 요청한다.
+승인된 실연동 PoC의 절차 중 개발 tenant·ChatGPT 개발 연결, metadata/redirect, 정상 토큰의 리소스·scope 검사 성공은 완료했다. PKCE 개별 요청 필드, 실제 두 계정, 외부 발급 토큰의 만료/철회 지연과 비용·개인정보 처리 조건은 남아 있다. 토큰 원문을 기록하지 않고 claim 이름·합격/실패·타임스탬프만 남긴다. 이 잔여 조건을 검토한 뒤 G-I 선정 결정을 요청한다.
 
 ### 2026-09-23 실행 점검
 
 - 승인된 GitHub 검증 브랜치의 [Foundation CI](https://github.com/inhoinno86-hub/CareerGround/actions/runs/35870819987)는 PostgreSQL 통합 테스트를 포함한 66개 테스트를 skip 없이 통과했다. 이는 Auth0 또는 ChatGPT 실연동 결과가 아니다.
-- 이 실행 환경에는 Auth0 관리 연결, `auth0` CLI 로그인, tenant 도메인/관리 권한, ChatGPT 개발 플러그인 관리 화면 접근이 없다. 연결 가능한 Auth0 앱 플러그인도 발견되지 않았다. 계정 생성·설정 변경은 수행하지 않았다.
-- 현재 백엔드는 `/health/*`만 제공하고 보호된 MCP 리소스 메타데이터, `/mcp`, 인증 도구가 없다. ChatGPT의 실제 callback 정보 역시 연결 화면에서 확인해야 한다. 그러므로 live OAuth 로그인·토큰 검증은 아직 **미실시**다.
-- 다음 실행 조건: 격리 Auth0 tenant 접근(관리 비밀을 저장소에 제공하지 않음), ChatGPT 개발 연결 화면의 client metadata URL/redirect URI, 그리고 합성 전용 공개 HTTPS MCP 테스트 서버. 무료 범위를 벗어나는 설정은 금액 한도 확인 후 별도로 다룬다.
+- Auth0 tenant 도메인은 확보했고 사용자 브라우저에서 웹 로그인·앱 세션·동일 client ID의 성공 로그를 확인했다. 이 실행 환경에는 Auth0 관리 연결과 ChatGPT 개발 플러그인 관리 화면 접근이 없고, tenant가 다른 용도와 격리됐는지도 아직 확인해야 한다. 비밀값이나 관리 토큰을 수집하지 않았다.
+- 웹 백엔드는 `/auth/*`와 `/health/*`를 제공한다. 별도 합성 전용 MCP 서버는 로컬의 보호 리소스 메타데이터·`/mcp`·읽기 전용 인증 도구를 제공한다. 실제 ChatGPT callback 정보와 MCP access token은 아직 얻지 못했으므로 **ChatGPT/MCP OAuth 실연동은 미실시**다.
+- 다음 실행 조건: 개발용 격리 tenant 확인, ChatGPT 개발 연결 화면의 client metadata URL/redirect URI, 그리고 합성 전용 Secure MCP Tunnel 또는 검토된 HTTPS 경로. 무료 범위를 벗어나는 설정은 금액 한도 확인 후 별도로 다룬다.
+- 2026-09-24: 합성 전용 로컬 MCP 인증 프로브 서버와 토큰 검증기를 구현했다. [실행 기록](CareerGround_Auth_PoC_Server_Runbook_2026-09-24.md). Auth0의 `resource`→`aud` 처리는 tenant의 Resource Parameter Compatibility Profile 설정 및 실측으로 확인해야 하며, 현재 로컬 합성 통과를 실연동 통과로 해석하지 않는다. [Auth0 지원 안내](https://support.auth0.com/center/s/article/mcp-audience-error-with-auth0)
+- 2026-09-24: 실제 tenant OIDC/OAuth discovery에서 issuer·PKCE S256을 확인했으나 CIMD 지원 플래그는 광고되지 않아 현재 CIMD 사전 검사는 실패했다. Auth0 tenant 설정의 CIMD·Resource Parameter Compatibility Profile 확인과 ChatGPT 연결 정보가 다음 게이트다. 웹 로그인 성공을 MCP 공급자 선정 근거로 확장하지 않는다.
+- 2026-09-26: 개발 tenant의 CIMD와 Resource Parameter Compatibility Profile을 활성/확인하고 ChatGPT 클라이언트·callback·개발용 MCP API와 최소 `careerground:probe` 권한을 등록했다. Auth0의 **Success Login**·**Success Exchange**, ChatGPT 연결 계정, 터널의 인증된 `get_poc_identity` 호출을 확인했다. 연결 해제 후 ChatGPT는 새 호출에 재연결을 요구했고 같은 계정의 시험 ID는 재연결 후 유지됐다. 현재 API의 새 액세스 토큰 최대 수명은 1시간으로 제한했다. 기존 JWT 즉시 무효화와 실제 다중 계정 격리는 검증되지 않았고, 제품 데이터는 연결하지 않았다. [상세 근거와 경계](CareerGround_Auth_PoC_Server_Runbook_2026-09-24.md)
 
 ## 2. 텍스트 LLM 공급자 — G-L
 

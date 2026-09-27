@@ -17,7 +17,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from sqlalchemy.pool import StaticPool
 
-from careerground.config import Settings
+from careerground.config import Auth0Settings, Settings
 from careerground.domain.authorization import (
     AuthenticationRequired,
     ResourceNotFound,
@@ -102,6 +102,15 @@ class FoundationTests(unittest.TestCase):
                     session, VerifiedIdentity("https://issuer-a.example", "subject-001")
                 )
 
+    def test_deleting_account_is_not_authenticated(self) -> None:
+        with Session(self.engine) as session:
+            session.get(Account, "acct-synthetic-a").status = "DELETING"
+            session.commit()
+            with self.assertRaises(AuthenticationRequired):
+                resolve_account_id(
+                    session, VerifiedIdentity("https://issuer-a.example", "subject-001")
+                )
+
     def test_profile_lookup_is_scoped_before_read(self) -> None:
         with Session(self.engine) as session:
             account_a = resolve_account_id(
@@ -148,10 +157,33 @@ class FoundationTests(unittest.TestCase):
 
     def test_only_health_routes_exist_before_provider_auth(self) -> None:
         client = TestClient(app)
+        self.assertEqual(
+            client.get("/").json(),
+            {"service": "CareerGround", "session_check": "/auth/me"},
+        )
         self.assertEqual(client.get("/health/live").json(), {"status": "live"})
         with patch.dict(os.environ, {"CAREERGROUND_DATABASE_URL": ""}):
             self.assertEqual(client.get("/health/ready").status_code, 503)
         self.assertEqual(client.get("/profiles/profile-synthetic-a").status_code, 404)
+        self.assertEqual(client.get("/auth/login").status_code, 404)
+
+    def test_auth0_login_is_off_until_fully_configured(self) -> None:
+        full = {
+            "AUTH0_DOMAIN": "tenant.example.auth0.com",
+            "AUTH0_CLIENT_ID": "synthetic-client",
+            "AUTH0_CLIENT_SECRET": "synthetic-secret",
+            "AUTH0_SECRET": "0" * 64,
+            "APP_BASE_URL": "http://localhost:5000",
+        }
+        with patch.dict(os.environ, {name: "" for name in full}):
+            self.assertIsNone(Auth0Settings.from_environment())
+        with (
+            patch.dict(os.environ, {**full, "AUTH0_CLIENT_SECRET": ""}),
+            self.assertRaisesRegex(ValueError, "AUTH0_CLIENT_SECRET"),
+        ):
+            Auth0Settings.from_environment()
+        with patch.dict(os.environ, full):
+            self.assertEqual(Auth0Settings.from_environment().client_id, "synthetic-client")
 
     def test_runtime_configuration_requires_postgresql_psycopg(self) -> None:
         old = os.environ.get("CAREERGROUND_DATABASE_URL")
@@ -238,9 +270,19 @@ class FoundationTests(unittest.TestCase):
             check=False,
         )
         self.assertEqual(process.returncode, 0, process.stderr)
-        for table in ("accounts", "auth_identities", "career_profiles"):
+        for table in (
+            "accounts",
+            "auth_identities",
+            "career_profiles",
+            "deletion_requests",
+            "deletion_work_items",
+            "profiling_sessions",
+            "profiling_inputs",
+        ):
             self.assertIn(f"CREATE TABLE {table}", process.stdout)
         self.assertIn("uq_auth_identity_issuer_subject", process.stdout)
+        self.assertIn("20260927_0003", process.stdout)
+        self.assertIn("ck_career_profiles_status", process.stdout)
 
 
 if __name__ == "__main__":

@@ -23,7 +23,7 @@
 | B. 면접 패키지 | 고정 버전의 최소 데이터를 ES256으로 서명해 같은 계정의 면접 앱에 1회 전달한다 | KMS/JWKS 연동, 만료·철회·변조·중복 시작 차단 |
 | C. 음성 면접 베타 | 자막·텍스트 대체와 음성 대화, 전사 확인, 피드백, 신규 경력 후보 검토를 제공한다 | 한국어 품질, 공급자 중단·삭제·보관 검증과 선택 녹음 30일 준수 |
 
-첫 개발 묶음은 로컬 실행 환경과 계약 정리, 인증 공급자 평가, 두 합성 계정의 격리, 기본 DB migration이다. Python 앱·migration·합성 테스트·CI를 추가했고 임시 로컬 PostgreSQL 17과 [GitHub CI](https://github.com/inhoinno86-hub/CareerGround/actions/runs/35870819987)에서 migration·계정 격리·전체 66개 테스트를 skip 없이 검증했다. **실제 ChatGPT/인증 공급자 연동은 아직 확인 전**이다. 사용자 데이터 수집 전에 삭제·복원 기반을 완성한다. 아직 결정되지 않은 인증·LLM·음성 공급자는 각 단계의 **진입 조건**으로 남긴다.
+첫 개발 묶음은 로컬 실행 환경과 계약 정리, 인증 공급자 평가, 두 합성 계정의 격리, 기본 DB migration이다. Python 앱·migration·합성 테스트·CI를 추가했고 임시 로컬 PostgreSQL 17과 [GitHub CI](https://github.com/inhoinno86-hub/CareerGround/actions/runs/35870819987)에서 migration·계정 격리·전체 66개 테스트를 skip 없이 검증했다. Auth0 웹 로그인과 개발용 ChatGPT/MCP OAuth 인증 도구 호출은 실측했지만 인증 공급자 최종 선정은 아직 전이다. 사용자 데이터 수집 전에 삭제·복원 기반을 완성한다. 아직 결정되지 않은 인증·LLM·음성 공급자는 각 단계의 **진입 조건**으로 남긴다.
 
 ## 1. Goal and source of truth
 
@@ -106,6 +106,8 @@ Each `T` item is one implementable task. The acceptance line is the Story's comp
 **Story E01-S02 — Authenticate MCP calls and authorize each command.**
 
 - `E01-T03` Validate token issuer/signature/expiry/audience/resource/scope on every MCP call, including refresh/revocation behavior supported by the chosen provider.
+- 2026-09-27 준비 상태: 제품용 `ActiveAccountTokenVerifier`와 합성 HTTP 검증으로 같은 JWT라도 계정 `DISABLED`/인증 매핑 제거 후 다음 호출이 401인지 확인했다. 제품 MCP 엔드포인트가 없어 운영 경로에 아직 연결되지 않았고, Auth0/ChatGPT의 실제 철회·refresh 동작은 별도 검증 게이트다. 실데이터 도구를 추가할 때 DB 조회 실패도 거부하는 이 게이트와 도구별 소유권 확인을 필수 적용한다.
+- 2026-09-27 후속: 별도 로컬 제품 MCP 팩토리에 `career.profile.read` 전용 인증, 계정 식별 도구와 소유자 범위의 프로필 ID/버전 조회를 연결했다. 이는 합성 데이터용 기초 경로이며 실행 진입점·실사용자 데이터·정식 `get_career_profile`은 아직 없다. 계정 전체 삭제·연결별 철회도 구현 전이다.
 - `E01-T04` Centralize per-resource `account_id` authorization and step-up confirmation for deletion and other high-impact actions.
 - Acceptance: all private read/write tools reject wrong subject, audience and scope in automated tests; model-supplied IDs cannot bypass owner checks.
 
@@ -130,12 +132,14 @@ Each `T` item is one implementable task. The acceptance line is the Story's comp
 **Story E02-S03 — Enforce temporary-data expiry.**
 
 - `E02-T05` Implement 30-minute auto-pause and query-time denial after the 90-day profiling expiry; only real activity in that session advances its clock.
+- 2026-09-27 준비 상태: 명시적으로 시작한 작업 세션과 단일 입력의 저장·계정 FK를 추가하고, 실제 입력·명시 재개만 해당 세션의 90일 만료를 연장하도록 했다. 30분 자동 일시정지는 기간을 연장하지 않으며 만료 후 조회는 즉시 거부한다. 만료 세션·입력을 한정 삭제하는 내부 배치 함수는 PostgreSQL 합성 DB에서도 검증했지만 스케줄러·동시 작업자·백업 복원 방지는 아직 없다. 실사용자 대화는 연결하지 않는다. [상세 경계](docs/CareerGround_Profiling_Workspace_Foundation_2026-09-27.md)
 - `E02-T06` Implement scheduled expiry for workspace, transcript/feedback, optional recordings and upload originals with separate clocks.
 - Acceptance: deterministic-clock tests show unrelated chat/login/auto-pause never extends retention; selected canonical Evidence survives temporary workspace expiry; recording is absent unless opted in.
 
 **Story E02-S04 — Erase data without restoring deleted evidence.**
 
 - `E02-T07` Implement deletion preview, exact impact digest, step-up execution, immediate read/use block, package revocation and visible `DELETING`/`ERASED` states.
+- 2026-09-27 준비 상태: 삭제 상태 및 요청/작업 항목 스키마와 `ACCOUNT`/`PROFILE`의 합성 기반 미리보기·재확인 검사를 구현했다. 현재 영향 범위는 계정/인증 연결/프로필 메타데이터뿐이며 `FOUNDATION_ONLY`, `ready_to_execute=false`로 표시한다. 신뢰된 step-up 발급, 삭제 실행·작업자, 패키지 철회, 외부 저장소/백업 복원 차단은 아직 없으므로 실사용자에게 노출하지 않는다. [경계와 후속](docs/CareerGround_Deletion_Foundation_2026-09-27.md)
 - `E02-T08` Fan out to DB/archive, all S3 object versions, cache/index/queue and applicable provider deletion; record minimal restricted tombstone/ledger without source text.
 - `E02-T09` Build quarantined backup-restore rehearsal that reapplies erasure ledger before service exposure; inventory manual snapshots/replicas and retention settings.
 - Acceptance: stale deletion digest changes nothing; a failed target remains `DELETING`; erased versions return `UNAVAILABLE_DUE_TO_ERASURE`, never latest fallback; restore test cannot resurrect erased content.
@@ -147,6 +151,7 @@ Each `T` item is one implementable task. The acceptance line is the Story's comp
 **Story E03-S01 — Capture only in-scope career conversation.**
 
 - `E03-T01` Implement `start_profiling`, `add_profiling_input`, `get_profiling_session`, `pause_profiling` domain commands and owner checks.
+- 2026-09-27 내부 서비스 상태: 명시 시작·단일 입력·세션 메타데이터 조회·직접 일시정지·재개를 합성 계정 소유권 검사와 함께 구현했다. 조회는 원문을 반환하지 않고, 직접 일시정지와 조회는 90일 시계를 연장하지 않는다. 실제 MCP 도구·프로토콜 질문 상태·클라이언트 수집 확인은 아직 없음.
 - `E03-T02` Build deterministic draft extraction and question-state orchestration against Profiling Protocol v1, with an AI adapter that cannot approve a Claim.
 - Acceptance: installation/general chat creates zero messages; explicit task input appears once with source trace; pause/draft does not change profile version; unsupported or prompt-injected input cannot widen access.
 
@@ -330,6 +335,16 @@ Not in scope: external/recruiter sharing, payments, automatic job application, h
 | 2026-09-23 | 후속 구현: 25개 도구의 입력·출력·대표 실패·예정 계약 테스트 ID를 매핑하고 공통 DTO에 Package 오류, bounded idempotency key, 원문 없는 outbox reference를 추가. ChatGPT/MCP 공식 문서에 맞춰 CIMD 우선·DCR 후순위로 공급자 평가를 갱신하고 합성 OAuth discovery metadata 사전 검사를 추가. 이는 live token/ChatGPT PoC가 아님. |
 | 2026-09-23 | Docker 없이 저장소 밖의 임시 PostgreSQL **17.11**에서 빈 DB `alembic upgrade head`, `alembic check`, `downgrade base`→`upgrade head`, 두 합성 계정 소유권 테스트 및 **전체 66개 테스트(66 통과, skip 0)**를 실행. Ruff 검사·포맷 검사 및 `actionlint`로 CI YAML 정적 검사 통과. 임시 서버 종료와 테스트 파일 정리 완료. 실제 GitHub Actions 실행·Auth0/Cognito tenant 연동은 미실시. [검증 기록](docs/CareerGround_First_Slice_Validation_2026-09-23.md) |
 | 2026-09-23 | 사용자가 외부 검증을 승인함. `codex/mvp-foundation-ci-20260923` 브랜치의 commit `1016f91`을 푸시하고 [GitHub Actions run 35870819987](https://github.com/inhoinno86-hub/CareerGround/actions/runs/35870819987)에서 PostgreSQL 17 migration·schema check, Ruff, **66개 테스트(66 통과, skip 0)**를 확인함. Auth0 tenant/ChatGPT 개발 관리 접근과 HTTPS `/mcp` 서버가 없어 실제 OAuth 연결은 미실시; 계정·유료 리소스도 만들지 않음. |
+| 2026-09-24 | 사용자 요청으로 합성 전용 Auth0–ChatGPT 인증 PoC 서버를 별도 ASGI 진입점에 구현함. Streamable HTTP, 보호 리소스 메타데이터, 읽기 전용 프로브 도구, RS256/JWKS issuer·audience·scope 검증 및 로컬 합성 HTTP 테스트를 추가. 제품 데이터·DB와 분리했으며 실제 tenant·ChatGPT·공개 HTTPS 연결은 아직 미실시. [실행 절차](docs/CareerGround_Auth_PoC_Server_Runbook_2026-09-24.md) |
+| 2026-09-24 | 사용자 브라우저에서 기존 Auth0 웹 앱의 Google 로그인·세션 `/auth/me`와 동일 client ID의 Auth0 성공 로그를 확인함. 로그인 후 `/` 404는 로컬 응답을 추가해 해소. 실제 tenant discovery는 issuer·PKCE S256이 일치했지만 CIMD 광고가 없어 해당 게이트는 미통과. 별도 MCP 프로브의 로컬 메타데이터 200·무인증 401을 확인했고 외부 전송은 Secure MCP Tunnel 우선으로 정리함. ChatGPT OAuth·MCP 실제 토큰·합성 계정 분리 시험은 미실시이며 공급자 선정은 보류. [실측·후속 절차](docs/CareerGround_Auth_PoC_Server_Runbook_2026-09-24.md) |
+| 2026-09-26 | 개발 Auth0 tenant에서 CIMD 등록과 ChatGPT OAuth 연결·재연결, 실제 MCP 인증 도구 호출을 확인함. 같은 계정의 안정적인 시험 ID와 ChatGPT 연결 해제 후 새 호출 차단을 관측했으나, 기존 JWT 즉시 무효화는 입증되지 않음. 엄격한 Auth0 제3자 클라이언트와 성공한 인가 코드 교환으로 PKCE 적용을 간접 확인했고, 실제 S256 요청 필드는 미캡처. 개발용 합성 API의 새 토큰 최대 수명을 1시간으로 줄여 재조회 확인함. 서로 다른 합성 subject의 ID 분리 테스트 6개가 통과했지만 두 실제 계정은 사용하지 않음. 운영용 인증 공급자 선정·제품 데이터 연결은 계속 보류. [상세 기록](docs/CareerGround_Auth_PoC_Server_Runbook_2026-09-24.md) |
+| 2026-09-27 | 사용자가 운영 전 계정 상태 재검사 방향을 승인함. 검증된 JWT에 대해 매 MCP HTTP 요청 새 DB 세션에서 `ACTIVE` 계정을 조회하는 게이트를 구현하고 합성 요청에서 같은 토큰의 활성→비활성/인증 매핑 제거 후 200→401 전환을 검증함. DB 없는 실행 중 PoC와 제품 데이터 미연결 상태는 유지. 실제 제품 MCP 경로·삭제 트랜잭션·연결별 철회·운영 token/refresh 설정은 아직 남음. |
+| 2026-09-27 | 다음 구현 단계로 별도 로컬 제품 MCP 팩토리를 추가함. `career.profile.read` 최소 scope, 검증된 계정의 안정적 ID, 계정 소유권을 다시 조회하는 프로필 메타데이터 도구를 합성 DB로 검사함. PoC의 `careerground:probe`만으로는 접근할 수 없고, 다른 계정/없는 ID는 같은 `found=false` 응답이다. 제품 서버 진입점과 실제 Career Graph·계정 삭제 파이프라인은 아직 없음. |
+| 2026-09-27 | 삭제 기능의 첫 기반으로 `20260927_0002` migration과 계정/프로필 `DELETING`·`ERASED` 상태, 제한된 삭제 요청/작업 항목 테이블을 추가함. 계정·인증 연결·프로필만 다루는 비파괴 미리보기와 짧은 HMAC 영향 digest/명시 동의/검증된 step-up 재확인 계약을 합성 테스트로 검증함. `FOUNDATION_ONLY`이며 삭제 실행·실데이터 도구·복원 방지 원장은 여전히 미구현. [상세 경계](docs/CareerGround_Deletion_Foundation_2026-09-27.md) |
+| 2026-09-27 | 사용자의 자율 진행 요청에 따라 `20260927_0003` migration과 명시적 프로파일링 작업 세션/입력 저장 경계를 추가함. 30분 일시정지, 세션별 마지막 실제 활동 기준 90일, 명시 재개·중복 입력의 기간 처리, 만료·삭제 중 조회 거부 및 계정 복합 FK 격리를 합성 테스트함. 삭제 미리보기에도 해당 세션/입력 ID를 반영했으나 아직 `FOUNDATION_ONLY`이다. [상세 경계](docs/CareerGround_Profiling_Workspace_Foundation_2026-09-27.md) |
+| 2026-09-27 | 사용자가 직접 시작한 일회용 로컬 PostgreSQL 17 `careerground_test`에서 `20260923_0001`→`20260927_0003` 적용, `alembic check`, 데이터가 없는 전체 테이블 확인 후 `downgrade base`→`upgrade head`, PostgreSQL 통합 테스트를 필수로 설정한 전체 **92개 테스트(92 통과, skip 0)**를 확인함. 이는 합성 빈 DB의 스키마 검증이며 보관 만료 물리 삭제·실데이터 복원 방지 검증은 아님. 사용자가 이후 일회용 컨테이너를 중지했고 `--rm` 설정으로 제거됨. |
+| 2026-09-27 | 내부 프로파일링 만료 배치 작업자를 추가함. 90일 경과한 세션과 그 입력만 최대 1,000개씩, 호출자 트랜잭션 안에서 삭제하고 `DELETING`/`ERASED` 대상은 제외한다. SQLite 합성 테스트로 만료 경계·제한 배치·재시도·롤백을 확인했다. 새 일회용 PostgreSQL 17 `careerground_test`에서 만료/유효 세션의 실제 삭제·보존, `alembic check`, 전체 **95개 테스트(95 통과, skip 0)**를 확인했고 테스트 후 모든 제품 테이블은 비어 있었다. 스케줄러·동시 작업자·백업 복원 차단은 여전히 미검증이다. |
+| 2026-09-27 | 테스트 컨테이너 종료 뒤 내부 `get_profiling_session`/`pause_profiling_session`을 추가했다. 읽기 전용 상태 조회는 30분 경과에 따른 유효 `PAUSED`를 표시하되 저장·원문 노출을 하지 않고, 직접 일시정지는 활동/만료/프로필 버전을 바꾸지 않는다. 별도 로컬 제품 MCP 팩토리에 `career.profile.read` 범위의 읽기 전용 세션 메타데이터 도구도 추가해 타 계정/없는 ID가 같은 `found=false`이고 입력 원문이 응답에 없는지 합성 HTTP로 확인했다. 전체 **98개 테스트 중 97개 통과, 종료된 PostgreSQL 전용 1개 skip**; Ruff 검사/포맷·diff 검사 통과. 실제 ASGI 진입점·수집 도구는 없으며 PostgreSQL 재검증은 이 변경 범위에서 미실시했다. |
 
 ## 10. Decision log
 
@@ -348,4 +363,4 @@ Not in scope: external/recruiter sharing, payments, automatic job application, h
 2. Which LLM and realtime provider satisfy Korean quality and privacy/stop/deletion requirements? A text provider choice is needed before AI-backed A; realtime may remain open until C.
 3. What exact cloud budget/account, data-transfer terms, key rotation interval and public deletion commitment can be approved? Keep production actions gated.
 
-계획 승인과 첫 로컬·GitHub CI PostgreSQL 검증은 완료됐다. 다음 게이트는 격리 Auth0 tenant와 ChatGPT 개발 관리 접근을 연결하고 합성 전용 HTTPS MCP 테스트 서버를 마련해 실제 PKCE·`resource`·scope·subject 격리를 시험하는 것이다. 사용자는 합성 외부 검증을 승인했으나, 실제 공급자 선정·실사용자 데이터 사용·유료 과금·클라우드 운영 구축은 아직 승인된 결론이 아니다.
+계획 승인과 첫 로컬·GitHub CI PostgreSQL 검증, Auth0 웹 로그인, 개발용 ChatGPT/MCP의 CIMD·인가 코드 교환·인증 도구 호출 확인은 완료됐다. G-I의 남은 게이트는 PKCE S256 실요청, 두 실제 계정의 독립성, 기존 토큰 철회·만료 및 계정 삭제 후 즉시 차단, 비용·개인정보·운영 계약 검토다. 사용자는 합성 외부 검증을 승인했으나, 실제 공급자 선정·실사용자 데이터 사용·유료 과금·클라우드 운영 구축은 아직 승인된 결론이 아니다.

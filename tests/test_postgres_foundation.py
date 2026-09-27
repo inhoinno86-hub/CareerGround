@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 import unittest
+from datetime import UTC, datetime, timedelta
 
 from sqlalchemy import create_engine, text
 from sqlalchemy.engine import make_url
@@ -15,7 +16,17 @@ from careerground.domain.authorization import (
     get_owned_profile,
     resolve_account_id,
 )
-from careerground.storage.models import Account, AuthIdentity, CareerProfile
+from careerground.storage.models import (
+    Account,
+    AuthIdentity,
+    CareerProfile,
+    ProfilingInput,
+    ProfilingSession,
+)
+from careerground.workers.profiling_retention import (
+    ExpiryBatchResult,
+    delete_expired_profiling_batch,
+)
 
 
 class PostgreSQLFoundationTests(unittest.TestCase):
@@ -40,7 +51,7 @@ class PostgreSQLFoundationTests(unittest.TestCase):
                 try:
                     self.assertEqual(
                         connection.scalar(text("SELECT version_num FROM alembic_version")),
-                        "20260923_0001",
+                        "20260927_0003",
                     )
                     with Session(
                         bind=connection, join_transaction_mode="create_savepoint"
@@ -56,6 +67,7 @@ class PostgreSQLFoundationTests(unittest.TestCase):
                                     subject="sub-a",
                                 ),
                                 CareerProfile(id="profile-ci-b", account_id="acct-ci-b", version=0),
+                                CareerProfile(id="profile-ci-a", account_id="acct-ci-a", version=0),
                             ]
                         )
                         session.flush()
@@ -67,6 +79,43 @@ class PostgreSQLFoundationTests(unittest.TestCase):
                             get_owned_profile(
                                 session, account_id=account_id, profile_id="profile-ci-b"
                             )
+                        now = datetime(2026, 9, 27, 12, tzinfo=UTC)
+                        for work_id, expiry in (
+                            ("work-ci-expired", now),
+                            ("work-ci-current", now + timedelta(days=1)),
+                        ):
+                            session.add(
+                                ProfilingSession(
+                                    id=work_id,
+                                    account_id="acct-ci-a",
+                                    profile_id="profile-ci-a",
+                                    status="ACTIVE",
+                                    base_profile_version=0,
+                                    created_at=now - timedelta(days=90),
+                                    last_activity_at=now - timedelta(days=90),
+                                    retention_expires_at=expiry,
+                                )
+                            )
+                        session.flush()
+                        for work_id in ("work-ci-expired", "work-ci-current"):
+                            session.add(
+                                ProfilingInput(
+                                    id=f"input-{work_id}",
+                                    account_id="acct-ci-a",
+                                    session_id=work_id,
+                                    idempotency_key=f"synthetic_{work_id}",
+                                    content_kind="USER_STATEMENT",
+                                    body="synthetic private statement",
+                                    created_at=now - timedelta(days=90),
+                                )
+                            )
+                        session.flush()
+                        self.assertEqual(
+                            delete_expired_profiling_batch(session, now=now),
+                            ExpiryBatchResult(sessions_deleted=1, inputs_deleted=1),
+                        )
+                        self.assertIsNone(session.get(ProfilingSession, "work-ci-expired"))
+                        self.assertIsNotNone(session.get(ProfilingSession, "work-ci-current"))
                 finally:
                     transaction.rollback()
         finally:

@@ -1,8 +1,15 @@
 .venv/
+.env
 .env.local
+.env.poc
 __pycache__/
 *.pyc
 .pytest_cache/
 .ruff_cache/
 .coverage
 src/*.egg-info/
+
+# Auth0 credentials
+.auth0-mcp-state.json
+
+.auth0-mcp-writes.log

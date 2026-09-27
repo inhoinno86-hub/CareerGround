@@ -47,10 +47,15 @@ def get_owned_profile(session: Session, *, account_id: str, profile_id: str) -> 
     """Scope the lookup itself; never fetch by ID first and authorize later."""
 
     profile = session.scalar(
-        select(CareerProfile).where(
+        select(CareerProfile)
+        .join(Account, Account.id == CareerProfile.account_id)
+        .where(
             CareerProfile.id == profile_id,
             CareerProfile.account_id == account_id,
+            Account.status == "ACTIVE",
+            CareerProfile.status == "ACTIVE",
         )
+        .execution_options(populate_existing=True)
     )
     if profile is None:
         raise ResourceNotFound

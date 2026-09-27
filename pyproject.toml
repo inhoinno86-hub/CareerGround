@@ -5,8 +5,11 @@ description = "CareerGround modular backend foundation"
 requires-python = ">=3.12,<3.15"
 dependencies = [
   "alembic>=1.16,<2",
+  "auth0-fastapi>=1.0.0b11,<2",
   "fastapi>=0.141,<0.150",
+  "mcp>=2.0,<3",
   "psycopg[binary]>=3.2,<4",
+  "pyjwt[crypto]>=2.10,<3",
   "sqlalchemy>=2.0,<2.2",
   "uvicorn>=0.35,<1",
 ]

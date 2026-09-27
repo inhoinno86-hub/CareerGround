@@ -36,6 +36,9 @@ production resources and live integrations are not yet selected or built.
 - [Implementation contract matrix](docs/mvp_implementation_contract_matrix_v0.1.md)
 - [Provider evaluation gates](docs/CareerGround_Provider_Evaluation_Gates_v0.1_2026-09-23.md)
 - [First implementation-slice validation](docs/CareerGround_First_Slice_Validation_2026-09-23.md)
+- [Synthetic Auth0–ChatGPT MCP PoC server runbook](docs/CareerGround_Auth_PoC_Server_Runbook_2026-09-24.md)
+- [Deletion foundation and safety boundary](docs/CareerGround_Deletion_Foundation_2026-09-27.md)
+- [Explicit profiling workspace and retention foundation](docs/CareerGround_Profiling_Workspace_Foundation_2026-09-27.md)
 
 ## Core principle
 
@@ -60,7 +63,24 @@ uv run --locked uvicorn careerground.web.app:app --host 127.0.0.1 --port 8000
 ```
 
 `GET /health/live` checks only the process; `GET /health/ready` checks PostgreSQL.
-There are deliberately no login, MCP, profile-writing or data-import routes yet.
+There are deliberately no product MCP, profile-writing or data-import routes yet.
+Auth0 login (`/auth/login`, `/auth/callback`, `/auth/logout`, `/auth/me`) mounts only when
+all of `AUTH0_DOMAIN`, `AUTH0_CLIENT_ID`, `AUTH0_CLIENT_SECRET`, `AUTH0_SECRET` and
+`APP_BASE_URL` are set; a partial set refuses to start. `.env` is git-ignored. To try it:
+`set -a; source .env; set +a; uv run --locked uvicorn careerground.web.app:app --host 127.0.0.1 --port 5000`,
+then open `http://localhost:5000/auth/login` (use `localhost`, matching `APP_BASE_URL`).
+An isolated synthetic-only MCP authentication probe has its own ASGI entry point; it
+does not access the product database. See its runbook above before attempting a test.
+The future private-MCP account gate is implemented separately and tested through a
+synthetic, DB-backed probe factory. The running PoC is deliberately unchanged: no
+product MCP entrypoint, account-deletion workflow, or per-connection revocation exists
+yet. Do not attach career data to the PoC entrypoint.
+An additional **local-only product-MCP foundation factory** now exercises the separate
+`career.profile.read` scope, per-request account gate, stable account profile, and
+owner-scoped profile metadata lookup against synthetic data. It has no ASGI entrypoint
+or live Auth0 API configuration. Its additional read-only profiling-session lookup
+returns only owned status, profile versions and retention times; no input text or
+general chat is exposed. Full Career Graph tools and account erasure remain gated.
 The database password is required; an empty example value will not start Compose.
 For a PostgreSQL integration test, use a **separate local database whose name ends
 in `_test`**, apply `alembic upgrade head` to it, and set both
@@ -73,8 +93,8 @@ accounts or career data are needed.
 With the locked development dependencies:
 
 ```bash
-uv run --locked ruff check src migrations tests/test_foundation.py tests/test_postgres_foundation.py tests/test_oauth_metadata_preflight.py
-uv run --locked ruff format --check src migrations tests/test_foundation.py tests/test_postgres_foundation.py tests/test_oauth_metadata_preflight.py
+uv run --locked ruff check src migrations tests/test_foundation.py tests/test_postgres_foundation.py tests/test_oauth_metadata_preflight.py tests/test_mcp_auth_poc.py tests/test_mcp_product_foundation.py tests/test_deletion_preview.py tests/test_profiling_workspace.py tests/test_profiling_retention.py
+uv run --locked ruff format --check src migrations tests/test_foundation.py tests/test_postgres_foundation.py tests/test_oauth_metadata_preflight.py tests/test_mcp_auth_poc.py tests/test_mcp_product_foundation.py tests/test_deletion_preview.py tests/test_profiling_workspace.py tests/test_profiling_retention.py
 uv run --locked python -m unittest discover -s tests -v
 ```
 
