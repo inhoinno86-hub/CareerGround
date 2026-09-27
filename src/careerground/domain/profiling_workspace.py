@@ -79,6 +79,15 @@ def start_profiling_session(
         profile = get_owned_profile(session, account_id=account_id, profile_id=profile_id)
     except ResourceNotFound as exc:
         raise ProfilingUnavailable from exc
+    # Serialize session creation with a synthetic deletion confirmation.
+    locked_profile = session.scalar(
+        select(CareerProfile)
+        .where(CareerProfile.id == profile.id)
+        .with_for_update()
+        .execution_options(populate_existing=True)
+    )
+    if locked_profile is None or locked_profile.status != "ACTIVE":
+        raise ProfilingUnavailable
     if profile.version != base_profile_version:
         raise ProfilingVersionConflict
     work = ProfilingSession(

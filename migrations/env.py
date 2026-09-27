@@ -7,6 +7,8 @@ from logging.config import fileConfig
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 
+import careerground.storage.graph_models
+import careerground.storage.jd_artifact_models  # noqa: F401 - register derived tables
 from careerground.config import Settings
 from careerground.storage.models import Base
 

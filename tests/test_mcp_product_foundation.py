@@ -13,8 +13,19 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
+from careerground.domain.claim_review_workspace import (
+    ClaimReviewPreparation,
+    propose_verbatim_draft,
+)
+from careerground.domain.profile_archive import ensure_profile_archive
 from careerground.mcp.oauth_resource import McpOAuthSettings
 from careerground.mcp.product_server import PROFILE_READ_SCOPE, build_product_foundation_app
+from careerground.storage.graph_models import (
+    Claim,
+    EvidenceClaimLink,
+    EvidenceItem,
+    EvidenceSource,
+)
 from careerground.storage.models import (
     Account,
     AuthIdentity,
@@ -26,6 +37,7 @@ from careerground.storage.models import (
 
 ISSUER = "https://product-auth.synthetic.example/"
 RESOURCE = "https://product-mcp.synthetic.example/mcp"
+REVIEW_SECRET = b"synthetic-review-mcp-key-at-least-32-bytes"
 
 
 class ProductFoundationTests(unittest.TestCase):
@@ -60,6 +72,7 @@ class ProductFoundationTests(unittest.TestCase):
         self.app = build_product_foundation_app(
             McpOAuthSettings(issuer=ISSUER, resource_url=RESOURCE),
             session_factory=self.sessions,
+            review_signing_secret=REVIEW_SECRET,
             signing_key=lambda _token: self.private_key.public_key(),
         )
 
@@ -105,7 +118,14 @@ class ProductFoundationTests(unittest.TestCase):
             tools = listing.json()["result"]["tools"]
             self.assertEqual(
                 {tool["name"] for tool in tools},
-                {"get_account_profile", "get_owned_profile_metadata", "get_profiling_session"},
+                {
+                    "get_account_profile",
+                    "get_owned_profile_metadata",
+                    "get_profiling_session",
+                    "get_career_profile",
+                    "get_claim_evidence",
+                    "get_claim_review",
+                },
             )
             for tool in tools:
                 self.assertEqual(
@@ -148,6 +168,243 @@ class ProductFoundationTests(unittest.TestCase):
             self.assertEqual(
                 foreign.json()["result"]["structuredContent"],
                 {"found": False, "profile_id": None, "version": None},
+            )
+
+    def test_exact_profile_read_requires_owned_archive_and_hides_deleted_profile(self) -> None:
+        now = datetime.now(UTC)
+        with self.sessions() as session:
+            session.add_all(
+                [
+                    Claim(
+                        id="claim-a",
+                        account_id="acct-a",
+                        profile_id="profile-a",
+                        scope_key="scope-a",
+                        claim_type="ACHIEVEMENT",
+                        canonical_text="Synthetic reviewed contribution.",
+                        created_in_version=3,
+                        status="ACTIVE",
+                        created_at=now,
+                    ),
+                    Claim(
+                        id="claim-b",
+                        account_id="acct-b",
+                        profile_id="profile-b",
+                        scope_key="scope-b",
+                        claim_type="ACHIEVEMENT",
+                        canonical_text="Other account private contribution.",
+                        created_in_version=8,
+                        status="ACTIVE",
+                        created_at=now,
+                    ),
+                    EvidenceSource(
+                        id="source-a",
+                        account_id="acct-a",
+                        profile_id="profile-a",
+                        source_type="EXPLICIT_PROFILING_INPUT",
+                        source_ref="input-a",
+                        content_hash="a" * 64,
+                        created_in_version=3,
+                        created_at=now,
+                    ),
+                    EvidenceItem(
+                        id="evidence-a",
+                        account_id="acct-a",
+                        profile_id="profile-a",
+                        source_id="source-a",
+                        content_text="Selected synthetic source excerpt.",
+                        content_hash="b" * 64,
+                        created_in_version=3,
+                        status="ACTIVE",
+                        created_at=now,
+                    ),
+                    EvidenceClaimLink(
+                        id="link-a",
+                        account_id="acct-a",
+                        profile_id="profile-a",
+                        evidence_id="evidence-a",
+                        claim_id="claim-a",
+                        relation_type="SUPPORTS",
+                        created_in_version=3,
+                    ),
+                ]
+            )
+            session.flush()
+            for account_id, profile_id, version in (
+                ("acct-a", "profile-a", 3),
+                ("acct-b", "profile-b", 8),
+            ):
+                ensure_profile_archive(
+                    session,
+                    account_id=account_id,
+                    profile_id=profile_id,
+                    profile_version=version,
+                    now=now,
+                )
+            session.commit()
+
+        with TestClient(self.app, base_url="https://product-mcp.synthetic.example") as client:
+            token = self.token()
+
+            def read(profile_id: str, version: int):
+                return self.call(
+                    client,
+                    token=token,
+                    name="get_career_profile",
+                    arguments={"profile_id": profile_id, "profile_version": version},
+                )
+
+            owned = read("profile-a", 3)
+            self.assertEqual(owned.status_code, 200)
+            result = owned.json()["result"]["structuredContent"]
+            self.assertEqual(result["profile_version"], 3)
+            self.assertEqual(result["claims"][0]["exact_text"], "Synthetic reviewed contribution.")
+            self.assertNotIn("Other account private contribution", str(result))
+            foreign = read("profile-b", 8)
+            missing = read("missing", 8)
+            self.assertEqual(foreign.json()["result"], missing.json()["result"])
+            self.assertFalse(foreign.json()["result"]["structuredContent"]["found"])
+            self.assertFalse(read("profile-a", 2).json()["result"]["structuredContent"]["found"])
+            evidence = self.call(
+                client,
+                token=token,
+                name="get_claim_evidence",
+                arguments={"claim_id": "claim-a", "profile_version": 3},
+            )
+            self.assertEqual(evidence.status_code, 200)
+            trace = evidence.json()["result"]["structuredContent"]
+            self.assertTrue(trace["found"])
+            self.assertEqual(trace["claim"]["exact_text"], "Synthetic reviewed contribution.")
+            self.assertEqual(
+                trace["evidence"][0]["exact_excerpt"], "Selected synthetic source excerpt."
+            )
+            self.assertEqual(trace["evidence"][0]["source_availability"], "SELECTED_EXCERPT_ONLY")
+            self.assertEqual(trace["evidence"][0]["relation_type"], "SUPPORTS")
+            self.assertFalse(trace["reviewed"])
+            self.assertNotIn("Other account private contribution", str(trace))
+            foreign_evidence = self.call(
+                client,
+                token=token,
+                name="get_claim_evidence",
+                arguments={"claim_id": "claim-b", "profile_version": 8},
+            )
+            missing_evidence = self.call(
+                client,
+                token=token,
+                name="get_claim_evidence",
+                arguments={"claim_id": "missing", "profile_version": 8},
+            )
+            self.assertEqual(foreign_evidence.json()["result"], missing_evidence.json()["result"])
+            old_evidence = self.call(
+                client,
+                token=token,
+                name="get_claim_evidence",
+                arguments={"claim_id": "claim-a", "profile_version": 2},
+            )
+            self.assertFalse(old_evidence.json()["result"]["structuredContent"]["found"])
+            with self.sessions() as session:
+                session.get(CareerProfile, "profile-a").status = "DELETING"
+                session.commit()
+            self.assertFalse(read("profile-a", 3).json()["result"]["structuredContent"]["found"])
+            after_delete = self.call(
+                client,
+                token=token,
+                name="get_claim_evidence",
+                arguments={"claim_id": "claim-a", "profile_version": 3},
+            )
+            self.assertFalse(after_delete.json()["result"]["structuredContent"]["found"])
+
+    def test_exact_review_read_is_owner_scoped_nonrenewing_and_reports_staleness(self) -> None:
+        now = datetime.now(UTC)
+        preparation = ClaimReviewPreparation(REVIEW_SECRET)
+        batch_ids = {}
+        with self.sessions() as session:
+            for account_id, profile_id, work_id, input_id, version in (
+                ("acct-a", "profile-a", "work-review-a", "input-review-a", 3),
+                ("acct-b", "profile-b", "work-review-b", "input-review-b", 8),
+            ):
+                session.add(
+                    ProfilingSession(
+                        id=work_id,
+                        account_id=account_id,
+                        profile_id=profile_id,
+                        status="ACTIVE",
+                        base_profile_version=version,
+                        created_at=now,
+                        last_activity_at=now,
+                        retention_expires_at=now + timedelta(days=90),
+                    )
+                )
+                session.flush()
+                session.add(
+                    ProfilingInput(
+                        id=input_id,
+                        account_id=account_id,
+                        session_id=work_id,
+                        idempotency_key=f"synthetic_review_{account_id}_0001",
+                        content_kind="USER_STATEMENT",
+                        body="Private prefix. I built a scoped feature. Private suffix.",
+                        created_at=now,
+                    )
+                )
+                session.flush()
+                draft = propose_verbatim_draft(
+                    session,
+                    account_id=account_id,
+                    profiling_session_id=work_id,
+                    source_input_id=input_id,
+                    scope_key="feature",
+                    claim_type="CONTRIBUTION",
+                    exact_text="I built a scoped feature.",
+                    now=now,
+                )
+                session.flush()
+                batch = preparation.prepare(
+                    session,
+                    account_id=account_id,
+                    profiling_session_id=work_id,
+                    draft_ids=(draft.id,),
+                    now=now,
+                )
+                batch_ids[account_id] = batch.id
+            session.commit()
+
+        with TestClient(self.app, base_url="https://product-mcp.synthetic.example") as client:
+            token = self.token()
+
+            def read(batch_id: str):
+                return self.call(
+                    client,
+                    token=token,
+                    name="get_claim_review",
+                    arguments={"review_batch_id": batch_id},
+                )
+
+            first = read(batch_ids["acct-a"])
+            self.assertEqual(first.status_code, 200)
+            view = first.json()["result"]["structuredContent"]
+            self.assertTrue(view["found"])
+            self.assertEqual(view["items"][0]["exact_text"], "I built a scoped feature.")
+            self.assertTrue(view["base_version_compatible"])
+            self.assertNotIn("Private prefix", str(view))
+            self.assertNotIn("Private suffix", str(view))
+            self.assertEqual(
+                read(batch_ids["acct-b"]).json()["result"], read("missing").json()["result"]
+            )
+            self.assertEqual(read(batch_ids["acct-a"]).json()["result"], first.json()["result"])
+            with self.sessions() as session:
+                session.get(CareerProfile, "profile-a").version = 4
+                session.commit()
+            stale = read(batch_ids["acct-a"]).json()["result"]["structuredContent"]
+            self.assertTrue(stale["found"])
+            self.assertFalse(stale["base_version_compatible"])
+            self.assertEqual(stale["review_digest"], view["review_digest"])
+            self.assertEqual(stale["expires_at"], view["expires_at"])
+            with self.sessions() as session:
+                session.get(ProfilingSession, "work-review-a").status = "DELETING"
+                session.commit()
+            self.assertFalse(
+                read(batch_ids["acct-a"]).json()["result"]["structuredContent"]["found"]
             )
 
     def test_session_metadata_is_owner_scoped_and_never_returns_input_text(self) -> None:

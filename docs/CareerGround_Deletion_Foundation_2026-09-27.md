@@ -2,9 +2,11 @@
 
 ## Scope and safety boundary
 
-This is an **internal, synthetic-data-only foundation**, not a user-facing deletion feature. The current schema contains accounts, auth identities, career-profile metadata and explicitly scoped profiling workspace/input rows. The preview therefore reports `coverage=FOUNDATION_ONLY` and `ready_to_execute=false`. It does not inspect career claims, evidence, drafts/reviews, interview transcripts, files, snapshots, indexes, queues, package registries, external providers or backups, because those storage structures do not yet exist. It must not be presented as the complete impact of deleting a real account or profile.
+This is an **internal, synthetic-data-only foundation**, not a user-facing deletion feature. The current preview inventories accounts, identities, profile/workspace/review rows, private-object/version metadata, canonical Graph and archive rows, and JD/resume metadata. It still reports `coverage=FOUNDATION_ONLY` and `ready_to_execute=false`. It cannot account for interview transcripts, actual file bytes, external object versions, package registries, provider copies, indexes, queues or backups. It must not be presented as the complete impact of deleting a real account or profile.
 
-No MCP or web deletion route, erasure worker, or production secret configuration is enabled. The service never writes when previewing or checking confirmation. The existing PoC and local product-MCP foundation remain read-only.
+The later synthetic execution, outbox and restore rehearsal are documented in [Data Lifecycle Foundation](CareerGround_Data_Lifecycle_Foundation_2026-09-27.md). The preview's public-readiness flags remain unchanged.
+
+No MCP or web deletion route, production erasure worker, or production secret configuration is enabled. The service never writes when previewing or checking confirmation. The existing PoC and local product-MCP foundation remain read-only.
 
 ## Schema reserved for later execution
 
