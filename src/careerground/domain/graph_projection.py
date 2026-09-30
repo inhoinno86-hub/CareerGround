@@ -147,10 +147,14 @@ def _snapshot(session: Session, account_id: str, profile_id: str, version: int) 
         ):
             if not isinstance(sections[name], list):
                 raise GraphUnavailable
-        if snapshot["schema"] == "canonical-foundation-v2":
+        if snapshot["schema"] in {"canonical-foundation-v2", "canonical-foundation-v3"}:
             for name in ("claim_boundary_reviews", "claim_conflict_reviews"):
                 if not isinstance(sections[name], list):
                     raise GraphUnavailable
+        if snapshot["schema"] == "canonical-foundation-v3" and not isinstance(
+            sections["claim_use_reviews"], list
+        ):
+            raise GraphUnavailable
         return snapshot
     except (ArchiveUnavailable, KeyError, TypeError) as exc:
         raise GraphUnavailable from exc

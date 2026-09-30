@@ -6,18 +6,26 @@ import re
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from enum import StrEnum
-from uuid import uuid4
+from uuid import UUID, uuid4, uuid5
 
 from sqlalchemy import select, update
 from sqlalchemy.orm import Session
 
 from careerground.domain.authorization import ResourceNotFound, get_owned_profile
-from careerground.storage.models import Account, CareerProfile, ProfilingInput, ProfilingSession
+from careerground.storage.models import (
+    Account,
+    CareerProfile,
+    ProfilingDraft,
+    ProfilingInput,
+    ProfilingReviewBatch,
+    ProfilingSession,
+)
 
 RETENTION = timedelta(days=90)
 AUTO_PAUSE_AFTER = timedelta(minutes=30)
 MAX_INPUT_CHARS = 20_000
 _IDEMPOTENCY_KEY = re.compile(r"[A-Za-z0-9_-]{16,128}\Z")
+_START_SESSION_NAMESPACE = UUID("2e847a76-3d34-4d91-9398-0d0fa15b72e9")
 
 
 class InputKind(StrEnum):
@@ -60,6 +68,7 @@ class ProfilingSessionView:
     status: str
     base_profile_version: int
     current_profile_version: int
+    protocol_cycle: int
     last_activity_at: datetime
     retention_expires_at: datetime
 
@@ -71,10 +80,15 @@ def start_profiling_session(
     profile_id: str,
     base_profile_version: int,
     now: datetime,
+    idempotency_key: str | None = None,
 ) -> ProfilingSession:
     """Create a workspace only for an explicit start request from an authenticated adapter."""
 
     now = _require_utc(now)
+    if idempotency_key is not None and (
+        not isinstance(idempotency_key, str) or not _IDEMPOTENCY_KEY.fullmatch(idempotency_key)
+    ):
+        raise ProfilingValidationError("invalid start idempotency key")
     try:
         profile = get_owned_profile(session, account_id=account_id, profile_id=profile_id)
     except ResourceNotFound as exc:
@@ -90,12 +104,29 @@ def start_profiling_session(
         raise ProfilingUnavailable
     if profile.version != base_profile_version:
         raise ProfilingVersionConflict
+    work_id = (
+        str(uuid5(_START_SESSION_NAMESPACE, f"{account_id}:{idempotency_key}"))
+        if idempotency_key is not None
+        else str(uuid4())
+    )
+    if idempotency_key is not None:
+        existing = session.get(ProfilingSession, work_id)
+        if existing is not None:
+            if (
+                existing.account_id != account_id
+                or existing.profile_id != profile_id
+                or existing.base_profile_version != base_profile_version
+            ):
+                raise ProfilingIdempotencyConflict
+            _ensure_available(existing, now)
+            return existing
     work = ProfilingSession(
-        id=str(uuid4()),
+        id=work_id,
         account_id=account_id,
         profile_id=profile_id,
         status="ACTIVE",
         base_profile_version=profile.version,
+        protocol_cycle=0,
         created_at=now,
         last_activity_at=now,
         retention_expires_at=now + RETENTION,
@@ -148,10 +179,34 @@ def append_explicit_profiling_input(
     if work.status != "ACTIVE" or now - _as_utc(work.last_activity_at) >= AUTO_PAUSE_AFTER:
         raise ProfilingPaused
 
+    if kind is InputKind.CORRECTION:
+        # A correction cannot reuse already delivered questions or an exact
+        # review prepared from the former understanding of this workspace.
+        work.protocol_cycle += 1
+        session.execute(
+            update(ProfilingReviewBatch)
+            .where(
+                ProfilingReviewBatch.account_id == account_id,
+                ProfilingReviewBatch.session_id == work.id,
+                ProfilingReviewBatch.status == "PREPARED",
+            )
+            .values(status="EXPIRED")
+        )
+        session.execute(
+            update(ProfilingDraft)
+            .where(
+                ProfilingDraft.account_id == account_id,
+                ProfilingDraft.session_id == work.id,
+                ProfilingDraft.status.in_(("DRAFT", "IN_REVIEW")),
+            )
+            .values(status="EDIT_REQUIRED")
+        )
+
     item = ProfilingInput(
         id=str(uuid4()),
         account_id=account_id,
         session_id=work.id,
+        protocol_cycle=work.protocol_cycle,
         idempotency_key=idempotency_key,
         content_kind=kind.value,
         body=content,
@@ -222,6 +277,7 @@ def get_profiling_session(
         status=status,
         base_profile_version=work.base_profile_version,
         current_profile_version=profile.version,
+        protocol_cycle=work.protocol_cycle,
         last_activity_at=_as_utc(work.last_activity_at),
         retention_expires_at=_as_utc(work.retention_expires_at),
     )

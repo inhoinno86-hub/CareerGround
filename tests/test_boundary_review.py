@@ -437,6 +437,7 @@ class BoundaryReviewTests(unittest.TestCase):
             legacy["schema"] = "canonical-foundation-v1"
             legacy["sections"].pop("claim_boundary_reviews")
             legacy["sections"].pop("claim_conflict_reviews")
+            legacy["sections"].pop("claim_use_reviews")
             for row in legacy["sections"]["claim_constraints"]:
                 row.pop("status")
             archive.snapshot_json = json.dumps(
@@ -467,7 +468,7 @@ class BoundaryReviewTests(unittest.TestCase):
                 [json.loads(row.snapshot_json)["schema"] for row in versions],
                 [
                     "canonical-foundation-v1",
-                    "canonical-foundation-v2",
+                    "canonical-foundation-v3",
                 ],
             )
 

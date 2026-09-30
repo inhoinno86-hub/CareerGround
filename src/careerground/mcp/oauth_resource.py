@@ -53,11 +53,21 @@ class JwtTokenVerifier:
         self,
         settings: McpOAuthSettings,
         *,
-        required_scope: str,
+        required_scope: str | frozenset[str],
         signing_key: Callable[[str], object] | None = None,
     ) -> None:
         self.settings = settings
-        self.required_scope = required_scope
+        if isinstance(required_scope, str):
+            accepted_scopes = frozenset({required_scope}) if required_scope else frozenset()
+        elif isinstance(required_scope, frozenset) and all(
+            isinstance(scope, str) and scope for scope in required_scope
+        ):
+            accepted_scopes = required_scope
+        else:
+            accepted_scopes = frozenset()
+        if not accepted_scopes:
+            raise ValueError("at least one accepted scope is required")
+        self.accepted_scopes = accepted_scopes
         self._signing_key = (
             signing_key
             or PyJWKClient(
@@ -97,7 +107,7 @@ class JwtTokenVerifier:
             ):
                 return None
             scopes = scope.split()
-            if self.required_scope not in scopes:
+            if not self.accepted_scopes.intersection(scopes):
                 return None
             return AccessToken(
                 token=token,

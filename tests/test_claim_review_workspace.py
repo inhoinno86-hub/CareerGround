@@ -12,6 +12,7 @@ from sqlalchemy.pool import StaticPool
 
 from careerground.domain.claim_review_workspace import (
     ClaimReviewPreparation,
+    ReviewIdempotencyConflict,
     ReviewStale,
     ReviewUnavailable,
     propose_verbatim_draft,
@@ -126,6 +127,46 @@ class ClaimReviewWorkspaceTests(unittest.TestCase):
                     now=self.now + timedelta(minutes=10),
                 )
 
+    def test_scope_preparation_replays_one_exact_batch_without_promotion(self) -> None:
+        with Session(self.engine) as session:
+            self.draft(session, "I implemented target-speed logic")
+            self.draft(session, "tested it in SIL")
+            session.flush()
+            request = {
+                "account_id": "acct-a",
+                "profiling_session_id": "session-a",
+                "scope_key": "feature-a",
+                "base_profile_version": 2,
+                "idempotency_key": "synthetic_prepare_0001",
+            }
+            first = self.service.prepare_for_scope(session, **request, now=self.now)
+            session.commit()
+            retry = self.service.prepare_for_scope(
+                session, **request, now=self.now + timedelta(minutes=1)
+            )
+            self.assertEqual(retry.id, first.id)
+            self.assertEqual(retry.review_digest, first.review_digest)
+            self.assertEqual(
+                session.scalar(select(func.count()).select_from(ProfilingReviewBatch)), 1
+            )
+            self.assertEqual(session.get(CareerProfile, "profile-a").version, 2)
+            with self.assertRaises(ReviewIdempotencyConflict):
+                self.service.prepare_for_scope(
+                    session,
+                    **{**request, "scope_key": "feature-b"},
+                    now=self.now + timedelta(minutes=1),
+                )
+            with self.assertRaises(ReviewUnavailable):
+                self.service.prepare_for_scope(
+                    session,
+                    **{
+                        **request,
+                        "scope_key": "missing",
+                        "idempotency_key": "synthetic_prepare_0002",
+                    },
+                    now=self.now + timedelta(minutes=1),
+                )
+
     def test_mixed_scope_six_items_and_unsupported_inference_fail(self) -> None:
         with Session(self.engine) as session:
             first = self.draft(session, "I implemented target-speed logic")
@@ -152,6 +193,19 @@ class ClaimReviewWorkspaceTests(unittest.TestCase):
             self.assertEqual(
                 session.scalar(select(func.count()).select_from(ProfilingReviewBatch)), 0
             )
+            for _ in range(5):
+                self.draft(session, "I implemented target-speed logic")
+            session.flush()
+            with self.assertRaises(ValueError):
+                self.service.prepare_for_scope(
+                    session,
+                    account_id="acct-a",
+                    profiling_session_id="session-a",
+                    scope_key="feature-a",
+                    base_profile_version=2,
+                    idempotency_key="synthetic_prepare_limit_0001",
+                    now=self.now,
+                )
 
     def test_source_or_version_change_rejects_preparation(self) -> None:
         with Session(self.engine) as session:

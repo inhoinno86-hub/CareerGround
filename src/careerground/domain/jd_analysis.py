@@ -46,6 +46,7 @@ def record_pasted_jd_analysis(
     now: datetime,
     company_name: str | None = None,
     job_title: str | None = None,
+    jd_id: str | None = None,
 ) -> JobDescription:
     """Persist only exact selected spans, source hash and bounded metadata.
 
@@ -102,7 +103,7 @@ def record_pasted_jd_analysis(
         )
     )
     jd = JobDescription(
-        id=str(uuid4()),
+        id=jd_id or str(uuid4()),
         account_id=account_id,
         profile_id=profile_id,
         jd_version=(current or 0) + 1,

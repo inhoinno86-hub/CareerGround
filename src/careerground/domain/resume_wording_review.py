@@ -198,6 +198,72 @@ class WordingReviewService:
         session.flush()
         return review
 
+    def submit_prepared(
+        self,
+        session: Session,
+        *,
+        account_id: str,
+        artifact_id: str,
+        review_id: str,
+        review_digest: str,
+        expires_at: datetime,
+        now: datetime,
+    ) -> ArtifactWordingReview:
+        """Rebuild a displayed review after a trusted adapter proves user intent."""
+
+        try:
+            now = _utc(now)
+            expires_at = _utc(expires_at)
+        except ValueError as exc:
+            raise WordingReviewRejected from exc
+        if (
+            not all(
+                isinstance(value, str) and value
+                for value in (account_id, artifact_id, review_id, review_digest)
+            )
+            or expires_at <= now
+        ):
+            raise WordingReviewRejected
+        existing = session.scalar(
+            select(ArtifactWordingReview).where(ArtifactWordingReview.id == review_id)
+        )
+        if existing is None:
+            view = self._view(
+                session,
+                account_id=account_id,
+                artifact_id=artifact_id,
+                review_id=review_id,
+                expires_at=expires_at,
+            )
+            if not hmac.compare_digest(view.review_digest, review_digest):
+                raise WordingReviewRejected
+        else:
+            # submit() checks the existing row and active owner before returning
+            # it. Exact source rechecks remain mandatory for any later export.
+            view = WordingReviewView(
+                review_id=review_id,
+                account_id=account_id,
+                artifact_id=artifact_id,
+                artifact_version=existing.artifact_version,
+                profile_version=existing.profile_version,
+                unit_texts=(),
+                trace_units=(),
+                review_digest=review_digest,
+                expires_at=expires_at,
+            )
+        return self.submit(
+            session,
+            view=view,
+            approval=VerifiedWordingApproval(
+                account_id=account_id,
+                review_id=review_id,
+                artifact_id=artifact_id,
+                review_digest=review_digest,
+                expires_at=expires_at,
+            ),
+            now=now,
+        )
+
     def export_resume(
         self,
         session: Session,

@@ -9,6 +9,7 @@ from uuid import uuid4
 
 from sqlalchemy import create_engine, delete, select, text
 from sqlalchemy.engine import make_url
+from sqlalchemy.exc import OperationalError
 from sqlalchemy.orm import Session
 
 from careerground.domain.authorization import (
@@ -28,6 +29,7 @@ from careerground.domain.claim_review_workspace import (
 from careerground.domain.jd_analysis import JDExcerpt, record_pasted_jd_analysis
 from careerground.domain.jd_mapping import JDMappingRejected, link_jd_requirement_to_claim
 from careerground.domain.profile_archive import read_profile_archive
+from careerground.domain.profiling_protocol_workspace import record_question_delivery
 from careerground.storage.graph_models import Claim, ClaimAssessment, ProfileArchive
 from careerground.storage.jd_artifact_models import Artifact, JDRequirement
 from careerground.storage.models import (
@@ -36,6 +38,7 @@ from careerground.storage.models import (
     CareerProfile,
     OutboxEvent,
     ProfilingInput,
+    ProfilingProtocolStep,
     ProfilingReviewItem,
     ProfilingSession,
 )
@@ -47,6 +50,79 @@ from careerground.workers.profiling_retention import (
 
 
 class PostgreSQLFoundationTests(unittest.TestCase):
+    def test_question_delivery_serializes_on_owned_workspace(self) -> None:
+        raw_url = os.environ.get("CAREERGROUND_TEST_DATABASE_URL")
+        if not raw_url:
+            if os.environ.get("CAREERGROUND_REQUIRE_POSTGRES_TEST") == "1":
+                self.fail("CI requires an explicit local PostgreSQL test URL")
+            self.skipTest("local test PostgreSQL URL is not configured")
+        url = make_url(raw_url)
+        if (
+            url.drivername != "postgresql+psycopg"
+            or url.host not in {"127.0.0.1", "localhost"}
+            or not (url.database or "").endswith("_test")
+        ):
+            self.fail("refusing to run this test outside a local *_test PostgreSQL database")
+        engine = create_engine(url)
+        suffix = uuid4().hex
+        account_id = f"a-{suffix}"
+        profile_id = f"p-{suffix}"
+        work_id = f"w-{suffix}"
+        now = datetime(2026, 9, 27, 12, tzinfo=UTC)
+        try:
+            with Session(engine) as session:
+                session.add(Account(id=account_id))
+                session.add(CareerProfile(id=profile_id, account_id=account_id, version=0))
+                session.flush()
+                session.add(
+                    ProfilingSession(
+                        id=work_id,
+                        account_id=account_id,
+                        profile_id=profile_id,
+                        status="ACTIVE",
+                        base_profile_version=0,
+                        created_at=now,
+                        last_activity_at=now,
+                        retention_expires_at=now + timedelta(days=90),
+                    )
+                )
+                session.commit()
+            with Session(engine) as first, Session(engine) as second:
+                delivered = record_question_delivery(
+                    first,
+                    account_id=account_id,
+                    profiling_session_id=work_id,
+                    delivery_key="synthetic_delivery_0001",
+                    now=now,
+                )
+                self.assertEqual(delivered.attempt, 1)
+                second.execute(text("SET LOCAL lock_timeout = '200ms'"))
+                with self.assertRaises(OperationalError):
+                    record_question_delivery(
+                        second,
+                        account_id=account_id,
+                        profiling_session_id=work_id,
+                        delivery_key="synthetic_delivery_0002",
+                        now=now,
+                    )
+                second.rollback()
+                first.commit()
+                delivered = record_question_delivery(
+                    second,
+                    account_id=account_id,
+                    profiling_session_id=work_id,
+                    delivery_key="synthetic_delivery_0002",
+                    now=now,
+                )
+                self.assertEqual(delivered.attempt, 2)
+                second.commit()
+        finally:
+            with engine.begin() as connection:
+                connection.execute(delete(ProfilingSession).where(ProfilingSession.id == work_id))
+                connection.execute(delete(CareerProfile).where(CareerProfile.id == profile_id))
+                connection.execute(delete(Account).where(Account.id == account_id))
+            engine.dispose()
+
     def test_expiry_skips_a_workspace_locked_by_another_worker(self) -> None:
         raw_url = os.environ.get("CAREERGROUND_TEST_DATABASE_URL")
         if not raw_url:
@@ -161,7 +237,7 @@ class PostgreSQLFoundationTests(unittest.TestCase):
                 try:
                     self.assertEqual(
                         connection.scalar(text("SELECT version_num FROM alembic_version")),
-                        "20260927_0012",
+                        "20260929_0015",
                     )
                     with Session(
                         bind=connection, join_transaction_mode="create_savepoint"
@@ -219,6 +295,20 @@ class PostgreSQLFoundationTests(unittest.TestCase):
                                     created_at=now - timedelta(days=90),
                                 )
                             )
+                        session.flush()
+                        session.add(
+                            ProfilingProtocolStep(
+                                id="protocol-ci-expired",
+                                account_id="acct-ci-a",
+                                session_id="work-ci-expired",
+                                state="CONTEXT_DISCOVERY",
+                                asked_count=1,
+                                first_delivery_key="synthetic_delivery_0001",
+                                observation_status="SATISFIED",
+                                source_input_id="input-work-ci-expired",
+                                updated_at=now - timedelta(days=90),
+                            )
+                        )
                         session.flush()
                         draft = propose_verbatim_draft(
                             session,
@@ -316,6 +406,11 @@ class PostgreSQLFoundationTests(unittest.TestCase):
                             ExpiryBatchResult(sessions_deleted=1, inputs_deleted=1),
                         )
                         self.assertIsNone(session.get(ProfilingSession, "work-ci-expired"))
+                        self.assertIsNone(
+                            session.get(
+                                ProfilingProtocolStep, "protocol-ci-expired", populate_existing=True
+                            )
+                        )
                         self.assertIsNotNone(session.get(ProfilingSession, "work-ci-current"))
                 finally:
                     transaction.rollback()

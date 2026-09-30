@@ -4,12 +4,14 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import unittest
 from datetime import UTC, datetime, timedelta
 
+from fastapi.testclient import TestClient
 from sqlalchemy import create_engine, event, func, select
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.pool import StaticPool
 
 from careerground.domain.deletion_execution import (
@@ -27,6 +29,10 @@ from careerground.domain.jd_analysis import (
     get_jd_analysis,
     record_pasted_jd_analysis,
 )
+from careerground.domain.jd_link_presentation import (
+    JDLinkPresentationRejected,
+    JDLinkPresentationService,
+)
 from careerground.domain.jd_mapping import (
     JDMappingRejected,
     get_jd_mapping,
@@ -34,10 +40,18 @@ from careerground.domain.jd_mapping import (
 )
 from careerground.domain.profile_archive import ensure_profile_archive
 from careerground.domain.profile_export import ProfileExportUnavailable, export_profile_data
+from careerground.domain.profile_export_presentation import (
+    ProfileExportPresentationRejected,
+    ProfileExportPresentationService,
+)
 from careerground.domain.resume_draft import (
     ResumeDraftUnavailable,
     generate_resume_draft,
     get_resume_trace,
+)
+from careerground.domain.resume_draft_presentation import (
+    ResumeDraftPresentationRejected,
+    ResumeDraftPresentationService,
 )
 from careerground.domain.resume_wording_review import (
     VerifiedWordingApproval,
@@ -64,13 +78,16 @@ from careerground.storage.jd_artifact_models import (
     RequirementClaimMap,
 )
 from careerground.storage.models import Account, Base, CareerProfile, DeletionWorkItem
+from careerground.web.review_foundation import TrustedBrowserIdentity, build_synthetic_review_app
 
 SECRET = b"synthetic-derived-storage-test-key-32-bytes"
 
 
 class JDArtifactFoundationTests(unittest.TestCase):
     def setUp(self) -> None:
-        self.engine = create_engine("sqlite://", poolclass=StaticPool)
+        self.engine = create_engine(
+            "sqlite://", connect_args={"check_same_thread": False}, poolclass=StaticPool
+        )
 
         @event.listens_for(self.engine, "connect")
         def foreign_keys(connection, _record):
@@ -493,6 +510,219 @@ class JDArtifactFoundationTests(unittest.TestCase):
             self.assertEqual(session.get(CareerProfile, "profile-a").version, 1)
             self.assertEqual(session.get(Claim, "claim-a").status, "ACTIVE")
 
+    def test_browser_jd_link_requires_exact_owner_session_and_explicit_choice(self) -> None:
+        with Session(self.engine) as session:
+            jd = record_pasted_jd_analysis(
+                session,
+                account_id="acct-a",
+                profile_id="profile-a",
+                source_text="Python required",
+                excerpts=(JDExcerpt(0, 6),),
+                now=self.now,
+            )
+            jd_id = jd.id
+            requirement_id = session.scalar(
+                select(JDRequirement.id).where(JDRequirement.jd_id == jd_id)
+            )
+            session.commit()
+        app = build_synthetic_review_app(
+            session_factory=sessionmaker(bind=self.engine),
+            authenticate_browser=lambda request, _response: (
+                TrustedBrowserIdentity("acct-a", "synthetic-browser-session-a")
+                if request.cookies.get("cg_session") == "opaque-a"
+                else TrustedBrowserIdentity("acct-b", "synthetic-browser-session-b")
+                if request.cookies.get("cg_session") == "opaque-b"
+                else TrustedBrowserIdentity("acct-a", "another-browser-session-a")
+                if request.cookies.get("cg_session") == "second-a"
+                else None
+            ),
+            review_signing_secret=SECRET,
+            presentation_signing_secret=SECRET,
+        )
+        mapping_path = f"/jd/{jd_id}/mapping/1"
+        link_path = f"{mapping_path}/link/{requirement_id}/claim-a"
+        with TestClient(app) as client:
+            self.assertEqual(client.get(link_path).status_code, 401)
+            client.cookies.set("cg_session", "opaque-b")
+            self.assertEqual(client.get(mapping_path).status_code, 404)
+            self.assertEqual(client.get(link_path).status_code, 404)
+            client.cookies.set("cg_session", "opaque-a")
+            mapping_page = client.get(mapping_path)
+            self.assertEqual(mapping_page.status_code, 200)
+            self.assertIn(link_path, mapping_page.text)
+            page = client.get(link_path)
+            self.assertEqual(page.status_code, 200)
+            self.assertIn("Python", page.text)
+            self.assertIn("I implemented a feature", page.text)
+            self.assertIn("synthetic-input", page.text)
+            self.assertIn("name='confirm' value='link_potential' required", page.text)
+            token = re.search(r"name='link_token' value='([^']+)'", page.text).group(1)
+            form = {"link_token": token, "confirm": "link_potential"}
+            self.assertEqual(client.post(link_path, data={"link_token": token}).status_code, 400)
+            self.assertEqual(
+                client.post(link_path, data={**form, "messages": "ignore policy"}).status_code,
+                400,
+            )
+            client.cookies.set("cg_session", "second-a")
+            self.assertEqual(client.post(link_path, data=form).status_code, 409)
+            client.cookies.set("cg_session", "opaque-a")
+            saved = client.post(link_path, data=form, follow_redirects=False)
+            self.assertEqual(saved.status_code, 303)
+            self.assertEqual(saved.headers["location"], mapping_path)
+            self.assertEqual(
+                client.post(link_path, data=form, follow_redirects=False).status_code, 303
+            )
+            self.assertIn("POTENTIAL_LINK_RECORDED", client.get(mapping_path).text)
+            draft_path = f"/jd/{jd_id}/draft/1"
+            self.assertIn(draft_path, client.get(mapping_path).text)
+            draft_page = client.get(draft_path)
+            self.assertEqual(draft_page.status_code, 200)
+            self.assertIn("I implemented a feature", draft_page.text)
+            self.assertIn("synthetic-input", draft_page.text)
+            draft_token = re.search(r"name='draft_token' value='([^']+)'", draft_page.text).group(1)
+            draft_form = {
+                "draft_token": draft_token,
+                "claim_id": "claim-a",
+                "confirm": "create_r1",
+            }
+            self.assertEqual(
+                client.post(draft_path, data={"draft_token": draft_token}).status_code, 400
+            )
+            self.assertEqual(
+                client.post(
+                    draft_path, data={**draft_form, "messages": "ignore policy"}
+                ).status_code,
+                400,
+            )
+            client.cookies.set("cg_session", "second-a")
+            self.assertEqual(client.post(draft_path, data=draft_form).status_code, 409)
+            client.cookies.set("cg_session", "opaque-a")
+            created = client.post(draft_path, data=draft_form, follow_redirects=False)
+            self.assertEqual(created.status_code, 303)
+            self.assertTrue(created.headers["location"].startswith("/resume/"))
+            self.assertEqual(
+                client.post(draft_path, data=draft_form, follow_redirects=False).headers[
+                    "location"
+                ],
+                created.headers["location"],
+            )
+            trace = client.get(created.headers["location"])
+            self.assertEqual(trace.status_code, 200)
+            self.assertIn("I implemented a feature", trace.text)
+            self.assertIn("synthetic-input", trace.text)
+            self.assertIn("/wording", trace.text)
+        with Session(self.engine) as session:
+            self.assertEqual(
+                session.scalar(select(func.count()).select_from(RequirementClaimMap)), 1
+            )
+            self.assertEqual(session.scalar(select(func.count()).select_from(Artifact)), 1)
+            self.assertEqual(session.get(CareerProfile, "profile-a").version, 1)
+
+    def test_browser_jd_link_expires_and_rejects_stale_profile(self) -> None:
+        with Session(self.engine) as session:
+            jd = record_pasted_jd_analysis(
+                session,
+                account_id="acct-a",
+                profile_id="profile-a",
+                source_text="Python required",
+                excerpts=(JDExcerpt(0, 6),),
+                now=self.now,
+            )
+            requirement_id = session.scalar(
+                select(JDRequirement.id).where(JDRequirement.jd_id == jd.id)
+            )
+            service = JDLinkPresentationService(SECRET)
+            fields = {
+                "account_id": "acct-a",
+                "browser_session_id": "synthetic-browser-session-a",
+                "jd_id": jd.id,
+                "requirement_id": requirement_id,
+                "claim_id": "claim-a",
+                "profile_version": 1,
+            }
+            presented = service.present(session, **fields, now=self.now)
+            with self.assertRaises(JDLinkPresentationRejected):
+                service.submit(
+                    session,
+                    **fields,
+                    link_token=presented.link_token,
+                    now=self.now + timedelta(minutes=4),
+                )
+            session.get(CareerProfile, "profile-a").version = 2
+            session.flush()
+            with self.assertRaises(JDLinkPresentationRejected):
+                service.submit(
+                    session,
+                    **fields,
+                    link_token=presented.link_token,
+                    now=self.now + timedelta(minutes=1),
+                )
+            self.assertEqual(
+                session.scalar(select(func.count()).select_from(RequirementClaimMap)), 0
+            )
+
+    def test_browser_r1_draft_rejects_expiry_and_changed_mapping(self) -> None:
+        with Session(self.engine) as session:
+            jd = record_pasted_jd_analysis(
+                session,
+                account_id="acct-a",
+                profile_id="profile-a",
+                source_text="- Python required\n- SQL required",
+                excerpts=(JDExcerpt(2, 17), JDExcerpt(20, 32)),
+                now=self.now,
+            )
+            requirements = tuple(
+                session.scalars(
+                    select(JDRequirement)
+                    .where(JDRequirement.jd_id == jd.id)
+                    .order_by(JDRequirement.ordinal)
+                )
+            )
+            link_jd_requirement_to_claim(
+                session,
+                account_id="acct-a",
+                jd_id=jd.id,
+                requirement_id=requirements[0].id,
+                claim_id="claim-a",
+                profile_version=1,
+                now=self.now,
+            )
+            service = ResumeDraftPresentationService(SECRET)
+            fields = {
+                "account_id": "acct-a",
+                "browser_session_id": "synthetic-browser-session-a",
+                "jd_id": jd.id,
+                "profile_version": 1,
+            }
+            presented = service.present(session, **fields, now=self.now)
+            self.assertEqual(len(presented.candidates), 1)
+            with self.assertRaises(ResumeDraftPresentationRejected):
+                service.submit(
+                    session,
+                    **fields,
+                    claim_ids=("claim-a",),
+                    draft_token=presented.draft_token,
+                    now=self.now + timedelta(minutes=4),
+                )
+            link_jd_requirement_to_claim(
+                session,
+                account_id="acct-a",
+                jd_id=jd.id,
+                requirement_id=requirements[1].id,
+                claim_id="claim-a",
+                profile_version=1,
+                now=self.now,
+            )
+            with self.assertRaises(ResumeDraftPresentationRejected):
+                service.submit(
+                    session,
+                    **fields,
+                    claim_ids=("claim-a",),
+                    draft_token=presented.draft_token,
+                    now=self.now + timedelta(minutes=1),
+                )
+            self.assertEqual(session.scalar(select(func.count()).select_from(Artifact)), 0)
+
     def test_mapping_rejects_wrong_owner_and_unreviewed_or_stale_claim(self) -> None:
         with Session(self.engine) as session:
             jd = record_pasted_jd_analysis(
@@ -586,11 +816,275 @@ class JDArtifactFoundationTests(unittest.TestCase):
             self.assertEqual(trace.units[0].original_input_refs, ("synthetic-input",))
             with self.assertRaises(ResumeDraftUnavailable):
                 get_resume_trace(session, account_id="acct-b", artifact_id=artifact.id)
+            session.commit()
+            app = build_synthetic_review_app(
+                session_factory=sessionmaker(bind=self.engine),
+                authenticate_browser=lambda request, _response: (
+                    TrustedBrowserIdentity("acct-a", "synthetic-browser-session-a")
+                    if request.cookies.get("cg_session") == "opaque-a"
+                    else TrustedBrowserIdentity("acct-b", "synthetic-browser-session-b")
+                    if request.cookies.get("cg_session") == "opaque-b"
+                    else None
+                ),
+                review_signing_secret=SECRET,
+                presentation_signing_secret=SECRET,
+            )
+            with TestClient(app) as client:
+                self.assertEqual(client.get("/artifacts").status_code, 401)
+                client.cookies.set("cg_session", "opaque-b")
+                self.assertNotIn(artifact.id, client.get("/artifacts").text)
+                self.assertEqual(client.get(f"/resume/{artifact.id}/trace").status_code, 404)
+
+                self.assertNotIn(jd.id, client.get("/jd").text)
+                self.assertEqual(client.get(f"/jd/{jd.id}").status_code, 404)
+                self.assertEqual(client.get(f"/jd/{jd.id}/mapping/1").status_code, 404)
+                client.cookies.set("cg_session", "opaque-a")
+                jd_listing = client.get("/jd")
+                self.assertEqual(jd_listing.status_code, 200)
+                self.assertIn(jd.id, jd_listing.text)
+                jd_page = client.get(f"/jd/{jd.id}")
+                self.assertEqual(jd_page.status_code, 200)
+                self.assertEqual(jd_page.headers["cache-control"], "no-store")
+                self.assertIn("Python", jd_page.text)
+                self.assertNotIn("Python required", jd_page.text)
+                mapping_page = client.get(f"/jd/{jd.id}/mapping/1")
+                self.assertEqual(mapping_page.status_code, 200)
+                self.assertIn("POTENTIAL_LINK_RECORDED", mapping_page.text)
+                self.assertIn("Claim claim-a", mapping_page.text)
+                self.assertNotIn("Python required", mapping_page.text)
+                self.assertEqual(client.get(f"/jd/{jd.id}/mapping/2").status_code, 404)
+                listing = client.get("/artifacts")
+                self.assertEqual(listing.status_code, 200)
+                self.assertIn(artifact.id, listing.text)
+                page = client.get(f"/resume/{artifact.id}/trace")
+                self.assertEqual(page.status_code, 200)
+                self.assertEqual(page.headers["cache-control"], "no-store")
+                self.assertIn("I implemented a feature", page.text)
+                self.assertIn("synthetic-input", page.text)
+                self.assertNotIn("Python required", page.text)
+                self.assertIn(f"/jd/{jd.id}/mapping/1", page.text)
             unit = session.get(ArtifactUnit, trace.units[0].unit_id)
             unit.exact_text = "I led a team and doubled revenue"
             session.flush()
             with self.assertRaises(ResumeDraftUnavailable):
                 get_resume_trace(session, account_id="acct-a", artifact_id=artifact.id)
+            session.commit()
+            with TestClient(app) as client:
+                client.cookies.set("cg_session", "opaque-a")
+                self.assertEqual(client.get(f"/resume/{artifact.id}/trace").status_code, 404)
+
+    def test_explicit_browser_export_uses_exact_archived_canonical_scope(self) -> None:
+        app = build_synthetic_review_app(
+            session_factory=sessionmaker(bind=self.engine),
+            authenticate_browser=lambda request, _response: (
+                TrustedBrowserIdentity("acct-a", "synthetic-browser-session-a")
+                if request.cookies.get("cg_session") == "opaque-a"
+                else TrustedBrowserIdentity("acct-b", "synthetic-browser-session-b")
+                if request.cookies.get("cg_session") == "opaque-b"
+                else TrustedBrowserIdentity("acct-a", "another-browser-session-a")
+                if request.cookies.get("cg_session") == "second-a"
+                else None
+            ),
+            review_signing_secret=SECRET,
+            presentation_signing_secret=SECRET,
+        )
+        path = "/profile/profile-a/export/1"
+        with TestClient(app) as client:
+            self.assertEqual(client.get(path).status_code, 401)
+            client.cookies.set("cg_session", "opaque-b")
+            self.assertEqual(client.get(path).status_code, 404)
+            self.assertEqual(client.get("/profile/profile-a/export/2").status_code, 404)
+            self.assertEqual(client.get("/profile/profile-a/1").status_code, 404)
+            self.assertEqual(client.get("/profile/profile-a/1/claim/claim-a").status_code, 404)
+            client.cookies.set("cg_session", "opaque-a")
+            self.assertIn(path, client.get("/profiling/start").text)
+            profile_page = client.get("/profile/profile-a/1")
+            self.assertEqual(profile_page.status_code, 200)
+            self.assertEqual(profile_page.headers["cache-control"], "no-store")
+            self.assertIn("I implemented a feature", profile_page.text)
+            self.assertIn("USER_CONFIRMED", profile_page.text)
+            self.assertIn("/profile/profile-a/1/claim/claim-a", profile_page.text)
+            claim_page = client.get("/profile/profile-a/1/claim/claim-a")
+            self.assertEqual(claim_page.status_code, 200)
+            self.assertIn("synthetic-input", claim_page.text)
+            self.assertIn("I implemented a feature", claim_page.text)
+            self.assertNotIn("raw_source_text", claim_page.text)
+            self.assertEqual(client.get("/profile/profile-a/2").status_code, 404)
+            self.assertEqual(client.get("/profile/profile-a/1/claim/missing").status_code, 404)
+            form_page = client.get(path)
+            self.assertEqual(form_page.status_code, 200)
+            self.assertEqual(form_page.headers["cache-control"], "no-store")
+            self.assertIn("임시 초안과 만료된 전체 대화 원문은 포함되지 않습니다", form_page.text)
+            self.assertNotIn("I implemented a feature", form_page.text)
+            match = re.search(r"name='export_token' value='([^']+)'", form_page.text)
+            self.assertIsNotNone(match)
+            token = match.group(1)
+            self.assertEqual(client.post(path, data={"export_token": token}).status_code, 400)
+            client.cookies.set("cg_session", "second-a")
+            self.assertEqual(
+                client.post(path, data={"export_token": token, "confirm": "download"}).status_code,
+                409,
+            )
+            client.cookies.set("cg_session", "opaque-a")
+            download = client.post(path, data={"export_token": token, "confirm": "download"})
+            self.assertEqual(download.status_code, 200)
+            self.assertEqual(download.headers["cache-control"], "no-store")
+            self.assertIn("attachment", download.headers["content-disposition"])
+            payload = download.json()
+            self.assertEqual(payload["scope"], "CANONICAL_ONLY")
+            self.assertEqual(payload["profile_version"], 1)
+            self.assertEqual(payload["claims"][0]["exact_text"], "I implemented a feature")
+            self.assertEqual(payload["temporary_drafts"], "NOT_INCLUDED")
+            self.assertEqual(payload["expired_source_bodies"], "UNAVAILABLE")
+            self.assertNotIn("raw_source_text", download.text)
+            with Session(self.engine) as session:
+                session.get(CareerProfile, "profile-a").status = "DELETING"
+                session.commit()
+            self.assertEqual(
+                client.post(path, data={"export_token": token, "confirm": "download"}).status_code,
+                409,
+            )
+
+    def test_explicit_browser_jd_bullets_store_only_selected_excerpts_once(self) -> None:
+        app = build_synthetic_review_app(
+            session_factory=sessionmaker(bind=self.engine),
+            authenticate_browser=lambda request, _response: (
+                TrustedBrowserIdentity("acct-a", "synthetic-browser-session-a")
+                if request.cookies.get("cg_session") == "opaque-a"
+                else TrustedBrowserIdentity("acct-b", "synthetic-browser-session-b")
+                if request.cookies.get("cg_session") == "opaque-b"
+                else TrustedBrowserIdentity("acct-a", "another-browser-session-a")
+                if request.cookies.get("cg_session") == "second-a"
+                else None
+            ),
+            review_signing_secret=SECRET,
+            presentation_signing_secret=SECRET,
+        )
+        with TestClient(app) as client:
+            self.assertEqual(client.get("/jd/new").status_code, 401)
+            client.cookies.set("cg_session", "opaque-a")
+            self.assertIn("/jd/new", client.get("/jd").text)
+            page = client.get("/jd/new")
+            self.assertEqual(page.status_code, 200)
+            token = re.search(r"name='paste_token' value='([^']+)'", page.text).group(1)
+            selected = "- Python required\n* SQL required"
+            form = {"paste_token": token, "selected_text": selected, "confirm": "store_excerpts"}
+            client.cookies.set("cg_session", "second-a")
+            self.assertEqual(client.post("/jd/new", data=form).status_code, 409)
+            client.cookies.set("cg_session", "opaque-a")
+            self.assertEqual(
+                client.post(
+                    "/jd/new", data={"paste_token": token, "selected_text": selected}
+                ).status_code,
+                400,
+            )
+            self.assertEqual(
+                client.post("/jd/new", data={**form, "messages": "all chat"}).status_code,
+                400,
+            )
+            self.assertEqual(
+                client.post(
+                    "/jd/new", data={**form, "selected_text": "whole JD prose"}
+                ).status_code,
+                409,
+            )
+            created = client.post("/jd/new", data=form, follow_redirects=False)
+            self.assertEqual(created.status_code, 303)
+            self.assertTrue(created.headers["location"].startswith("/jd/"))
+            retry = client.post("/jd/new", data=form, follow_redirects=False)
+            self.assertEqual(retry.headers["location"], created.headers["location"])
+            self.assertEqual(
+                client.post(
+                    "/jd/new",
+                    data={**form, "selected_text": "- Different requirement"},
+                ).status_code,
+                409,
+            )
+            client.cookies.set("cg_session", "opaque-b")
+            self.assertEqual(client.get(created.headers["location"]).status_code, 404)
+            client.cookies.set("cg_session", "opaque-a")
+            analysis = client.get(created.headers["location"])
+            self.assertEqual(analysis.status_code, 200)
+            self.assertIn("Python required", analysis.text)
+            self.assertIn("SQL required", analysis.text)
+            with Session(self.engine) as session:
+                self.assertEqual(
+                    session.scalar(select(func.count()).select_from(JobDescription)), 1
+                )
+                rows = tuple(session.scalars(select(JDRequirement).order_by(JDRequirement.ordinal)))
+                self.assertEqual(
+                    [row.exact_text for row in rows], ["Python required", "SQL required"]
+                )
+                self.assertEqual(session.get(CareerProfile, "profile-a").version, 1)
+
+    def test_empty_profile_can_store_jd_and_see_no_eligible_r1_claims(self) -> None:
+        app = build_synthetic_review_app(
+            session_factory=sessionmaker(bind=self.engine),
+            authenticate_browser=lambda request, _response: (
+                TrustedBrowserIdentity("acct-b", "synthetic-browser-session-b")
+                if request.cookies.get("cg_session") == "opaque-b"
+                else None
+            ),
+            review_signing_secret=SECRET,
+            presentation_signing_secret=SECRET,
+        )
+        with TestClient(app) as client:
+            client.cookies.set("cg_session", "opaque-b")
+            page = client.get("/jd/new")
+            self.assertEqual(page.status_code, 200)
+            token = re.search(r"name='paste_token' value='([^']+)'", page.text).group(1)
+            created = client.post(
+                "/jd/new",
+                data={
+                    "paste_token": token,
+                    "selected_text": "- Python required",
+                    "confirm": "store_excerpts",
+                },
+                follow_redirects=False,
+            )
+            self.assertEqual(created.status_code, 303)
+            jd_id = created.headers["location"].split("/")[-1]
+            mapping_page = client.get(f"/jd/{jd_id}/mapping/0")
+            self.assertEqual(mapping_page.status_code, 200)
+            self.assertIn("NO_ELIGIBLE_LINK_RECORDED", mapping_page.text)
+            self.assertNotIn("/link/", mapping_page.text)
+            draft_page = client.get(f"/jd/{jd_id}/draft/0")
+            self.assertEqual(draft_page.status_code, 200)
+            self.assertIn("현재 선택 가능한 사실이 없습니다", draft_page.text)
+            self.assertNotIn("<form", draft_page.text)
+        with Session(self.engine) as session:
+            self.assertEqual(session.get(CareerProfile, "profile-b").version, 0)
+            self.assertEqual(
+                session.scalar(
+                    select(func.count())
+                    .select_from(ProfileArchive)
+                    .where(ProfileArchive.profile_id == "profile-b")
+                ),
+                1,
+            )
+            self.assertEqual(session.scalar(select(func.count()).select_from(Artifact)), 0)
+
+    def test_browser_export_intent_expires_without_fallback(self) -> None:
+        service = ProfileExportPresentationService(SECRET)
+        with Session(self.engine) as session:
+            view = service.present(
+                session,
+                account_id="acct-a",
+                browser_session_id="synthetic-browser-session-a",
+                profile_id="profile-a",
+                profile_version=1,
+                now=self.now,
+            )
+            with self.assertRaises(ProfileExportPresentationRejected):
+                service.submit(
+                    session,
+                    account_id="acct-a",
+                    browser_session_id="synthetic-browser-session-a",
+                    profile_id="profile-a",
+                    profile_version=1,
+                    export_token=view.export_token,
+                    now=self.now + timedelta(minutes=6),
+                )
 
     def test_canonical_profile_export_is_exact_owner_scoped_and_bounded(self) -> None:
         with Session(self.engine) as session:
@@ -750,6 +1244,177 @@ class JDArtifactFoundationTests(unittest.TestCase):
             session.commit()
             self.assertEqual(
                 session.scalar(select(func.count()).select_from(ArtifactWordingReview)), 0
+            )
+
+    def test_browser_r1_wording_review_requires_exact_display_and_session(self) -> None:
+        with Session(self.engine) as session:
+            jd = record_pasted_jd_analysis(
+                session,
+                account_id="acct-a",
+                profile_id="profile-a",
+                source_text="Python required",
+                excerpts=(JDExcerpt(0, 6),),
+                now=self.now,
+            )
+            requirement = session.scalar(select(JDRequirement).where(JDRequirement.jd_id == jd.id))
+            link_jd_requirement_to_claim(
+                session,
+                account_id="acct-a",
+                jd_id=jd.id,
+                requirement_id=requirement.id,
+                claim_id="claim-a",
+                profile_version=1,
+                now=self.now,
+            )
+            artifact = generate_resume_draft(
+                session,
+                account_id="acct-a",
+                profile_id="profile-a",
+                profile_version=1,
+                jd_id=jd.id,
+                claim_ids=("claim-a",),
+                now=self.now,
+            )
+            session.commit()
+            artifact_id = artifact.id
+        app = build_synthetic_review_app(
+            session_factory=sessionmaker(bind=self.engine),
+            authenticate_browser=lambda request, _response: (
+                TrustedBrowserIdentity("acct-a", "synthetic-browser-session-a")
+                if request.cookies.get("cg_session") == "opaque-a"
+                else TrustedBrowserIdentity("acct-b", "synthetic-browser-session-b")
+                if request.cookies.get("cg_session") == "opaque-b"
+                else TrustedBrowserIdentity("acct-a", "another-browser-session-a")
+                if request.cookies.get("cg_session") == "second-a"
+                else None
+            ),
+            review_signing_secret=SECRET,
+            presentation_signing_secret=SECRET,
+        )
+        path = f"/resume/{artifact_id}/wording"
+        with TestClient(app) as client:
+            self.assertEqual(client.get(path).status_code, 401)
+            client.cookies.set("cg_session", "opaque-b")
+            self.assertEqual(client.get(path).status_code, 404)
+            client.cookies.set("cg_session", "opaque-a")
+            page = client.get(path)
+            self.assertEqual(page.status_code, 200)
+            self.assertIn("I implemented a feature", page.text)
+            self.assertIn("synthetic-input", page.text)
+            self.assertNotIn("Python required", page.text)
+            self.assertIn("name='confirm' value='accept_r1' required", page.text)
+            match = re.search(r"name='approval_token' value='([^']+)'", page.text)
+            self.assertIsNotNone(match)
+            token = match.group(1)
+            self.assertEqual(client.post(path, data={"approval_token": token}).status_code, 400)
+            self.assertEqual(
+                client.post(
+                    path,
+                    data={"approval_token": token, "confirm": "accept_r1", "text": "altered"},
+                ).status_code,
+                400,
+            )
+            client.cookies.set("cg_session", "second-a")
+            self.assertEqual(
+                client.post(
+                    path, data={"approval_token": token, "confirm": "accept_r1"}
+                ).status_code,
+                409,
+            )
+            client.cookies.set("cg_session", "opaque-a")
+            with Session(self.engine) as session:
+                unit = session.scalar(
+                    select(ArtifactUnit).where(ArtifactUnit.artifact_id == artifact_id)
+                )
+                unit.exact_text = "I led the whole team"
+                session.commit()
+            self.assertEqual(
+                client.post(
+                    path, data={"approval_token": token, "confirm": "accept_r1"}
+                ).status_code,
+                409,
+            )
+            with Session(self.engine) as session:
+                unit = session.scalar(
+                    select(ArtifactUnit).where(ArtifactUnit.artifact_id == artifact_id)
+                )
+                unit.exact_text = "I implemented a feature"
+                session.commit()
+            success = client.post(
+                path,
+                data={"approval_token": token, "confirm": "accept_r1"},
+                follow_redirects=False,
+            )
+            self.assertEqual(success.status_code, 303)
+            self.assertEqual(success.headers["location"], f"/resume/{artifact_id}/trace")
+            self.assertEqual(
+                client.post(
+                    path,
+                    data={"approval_token": token, "confirm": "accept_r1"},
+                    follow_redirects=False,
+                ).status_code,
+                303,
+            )
+            self.assertEqual(client.get(path).status_code, 404)
+            trace_page = client.get(f"/resume/{artifact_id}/trace")
+            self.assertIn(f"/resume/{artifact_id}/export/JSON", trace_page.text)
+            json_path = f"/resume/{artifact_id}/export/JSON"
+            markdown_path = f"/resume/{artifact_id}/export/MARKDOWN"
+            json_form = client.get(json_path)
+            self.assertEqual(json_form.status_code, 200)
+            self.assertIn("현재 승인된 R1 문구", json_form.text)
+            self.assertNotIn("I implemented a feature", json_form.text)
+            match = re.search(r"name='export_token' value='([^']+)'", json_form.text)
+            self.assertIsNotNone(match)
+            json_token = match.group(1)
+            self.assertEqual(
+                client.post(json_path, data={"export_token": json_token}).status_code, 400
+            )
+            self.assertEqual(
+                client.post(
+                    markdown_path,
+                    data={"export_token": json_token, "confirm": "download"},
+                ).status_code,
+                409,
+            )
+            client.cookies.set("cg_session", "second-a")
+            self.assertEqual(
+                client.post(
+                    json_path, data={"export_token": json_token, "confirm": "download"}
+                ).status_code,
+                409,
+            )
+            client.cookies.set("cg_session", "opaque-a")
+            json_download = client.post(
+                json_path, data={"export_token": json_token, "confirm": "download"}
+            )
+            self.assertEqual(json_download.status_code, 200)
+            self.assertIn("attachment", json_download.headers["content-disposition"])
+            self.assertEqual(json_download.headers["cache-control"], "no-store")
+            self.assertEqual(json_download.json()["units"][0]["claim_id"], "claim-a")
+            md_form = client.get(markdown_path)
+            self.assertEqual(md_form.status_code, 200)
+            md_match = re.search(r"name='export_token' value='([^']+)'", md_form.text)
+            self.assertIsNotNone(md_match)
+            markdown_download = client.post(
+                markdown_path,
+                data={"export_token": md_match.group(1), "confirm": "download"},
+            )
+            self.assertEqual(markdown_download.status_code, 200)
+            self.assertEqual(markdown_download.text, "- I implemented a feature\n")
+            with Session(self.engine) as session:
+                self.assertEqual(session.get(Artifact, artifact_id).status, "WORDING_REVIEWED")
+                self.assertEqual(
+                    session.scalar(select(func.count()).select_from(ArtifactWordingReview)), 1
+                )
+                session.get(CareerProfile, "profile-a").status = "DELETING"
+                session.commit()
+            self.assertEqual(
+                client.post(
+                    json_path,
+                    data={"export_token": json_token, "confirm": "download"},
+                ).status_code,
+                409,
             )
 
 

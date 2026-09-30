@@ -25,6 +25,7 @@ from careerground.storage.graph_models import (
     ClaimConflictReview,
     ClaimConstraint,
     ClaimReview,
+    ClaimUseReview,
     EvidenceClaimLink,
     EvidenceItem,
     EvidenceSource,
@@ -48,6 +49,7 @@ from careerground.storage.models import (
     PrivateObjectVersion,
     ProfilingDraft,
     ProfilingInput,
+    ProfilingProtocolStep,
     ProfilingReviewBatch,
     ProfilingReviewItem,
     ProfilingSession,
@@ -279,6 +281,16 @@ class DeletionPreviewService:
         items.extend(
             DeletionImpactItem(kind="PROFILING_INPUT", target_id=input_id) for input_id in input_ids
         )
+        step_ids = session.scalars(
+            select(ProfilingProtocolStep.id).where(
+                ProfilingProtocolStep.account_id == account_id,
+                ProfilingProtocolStep.session_id.in_(workspace_ids),
+            )
+        ).all()
+        items.extend(
+            DeletionImpactItem(kind="PROFILING_PROTOCOL_STEP", target_id=step_id)
+            for step_id in step_ids
+        )
         draft_ids = session.scalars(
             select(ProfilingDraft.id).where(
                 ProfilingDraft.account_id == account_id,
@@ -350,6 +362,7 @@ class DeletionPreviewService:
             ("CLAIM_REVIEW", ClaimReview),
             ("CLAIM_BOUNDARY_REVIEW", ClaimBoundaryReview),
             ("CLAIM_CONFLICT_REVIEW", ClaimConflictReview),
+            ("CLAIM_USE_REVIEW", ClaimUseReview),
             ("CLAIM_CONSTRAINT", ClaimConstraint),
         ):
             query = select(model.id).where(model.account_id == account_id)

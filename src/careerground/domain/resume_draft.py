@@ -58,6 +58,7 @@ def generate_resume_draft(
     jd_id: str,
     claim_ids: tuple[str, ...],
     now: datetime,
+    artifact_id: str | None = None,
 ) -> Artifact:
     """Copy 1–5 exact eligible Claim strings into a review-required text draft.
 
@@ -74,6 +75,7 @@ def generate_resume_draft(
         or not 1 <= len(claim_ids) <= 5
         or any(not isinstance(value, str) or not value for value in claim_ids)
         or len(set(claim_ids)) != len(claim_ids)
+        or (artifact_id is not None and (not isinstance(artifact_id, str) or not artifact_id))
     ):
         raise ResumeDraftUnavailable
     account = session.scalar(select(Account).where(Account.id == account_id).with_for_update())
@@ -146,6 +148,24 @@ def generate_resume_draft(
         if claim.canonical_text != trace.claim.exact_text:
             raise ResumeDraftUnavailable
         traces.append(trace)
+    if artifact_id is not None:
+        existing = session.get(Artifact, artifact_id)
+        if existing is not None:
+            if (
+                existing.account_id != account_id
+                or existing.profile_id != profile_id
+                or existing.profile_version != profile_version
+                or existing.jd_id != jd_id
+                or tuple(
+                    unit.claim_id
+                    for unit in get_resume_trace(
+                        session, account_id=account_id, artifact_id=artifact_id
+                    ).units
+                )
+                != claim_ids
+            ):
+                raise ResumeDraftUnavailable
+            return existing
     current = session.scalar(
         select(func.max(Artifact.artifact_version)).where(
             Artifact.account_id == account_id,
@@ -154,7 +174,7 @@ def generate_resume_draft(
         )
     )
     artifact = Artifact(
-        id=str(uuid4()),
+        id=artifact_id or str(uuid4()),
         account_id=account_id,
         profile_id=profile_id,
         artifact_type="RESUME_TEXT",

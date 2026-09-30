@@ -9,7 +9,7 @@ from datetime import UTC, datetime, timedelta
 import jwt
 from cryptography.hazmat.primitives.asymmetric import rsa
 from fastapi.testclient import TestClient
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, func, select
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
@@ -17,21 +17,33 @@ from careerground.domain.claim_review_workspace import (
     ClaimReviewPreparation,
     propose_verbatim_draft,
 )
+from careerground.domain.jd_analysis import JDExcerpt, record_pasted_jd_analysis
+from careerground.domain.jd_mapping import link_jd_requirement_to_claim
 from careerground.domain.profile_archive import ensure_profile_archive
+from careerground.domain.resume_draft import generate_resume_draft
 from careerground.mcp.oauth_resource import McpOAuthSettings
-from careerground.mcp.product_server import PROFILE_READ_SCOPE, build_product_foundation_app
+from careerground.mcp.product_server import (
+    ARTIFACT_READ_SCOPE,
+    PROFILE_READ_SCOPE,
+    PROFILE_WRITE_SCOPE,
+    build_product_foundation_app,
+)
 from careerground.storage.graph_models import (
     Claim,
+    ClaimAssessment,
+    ClaimReview,
     EvidenceClaimLink,
     EvidenceItem,
     EvidenceSource,
 )
+from careerground.storage.jd_artifact_models import ArtifactUnit, JDRequirement
 from careerground.storage.models import (
     Account,
     AuthIdentity,
     Base,
     CareerProfile,
     ProfilingInput,
+    ProfilingReviewBatch,
     ProfilingSession,
 )
 
@@ -125,14 +137,31 @@ class ProductFoundationTests(unittest.TestCase):
                     "get_career_profile",
                     "get_claim_evidence",
                     "get_claim_review",
+                    "get_jd_analysis",
+                    "get_resume_trace",
+                    "start_profiling",
+                    "add_profiling_input",
+                    "pause_profiling",
+                    "prepare_claim_review",
                 },
             )
             for tool in tools:
+                expected_scope = {
+                    "get_jd_analysis": ARTIFACT_READ_SCOPE,
+                    "get_resume_trace": ARTIFACT_READ_SCOPE,
+                    "start_profiling": PROFILE_WRITE_SCOPE,
+                    "add_profiling_input": PROFILE_WRITE_SCOPE,
+                    "pause_profiling": PROFILE_WRITE_SCOPE,
+                    "prepare_claim_review": PROFILE_WRITE_SCOPE,
+                }.get(tool["name"], PROFILE_READ_SCOPE)
                 self.assertEqual(
                     tool["securitySchemes"],
-                    [{"type": "oauth2", "scopes": [PROFILE_READ_SCOPE]}],
+                    [{"type": "oauth2", "scopes": [expected_scope]}],
                 )
-                self.assertTrue(tool["annotations"]["readOnlyHint"])
+                self.assertEqual(
+                    tool["annotations"]["readOnlyHint"],
+                    expected_scope != PROFILE_WRITE_SCOPE,
+                )
             account_tool = next(tool for tool in tools if tool["name"] == "get_account_profile")
             self.assertTrue(account_tool["_meta"]["openai/profile"])
 
@@ -169,6 +198,404 @@ class ProductFoundationTests(unittest.TestCase):
                 foreign.json()["result"]["structuredContent"],
                 {"found": False, "profile_id": None, "version": None},
             )
+
+    def test_explicit_profile_writes_are_scoped_idempotent_and_do_not_promote(self) -> None:
+        with TestClient(self.app, base_url="https://product-mcp.synthetic.example") as client:
+            write_token = self.token(scope=PROFILE_WRITE_SCOPE)
+            read_token = self.token()
+            start_args = {
+                "profile_id": "profile-a",
+                "goal": "ADD_EXPERIENCE",
+                "policy_version": "product-policy-v0.1",
+                "idempotency_key": "synthetic_start_0001",
+            }
+            with self.sessions() as session:
+                self.assertEqual(
+                    session.scalar(select(func.count()).select_from(ProfilingSession)), 0
+                )
+            denied_start = self.call(
+                client, token=read_token, name="start_profiling", arguments=start_args
+            )
+            self.assertTrue(denied_start.json()["result"]["isError"])
+            unscoped_chat = self.call(
+                client,
+                token=write_token,
+                name="start_profiling",
+                arguments={**start_args, "messages": ["unrelated chat"]},
+            )
+            self.assertTrue(unscoped_chat.json()["result"]["isError"])
+            self.assertFalse(
+                self.call(
+                    client,
+                    token=write_token,
+                    name="start_profiling",
+                    arguments={**start_args, "goal": "RESOLVE_GAP"},
+                ).json()["result"]["structuredContent"]["ok"]
+            )
+            foreign = self.call(
+                client,
+                token=write_token,
+                name="start_profiling",
+                arguments={**start_args, "profile_id": "profile-b"},
+            )
+            missing = self.call(
+                client,
+                token=write_token,
+                name="start_profiling",
+                arguments={**start_args, "profile_id": "missing"},
+            )
+            self.assertEqual(foreign.json()["result"], missing.json()["result"])
+            started = self.call(
+                client, token=write_token, name="start_profiling", arguments=start_args
+            ).json()["result"]["structuredContent"]
+            self.assertTrue(started["ok"])
+            self.assertEqual(started["protocol_state"], "CONTEXT_DISCOVERY")
+            work_id = started["profiling_session_id"]
+            retried = self.call(
+                client, token=write_token, name="start_profiling", arguments=start_args
+            ).json()["result"]["structuredContent"]
+            self.assertEqual(retried["profiling_session_id"], work_id)
+            self.assertEqual(retried["retention_expires_at"], started["retention_expires_at"])
+
+            add_args = {
+                "profiling_session_id": work_id,
+                "base_profile_version": 3,
+                "content": "Synthetic explicit work statement.",
+                "content_kind": "USER_STATEMENT",
+                "idempotency_key": "synthetic_input_0001",
+            }
+            denied_add = self.call(
+                client, token=read_token, name="add_profiling_input", arguments=add_args
+            )
+            self.assertTrue(denied_add.json()["result"]["isError"])
+            unsupported = self.call(
+                client,
+                token=write_token,
+                name="add_profiling_input",
+                arguments={**add_args, "content_kind": "SELECTED_CHAT_EXCERPT"},
+            ).json()["result"]["structuredContent"]
+            self.assertEqual(unsupported["error_code"], "VALIDATION_FAILED")
+            foreign_input = self.call(
+                client,
+                token=self.token(sub="user-b", scope=PROFILE_WRITE_SCOPE),
+                name="add_profiling_input",
+                arguments=add_args,
+            )
+            missing_input = self.call(
+                client,
+                token=write_token,
+                name="add_profiling_input",
+                arguments={**add_args, "profiling_session_id": "missing"},
+            )
+            self.assertEqual(foreign_input.json()["result"], missing_input.json()["result"])
+            added = self.call(
+                client, token=write_token, name="add_profiling_input", arguments=add_args
+            ).json()["result"]["structuredContent"]
+            self.assertTrue(added["ok"])
+            self.assertNotIn(add_args["content"], str(added))
+            retry_add = self.call(
+                client, token=write_token, name="add_profiling_input", arguments=add_args
+            ).json()["result"]["structuredContent"]
+            self.assertEqual(retry_add["input_id"], added["input_id"])
+            self.assertEqual(retry_add["retention_expires_at"], added["retention_expires_at"])
+            conflict = self.call(
+                client,
+                token=write_token,
+                name="add_profiling_input",
+                arguments={**add_args, "content": "Different text"},
+            ).json()["result"]["structuredContent"]
+            self.assertEqual(conflict["error_code"], "IDEMPOTENCY_CONFLICT")
+            correction = self.call(
+                client,
+                token=write_token,
+                name="add_profiling_input",
+                arguments={
+                    **add_args,
+                    "content": "Synthetic correction.",
+                    "content_kind": "CORRECTION",
+                    "idempotency_key": "synthetic_correction_0001",
+                },
+            ).json()["result"]["structuredContent"]
+            self.assertEqual(correction["protocol_cycle"], 1)
+            with self.sessions() as session:
+                self.assertEqual(
+                    session.scalar(select(func.count()).select_from(ProfilingSession)), 1
+                )
+                self.assertEqual(
+                    session.scalar(select(func.count()).select_from(ProfilingInput)), 2
+                )
+                self.assertEqual(session.get(CareerProfile, "profile-a").version, 3)
+            paused = self.call(
+                client,
+                token=write_token,
+                name="pause_profiling",
+                arguments={"profiling_session_id": work_id},
+            ).json()["result"]["structuredContent"]
+            self.assertTrue(paused["ok"])
+            self.assertEqual(paused["session_status"], "PAUSED")
+            self.assertEqual(paused["retention_expires_at"], correction["retention_expires_at"])
+            self.assertEqual(
+                self.call(
+                    client,
+                    token=write_token,
+                    name="pause_profiling",
+                    arguments={"profiling_session_id": work_id},
+                ).json()["result"]["structuredContent"]["retention_expires_at"],
+                paused["retention_expires_at"],
+            )
+            paused_input = self.call(
+                client,
+                token=write_token,
+                name="add_profiling_input",
+                arguments={**add_args, "idempotency_key": "synthetic_input_0002"},
+            ).json()["result"]["structuredContent"]
+            self.assertEqual(paused_input["error_code"], "SESSION_PAUSED")
+
+    def test_jd_read_requires_artifact_scope_and_hides_foreign_or_deleted_data(self) -> None:
+        now = datetime.now(UTC)
+        with self.sessions() as session:
+            for account_id, profile_id, version in (
+                ("acct-a", "profile-a", 3),
+                ("acct-b", "profile-b", 8),
+            ):
+                ensure_profile_archive(
+                    session,
+                    account_id=account_id,
+                    profile_id=profile_id,
+                    profile_version=version,
+                    now=now,
+                )
+            own = record_pasted_jd_analysis(
+                session,
+                account_id="acct-a",
+                profile_id="profile-a",
+                source_text="Python required. Synthetic private suffix.",
+                excerpts=(JDExcerpt(0, 6),),
+                now=now,
+            )
+            foreign = record_pasted_jd_analysis(
+                session,
+                account_id="acct-b",
+                profile_id="profile-b",
+                source_text="Other account private JD.",
+                excerpts=(JDExcerpt(0, 13),),
+                now=now,
+            )
+            own_id, foreign_id = own.id, foreign.id
+            session.commit()
+
+        with TestClient(self.app, base_url="https://product-mcp.synthetic.example") as client:
+            artifact_token = self.token(scope=ARTIFACT_READ_SCOPE)
+
+            def read(jd_id: str, version: int = 3, token: str = artifact_token):
+                return self.call(
+                    client,
+                    token=token,
+                    name="get_jd_analysis",
+                    arguments={"jd_id": jd_id, "profile_version": version},
+                )
+
+            owned = read(own_id)
+            self.assertEqual(owned.status_code, 200)
+            data = owned.json()["result"]["structuredContent"]
+            self.assertTrue(data["found"])
+            self.assertEqual(data["jd_version"], 1)
+            self.assertEqual(data["profile_version"], 3)
+            self.assertFalse(data["stale_relative_to_current_profile"])
+            self.assertEqual(data["requirements"][0]["exact_text"], "Python")
+            self.assertEqual(data["requirements"][0]["source_start"], 0)
+            self.assertEqual(data["requirements"][0]["gap_status"], "NO_ELIGIBLE_LINK_RECORDED")
+            self.assertNotIn("Synthetic private suffix", str(data))
+            self.assertEqual(read(foreign_id).json()["result"], read("missing").json()["result"])
+            self.assertFalse(read(own_id, 2).json()["result"]["structuredContent"]["found"])
+            self.assertTrue(read(own_id, token=self.token()).json()["result"]["isError"])
+            profile_denied = self.call(
+                client,
+                token=artifact_token,
+                name="get_owned_profile_metadata",
+                arguments={"profile_id": "profile-a"},
+            )
+            self.assertTrue(profile_denied.json()["result"]["isError"])
+            with self.sessions() as session:
+                session.get(CareerProfile, "profile-a").version = 4
+                session.commit()
+            stale = read(own_id).json()["result"]["structuredContent"]
+            self.assertTrue(stale["found"])
+            self.assertTrue(stale["stale_relative_to_current_profile"])
+            with self.sessions() as session:
+                session.get(CareerProfile, "profile-a").status = "DELETING"
+                session.commit()
+            self.assertFalse(read(own_id).json()["result"]["structuredContent"]["found"])
+
+    def test_resume_trace_is_scoped_exact_and_closes_on_tamper_or_deletion(self) -> None:
+        now = datetime.now(UTC)
+        with self.sessions() as session:
+            session.add(
+                Claim(
+                    id="resume-claim-a",
+                    account_id="acct-a",
+                    profile_id="profile-a",
+                    scope_key="resume-scope",
+                    claim_type="CONTRIBUTION",
+                    canonical_text="I built a synthetic feature.",
+                    created_in_version=3,
+                    status="ACTIVE",
+                    created_at=now,
+                )
+            )
+            session.flush()
+            session.add_all(
+                [
+                    ClaimAssessment(
+                        id="resume-assessment-a",
+                        account_id="acct-a",
+                        profile_id="profile-a",
+                        claim_id="resume-claim-a",
+                        knowledge_status="USER_CONFIRMED",
+                        consistency_status="CONSISTENT",
+                        usage_policy="ALLOWED",
+                        profile_version=3,
+                        assessed_at=now,
+                    ),
+                    ClaimReview(
+                        id="resume-review-a",
+                        account_id="acct-a",
+                        profile_id="profile-a",
+                        claim_id="resume-claim-a",
+                        review_batch_id="synthetic-resume-batch",
+                        review_item_id="synthetic-resume-item",
+                        review_digest="a" * 64,
+                        review_purpose="FACT_CONFIRMATION",
+                        review_action="ACCEPT",
+                        base_profile_version=2,
+                        profile_version=3,
+                        reviewed_at=now,
+                    ),
+                    EvidenceSource(
+                        id="resume-source-a",
+                        account_id="acct-a",
+                        profile_id="profile-a",
+                        source_type="EXPLICIT_PROFILING_INPUT",
+                        source_ref="synthetic-resume-input",
+                        content_hash="b" * 64,
+                        created_in_version=3,
+                        created_at=now,
+                    ),
+                ]
+            )
+            session.flush()
+            session.add(
+                EvidenceItem(
+                    id="resume-evidence-a",
+                    account_id="acct-a",
+                    profile_id="profile-a",
+                    source_id="resume-source-a",
+                    content_text="I built a synthetic feature.",
+                    content_hash="c" * 64,
+                    created_in_version=3,
+                    status="ACTIVE",
+                    created_at=now,
+                )
+            )
+            session.flush()
+            session.add(
+                EvidenceClaimLink(
+                    id="resume-support-a",
+                    account_id="acct-a",
+                    profile_id="profile-a",
+                    evidence_id="resume-evidence-a",
+                    claim_id="resume-claim-a",
+                    relation_type="SUPPORTS",
+                    created_in_version=3,
+                )
+            )
+            session.flush()
+            ensure_profile_archive(
+                session,
+                account_id="acct-a",
+                profile_id="profile-a",
+                profile_version=3,
+                now=now,
+            )
+            jd = record_pasted_jd_analysis(
+                session,
+                account_id="acct-a",
+                profile_id="profile-a",
+                source_text="Python required. Private JD suffix.",
+                excerpts=(JDExcerpt(0, 6),),
+                now=now,
+            )
+            requirement = session.scalar(select(JDRequirement).where(JDRequirement.jd_id == jd.id))
+            link_jd_requirement_to_claim(
+                session,
+                account_id="acct-a",
+                jd_id=jd.id,
+                requirement_id=requirement.id,
+                claim_id="resume-claim-a",
+                profile_version=3,
+                now=now,
+            )
+            artifact = generate_resume_draft(
+                session,
+                account_id="acct-a",
+                profile_id="profile-a",
+                profile_version=3,
+                jd_id=jd.id,
+                claim_ids=("resume-claim-a",),
+                now=now,
+            )
+            artifact_id = artifact.id
+            jd_id = jd.id
+            session.commit()
+
+        with TestClient(self.app, base_url="https://product-mcp.synthetic.example") as client:
+            artifact_token = self.token(scope=ARTIFACT_READ_SCOPE)
+
+            def read(artifact_id: str, token: str = artifact_token):
+                return self.call(
+                    client,
+                    token=token,
+                    name="get_resume_trace",
+                    arguments={"artifact_id": artifact_id},
+                )
+
+            self.assertTrue(read(artifact_id, self.token()).json()["result"]["isError"])
+            self.assertEqual(
+                read(artifact_id, self.token(sub="user-b", scope=ARTIFACT_READ_SCOPE)).json()[
+                    "result"
+                ],
+                read("missing").json()["result"],
+            )
+            result = read(artifact_id).json()["result"]["structuredContent"]
+            self.assertTrue(result["found"])
+            self.assertEqual(result["profile_version"], 3)
+            self.assertEqual(result["jd_id"], jd_id)
+            self.assertFalse(result["stale_relative_to_current_profile"])
+            self.assertEqual(result["units"][0]["exact_text"], "I built a synthetic feature.")
+            self.assertEqual(result["units"][0]["evidence_ids"], ["resume-evidence-a"])
+            self.assertEqual(result["units"][0]["original_input_refs"], ["synthetic-resume-input"])
+            self.assertNotIn("Private JD suffix", str(result))
+            linked_jd = self.call(
+                client,
+                token=artifact_token,
+                name="get_jd_analysis",
+                arguments={"jd_id": jd_id, "profile_version": 3},
+            ).json()["result"]["structuredContent"]
+            self.assertEqual(linked_jd["requirements"][0]["linked_claim_ids"], ["resume-claim-a"])
+            self.assertEqual(linked_jd["requirements"][0]["gap_status"], "POTENTIAL_LINK_RECORDED")
+            with self.sessions() as session:
+                session.scalar(
+                    select(ArtifactUnit).where(ArtifactUnit.artifact_id == artifact_id)
+                ).exact_text = "Invented achievement"
+                session.commit()
+            self.assertFalse(read(artifact_id).json()["result"]["structuredContent"]["found"])
+            with self.sessions() as session:
+                session.scalar(
+                    select(ArtifactUnit).where(ArtifactUnit.artifact_id == artifact_id)
+                ).exact_text = "I built a synthetic feature."
+                session.get(CareerProfile, "profile-a").status = "DELETING"
+                session.commit()
+            self.assertFalse(read(artifact_id).json()["result"]["structuredContent"]["found"])
 
     def test_exact_profile_read_requires_owned_archive_and_hides_deleted_profile(self) -> None:
         now = datetime.now(UTC)
@@ -313,6 +740,81 @@ class ProductFoundationTests(unittest.TestCase):
                 arguments={"claim_id": "claim-a", "profile_version": 3},
             )
             self.assertFalse(after_delete.json()["result"]["structuredContent"]["found"])
+
+    def test_review_preparation_is_exact_scoped_and_replay_safe(self) -> None:
+        now = datetime.now(UTC)
+        with self.sessions() as session:
+            session.add(
+                ProfilingSession(
+                    id="work-prepare-a",
+                    account_id="acct-a",
+                    profile_id="profile-a",
+                    status="ACTIVE",
+                    base_profile_version=3,
+                    created_at=now,
+                    last_activity_at=now,
+                    retention_expires_at=now + timedelta(days=90),
+                )
+            )
+            session.flush()
+            session.add(
+                ProfilingInput(
+                    id="input-prepare-a",
+                    account_id="acct-a",
+                    session_id="work-prepare-a",
+                    idempotency_key="synthetic_prepare_input_0001",
+                    content_kind="USER_STATEMENT",
+                    body="Private prefix. I built a scoped feature. Private suffix.",
+                    created_at=now,
+                )
+            )
+            session.flush()
+            propose_verbatim_draft(
+                session,
+                account_id="acct-a",
+                profiling_session_id="work-prepare-a",
+                source_input_id="input-prepare-a",
+                scope_key="feature",
+                claim_type="CONTRIBUTION",
+                exact_text="I built a scoped feature.",
+                now=now,
+            )
+            session.commit()
+
+        arguments = {
+            "profiling_session_id": "work-prepare-a",
+            "experience_scope_id": "feature",
+            "base_profile_version": 3,
+            "idempotency_key": "synthetic_review_prepare_0001",
+        }
+        with TestClient(self.app, base_url="https://product-mcp.synthetic.example") as client:
+            write_token = self.token(scope=PROFILE_WRITE_SCOPE)
+
+            def prepare(args=arguments, token=write_token):
+                return self.call(client, token=token, name="prepare_claim_review", arguments=args)
+
+            self.assertTrue(prepare(token=self.token()).json()["result"]["isError"])
+            foreign = prepare(token=self.token(sub="user-b", scope=PROFILE_WRITE_SCOPE))
+            missing = prepare(args={**arguments, "profiling_session_id": "missing"})
+            self.assertEqual(foreign.json()["result"], missing.json()["result"])
+            first = prepare().json()["result"]["structuredContent"]
+            self.assertTrue(first["ok"])
+            self.assertEqual(first["items"][0]["exact_text"], "I built a scoped feature.")
+            self.assertNotIn("Private prefix", str(first))
+            self.assertNotIn("Private suffix", str(first))
+            replay = prepare().json()["result"]["structuredContent"]
+            self.assertEqual(replay["review_batch_id"], first["review_batch_id"])
+            self.assertEqual(replay["review_digest"], first["review_digest"])
+            conflict = prepare(args={**arguments, "experience_scope_id": "other"}).json()["result"][
+                "structuredContent"
+            ]
+            self.assertEqual(conflict["error_code"], "IDEMPOTENCY_CONFLICT")
+            with self.sessions() as session:
+                self.assertEqual(
+                    session.scalar(select(func.count()).select_from(ProfilingReviewBatch)), 1
+                )
+                self.assertEqual(session.scalar(select(func.count()).select_from(Claim)), 0)
+                self.assertEqual(session.get(CareerProfile, "profile-a").version, 3)
 
     def test_exact_review_read_is_owner_scoped_nonrenewing_and_reports_staleness(self) -> None:
         now = datetime.now(UTC)

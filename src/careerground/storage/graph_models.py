@@ -346,6 +346,36 @@ class ClaimConflictReview(Base):
     reviewed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
 
 
+class ClaimUseReview(Base):
+    """Separate owner attestation for consistent, permitted R1 use of one Claim."""
+
+    __tablename__ = "claim_use_reviews"
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["claim_id", "account_id", "profile_id"],
+            ["claims.id", "claims.account_id", "claims.profile_id"],
+            name="fk_use_review_owned_claim",
+            ondelete="RESTRICT",
+        ),
+        CheckConstraint("profile_version = base_profile_version + 1", name="ck_use_review_version"),
+        CheckConstraint(
+            "consistency_attested = true AND use_authorized = true",
+            name="ck_use_review_explicit_choices",
+        ),
+    )
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    account_id: Mapped[str] = mapped_column(String(36), nullable=False, index=True)
+    profile_id: Mapped[str] = mapped_column(String(36), nullable=False, index=True)
+    claim_id: Mapped[str] = mapped_column(String(36), nullable=False)
+    review_digest: Mapped[str] = mapped_column(String(64), nullable=False)
+    consistency_attested: Mapped[bool] = mapped_column(nullable=False)
+    use_authorized: Mapped[bool] = mapped_column(nullable=False)
+    base_profile_version: Mapped[int] = mapped_column(Integer, nullable=False)
+    profile_version: Mapped[int] = mapped_column(Integer, nullable=False)
+    reviewed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+
+
 class ProfileArchive(Base):
     """Immutable-by-service exact canonical snapshot for one profile version."""
 

@@ -1,7 +1,7 @@
 # Career Profiling Protocol v1
 
 - Date: 2026-09-21
-- Status: domain protocol for synthetic validation; no agent/runtime implemented.
+- Status: domain protocol with a synthetic internal question workspace; no agent/runtime implemented.
 - Contract: [Schema v1](career_graph_schema_v1.md), [Entity/Relationship Model](career_graph_entity_relationship_model_v1.md).
 - Evidence: [validation report](career_graph_schema_v1_validation.md).
 
@@ -194,6 +194,12 @@ candidate 격리/승인/replay, Evidence 보존, 버전 archive 복원이다. �
 진실성/atomicity, 실제 사용자 인증, DB transaction/동시성은 검증하지 않는다.
 알려진 compound 반례를 거부하는 검사를 일반 NLP 검증이라고 부르지 않는다.
 
-Protocol instance 저장/API 계약은 아직 정의하지 않았다. 따라서 protocol JSON Schema로
-미정 workspace 필드를 고정하지 않는다. 14 state/guard와 §7 체크리스트는 수동 검토
-계약이며 [validation report](career_graph_schema_v1_validation.md)에 실제 검사 대응을 남긴다.
+질문 전달 횟수와 출처가 연결된 상태 관찰은 내부 합성 `profiling_protocol_steps`에
+임시 저장한다. 세션 소유권·90일 보관·삭제 경계를 공유하지만, 자연어 답변의 의미를
+판단하거나 Claim 승인을 발급하지 않는다. 현재 내부 질문 계산기는 §7의 별도 검토를
+검증하지 못하므로 COMPLETE도 발급하지 않는다. 공개 protocol API와 agent/runtime 계약은
+아직 정의하지 않았다. 따라서 protocol JSON Schema로 그 필드를 고정하지 않는다.
+명시 정정 입력은 임시 protocol cycle을 새로 시작하고 미제출 검토를 만료시킨다.
+이전 회차의 출처는 새 질문 관찰에 재사용할 수 없다.
+14 state/guard와 §7 체크리스트는 여전히 수동 검토 계약이며
+[validation report](career_graph_schema_v1_validation.md)에 실제 검사 대응을 남긴다.

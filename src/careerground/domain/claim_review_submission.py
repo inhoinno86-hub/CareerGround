@@ -208,6 +208,7 @@ def submit_synthetic_review(
             or draft.source_input_id != item.source_input_id
             or _stored_utc(draft.expires_at) <= now
             or source is None
+            or source.protocol_cycle != work.protocol_cycle
             or hashlib.sha256(source.body.encode()).hexdigest() != item.source_content_hash
             or item.exact_text not in source.body
         ):

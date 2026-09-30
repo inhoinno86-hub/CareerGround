@@ -151,6 +151,7 @@ class ProfilingSession(Base):
             name="ck_profiling_sessions_status",
         ),
         CheckConstraint("base_profile_version >= 0", name="ck_profiling_sessions_base_version"),
+        CheckConstraint("protocol_cycle >= 0", name="ck_profiling_sessions_cycle"),
         CheckConstraint(
             "retention_expires_at > last_activity_at", name="ck_profiling_sessions_retention"
         ),
@@ -163,6 +164,9 @@ class ProfilingSession(Base):
     profile_id: Mapped[str] = mapped_column(String(36), nullable=False)
     status: Mapped[str] = mapped_column(String(16), nullable=False, default="ACTIVE")
     base_profile_version: Mapped[int] = mapped_column(Integer, nullable=False)
+    protocol_cycle: Mapped[int] = mapped_column(
+        Integer, nullable=False, default=0, server_default="0"
+    )
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     last_activity_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     retention_expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
@@ -182,6 +186,10 @@ class ProfilingInput(Base):
         UniqueConstraint("session_id", "idempotency_key", name="uq_profiling_input_idempotency"),
         UniqueConstraint("id", "account_id", name="uq_profiling_input_owner_pair"),
         UniqueConstraint("id", "account_id", "session_id", name="uq_profiling_input_scope_pair"),
+        UniqueConstraint(
+            "id", "account_id", "session_id", "protocol_cycle", name="uq_profiling_input_cycle_pair"
+        ),
+        CheckConstraint("protocol_cycle >= 0", name="ck_profiling_inputs_cycle"),
         CheckConstraint(
             "content_kind IN ('USER_STATEMENT', 'SELECTED_CHAT_EXCERPT', "
             "'PASTED_DOCUMENT_EXCERPT', 'CORRECTION')",
@@ -193,10 +201,87 @@ class ProfilingInput(Base):
     id: Mapped[str] = mapped_column(String(36), primary_key=True)
     account_id: Mapped[str] = mapped_column(String(36), nullable=False, index=True)
     session_id: Mapped[str] = mapped_column(String(36), nullable=False, index=True)
+    protocol_cycle: Mapped[int] = mapped_column(
+        Integer, nullable=False, default=0, server_default="0"
+    )
     idempotency_key: Mapped[str] = mapped_column(String(128), nullable=False)
     content_kind: Mapped[str] = mapped_column(String(32), nullable=False)
     body: Mapped[str] = mapped_column(Text, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+
+
+class ProfilingProtocolStep(Base):
+    """Temporary question delivery and sourced observation for one protocol state."""
+
+    __tablename__ = "profiling_protocol_steps"
+    __table_args__ = (
+        UniqueConstraint(
+            "session_id", "protocol_cycle", "state", name="uq_profiling_protocol_step_state"
+        ),
+        ForeignKeyConstraint(
+            ["session_id", "account_id"],
+            ["profiling_sessions.id", "profiling_sessions.account_id"],
+            name="fk_profiling_protocol_step_owned_session",
+            ondelete="CASCADE",
+        ),
+        ForeignKeyConstraint(
+            ["source_input_id", "account_id", "session_id", "protocol_cycle"],
+            [
+                "profiling_inputs.id",
+                "profiling_inputs.account_id",
+                "profiling_inputs.session_id",
+                "profiling_inputs.protocol_cycle",
+            ],
+            name="fk_profiling_protocol_step_owned_input",
+            ondelete="CASCADE",
+        ),
+        CheckConstraint(
+            "state IN ('CONTEXT_DISCOVERY', 'ROLE_DISCOVERY', 'PROJECT_DISCOVERY', "
+            "'RESPONSIBILITY_DISCOVERY', 'CONTRIBUTION_DISCOVERY', 'OWNERSHIP_PROBING', "
+            "'TECHNICAL_DEPTH_PROBING', 'VALIDATION_PROBING', 'OUTCOME_PROBING', "
+            "'EVIDENCE_CAPTURE', 'CLAIM_DRAFTING', 'CLAIM_CONFIRMATION', 'BOUNDARY_CHECK')",
+            name="ck_profiling_protocol_step_state",
+        ),
+        CheckConstraint("asked_count BETWEEN 0 AND 2", name="ck_profiling_protocol_step_count"),
+        CheckConstraint("protocol_cycle >= 0", name="ck_profiling_protocol_step_cycle"),
+        CheckConstraint(
+            "observation_status IS NULL OR observation_status IN "
+            "('SATISFIED', 'UNKNOWN', 'CONFLICT')",
+            name="ck_profiling_protocol_step_observation",
+        ),
+        CheckConstraint(
+            "(asked_count = 0 AND first_delivery_key IS NULL AND second_delivery_key IS NULL) "
+            "OR (asked_count = 1 AND first_delivery_key IS NOT NULL "
+            "AND second_delivery_key IS NULL) OR (asked_count = 2 "
+            "AND first_delivery_key IS NOT NULL AND second_delivery_key IS NOT NULL)",
+            name="ck_profiling_protocol_step_delivery",
+        ),
+        CheckConstraint(
+            "observation_status IS NULL OR observation_status = 'UNKNOWN' "
+            "OR source_input_id IS NOT NULL",
+            name="ck_profiling_protocol_step_source",
+        ),
+        CheckConstraint(
+            "observation_status NOT IN ('UNKNOWN', 'CONFLICT') OR "
+            "(reason IS NOT NULL AND length(reason) BETWEEN 1 AND 1000)",
+            name="ck_profiling_protocol_step_reason",
+        ),
+    )
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    account_id: Mapped[str] = mapped_column(String(36), nullable=False, index=True)
+    session_id: Mapped[str] = mapped_column(String(36), nullable=False, index=True)
+    protocol_cycle: Mapped[int] = mapped_column(
+        Integer, nullable=False, default=0, server_default="0"
+    )
+    state: Mapped[str] = mapped_column(String(40), nullable=False)
+    asked_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    first_delivery_key: Mapped[str | None] = mapped_column(String(128))
+    second_delivery_key: Mapped[str | None] = mapped_column(String(128))
+    observation_status: Mapped[str | None] = mapped_column(String(16))
+    source_input_id: Mapped[str | None] = mapped_column(String(36))
+    reason: Mapped[str | None] = mapped_column(String(1000))
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
 
 
 class OutboxEvent(Base):

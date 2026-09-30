@@ -7,7 +7,7 @@ import hmac
 import json
 import re
 from datetime import UTC, datetime, timedelta
-from uuid import uuid4
+from uuid import UUID, uuid4, uuid5
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -25,6 +25,8 @@ from careerground.storage.models import (
 REVIEW_TTL = timedelta(minutes=10)
 _SCOPE = re.compile(r"[A-Za-z0-9_-]{1,64}\Z")
 _CLAIM_TYPE = re.compile(r"[A-Z][A-Z0-9_]{0,31}\Z")
+_PREPARE_KEY = re.compile(r"[A-Za-z0-9_-]{16,128}\Z")
+_PREPARE_NAMESPACE = UUID("539bb5b0-3862-4af4-bd60-48cf96d468d5")
 
 
 class ReviewUnavailable(Exception):
@@ -33,6 +35,10 @@ class ReviewUnavailable(Exception):
 
 class ReviewStale(Exception):
     """The exact prepared wording, source or profile version changed."""
+
+
+class ReviewIdempotencyConflict(Exception):
+    """A preparation key was reused for a different review target."""
 
 
 def propose_verbatim_draft(
@@ -45,6 +51,7 @@ def propose_verbatim_draft(
     claim_type: str,
     exact_text: str,
     now: datetime,
+    draft_id: str | None = None,
 ) -> ProfilingDraft:
     """Only a source substring may be proposed; no AI inference or approval occurs."""
 
@@ -69,10 +76,14 @@ def propose_verbatim_draft(
             ProfilingInput.account_id == account_id,
         )
     )
-    if source is None or exact_text not in source.body:
+    if (
+        source is None
+        or source.protocol_cycle != work.protocol_cycle
+        or exact_text not in source.body
+    ):
         raise ReviewUnavailable
     draft = ProfilingDraft(
-        id=str(uuid4()),
+        id=draft_id or str(uuid4()),
         account_id=account_id,
         session_id=work.id,
         source_input_id=source.id,
@@ -104,6 +115,7 @@ class ClaimReviewPreparation:
         profiling_session_id: str,
         draft_ids: tuple[str, ...],
         now: datetime,
+        batch_id: str | None = None,
     ) -> ProfilingReviewBatch:
         """Snapshot one to five drafts from one scope; the caller owns the commit."""
 
@@ -145,11 +157,12 @@ class ClaimReviewPreparation:
                 draft.status != "DRAFT"
                 or _stored_utc(draft.expires_at) <= now
                 or source is None
+                or source.protocol_cycle != work.protocol_cycle
                 or hashlib.sha256(source.body.encode()).hexdigest() != draft.source_content_hash
                 or draft.exact_text not in source.body
             ):
                 raise ReviewStale
-        batch_id = str(uuid4())
+        batch_id = batch_id or str(uuid4())
         expires_at = min(now + REVIEW_TTL, _stored_utc(work.retention_expires_at))
         items = [
             ProfilingReviewItem(
@@ -194,6 +207,75 @@ class ClaimReviewPreparation:
         for draft in ordered:
             draft.status = "IN_REVIEW"
         return batch
+
+    def prepare_for_scope(
+        self,
+        session: Session,
+        *,
+        account_id: str,
+        profiling_session_id: str,
+        scope_key: str,
+        base_profile_version: int,
+        idempotency_key: str,
+        now: datetime,
+    ) -> ProfilingReviewBatch:
+        """Prepare all current drafts in one scope, or replay an exact prior batch."""
+
+        now = _utc(now)
+        if (
+            not isinstance(scope_key, str)
+            or not _SCOPE.fullmatch(scope_key)
+            or type(base_profile_version) is not int
+            or base_profile_version < 0
+            or not isinstance(idempotency_key, str)
+            or not _PREPARE_KEY.fullmatch(idempotency_key)
+        ):
+            raise ValueError("invalid review preparation request")
+        work, profile = _owned_work(session, account_id, profiling_session_id)
+        if work.status not in {"ACTIVE", "PAUSED"} or _stored_utc(work.retention_expires_at) <= now:
+            raise ReviewUnavailable
+        if (
+            profile.version != base_profile_version
+            or work.base_profile_version != base_profile_version
+        ):
+            raise ReviewStale
+        batch_id = str(uuid5(_PREPARE_NAMESPACE, f"{account_id}:{idempotency_key}"))
+        existing = session.get(ProfilingReviewBatch, batch_id)
+        if existing is not None:
+            if (
+                existing.account_id != account_id
+                or existing.session_id != profiling_session_id
+                or existing.scope_key != scope_key
+                or existing.base_profile_version != base_profile_version
+            ):
+                raise ReviewIdempotencyConflict
+            self.get(session, account_id=account_id, batch_id=batch_id, now=now)
+            return existing
+        draft_ids = tuple(
+            session.scalars(
+                select(ProfilingDraft.id)
+                .where(
+                    ProfilingDraft.account_id == account_id,
+                    ProfilingDraft.session_id == profiling_session_id,
+                    ProfilingDraft.scope_key == scope_key,
+                    ProfilingDraft.status == "DRAFT",
+                )
+                .order_by(ProfilingDraft.created_at, ProfilingDraft.id)
+                .limit(6)
+            )
+        )
+        if not draft_ids:
+            raise ReviewUnavailable
+        if len(draft_ids) > 5:
+            raise ValueError("review scope exceeds five drafts")
+        return self.prepare(
+            session,
+            account_id=account_id,
+            profiling_session_id=profiling_session_id,
+            draft_ids=draft_ids,
+            now=now,
+            batch_id=batch_id,
+        )
 
     def get(
         self, session: Session, *, account_id: str, batch_id: str, now: datetime

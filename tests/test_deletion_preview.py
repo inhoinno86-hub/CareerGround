@@ -5,9 +5,10 @@ from __future__ import annotations
 import unittest
 from datetime import UTC, datetime, timedelta
 
+from fastapi.testclient import TestClient
 from sqlalchemy import create_engine, event, func, select
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.pool import StaticPool
 
 from careerground.domain.authorization import ResourceNotFound, get_owned_profile
@@ -31,6 +32,7 @@ from careerground.storage.models import (
     DeletionRequest,
     DeletionWorkItem,
 )
+from careerground.web.review_foundation import TrustedBrowserIdentity, build_synthetic_review_app
 
 
 class DeletionPreviewTests(unittest.TestCase):
@@ -117,6 +119,43 @@ class DeletionPreviewTests(unittest.TestCase):
             self.assertEqual(session.scalar(select(func.count()).select_from(DeletionRequest)), 0)
             self.assertEqual(session.scalar(select(func.count()).select_from(DeletionWorkItem)), 0)
             self.assertEqual(session.get(Account, "acct-a").status, "ACTIVE")
+
+    def test_isolated_browser_preview_is_explicitly_incomplete_and_read_only(self) -> None:
+        app = build_synthetic_review_app(
+            session_factory=sessionmaker(bind=self.engine),
+            authenticate_browser=lambda request, _response: (
+                TrustedBrowserIdentity("acct-a", "synthetic-browser-session-a")
+                if request.cookies.get("cg_session") == "opaque-a"
+                else TrustedBrowserIdentity("acct-b", "synthetic-browser-session-b")
+                if request.cookies.get("cg_session") == "opaque-b"
+                else None
+            ),
+            review_signing_secret=b"synthetic-review-secret-32-bytes-long",
+            presentation_signing_secret=b"synthetic-preview-secret-32-bytes-long",
+        )
+        with TestClient(app) as client:
+            self.assertEqual(client.get("/deletion/preview/account").status_code, 401)
+            client.cookies.set("cg_session", "opaque-b")
+            self.assertEqual(client.get("/deletion/preview/profile/profile-a").status_code, 404)
+            client.cookies.set("cg_session", "opaque-a")
+            account = client.get("/deletion/preview/account")
+            self.assertEqual(account.status_code, 200)
+            self.assertEqual(account.headers["cache-control"], "no-store")
+            self.assertIn("일부만 집계", account.text)
+            self.assertIn("적용 가능: 아니오", account.text)
+            self.assertIn("AUTH_IDENTITY: 1", account.text)
+            self.assertNotIn("https://a/", account.text)
+            self.assertNotIn("name='deletion_digest'", account.text)
+            profile = client.get("/deletion/preview/profile/profile-a")
+            self.assertEqual(profile.status_code, 200)
+            self.assertIn("CAREER_PROFILE: 1", profile.text)
+            self.assertNotIn("AUTH_IDENTITY", profile.text)
+            self.assertEqual(client.post("/deletion/preview/account").status_code, 405)
+            with Session(self.engine) as session:
+                self.assertEqual(
+                    session.scalar(select(func.count()).select_from(DeletionRequest)), 0
+                )
+                self.assertEqual(session.get(Account, "acct-a").status, "ACTIVE")
 
     def test_changed_impact_or_expired_digest_cannot_be_confirmed(self) -> None:
         with Session(self.engine) as session:

@@ -23,6 +23,7 @@ from careerground.storage.graph_models import (
     ClaimConflictReview,
     ClaimConstraint,
     ClaimReview,
+    ClaimUseReview,
     EvidenceClaimLink,
     EvidenceItem,
     EvidenceSource,
@@ -49,6 +50,7 @@ from careerground.storage.models import (
     PrivateObjectVersion,
     ProfilingDraft,
     ProfilingInput,
+    ProfilingProtocolStep,
     ProfilingReviewBatch,
     ProfilingReviewItem,
     ProfilingSession,
@@ -62,6 +64,7 @@ KNOWN_KINDS = frozenset(
         "CAREER_PROFILE",
         "PROFILING_SESSION",
         "PROFILING_INPUT",
+        "PROFILING_PROTOCOL_STEP",
         "PROFILING_DRAFT",
         "PROFILING_REVIEW_BATCH",
         "PROFILING_REVIEW_ITEM",
@@ -79,6 +82,7 @@ GRAPH_KINDS = frozenset(
         "CLAIM_REVIEW",
         "CLAIM_BOUNDARY_REVIEW",
         "CLAIM_CONFLICT_REVIEW",
+        "CLAIM_USE_REVIEW",
         "CLAIM_CONSTRAINT",
     }
 )
@@ -107,6 +111,7 @@ _LOCAL_DELETE_ORDER = (
     ProfileArchive,
     ClaimBoundaryReview,
     ClaimConflictReview,
+    ClaimUseReview,
     ClaimReview,
     ClaimAssessment,
     EvidenceClaimLink,
@@ -360,6 +365,13 @@ def apply_deletion_work(session: Session, item_id: str) -> None:
         session.execute(
             delete(ProfilingInput).where(
                 ProfilingInput.id == item.target_id, ProfilingInput.account_id == account_id
+            )
+        )
+    elif item.kind == "PROFILING_PROTOCOL_STEP":
+        session.execute(
+            delete(ProfilingProtocolStep).where(
+                ProfilingProtocolStep.id == item.target_id,
+                ProfilingProtocolStep.account_id == account_id,
             )
         )
     elif item.kind == "PROFILING_DRAFT":

@@ -117,6 +117,42 @@ class ProfilingWorkspaceTests(unittest.TestCase):
                     content="Different text",
                 )
 
+    def test_start_retry_keeps_one_session_and_original_retention(self) -> None:
+        key = "synthetic_start_0001"
+        with Session(self.engine) as session:
+            first = start_profiling_session(
+                session,
+                account_id="acct-a",
+                profile_id="profile-a",
+                base_profile_version=2,
+                now=self.now,
+                idempotency_key=key,
+            )
+            session.commit()
+            original_expiry = first.retention_expires_at
+            retry = start_profiling_session(
+                session,
+                account_id="acct-a",
+                profile_id="profile-a",
+                base_profile_version=2,
+                now=self.now + timedelta(minutes=5),
+                idempotency_key=key,
+            )
+            self.assertEqual(retry.id, first.id)
+            self.assertEqual(retry.retention_expires_at, original_expiry)
+            self.assertEqual(session.scalar(select(func.count()).select_from(ProfilingSession)), 1)
+            session.get(CareerProfile, "profile-a").version = 3
+            session.flush()
+            with self.assertRaises(ProfilingIdempotencyConflict):
+                start_profiling_session(
+                    session,
+                    account_id="acct-a",
+                    profile_id="profile-a",
+                    base_profile_version=3,
+                    now=self.now + timedelta(minutes=5),
+                    idempotency_key=key,
+                )
+
     def test_auto_pause_does_not_refresh_expiry_and_resume_is_explicit(self) -> None:
         with Session(self.engine) as session:
             work = self.start(session)

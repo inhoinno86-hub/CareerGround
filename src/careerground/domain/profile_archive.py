@@ -18,6 +18,7 @@ from careerground.storage.graph_models import (
     ClaimConflictReview,
     ClaimConstraint,
     ClaimReview,
+    ClaimUseReview,
     EvidenceClaimLink,
     EvidenceItem,
     EvidenceSource,
@@ -35,10 +36,12 @@ _SNAPSHOT_MODELS = (
     ClaimAssessment,
     ClaimBoundaryReview,
     ClaimConflictReview,
+    ClaimUseReview,
     ClaimReview,
     ClaimConstraint,
     ProfileChangeSet,
 )
+_V2_SNAPSHOT_MODELS = tuple(model for model in _SNAPSHOT_MODELS if model is not ClaimUseReview)
 _LEGACY_SNAPSHOT_MODELS = (
     Claim,
     EvidenceSource,
@@ -93,7 +96,7 @@ def ensure_profile_archive(
             # Old snapshots predate boundary status and review journals. They
             # remain byte-identical; new rows or a revoked constraint would
             # mean the old version was changed without a profile increment.
-            for model in (ClaimBoundaryReview, ClaimConflictReview):
+            for model in (ClaimBoundaryReview, ClaimConflictReview, ClaimUseReview):
                 if (
                     session.scalar(
                         select(model.id)
@@ -116,9 +119,11 @@ def ensure_profile_archive(
                 is not None
             ):
                 raise ArchiveUnavailable("changed boundary in legacy profile version")
-        elif stored.get("schema") != "canonical-foundation-v2":
+        elif stored.get("schema") not in {"canonical-foundation-v2", "canonical-foundation-v3"}:
             raise ArchiveUnavailable("unsupported archive schema")
-        payload = _canonical_json(session, account_id, profile_id, profile_version, legacy=legacy)
+        payload = _canonical_json(
+            session, account_id, profile_id, profile_version, schema=stored["schema"]
+        )
         digest = hashlib.sha256(payload.encode()).hexdigest()
         if (
             not hmac.compare_digest(archive.content_hash, digest)
@@ -184,7 +189,8 @@ def read_profile_archive(
         raise ArchiveUnavailable from exc
     if (
         not isinstance(value, dict)
-        or value.get("schema") not in {"canonical-foundation-v1", "canonical-foundation-v2"}
+        or value.get("schema")
+        not in {"canonical-foundation-v1", "canonical-foundation-v2", "canonical-foundation-v3"}
         or value.get("account_id") != account_id
         or value.get("profile_id") != profile_id
         or value.get("profile_version") != profile_version
@@ -194,11 +200,24 @@ def read_profile_archive(
 
 
 def _canonical_json(
-    session: Session, account_id: str, profile_id: str, version: int, *, legacy: bool = False
+    session: Session,
+    account_id: str,
+    profile_id: str,
+    version: int,
+    *,
+    schema: str = "canonical-foundation-v3",
 ) -> str:
     sections = {}
+    if schema == "canonical-foundation-v1":
+        models = _LEGACY_SNAPSHOT_MODELS
+    elif schema == "canonical-foundation-v2":
+        models = _V2_SNAPSHOT_MODELS
+    elif schema == "canonical-foundation-v3":
+        models = _SNAPSHOT_MODELS
+    else:
+        raise ArchiveUnavailable("unsupported archive schema")
     with session.no_autoflush:
-        for model in _LEGACY_SNAPSHOT_MODELS if legacy else _SNAPSHOT_MODELS:
+        for model in models:
             rows = session.scalars(
                 select(model)
                 .where(model.account_id == account_id, model.profile_id == profile_id)
@@ -208,13 +227,17 @@ def _canonical_json(
                 {
                     column.name: _json_value(getattr(row, column.name))
                     for column in model.__table__.columns
-                    if not (legacy and model is ClaimConstraint and column.name == "status")
+                    if not (
+                        schema == "canonical-foundation-v1"
+                        and model is ClaimConstraint
+                        and column.name == "status"
+                    )
                 }
                 for row in rows
             ]
     payload = json.dumps(
         {
-            "schema": "canonical-foundation-v1" if legacy else "canonical-foundation-v2",
+            "schema": schema,
             "account_id": account_id,
             "profile_id": profile_id,
             "profile_version": version,
