@@ -44,6 +44,7 @@ from careerground.storage.jd_artifact_models import (
 from careerground.storage.models import (
     Account,
     AuthIdentity,
+    BrowserOperation,
     CareerProfile,
     PrivateObject,
     PrivateObjectVersion,
@@ -353,6 +354,7 @@ class DeletionPreviewService:
         items = []
         for kind, model in (
             ("PROFILE_CHANGE_SET", ProfileChangeSet),
+            ("BROWSER_OPERATION", BrowserOperation),
             ("PROFILE_ARCHIVE", ProfileArchive),
             ("CLAIM", Claim),
             ("EVIDENCE_SOURCE", EvidenceSource),

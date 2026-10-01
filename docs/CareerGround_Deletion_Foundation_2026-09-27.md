@@ -6,7 +6,7 @@ This is an **internal, synthetic-data-only foundation**, not a user-facing delet
 
 The later synthetic execution, outbox and restore rehearsal are documented in [Data Lifecycle Foundation](CareerGround_Data_Lifecycle_Foundation_2026-09-27.md). The preview's public-readiness flags remain unchanged.
 
-No MCP or web deletion execution route, production erasure worker, or production secret configuration is enabled. The service never writes when previewing or checking confirmation. The existing PoC and local product-MCP foundation remain read-only.
+No MCP or web deletion execution route, production erasure worker, or production secret configuration is enabled. The service never writes when previewing or checking confirmation. The authentication PoC remains read-only; the local product MCP factory now also supports bounded synthetic profiling writes, without any deletion execution tool. See [current Phase A coverage](CareerGround_Phase_A_Local_Validation_2026-09-30.md).
 
 An isolated synthetic browser factory now renders account or owned-profile deletion impact as counts by known local kind. The page explicitly states that its inventory is incomplete, displays `ready_to_execute=false`, omits the confirmation digest and source text, and has no deletion POST or step-up action. Foreign profiles receive 404 and GET creates no deletion request. This is a local test presentation only; it is not mounted in the product web app and cannot be used as a complete impact notice for real users.
 

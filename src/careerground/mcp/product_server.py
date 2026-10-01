@@ -6,18 +6,21 @@ must not be pointed at real user data before provider and erasure gates pass.
 
 from __future__ import annotations
 
+import json
+from collections import Counter
 from collections.abc import Callable
+from copy import deepcopy
 from dataclasses import asdict
 from datetime import UTC, datetime
-from typing import Any
+from typing import Any, Literal
 from urllib.parse import urlsplit
 
 from mcp.server.auth.middleware.auth_context import get_access_token
 from mcp.server.auth.settings import AuthSettings
 from mcp.server.mcpserver import MCPServer
-from mcp.server.mcpserver.exceptions import ToolError
+from mcp.server.mcpserver.exceptions import ToolError, UnexpectedToolError
 from mcp.server.transport_security import TransportSecuritySettings
-from mcp.types import ToolAnnotations
+from mcp.types import CallToolResult, TextContent, ToolAnnotations
 from pydantic import AnyHttpUrl, BaseModel, ConfigDict, Field
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -30,11 +33,23 @@ from careerground.domain.authorization import (
     get_owned_profile,
     resolve_account_id,
 )
+from careerground.domain.browser_operations import (
+    BrowserOperationRejected,
+    BrowserOperationService,
+    BrowserOperationUnavailable,
+)
 from careerground.domain.claim_review_workspace import (
     ClaimReviewPreparation,
     ReviewIdempotencyConflict,
     ReviewStale,
     ReviewUnavailable,
+)
+from careerground.domain.contracts import ErrorResponse, SuccessResponse
+from careerground.domain.contracts import ToolError as FunctionalToolError
+from careerground.domain.deletion_preview import (
+    DeletionPreviewService,
+    DeletionScope,
+    DeletionTargetUnavailable,
 )
 from careerground.domain.graph_projection import (
     GraphUnavailable,
@@ -59,8 +74,23 @@ from careerground.domain.profiling_workspace import (
 from careerground.domain.profiling_workspace import (
     get_profiling_session as read_profiling_session,
 )
+from careerground.domain.request_limits import (
+    DEFAULT_REQUEST_LIMITS,
+    AccountRequestLimiter,
+    RequestLimitExceeded,
+    RequestLimitPolicy,
+)
 from careerground.domain.resume_draft import ResumeDraftUnavailable, get_resume_trace
+from careerground.domain.safe_events import record_result
 from careerground.mcp.account_access import ActiveAccountTokenVerifier
+from careerground.mcp.confirmation_tools import (
+    ACTION_SCOPES,
+    ARTIFACT_WRITE_SCOPE,
+    EXPORT_SCOPE,
+    TOOL_SCOPES,
+    register_confirmation_tools,
+)
+from careerground.mcp.local_ingress import LocalMCPIngress
 from careerground.mcp.oauth_resource import (
     JwtTokenVerifier,
     LocalMetadataPathAlias,
@@ -72,6 +102,7 @@ from careerground.storage.graph_models import Claim
 PROFILE_READ_SCOPE = "career.profile.read"
 PROFILE_WRITE_SCOPE = "career.profile.write"
 ARTIFACT_READ_SCOPE = "career.artifact.read"
+DELETE_SCOPE = "career.delete"
 
 _TOOL_ARGUMENTS = {
     "get_account_profile": frozenset(),
@@ -96,23 +127,167 @@ _TOOL_ARGUMENTS = {
     "prepare_claim_review": frozenset(
         {"profiling_session_id", "experience_scope_id", "base_profile_version", "idempotency_key"}
     ),
+    "preview_data_deletion": frozenset({"scope", "target_ids"}),
+    "request_user_confirmation": frozenset(
+        {"action", "target_id", "profile_version", "format", "idempotency_key"}
+    ),
+    "submit_claim_review": frozenset({"review_batch_id", "approval_receipt"}),
+    "submit_resume_wording_review": frozenset({"artifact_id", "approval_receipt"}),
+    "export_profile_data": frozenset(
+        {"profile_id", "profile_version", "format", "approval_receipt"}
+    ),
+    "export_resume": frozenset({"artifact_id", "format", "approval_receipt"}),
+    "get_deletion_status": frozenset({"erasure_request_id"}),
+    "resolve_claim_conflict": frozenset({"claim_id", "approval_receipt"}),
+    "review_boundary_change": frozenset({"claim_id", "approval_receipt"}),
+    "record_selected_jd": frozenset({"profile_id", "profile_version", "approval_receipt"}),
+    "link_jd_requirement": frozenset({"jd_id", "approval_receipt"}),
+    "generate_resume_draft": frozenset({"jd_id", "profile_version", "approval_receipt"}),
 }
 
 
 class StrictProductMCPServer(MCPServer):
     """Reject surplus or missing tool fields before the SDK discards them."""
 
+    guard_call: Callable[[str, dict[str, Any]], None]
+    guard_invalid: Callable[[], None]
+
+    def invalid_tool_call(self) -> CallToolResult:
+        # Every authenticated malformed tool call reserves the shared read lane.
+        # No write scope is inferred from untrusted or incomplete arguments.
+        self.guard_invalid()
+        return _functional_error("VALIDATION_FAILED")
+
+    async def list_tools(self):
+        tools = await super().list_tools()
+        for tool in tools:
+            tool.input_schema["additionalProperties"] = False
+            original = deepcopy(tool.output_schema)
+            success = SuccessResponse.model_json_schema()
+            success["required"] = ["status", "data", "next_actions", "user_message"]
+            success["properties"]["data"] = original
+            error = ErrorResponse.model_json_schema()
+            error["required"] = ["status", "error"]
+            definitions = {}
+            for schema in (original, success, error):
+                definitions.update(schema.pop("$defs", {}))
+            tool.output_schema = {"type": "object", "oneOf": [success, error], "$defs": definitions}
+        return tools
+
     async def call_tool(self, name: str, arguments: dict[str, Any], context=None):
-        allowed = _TOOL_ARGUMENTS.get(name)
-        if allowed is None or set(arguments) != allowed:
-            raise ToolError("Unsupported tool arguments")
-        return await super().call_tool(name, arguments, context)
+        try:
+            allowed = _TOOL_ARGUMENTS.get(name)
+            if type(arguments) is not dict or allowed is None or set(arguments) != allowed:
+                return self.invalid_tool_call()
+            # Reject SDK coercion and errors containing submitted values.
+            for field, value in arguments.items():
+                if field == "target_ids":
+                    if (
+                        type(value) is not list
+                        or len(value) != 1
+                        or any(type(item) is not str or not item for item in value)
+                    ):
+                        return self.invalid_tool_call()
+                    continue
+                expected = int if field in {"profile_version", "base_profile_version"} else str
+                if type(value) is not expected:
+                    return self.invalid_tool_call()
+            if name == "request_user_confirmation" and arguments["action"] not in ACTION_SCOPES:
+                return self.invalid_tool_call()
+            self.guard_call(name, arguments)
+            result = await super().call_tool(name, arguments, context)
+            data = result.structured_content
+            if not isinstance(data, dict):
+                raise TypeError("Missing structured tool output")
+            if data.get("ok") is False:
+                code = {
+                    "IDEMPOTENCY_CONFLICT": "VALIDATION_FAILED",
+                    "REVIEW_STALE": "VERSION_CONFLICT",
+                }.get(data["error_code"], data["error_code"])
+                return _functional_error(code)
+            if data.get("found") is False:
+                return _functional_error("NOT_FOUND")
+            envelope = SuccessResponse(
+                data=data, next_actions=[], user_message="요청이 처리됐습니다."
+            )
+            record_result("mcp", "OK")
+            return _tool_result(envelope.model_dump(mode="json"))
+        except RequestLimitExceeded as exc:
+            return _functional_error("RATE_LIMITED", retry_after_seconds=exc.retry_after_seconds)
+        except PermissionError:
+            return _functional_error("FORBIDDEN")
+        except BrowserOperationRejected:
+            return _functional_error("REVIEW_REQUIRED")
+        except ToolError as exc:
+            if isinstance(exc.__cause__, BrowserOperationRejected):
+                return _functional_error(
+                    "NOT_FOUND"
+                    if isinstance(exc.__cause__, BrowserOperationUnavailable)
+                    else "REVIEW_REQUIRED"
+                )
+            return _functional_error(
+                "INTERNAL_ERROR" if isinstance(exc, UnexpectedToolError) else "VALIDATION_FAILED"
+            )
+        except Exception:  # noqa: BLE001 - the public failure boundary must hide every SDK/DB crash
+            # SDK error chains can contain SQL binds or submitted source values.
+            # Return before SDK's exception logger serializes the exception chain.
+            return _functional_error("INTERNAL_ERROR")
+
+
+def _tool_result(payload: dict, *, error: bool = False) -> CallToolResult:
+    return CallToolResult(
+        content=[TextContent(type="text", text=json.dumps(payload, ensure_ascii=False))],
+        structured_content=payload,
+        is_error=error,
+    )
+
+
+def _functional_error(code: str, *, retry_after_seconds: int | None = None) -> CallToolResult:
+    messages = {
+        "FORBIDDEN": "이 요청을 수행할 권한이 없습니다.",
+        "NOT_FOUND": "요청한 내용을 찾을 수 없습니다.",
+        "VALIDATION_FAILED": "요청 형식을 확인해 주세요.",
+        "VERSION_CONFLICT": "현재 버전을 확인하고 새 화면에서 다시 검토해 주세요.",
+        "SESSION_PAUSED": "명시적으로 세션을 재개한 뒤 입력해 주세요.",
+        "SESSION_EXPIRED": "세션이 만료됐습니다. 새 세션을 시작해 주세요.",
+        "RATE_LIMITED": "잠시 후 다시 시도해 주세요.",
+        "INTERNAL_ERROR": "처리 상태를 다시 확인해 주세요. 같은 작업을 바로 반복하지 마세요.",
+        "REVIEW_REQUIRED": "현재 내용을 브라우저에서 직접 확인하고 유효한 완료 증명을 전달해 주세요.",
+    }
+    if code not in messages:
+        code = "INTERNAL_ERROR"
+    event = (
+        code
+        if code in {"FORBIDDEN", "NOT_FOUND", "VALIDATION_FAILED", "RATE_LIMITED", "INTERNAL_ERROR"}
+        else "VALIDATION_FAILED"
+    )
+    record_result("mcp", event)
+    payload = ErrorResponse(
+        error=FunctionalToolError(
+            code=code,
+            message=messages[code],
+            recoverable=code not in {"FORBIDDEN", "NOT_FOUND"},
+            next_action="RETRY_AFTER" if code == "RATE_LIMITED" else "CHECK_CURRENT_STATE",
+            retry_after_seconds=retry_after_seconds,
+        )
+    ).model_dump(mode="json")
+    return _tool_result(payload, error=True)
 
 
 class AccountProfile(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     id: str = Field(min_length=1)
+
+
+class DeletionPreviewOutput(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    scope: Literal["ACCOUNT", "PROFILE"]
+    found: bool = True
+    coverage: Literal["FOUNDATION_ONLY"] = "FOUNDATION_ONLY"
+    ready_to_execute: Literal[False] = False
+    counts: dict[str, int]
 
 
 class ProfileMetadata(BaseModel):
@@ -310,15 +485,28 @@ def build_product_foundation_app(
     session_factory: Callable[[], Session],
     review_signing_secret: bytes,
     signing_key: Callable[[str], object] | None = None,
+    request_limits: RequestLimitPolicy = DEFAULT_REQUEST_LIMITS,
+    presentation_signing_secret: bytes | None = None,
 ) -> ASGIApp:
     """Build isolated product auth/ownership checks for synthetic local tests."""
 
     review_preparation = ClaimReviewPreparation(review_signing_secret)
+    limiter = AccountRequestLimiter(session_factory, review_signing_secret, policy=request_limits)
+    operation_service = BrowserOperationService(
+        review_signing_secret, presentation_signing_secret or review_signing_secret
+    )
     verifier = ActiveAccountTokenVerifier(
         JwtTokenVerifier(
             settings,
             required_scope=frozenset(
-                {PROFILE_READ_SCOPE, PROFILE_WRITE_SCOPE, ARTIFACT_READ_SCOPE}
+                {
+                    PROFILE_READ_SCOPE,
+                    PROFILE_WRITE_SCOPE,
+                    ARTIFACT_READ_SCOPE,
+                    DELETE_SCOPE,
+                    EXPORT_SCOPE,
+                    ARTIFACT_WRITE_SCOPE,
+                }
             ),
             signing_key=signing_key,
         ),
@@ -340,12 +528,87 @@ def build_product_foundation_app(
 
     def current_account_id(session: Session, required_scope: str = PROFILE_READ_SCOPE) -> str:
         access = get_access_token()
-        if access is None or not access.subject or required_scope not in access.scopes:
+        if (
+            access is None
+            or not access.subject
+            or (required_scope and required_scope not in access.scopes)
+        ):
             raise PermissionError("Authentication required")
         try:
             return resolve_account_id(session, VerifiedIdentity(settings.issuer, access.subject))
         except AuthenticationRequired as exc:
             raise PermissionError("Authentication required") from exc
+
+    def guard_call(name: str, arguments: dict[str, Any]) -> None:
+        write = name in {
+            "start_profiling",
+            "add_profiling_input",
+            "pause_profiling",
+            "prepare_claim_review",
+        } or (name in TOOL_SCOPES and name != "get_deletion_status")
+        scope = (
+            PROFILE_WRITE_SCOPE
+            if write
+            else DELETE_SCOPE
+            if name == "preview_data_deletion"
+            else ARTIFACT_READ_SCOPE
+            if name in {"get_jd_analysis", "get_resume_trace"}
+            else PROFILE_READ_SCOPE
+        )
+        if name in TOOL_SCOPES:
+            scope = (
+                ACTION_SCOPES[arguments["action"]]
+                if name == "request_user_confirmation"
+                else TOOL_SCOPES[name]
+            )
+        with session_factory() as session:
+            account_id = current_account_id(session, scope)
+        limiter.consume(account_id, "write" if write else "read")
+
+    server.guard_call = guard_call
+
+    def guard_invalid() -> None:
+        with session_factory() as session:
+            account_id = current_account_id(session, "")
+        limiter.consume(account_id, "read")
+
+    server.guard_invalid = guard_invalid
+    register_confirmation_tools(
+        server,
+        settings=settings,
+        session_factory=session_factory,
+        current_account_id=current_account_id,
+        service=operation_service,
+        limiter=limiter,
+    )
+
+    @server.tool(
+        name="preview_data_deletion",
+        title="Preview known local deletion counts",
+        description="Synthetic incomplete ACCOUNT/PROFILE counts only. No digest or deletion execution; ready_to_execute=false.",
+        annotations=ToolAnnotations(
+            read_only_hint=True, destructive_hint=False, open_world_hint=False
+        ),
+        structured_output=True,
+    )
+    def preview_data_deletion(
+        scope: Literal["ACCOUNT", "PROFILE"], target_ids: list[str]
+    ) -> DeletionPreviewOutput:
+        with session_factory() as session:
+            account_id = current_account_id(session, DELETE_SCOPE)
+            try:
+                view = DeletionPreviewService(review_signing_secret).preview(
+                    session,
+                    account_id=account_id,
+                    scope=DeletionScope(scope),
+                    target_id=target_ids[0],
+                    now=datetime.now(UTC),
+                )
+            except DeletionTargetUnavailable:
+                return DeletionPreviewOutput(scope=scope, found=False, counts={})
+            return DeletionPreviewOutput(
+                scope=scope, counts=dict(Counter(item.kind for item in view.items))
+            )
 
     @server.tool(
         name="get_account_profile",
@@ -364,7 +627,7 @@ def build_product_foundation_app(
     @server.tool(
         name="get_owned_profile_metadata",
         title="Get owned profile metadata",
-        description="Return only ID and version of an owned profile, or found=false.",
+        description="Return only ID and version of an owned profile, or a NOT_FOUND error.",
         annotations=ToolAnnotations(
             read_only_hint=True, destructive_hint=False, open_world_hint=False
         ),
@@ -872,6 +1135,7 @@ def build_product_foundation_app(
     )
     declarations = OAuthToolDeclarations(
         app,
+        functional_headers=True,
         tool_scopes={
             "get_account_profile": PROFILE_READ_SCOPE,
             "get_owned_profile_metadata": PROFILE_READ_SCOPE,
@@ -885,6 +1149,9 @@ def build_product_foundation_app(
             "add_profiling_input": PROFILE_WRITE_SCOPE,
             "pause_profiling": PROFILE_WRITE_SCOPE,
             "prepare_claim_review": PROFILE_WRITE_SCOPE,
+            "preview_data_deletion": DELETE_SCOPE,
+            **TOOL_SCOPES,
         },
     )
-    return LocalMetadataPathAlias(declarations, urlsplit(settings.resource_url).path)
+    application = LocalMetadataPathAlias(declarations, urlsplit(settings.resource_url).path)
+    return LocalMCPIngress(application)

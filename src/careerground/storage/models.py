@@ -5,6 +5,7 @@ from __future__ import annotations
 from datetime import UTC, datetime
 
 from sqlalchemy import (
+    BigInteger,
     CheckConstraint,
     DateTime,
     ForeignKey,
@@ -24,6 +25,73 @@ def utc_now() -> datetime:
 
 class Base(DeclarativeBase):
     pass
+
+
+class RequestLimitBucket(Base):
+    """Short-lived HMAC account/lane counter; contains no source, token or raw ID."""
+
+    __tablename__ = "request_limit_buckets"
+    __table_args__ = (
+        CheckConstraint("requests >= 1", name="ck_request_limit_requests"),
+        CheckConstraint("window_start >= 0", name="ck_request_limit_window"),
+        CheckConstraint("expires_at > window_start", name="ck_request_limit_expiry"),
+    )
+
+    bucket_key: Mapped[str] = mapped_column(String(64), primary_key=True)
+    window_start: Mapped[int] = mapped_column(BigInteger, primary_key=True)
+    requests: Mapped[int] = mapped_column(Integer, nullable=False)
+    expires_at: Mapped[int] = mapped_column(BigInteger, nullable=False, index=True)
+
+
+class BrowserOperation(Base):
+    """Expiring MCP confirmation and metadata receipt; never stores source text/tokens."""
+
+    __tablename__ = "browser_operations"
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["profile_id", "account_id"],
+            ["career_profiles.id", "career_profiles.account_id"],
+            name="fk_browser_operation_owned_profile",
+            ondelete="CASCADE",
+        ),
+        UniqueConstraint("request_key", name="uq_browser_operation_request"),
+        CheckConstraint(
+            "action IN ('FACT_REVIEW', 'WORDING_REVIEW', 'PROFILE_EXPORT', 'RESUME_EXPORT', 'CONFLICT_REVIEW', 'BOUNDARY_REVIEW', 'JD_PASTE', 'JD_LINK', 'R1_DRAFT')",
+            name="ck_browser_operation_action",
+        ),
+        CheckConstraint(
+            "status IN ('WAITING', 'DONE', 'CONSUMED')", name="ck_browser_operation_status"
+        ),
+        CheckConstraint("profile_version >= 0", name="ck_browser_operation_version"),
+        CheckConstraint("expires_at > created_at", name="ck_browser_operation_expiry"),
+        CheckConstraint(
+            "format IN ('NONE', 'JSON', 'MARKDOWN')", name="ck_browser_operation_format"
+        ),
+        CheckConstraint(
+            "(status = 'WAITING' AND browser_key IS NULL AND confirmation_key IS NULL AND result_json IS NULL) OR (status IN ('DONE', 'CONSUMED') AND browser_key IS NOT NULL AND confirmation_key IS NOT NULL AND result_json IS NOT NULL)",
+            name="ck_browser_operation_completion",
+        ),
+    )
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    account_id: Mapped[str] = mapped_column(String(36), nullable=False, index=True)
+    profile_id: Mapped[str] = mapped_column(String(36), nullable=False, index=True)
+    connection_key: Mapped[str] = mapped_column(String(64), nullable=False)
+    client_id: Mapped[str] = mapped_column(String(128), nullable=False)
+    request_key: Mapped[str] = mapped_column(String(64), nullable=False)
+    action: Mapped[str] = mapped_column(String(24), nullable=False)
+    target_id: Mapped[str] = mapped_column(String(36), nullable=False)
+    profile_version: Mapped[int] = mapped_column(Integer, nullable=False)
+    format: Mapped[str] = mapped_column(String(8), nullable=False)
+    status: Mapped[str] = mapped_column(String(12), nullable=False, default="WAITING")
+    browser_key: Mapped[str | None] = mapped_column(String(64))
+    confirmation_key: Mapped[str | None] = mapped_column(String(64))
+    result_json: Mapped[str | None] = mapped_column(Text)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    expires_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, index=True
+    )
+    consumed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
 
 class Account(Base):

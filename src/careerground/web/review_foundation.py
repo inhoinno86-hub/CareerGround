@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+import base64
+import hashlib
+import re
 from collections.abc import Awaitable, Callable
 from dataclasses import dataclass
 from datetime import UTC, datetime
@@ -11,6 +14,7 @@ from inspect import isawaitable
 from urllib.parse import parse_qs, quote
 
 from fastapi import FastAPI, HTTPException, Request, Response
+from fastapi.exceptions import RequestValidationError
 from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy.orm import Session
 from starlette.exceptions import HTTPException as StarletteHTTPException
@@ -21,6 +25,8 @@ from careerground.domain.artifact_navigation import (
     list_jd_analyses,
     list_resume_artifacts,
 )
+from careerground.domain.artifact_operation_presentation import ARTIFACT_ACTIONS, ARTIFACT_FIELDS
+from careerground.domain.browser_operations import BrowserOperationRejected, BrowserOperationService
 from careerground.domain.claim_review_workspace import ClaimReviewPreparation
 from careerground.domain.claim_use_review import (
     ClaimUseReviewPresentation,
@@ -52,6 +58,11 @@ from careerground.domain.jd_paste_presentation import (
     JDPastePresentation,
     JDPastePresentationRejected,
     JDPastePresentationService,
+)
+from careerground.domain.policy_review_presentation import (
+    BOUNDARY_FIELDS,
+    CONFLICT_FIELDS,
+    POLICY_ACTIONS,
 )
 from careerground.domain.profile_export_presentation import (
     ProfileExportPresentation,
@@ -99,6 +110,13 @@ from careerground.domain.profiling_workspace import (
     ProfilingUnavailable,
     ProfilingVersionConflict,
 )
+from careerground.domain.request_limits import (
+    DEFAULT_REQUEST_LIMITS,
+    AccountRequestLimiter,
+    RequestLimitExceeded,
+    RequestLimitPolicy,
+    RequestLimitStoreUnavailable,
+)
 from careerground.domain.resume_draft import ResumeDraftUnavailable, ResumeTrace, get_resume_trace
 from careerground.domain.resume_draft_presentation import (
     ResumeDraftPresentation,
@@ -126,8 +144,11 @@ from careerground.domain.review_presentation import (
     ReviewPresentationRejected,
     ReviewPresentationService,
 )
+from careerground.domain.safe_events import record_result
 from careerground.storage.jd_artifact_models import JobDescription
 from careerground.storage.models import CareerProfile
+from careerground.web.artifact_operation_forms import render_artifact_choices, render_artifact_exact
+from careerground.web.policy_review_forms import render_policy_choices, render_policy_exact
 
 _DECISION_LABELS = (
     ("ACCEPT", "사실 그대로 확인"),
@@ -155,6 +176,7 @@ def build_synthetic_review_app(
     ],
     review_signing_secret: bytes,
     presentation_signing_secret: bytes,
+    request_limits: RequestLimitPolicy = DEFAULT_REQUEST_LIMITS,
 ) -> FastAPI:
     """Build a local-only test app with no server entrypoint or real auth adapter."""
 
@@ -187,6 +209,31 @@ def build_synthetic_review_app(
         hmac_digest(presentation_signing_secret, b"synthetic-deletion-preview-v1", "sha256")
     )
     app = FastAPI(title="CareerGround synthetic review", docs_url=None, redoc_url=None)
+    limiter = AccountRequestLimiter(session_factory, review_signing_secret, policy=request_limits)
+    operation_service = BrowserOperationService(review_signing_secret, presentation_signing_secret)
+
+    @app.middleware("http")
+    async def private_failure_boundary(request: Request, call_next):
+        try:
+            response = await call_next(request)
+            if 200 <= response.status_code < 400:
+                record_result("web", "OK")
+            return response
+        except Exception:  # noqa: BLE001 - sanitize before the ASGI server can log source/SQL values
+            # Never log exc/traceback: database and SDK exceptions can contain input.
+            record_result("web", "INTERNAL_ERROR")
+            return _html_response(
+                "<!doctype html><html lang='ko'><meta charset='utf-8'>"
+                "<title>요청을 처리할 수 없습니다</title><main role='alert'>"
+                "<h1>요청을 처리할 수 없습니다</h1>"
+                "<p>처리 상태를 다시 확인해 주세요. 같은 작업을 바로 반복하지 마세요.</p>"
+                "<p><a href='/profiling/start'>시작 화면에서 현재 상태 확인하기</a></p></main></html>",
+                status_code=500,
+            )
+
+    @app.exception_handler(RequestValidationError)
+    async def private_validation_error(request: Request, _exc: RequestValidationError):
+        return await browser_error(request, StarletteHTTPException(400))
 
     @app.exception_handler(StarletteHTTPException)
     async def browser_error(_request: Request, exc: StarletteHTTPException) -> HTMLResponse:
@@ -198,19 +245,33 @@ def build_synthetic_review_app(
             409: "화면의 정보가 바뀌었습니다",
             413: "제출 내용이 너무 큽니다",
             415: "지원하지 않는 제출 형식입니다",
+            429: "잠시 후 다시 시도해 주세요",
+            503: "현재 요청을 처리할 수 없습니다",
         }
         title = titles.get(exc.status_code, "요청을 처리할 수 없습니다")
         recovery = (
             "<p><a href='/profiling/start'>경력 정리 시작 화면에서 다시 확인하기</a></p>"
-            if exc.status_code in {400, 404, 409, 413, 415}
+            if exc.status_code in {400, 404, 409, 413, 415, 429, 503}
             else ""
         )
-        return _html_response(
+        retry = (exc.headers or {}).get("Retry-After")
+        if exc.status_code == 429 and retry and retry.isdecimal():
+            recovery = f"<p>{escape(retry)}초 뒤 현재 상태를 확인해 주세요.</p>" + recovery
+        result = _html_response(
             "<!doctype html><html lang='ko'><meta charset='utf-8'>"
             f"<title>{title}</title><main role='alert'><h1>{title}</h1>"
             f"<p>이 요청은 저장되지 않았습니다.</p>{recovery}</main></html>",
             status_code=exc.status_code,
         )
+        if exc.status_code == 429 and retry and retry.isdecimal():
+            result.headers["Retry-After"] = retry
+        record_result(
+            "web",
+            "RATE_LIMITED"
+            if exc.status_code == 429
+            else ("INTERNAL_ERROR" if exc.status_code >= 500 else "VALIDATION_FAILED"),
+        )
+        return result
 
     async def identity(request: Request, auth_response: Response) -> TrustedBrowserIdentity:
         principal = authenticate_browser(request, auth_response)
@@ -218,6 +279,16 @@ def build_synthetic_review_app(
             principal = await principal
         if type(principal) is not TrustedBrowserIdentity:
             raise HTTPException(status_code=401, detail="Authentication required")
+        try:
+            limiter.consume(
+                principal.account_id, "read" if request.method in {"GET", "HEAD"} else "write"
+            )
+        except RequestLimitExceeded as exc:
+            raise HTTPException(
+                429, headers={"Retry-After": str(exc.retry_after_seconds)}
+            ) from None
+        except RequestLimitStoreUnavailable:
+            raise HTTPException(503) from None
         return principal
 
     @app.get("/profiling/start", response_class=HTMLResponse)
@@ -1281,6 +1352,7 @@ def build_synthetic_review_app(
                     now=datetime.now(UTC),
                 )
                 version_after = change.version_after if change is not None else None
+                profile_id = change.profile_id if change is not None else None
                 session.commit()
             except ReviewPresentationRejected as exc:
                 raise HTTPException(
@@ -1288,6 +1360,10 @@ def build_synthetic_review_app(
                 ) from exc
         version_note = (
             f"<p>프로필 버전 {version_after}에 반영됐습니다.</p>"
+            "<p>사실 확인은 외부 검증이나 R1 사용 허용을 뜻하지 않습니다. "
+            "각 사실의 선택 근거 화면에서 별도로 사용 가능 여부를 검토하세요.</p>"
+            f"<p><a href='/profile/{quote(profile_id, safe='')}/{version_after}'>"
+            "반영된 사실과 선택 근거 확인하기</a></p>"
             if version_after is not None
             else "<p>추가 확인 또는 수정 대상으로 저장됐습니다.</p>"
         )
@@ -1295,12 +1371,236 @@ def build_synthetic_review_app(
             _html_response(
                 "<!doctype html><html lang='ko'><meta charset='utf-8'>"
                 "<title>검토 결과</title><main><h1>검토 결과 저장</h1>"
-                f"{version_note}</main></html>"
+                f"{version_note}<p><a href='/profiling/start'>"
+                "경력 정리 시작 화면으로 돌아가기</a></p></main></html>"
             ),
             auth_response,
         )
 
+    @app.get("/mcp/confirm/{operation_id}", response_class=HTMLResponse)
+    async def show_mcp_confirmation(operation_id: str, request: Request):
+        auth_response = Response()
+        principal = await identity(request, auth_response)
+        with session_factory() as session:
+            try:
+                presentation = operation_service.present(
+                    session,
+                    account_id=principal.account_id,
+                    browser_session_id=principal.session_id,
+                    operation_id=operation_id,
+                    now=datetime.now(UTC),
+                )
+            except BrowserOperationRejected:
+                raise HTTPException(404) from None
+            row = presentation.operation
+            if row.status != "WAITING":
+                body = _render_operation_receipt(row, operation_service.receipt(row))
+            else:
+                if row.action in POLICY_ACTIONS | ARTIFACT_ACTIONS:
+                    render_choices = (
+                        render_policy_choices
+                        if row.action in POLICY_ACTIONS
+                        else render_artifact_choices
+                    )
+                    body = render_choices(presentation.view, row.id).replace(
+                        "</h1>", "</h1>" + _operation_recipient(row), 1
+                    )
+                else:
+                    render = {
+                        "FACT_REVIEW": _render_review,
+                        "WORDING_REVIEW": _render_wording_review,
+                        "PROFILE_EXPORT": _render_export_form,
+                        "RESUME_EXPORT": _render_resume_export_form,
+                    }[row.action]
+                    body = render(presentation.view)
+                    body = re.sub(
+                        r"<form method='post' action='[^']+'>",
+                        f"<form method='post' action='/mcp/confirm/{escape(row.id, quote=True)}'>",
+                        body,
+                        count=1,
+                    )
+                    body = re.sub(
+                        r"<input type='hidden' name='(?:approval_token|export_token)' value='[^']+'>",
+                        f"<input type='hidden' name='confirmation_token' value='{escape(presentation.confirmation_token, quote=True)}'>",
+                        body,
+                        count=1,
+                    )
+                    body = body.replace("</h1>", "</h1>" + _operation_recipient(row), 1)
+                    body = body.replace(
+                        "<button type='submit'>",
+                        "<label><input type='checkbox' name='allow_connection' value='yes' required>표시된 연결 앱이 이 작업의 결과를 받도록 허용합니다.</label><button type='submit'>",
+                        1,
+                    )
+                    if row.action.endswith("EXPORT"):
+                        body = body.replace(
+                            "외부 전송이나 채용 결과를 뜻하지 않습니다.",
+                            "받을 연결 앱과 내보낼 범위를 직접 확인하세요. 채용 결과를 뜻하지 않습니다.",
+                        )
+                        body = body.replace("다운로드합니다.", "표시된 연결 앱에 내보냅니다.")
+                        body = body.replace(
+                            "JSON 다운로드</button>", "JSON 내보내기 허용</button>"
+                        ).replace("파일 다운로드</button>", "내보내기 허용</button>")
+            return _with_auth_cookies(_html_response(body), auth_response)
+
+    @app.post("/mcp/confirm/{operation_id}/prepare", response_class=HTMLResponse)
+    async def prepare_mcp_policy(operation_id: str, request: Request):
+        auth_response = Response()
+        principal = await identity(request, auth_response)
+        _require_confirmation_origin(request)
+        if (
+            request.headers.get("content-type", "").split(";", 1)[0].strip().lower()
+            != "application/x-www-form-urlencoded"
+        ):
+            raise HTTPException(415)
+        body = await request.body()
+        if len(body) > 65536:
+            raise HTTPException(413)
+        try:
+            values = parse_qs(
+                body.decode("utf-8"), keep_blank_values=True, strict_parsing=True, max_num_fields=16
+            )
+        except (UnicodeDecodeError, ValueError):
+            raise HTTPException(400) from None
+        if (
+            any(
+                not (1 <= len(value) <= 5 if key == "claim_ids" else len(value) == 1)
+                for key, value in values.items()
+            )
+            or "choice_token" not in values
+            or not set(values).issubset(
+                {"choice_token", *CONFLICT_FIELDS, *BOUNDARY_FIELDS, *ARTIFACT_FIELDS}
+            )
+        ):
+            raise HTTPException(400)
+        with session_factory() as session:
+            try:
+                presentation = operation_service.prepare_policy(
+                    session,
+                    account_id=principal.account_id,
+                    browser_session_id=principal.session_id,
+                    operation_id=operation_id,
+                    choice_token=values["choice_token"][0],
+                    fields={
+                        key: value if key == "claim_ids" else value[0]
+                        for key, value in values.items()
+                        if key != "choice_token"
+                    },
+                    now=datetime.now(UTC),
+                )
+                render_exact = (
+                    render_policy_exact
+                    if presentation.operation.action in POLICY_ACTIONS
+                    else render_artifact_exact
+                )
+                result = render_exact(presentation).replace(
+                    "</h1>", "</h1>" + _operation_recipient(presentation.operation), 1
+                )
+            except BrowserOperationRejected:
+                raise HTTPException(409) from None
+        return _with_auth_cookies(_html_response(result), auth_response)
+
+    @app.post("/mcp/confirm/{operation_id}", response_class=HTMLResponse)
+    async def confirm_mcp_operation(operation_id: str, request: Request):
+        auth_response = Response()
+        principal = await identity(request, auth_response)
+        _require_confirmation_origin(request)
+        if (
+            request.headers.get("content-type", "").split(";", 1)[0].strip().lower()
+            != "application/x-www-form-urlencoded"
+        ):
+            raise HTTPException(415)
+        body = await request.body()
+        if len(body) > 65536:
+            raise HTTPException(413)
+        try:
+            values = parse_qs(
+                body.decode("utf-8"), keep_blank_values=True, strict_parsing=True, max_num_fields=16
+            )
+        except (UnicodeDecodeError, ValueError):
+            raise HTTPException(400) from None
+        decision_keys = [key for key in values if key.startswith("decision_")]
+        extra_keys = set(values) & (CONFLICT_FIELDS | BOUNDARY_FIELDS | ARTIFACT_FIELDS)
+        if (
+            any(
+                not (1 <= len(value) <= 5 if key == "claim_ids" else len(value) == 1)
+                for key, value in values.items()
+            )
+            or set(values)
+            != {"confirmation_token", "confirm", "allow_connection", *decision_keys, *extra_keys}
+            or values.get("allow_connection") != ["yes"]
+        ):
+            raise HTTPException(400)
+        with session_factory() as session:
+            try:
+                row = operation_service.confirm(
+                    session,
+                    account_id=principal.account_id,
+                    browser_session_id=principal.session_id,
+                    operation_id=operation_id,
+                    confirmation_token=values["confirmation_token"][0],
+                    confirm_value=values["confirm"][0],
+                    decisions=tuple(
+                        (key.removeprefix("decision_"), values[key][0]) for key in decision_keys
+                    ),
+                    submission_fields={
+                        key: values[key] if key == "claim_ids" else values[key][0]
+                        for key in extra_keys
+                    },
+                    now=datetime.now(UTC),
+                )
+                receipt = operation_service.receipt(row)
+                result = _render_operation_receipt(row, receipt)
+                session.commit()
+            except BrowserOperationRejected:
+                raise HTTPException(409) from None
+        return _with_auth_cookies(_html_response(result), auth_response)
+
     return app
+
+
+def _require_confirmation_origin(request):
+    allowed_origins = {None, str(request.base_url).rstrip("/")}
+    # A no-referrer HTTP form may send Origin: null. Permit it only on the
+    # explicitly local synthetic route; the signed session token is still
+    # mandatory. HTTPS deployments must send the matching origin.
+    if request.url.scheme == "http" and request.url.hostname in {"127.0.0.1", "localhost"}:
+        allowed_origins.add("null")
+    if request.headers.get("origin") not in allowed_origins or request.headers.get(
+        "sec-fetch-site"
+    ) not in {None, "same-origin", "none"}:
+        raise HTTPException(400)
+
+
+def _operation_recipient(row) -> str:
+    action_label = {
+        "FACT_REVIEW": "경력 사실 검토",
+        "CONFLICT_REVIEW": "모순 결정 검토",
+        "BOUNDARY_REVIEW": "사용 경계 변경 검토",
+        "JD_PASTE": "JD 선택 발췌 기록",
+        "JD_LINK": "JD 요구와 경력의 잠재 연결",
+        "R1_DRAFT": "정확한 R1 초안 생성",
+        "WORDING_REVIEW": "R1 문구 검토",
+        "PROFILE_EXPORT": "프로필 JSON 내보내기",
+        "RESUME_EXPORT": "검토된 R1 내보내기",
+    }[row.action]
+    return (
+        "<section aria-label='연결 앱 확인'><h2>이 결과를 받을 연결 앱</h2>"
+        f"<p>연결 앱 식별자: {escape(row.client_id)} · 작업: {escape(action_label)}</p>"
+        f"<p>유효 기한: {escape((row.expires_at.replace(tzinfo=UTC) if row.expires_at.tzinfo is None else row.expires_at.astimezone(UTC)).isoformat())}</p>"
+        "<p>이 요청을 시작한 연결 앱이 맞는지 확인하세요. 사실 확인은 별도 사용 허용을 뜻하지 않습니다.</p></section>"
+    )
+
+
+def _render_operation_receipt(row, receipt) -> str:
+    return (
+        "<!doctype html><html lang='ko'><meta charset='utf-8'>"
+        "<title>연결 작업 확인 결과</title><main><h1>연결 작업 확인 완료</h1>"
+        + _operation_recipient(row)
+        + "<p>표시한 내용을 직접 확인한 작업이 완료됐습니다. 아래 짧은 완료 증명은 요청을 시작한 연결 앱에서만 사용할 수 있습니다.</p>"
+        + f"<p>완료 증명: <code id='approval-receipt'>{escape(receipt)}</code></p>"
+        + "<p>증명은 유효 기한 뒤 사용할 수 없습니다. 다른 앱이나 대화에 공유하지 마세요.</p>"
+        + "<p><a href='/profiling/start'>시작 화면에서 현재 상태 확인하기</a></p></main></html>"
+    )
 
 
 def _render_review(view: ReviewPresentation) -> str:
@@ -1364,13 +1664,14 @@ def _render_session(
         parts.append("<li>초안 없음</li>")
     parts.append(
         f"</ul><p><a href='/profiling/{escape(work.id, quote=True)}/drafts'>"
-        "임시 초안 문구와 상태 보기</a></p><h2>검토 대기 묶음</h2><ul>"
+        "임시 초안 문구와 상태 보기</a></p>"
     )
     if work.base_profile_version == work.current_profile_version:
         parts.append(
             f"<p><a href='/profiling/{escape(work.id, quote=True)}/questions'>"
             "질문 단계별 진행 상태 보기</a></p>"
         )
+    parts.append("<h2>검토 대기 묶음</h2><ul>")
     if view.pending_reviews:
         for batch in view.pending_reviews:
             parts.append(
@@ -1851,6 +2152,7 @@ def _render_career_profile(view: ProfileView) -> str:
     parts.extend(
         [
             "</ol>",
+            "<p><a href='/jd/new'>JD 요건 직접 입력</a> · <a href='/jd'>저장한 JD 보기</a></p>",
             (
                 f"<p><a href='/profile/{profile_id}/export/{view.profile_version}'>"
                 "이 버전 JSON 내보내기</a></p>"
@@ -1894,6 +2196,9 @@ def _render_claim_evidence(profile_id: str, view: ClaimEvidenceView) -> str:
         f"</ul><p><a href='/profile/{escape(profile_id, quote=True)}/"
         f"{view.profile_version}/claim/{escape(claim.claim_id, quote=True)}/use-review'>"
         "R1 사용 가능 여부 검토</a></p>"
+    )
+    parts.append(
+        "<p><a href='/jd/new'>JD 요건 직접 입력</a> · <a href='/jd'>저장한 JD 보기</a></p>"
     )
     parts.append(
         f"<p><a href='/profile/{escape(profile_id, quote=True)}/"
@@ -2100,6 +2405,10 @@ def _render_start(view: ProfilingStartView, *, export_available: bool) -> str:
         "<title>CareerGround 경력 정리 시작</title><main>",
         "<h1>경력 정리 시작</h1>",
         "<p>경력 추가 작업을 명시적으로 시작합니다. 이 작업에 직접 제출한 내용만 수집합니다.</p>",
+        (
+            "<p>문서 없이 직접 입력할 수 있습니다. 사실 확인과 R1 사용 검토는 각각 필요하며, "
+            "외부 검증이나 채용 결과를 보장하지 않습니다.</p>"
+        ),
         "<p>임시 세션과 입력은 마지막 활동 후 최대 90일 동안 보관됩니다.</p>",
         f"<p>기준 프로필 버전: {view.profile_version}</p>",
         "<h2>기존 임시 세션</h2><ul>",
@@ -2119,6 +2428,11 @@ def _render_start(view: ProfilingStartView, *, export_available: bool) -> str:
             "<label><input type='checkbox' name='confirm' value='start' required>",
             "수집 범위와 임시 보관 기간을 확인하고 새 세션을 시작합니다.</label>",
             "<button type='submit'>새 경력 정리 시작</button></form>",
+            (
+                "<p><a href='/jd/new'>JD 요건 직접 입력</a> · "
+                "<a href='/jd'>저장한 JD 보기</a> · "
+                "<a href='/artifacts'>이력서 초안과 근거 보기</a></p>"
+            ),
             (
                 "<p>합성 테스트 저장소의 일부 삭제 영향만 확인할 수 있습니다. "
                 "이 화면에서는 삭제 요청을 제출할 수 없습니다.</p>"
@@ -2176,14 +2490,40 @@ def _render_input_form(view: ProfilingInputForm) -> str:
     )
 
 
+_REVIEW_CSS = """html{font-family:system-ui,sans-serif;line-height:1.6;color:#172033;background:#fff}
+body{margin:1rem}main{max-width:64rem;margin:auto;overflow-wrap:anywhere}
+a{color:#0645ad}a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,
+textarea:focus-visible,main:focus-visible{outline:3px solid #0645ad;outline-offset:3px}
+textarea,input[type=text],select{box-sizing:border-box;max-width:100%;font:inherit}
+textarea{width:100%}button{font:inherit;max-width:100%;white-space:normal;margin:.5rem 0}
+label{display:block;margin:.5rem 0}fieldset{min-width:0}blockquote{margin:1rem}
+table{display:block;max-width:100%;overflow-x:auto}pre{white-space:pre-wrap}
+"""
+_REVIEW_CSS_HASH = base64.b64encode(hashlib.sha256(_REVIEW_CSS.encode()).digest()).decode()
+
+
 def _html_response(body: str, *, status_code: int = 200) -> HTMLResponse:
+    body = body.replace(
+        "<meta charset='utf-8'>",
+        "<meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>"
+        f"<style>{_REVIEW_CSS}</style>",
+        1,
+    )
+    focus = " autofocus" if status_code >= 400 else ""
+    body = body.replace(
+        "<main",
+        "<a href='#main-content'>본문으로 바로가기</a>"
+        f"<main id='main-content' tabindex='-1'{focus}",
+        1,
+    )
     return HTMLResponse(
         body,
         status_code=status_code,
         headers={
             "Cache-Control": "no-store",
             "Content-Security-Policy": (
-                "default-src 'none'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'"
+                "default-src 'none'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'; "
+                f"style-src 'sha256-{_REVIEW_CSS_HASH}'"
             ),
             "Referrer-Policy": "no-referrer",
             "X-Content-Type-Options": "nosniff",

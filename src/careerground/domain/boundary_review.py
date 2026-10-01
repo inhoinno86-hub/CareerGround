@@ -85,10 +85,17 @@ class BoundaryReviewService:
         allowed_wording: str,
         remaining_prohibited_expansion: str,
         now: datetime,
+        review_id: str | None = None,
+        expires_at: datetime | None = None,
     ) -> BoundaryReviewView:
         """Render one exact review; preparation makes no canonical change."""
 
         now = _utc(now)
+        expires_at = _utc(expires_at) if expires_at is not None else now + REVIEW_TTL
+        if not now < expires_at <= now + REVIEW_TTL or (
+            review_id is not None and (type(review_id) is not str or len(review_id) != 36)
+        ):
+            raise BoundaryReviewRejected
         if action not in {"ADD", "REVOKE"}:
             raise BoundaryReviewRejected
         for value in (allowed_wording, remaining_prohibited_expansion):
@@ -110,8 +117,8 @@ class BoundaryReviewService:
             proposed_boundary_text=proposed_boundary_text,
             allowed_wording=allowed_wording,
             remaining_prohibited_expansion=remaining_prohibited_expansion,
-            review_id=str(uuid4()),
-            expires_at=now + REVIEW_TTL,
+            review_id=review_id or str(uuid4()),
+            expires_at=expires_at,
         )
 
     def submit(

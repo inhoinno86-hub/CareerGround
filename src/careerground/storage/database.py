@@ -10,4 +10,4 @@ from careerground.config import Settings
 def make_engine(settings: Settings) -> Engine:
     if not settings.database_url:
         raise RuntimeError("CAREERGROUND_DATABASE_URL is required for database access")
-    return create_engine(settings.database_url, pool_pre_ping=True)
+    return create_engine(settings.database_url, pool_pre_ping=True, hide_parameters=True)

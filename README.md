@@ -8,12 +8,25 @@ Career Graph v1 domain/schema validation, Career Profiling Protocol v1, approved
 text-MVP product policy, Schema v1.1 policy addendum, Plugin Functional Specification
 v1, Interview Package Schema v1 and Voice Interview Agent Specification v1. Synthetic
 fixtures cover Career Graph ownership, signed Interview Packages and Voice Agent
-state/policy cases. A local backend foundation now contains account/identity/profile
-tables, a provider-neutral tenant lookup, strict common response DTOs and health
-routes. It does **not** yet accept user data or expose authenticated product tools.
-Managed signing keys and the Voice Interview App are not implemented. MVP Architecture
-v1 and the implementation plan are approved; identity, LLM and realtime providers,
-production resources and live integrations are not yet selected or built.
+state/policy cases. The local backend now has 19 migrations for identity, profiling,
+exact fact review, canonical Claim/Evidence archives, separate Claim use review,
+JD/R1 artifacts and retention/erasure foundations. Isolated MCP and Web/BFF factories
+exercise authenticated synthetic flows. The document-free browser journey starts
+with an empty profile and reaches reviewed R1 Markdown export through explicit
+fact, use, JD-link and wording confirmations. Shared account quotas, sanitized
+exception responses, finite idle cleanup, browser-confirmed MCP receipts and private
+exports, exact conflict/boundary decisions, selected JD links and R1 drafts are
+implemented. A bounded MCP ingress and internal deletion status capability add
+local protections; the status capability has no public route. Local Firefox, native Chrome zoom and isolated Orca
+speech-request checks supplement the Chrome keyboard/reflow checks.
+
+These factories have **no public product entrypoint** and use synthetic data only.
+The public app provides health routes and optionally configured Auth0 login;
+the separate development authentication PoC is historical provider evidence.
+Deletion previews remain `FOUNDATION_ONLY`, `ready_to_execute=false`. Full MCP
+contracts, production erasure/restore, accessibility and operations gates remain
+open. Managed signing and the Voice Interview App are not implemented. Identity,
+LLM/realtime provider adoption and paid cloud resources remain separate decisions.
 
 ## Core documents
 
@@ -39,6 +52,10 @@ production resources and live integrations are not yet selected or built.
 - [Synthetic Auth0–ChatGPT MCP PoC server runbook](docs/CareerGround_Auth_PoC_Server_Runbook_2026-09-24.md)
 - [Deletion foundation and safety boundary](docs/CareerGround_Deletion_Foundation_2026-09-27.md)
 - [Explicit profiling workspace and retention foundation](docs/CareerGround_Profiling_Workspace_Foundation_2026-09-27.md)
+- [Phase A local journey, adapter coverage and remaining gates](docs/CareerGround_Phase_A_Local_Validation_2026-09-30.md)
+- [Local security, actual browser checks and MCP envelope verification](docs/CareerGround_Phase_A_Security_Accessibility_Contracts_2026-10-01.md)
+- [Idle cleanup, browser–MCP receipts, private exports and accessibility](docs/CareerGround_Phase_A_Browser_MCP_Closeout_2026-10-01.md)
+- [Latest: exact policy review, selected JD/R1 and local request hardening](docs/CareerGround_Phase_A_Review_JD_Hardening_2026-10-01.md)
 
 ## Core principle
 
@@ -63,7 +80,7 @@ uv run --locked uvicorn careerground.web.app:app --host 127.0.0.1 --port 8000
 ```
 
 `GET /health/live` checks only the process; `GET /health/ready` checks PostgreSQL.
-There are deliberately no product MCP, profile-writing or data-import routes yet.
+This entrypoint does not mount the synthetic product MCP or Web/BFF factories.
 Auth0 login (`/auth/login`, `/auth/callback`, `/auth/logout`, `/auth/me`) mounts only when
 all of `AUTH0_DOMAIN`, `AUTH0_CLIENT_ID`, `AUTH0_CLIENT_SECRET`, `AUTH0_SECRET` and
 `APP_BASE_URL` are set; a partial set refuses to start. `.env` is git-ignored. To try it:
@@ -73,14 +90,26 @@ An isolated synthetic-only MCP authentication probe has its own ASGI entry point
 does not access the product database. See its runbook above before attempting a test.
 The future private-MCP account gate is implemented separately and tested through a
 synthetic, DB-backed probe factory. The running PoC is deliberately unchanged: no
-product MCP entrypoint, account-deletion workflow, or per-connection revocation exists
+product MCP entrypoint, production account erasure, or per-connection revocation exists
 yet. Do not attach career data to the PoC entrypoint.
-An additional **local-only product-MCP foundation factory** now exercises the separate
-`career.profile.read` scope, per-request account gate, stable account profile, and
-owner-scoped profile metadata lookup against synthetic data. It has no ASGI entrypoint
-or live Auth0 API configuration. Its additional read-only profiling-session lookup
-returns only owned status, profile versions and retention times; no input text or
-general chat is exposed. Full Career Graph tools and account erasure remain gated.
+The **local-only product MCP factory** exposes 24 tools under
+`career.profile.read`, `career.profile.write`, `career.artifact.read`,
+`career.artifact.write`, `career.export` and `career.delete` scopes.
+All product tools return a common success/error envelope with advertised schemas,
+strict wire validation and per-request active-account checks. Web/MCP share
+DB-backed read/write quotas when configured with the same review secret and policy;
+browser operations also require the same presentation secret in both factories.
+Browser confirmation executes the exact operation and issues a short receipt.
+MCP acknowledges the completed browser result; the model does not issue approval.
+Export resources require the original account/client/access token, scope and current
+source eligibility on every read. Deletion preview/status remain partial and
+non-certifying; account deletion itself blocks this active-account-only adapter.
+See the latest closeout report for wire differences, token-refresh recovery,
+remaining two Phase A tool names and production gates.
+A synthetic real-browser check is available with
+`uv run python scripts/run_local_browser_checks.py --output-dir /tmp/careerground-browser-checks`.
+It uses a temporary DB and browser context; install local Chrome or run
+`uv run playwright install chromium` first. CI includes the same check.
 The database password is required; an empty example value will not start Compose.
 For a PostgreSQL integration test, use a **separate local database whose name ends
 in `_test`**, apply `alembic upgrade head` to it, and set both
@@ -93,10 +122,17 @@ accounts or career data are needed.
 With the locked development dependencies:
 
 ```bash
-uv run --locked ruff check src migrations tests/test_foundation.py tests/test_postgres_foundation.py tests/test_oauth_metadata_preflight.py tests/test_mcp_auth_poc.py tests/test_mcp_product_foundation.py tests/test_deletion_preview.py tests/test_profiling_workspace.py tests/test_profiling_retention.py
-uv run --locked ruff format --check src migrations tests/test_foundation.py tests/test_postgres_foundation.py tests/test_oauth_metadata_preflight.py tests/test_mcp_auth_poc.py tests/test_mcp_product_foundation.py tests/test_deletion_preview.py tests/test_profiling_workspace.py tests/test_profiling_retention.py
 uv run --locked python -m unittest discover -s tests -v
+uv run --locked python -m unittest discover -s tests -p test_text_journey.py -v
 ```
+
+The exact lint/format scope is in `.github/workflows/ci.yml`, including
+`tests/test_text_journey.py`. Repository-wide lint includes legacy reference tests
+outside that gate. The journey suite checks links, labels, native controls, focus
+targets and security/retention copy; it does not replace a browser/screen-reader audit.
+Its two PostgreSQL variants require an explicit loopback `*_test` URL and use an
+outer transaction with savepoints, rolling back fixture writes even after route
+commits. CI requires PostgreSQL tests rather than allowing skips.
 
 Before the backend foundation was added, the 48 synthetic tests also ran with
 standard-library-only Python 3.14.4. The expanded suite requires the dependencies
@@ -105,7 +141,13 @@ installed by `uv sync`.
 The tests validate synthetic Career Graph fixtures and a small reference model for
 publication, candidate promotion and historical traceability. They also validate the
 Interview Package JSON Schema contract, references, lifecycle guards, canonicalization
-and a synthetic ES256 detached-JWS vector. They do not verify real careers, implement
-live authentication or validate a complete Career Graph JSON Schema. The new
-PostgreSQL integration test runs only when its explicit local test URL is configured.
+and a synthetic ES256 detached-JWS vector. They do not verify real careers,
+demonstrate production authentication or validate a complete Career Graph JSON Schema.
+PostgreSQL tests run only when their explicit local test URL is configured.
 See the validation report for coverage, negative cases and open decisions.
+
+Firefox and the new browser–MCP confirmation checks are included in CI.
+Use `scripts/run_local_confirmation_browser_checks.py --browser firefox` with an
+explicit `--output-dir` for disposable synthetic verification. Native zoom and
+Orca speech-request checks have separate scripts described in the latest report;
+they do not constitute a complete accessibility audit.

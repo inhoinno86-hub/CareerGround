@@ -48,6 +48,7 @@ class ToolError(BaseModel):
     message: str = Field(min_length=1)
     recoverable: bool
     next_action: str | None = None
+    retry_after_seconds: int | None = Field(default=None, ge=1)
 
 
 class ErrorResponse(BaseModel):

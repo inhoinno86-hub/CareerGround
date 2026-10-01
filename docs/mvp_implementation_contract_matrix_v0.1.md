@@ -1,7 +1,7 @@
 # MVP 구현 계약 매핑 v0.1
 
 - 작성일: 2026-09-23
-- 상태: 첫 구현 묶음의 `E00-T04/T05` 초기 매핑. 개별 입력·오류·테스트 계약은 후속 상세화 필요. **도구 endpoint는 아직 구현되지 않음**
+- 상태 (2026-10-01): 아래 표는 승인 목표 계약이다. 합성 MCP 팩토리에 Phase A 이름 19개+보조 5개 도구와 공통 응답 봉투/출력 schema가 구현됐고 Web/BFF 합성 승인·JD/R1 경로가 존재한다. 이름 대응도 목표의 전체 계약 완료를 뜻하지 않는다. 전체 계약/공개 endpoint는 미완료다. [현재 어댑터 범위와 검증](CareerGround_Phase_A_Review_JD_Hardening_2026-10-01.md)
 - 근거: [Plugin Functional Spec v1](plugin_functional_spec_v1.md), [Architecture v1](architecture_v1.md), [구현 계획](../PLAN-2026-09-23-mvp-implementation.md)
 
 이 표의 OAuth scope는 Plugin Spec §5의 *제안 scope*를 각 도구에 배치한 초안이다. 실제 인증 공급자와 MCP tool schema를 연결할 때 확정·검증해야 한다. 모든 도구는 토큰에서 도출한 `account_id`로 대상 리소스를 조회하며, 모델이 보낸 ID를 신뢰하지 않는다. 표의 완료 시점은 출시 순서 A(텍스트)와 B(패키지)를 뜻한다.
@@ -79,4 +79,4 @@ Interview Package 전용 `PACKAGE_*` 오류는 Plugin Spec §14.5의 전체 집�
 | outbox | DB mutation과 최소 event reference를 함께 commit; 원문을 event payload로 복제하지 않음. `OutboxEventRef`는 event/account/aggregate ID·version·type·시간만 허용 | DTO의 원문 필드 거부 테스트 완료, worker crash/retry 통합 테스트는 후속 Story |
 | 버전 | `profile_version`, artifact version, review digest, transcript version을 서로 대체하지 않음 | stale digest/version과 최신값 fallback 거부(후속 Story) |
 
-현재 코드에는 `accounts`, `auth_identities`, `career_profiles`의 첫 migration, 공급자 독립 identity lookup/소유권 조회, 공통 응답·outbox reference·idempotency 형식 DTO만 있다. 위 표의 25개 도구가 구현됐다는 의미가 아니다. 본 표를 기준으로 각 Story에서 도구별 정확한 JSON Schema, HTTP/MCP 오류 매핑, 사용자의 정확한 확인 UI를 추가한다.
+현재 코드는 19개 migration과 Graph/Review/JD/R1/retention·erasure, 공유 account quota, 무요청 정리와 브라우저 승인 연계까지 확장됐다. 합성 MCP 24개 도구(Phase A 이름19+보조5)는 공통 응답 봉투/실제 schema를 사용한다. 사실·모순·경계·JD 선택/연결·R1·문구 제출은 **브라우저에서 완료한 결과의 짧은 증명**을 소비한다. JD는 선택 발췌만 기록하며 의미 분석은 아니다. R1은 정확한 Claim 복사와 별도 문구/내보내기 승인을 요구한다. 내보내기는 원래 OAuth token·scope·동의·정확한 hash·만료/현재 근거를 재검사하는 private resource다. 이 차이는 위 목표 계약을 수정하거나 전체 완료로 표시한 것이 아니다. 삭제 preview/status는 FOUNDATION_ONLY이고 정상 MCP는 활성 계정만 지원한다. 삭제 후 최소 capability는 내부 합성 서비스이며 공개 route가 없다. 128KiB 입구/잘못된 도구 호출의 공통 읽기 한도도 로컬 범위다. 미구현 Phase A 이름2개(`analyze_jd`, `execute_data_deletion`), 나머지 의미적 차이·검증은 [최신 기록](CareerGround_Phase_A_Review_JD_Hardening_2026-10-01.md)을 따른다.

@@ -124,9 +124,16 @@ class JwtTokenVerifier:
 class OAuthToolDeclarations:
     """Add top-level securitySchemes until the MCP SDK exposes them directly."""
 
-    def __init__(self, app: ASGIApp, *, tool_scopes: dict[str, str]) -> None:
+    def __init__(
+        self,
+        app: ASGIApp,
+        *,
+        tool_scopes: dict[str, str | tuple[str, ...]],
+        functional_headers: bool = False,
+    ) -> None:
         self.app = app
         self.tool_scopes = tool_scopes
+        self.functional_headers = functional_headers
 
     async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
         if scope["type"] != "http" or scope.get("path") != "/mcp":
@@ -155,15 +162,26 @@ class OAuthToolDeclarations:
                 return
 
             body = b"".join(body_parts)
+            retry_after = None
             try:
                 payload = json.loads(body)
                 tools = payload.get("result", {}).get("tools", [])
                 for tool in tools:
                     required_scope = self.tool_scopes.get(tool.get("name"))
                     if required_scope:
-                        tool["securitySchemes"] = [{"type": "oauth2", "scopes": [required_scope]}]
+                        scopes = (
+                            (required_scope,) if isinstance(required_scope, str) else required_scope
+                        )
+                        tool["securitySchemes"] = [
+                            {"type": "oauth2", "scopes": [value]} for value in dict.fromkeys(scopes)
+                        ]
                 if tools:
                     body = json.dumps(payload, separators=(",", ":")).encode()
+                if self.functional_headers:
+                    error = payload.get("result", {}).get("structuredContent", {}).get("error", {})
+                    retry = error.get("retry_after_seconds")
+                    if error.get("code") == "RATE_LIMITED" and type(retry) is int and retry > 0:
+                        retry_after = retry
             except (ValueError, AttributeError, TypeError):
                 pass
             assert response_start is not None
@@ -173,7 +191,17 @@ class OAuthToolDeclarations:
                 if name.lower() != b"content-length"
             ]
             headers.append((b"content-length", str(len(body)).encode()))
-            await send({**response_start, "headers": headers})
+            if self.functional_headers:
+                headers.append((b"cache-control", b"no-store"))
+            if retry_after is not None:
+                headers.append((b"retry-after", str(retry_after).encode()))
+            await send(
+                {
+                    **response_start,
+                    "headers": headers,
+                    "status": 429 if retry_after is not None else response_start["status"],
+                }
+            )
             await send({"type": "http.response.body", "body": body})
 
         await self.app(scope, receive, send_with_declaration)

@@ -42,6 +42,7 @@ from careerground.storage.jd_artifact_models import (
 from careerground.storage.models import (
     Account,
     AuthIdentity,
+    BrowserOperation,
     CareerProfile,
     DeletionRequest,
     DeletionWorkItem,
@@ -72,6 +73,7 @@ KNOWN_KINDS = frozenset(
 )
 GRAPH_KINDS = frozenset(
     {
+        "BROWSER_OPERATION",
         "PROFILE_CHANGE_SET",
         "PROFILE_ARCHIVE",
         "CLAIM",
@@ -101,6 +103,7 @@ LOCAL_PROFILE_KINDS = GRAPH_KINDS | DERIVED_KINDS
 UNVERIFIED_KINDS = LOCAL_PROFILE_KINDS | {"PRIVATE_OBJECT", "PRIVATE_OBJECT_VERSION"}
 
 _LOCAL_DELETE_ORDER = (
+    BrowserOperation,
     ArtifactClaimLink,
     ArtifactWordingReview,
     RequirementClaimMap,

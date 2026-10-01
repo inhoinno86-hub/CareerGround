@@ -81,10 +81,17 @@ class ConflictReviewService:
         resolution: str,
         explanation: str,
         now: datetime,
+        review_id: str | None = None,
+        expires_at: datetime | None = None,
     ) -> ConflictReviewView:
         """Show one exact opposing proposition without changing the Graph."""
 
         now = _utc(now)
+        expires_at = _utc(expires_at) if expires_at is not None else now + REVIEW_TTL
+        if not now < expires_at <= now + REVIEW_TTL or (
+            review_id is not None and (type(review_id) is not str or len(review_id) != 36)
+        ):
+            raise ConflictReviewRejected
         if (
             resolution not in RESOLUTIONS
             or not isinstance(explanation, str)
@@ -100,8 +107,8 @@ class ConflictReviewService:
             conflict_link_id=conflict_link_id,
             resolution=resolution,
             explanation=explanation,
-            review_id=str(uuid4()),
-            expires_at=now + REVIEW_TTL,
+            review_id=review_id or str(uuid4()),
+            expires_at=expires_at,
         )
 
     def submit(

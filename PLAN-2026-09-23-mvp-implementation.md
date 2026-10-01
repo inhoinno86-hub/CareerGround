@@ -10,7 +10,9 @@
 - Superpowers execution: disabled
 - Superpowers brainstorming: not used
 - Ouroboros: not requested; not used
-- Status: **사용자 승인 완료 — 첫 구현 묶음 진행 중 (로컬 기초 구현, 공급자 선정 보류)**
+- Status: **사용자 승인 완료 — Phase A 합성 로컬 텍스트 여정 검증 완료, 전체 공개/운영 수용 기준과 공급자 선정은 미완료**
+- Continuation checkpoint (2026-09-30): `codex/mvp-foundation-ci-20260923` / `061b371be0620adeac6f76b0fa6b70eefd36ab99`. HEAD/초안을 보존하며 로컬 인계 step-01–05 수행. [현재 검증·잔여 게이트](docs/CareerGround_Phase_A_Local_Validation_2026-09-30.md)
+- Local follow-up 1–4 (2026-10-01): 브라우저 승인–MCP 증명/resource, 정기 정리, 다중 브라우저/Orca 구현. [최신 기록](docs/CareerGround_Phase_A_Browser_MCP_Closeout_2026-10-01.md)
 - Baseline: current `main` working tree, including existing uncommitted/untracked project documents. Do not discard or overwrite those changes.
 
 ## 검토용 요약
@@ -215,6 +217,7 @@ Each `T` item is one implementable task. The acceptance line is the Story's comp
 
 - `E05-T03` Implement explicit session start, source-scope notice, question/draft list, five-item exact review, JD/resume trace and deletion preview/status screens.
 - `E05-T04` Add keyboard/accessibility checks, error recovery, empty/no-document path and privacy copy for 90-day workspace retention.
+- 2026-09-30: 빈 v0 프로필의 직접 입력부터 초안·사실 확인·별도 사용 검토·JD 잠재 연결·R1 문구 검토·Markdown 다운로드까지 합성 Web 경로를 SQLite와 PostgreSQL에서 확인했다. 정확한 표시/사용 승인 분리를 유지하고 사실 검토 결과→근거→JD 화면 링크를 보강했다. 본문 바로가기·label/native control·오류 focus/alert·보관/검증 경계 문구를 HTML 구조로 점검했다. 실제 브라우저 키보드/스크린리더와 전체 접근성 감사는 미실시이며 공개 제품 UX 완료를 뜻하지 않는다. [증거](docs/CareerGround_Phase_A_Local_Validation_2026-09-30.md)
 - Acceptance: a user can complete one end-to-end text journey without a document; wording under review is visible before approval; no page implies external verification or automatic hiring success.
 
 ### EPIC-06 — Interview Package and same-account handoff (B; depends on A)
@@ -282,6 +285,7 @@ Each `T` item is one implementable task. The acceptance line is the Story's comp
 
 - `E08-T01` Add contract/integration tests for all Phase A tools, tenant isolation, exact approval, prompt injection, expiry and erasure/restore.
 - `E08-T02` Add privacy-safe logs/metrics, audit of exceptional operator reads, rate limiting, threat review and accessibility checks; document rollback and incident response.
+- 2026-09-30: 공통 MCP/Web 시작·입력·pause의 도메인 결과/거부와 재시도·Graph 무변경을 비교했다. MCP의 버전 문자열/bool/float/object 및 source object를 SDK coercion 전에 거부하고 원문이 오류/일반 INFO 로그에 나오지 않음을 확인했다. 전체 224개 테스트가 로컬 PostgreSQL 필수 모드에서 skip 없이 통과했으나, MCP 12개 도구(Phase A 이름 10개+보조 2개)는 전체 Plugin 계약이 아니다. 운영 rate limit/감사/로그·메트릭/실제 backup·외부 삭제/전체 접근성은 미완료다. [범위·위협·사고/롤백·출시 차단](docs/CareerGround_Phase_A_Local_Validation_2026-09-30.md)
 - Acceptance: Gate A table in §3 is demonstrated with commands/results and known limitations; no real data or secrets in test output or logs.
 
 **Story E08-S02 — Close Phase B and C separately.**
@@ -405,6 +409,12 @@ Not in scope: external/recruiter sharing, payments, automatic job application, h
 | 2026-09-29 | 사용자 시작한 루프백 PostgreSQL 17 `careerground_test`의 빈 DB에 `alembic upgrade head`로 `0015`까지 적용하고 `alembic check`, `0015`→`0014` 롤백→`0015` 재적용을 검증했다. `CAREERGROUND_REQUIRE_POSTGRES_TEST=1`로 전체 **213개 통과, skip 0**. 종료 후 migration은 `0015`, 제품 테이블 35개는 전부 비어 있었다. 실제 사용자 데이터·운영 서비스는 연결하지 않았다. [검증 기록](docs/CareerGround_Claim_Use_Review_Foundation_2026-09-29.md) |
 | 2026-09-29 | E04-T02/T03·E05-T03의 합성 브라우저에 JD 요건과 적격 Claim의 명시적 잠재 연결, 연결된 정확 문구 1~5개 선택 R1 초안 생성을 추가했다. 각각 짧은 계정·브라우저·버전·표시 내용 토큰/확인 체크와 소유권·현재 archive 검사를 요구한다. 동일 제출은 연결 또는 초안 한 건으로 수렴하고 다른 세션·오래된 버전·변경된 연결은 거부한다. 별도 Claim 사용 검토→JD 저장→연결→R1 초안→문구 검토→Markdown 다운로드의 합성 브라우저 여정과 빈 버전 0 프로필의 JD 저장/명시적 연결 없음 화면을 확인했다. 전체 로컬 **218개 중 214 통과, 중지된 PostgreSQL 전용 4 skip**, JD 집중 18개 통과, CI 범위 Ruff·format 통과. 새 migration은 없고 실제 사용자 데이터·운영 서비스는 연결하지 않았다. [경계](docs/CareerGround_JD_Artifact_Foundation_2026-09-27.md) |
 | 2026-09-28 | E04-T04/E05-T02의 합성 R1 문구 검토와 JSON·Markdown 내보내기 화면을 연결했다. 정확한 문구·Claim·선택 Evidence를 보여준 뒤 3분 계정/브라우저/검토 digest 토큰과 명시 확인을 요구한다. 승인 제출은 현재 Graph와 원문을 재검사하며 동일 토큰 재시도는 검토 기록 한 건으로 수렴한다. 내보내기는 형식/해시를 묶은 5분 토큰과 최신 적격 근거 재검사를 거쳐 no-store 첨부파일을 반환한다. R2/R3와 실제 제품 진입점은 후속이다. [경계](docs/CareerGround_Resume_Wording_Foundation_2026-09-27.md) |
+| 2026-09-30 | 지정 HEAD에서 인계 step-01–05를 진행했다. 문서 없는 빈 프로필 직접 입력→R1 다운로드의 SQLite/PostgreSQL 여정, 타 계정/삭제 중 export 차단, 만료·입력 거부·화면 구조와 MCP/Web workspace parity를 보강했다. DB URL 없는 전체 **224개 중 218 통과, PostgreSQL 6 skip**, 새 여정 파일을 포함한 CI 범위 Ruff check 및 format **103개** 통과. 사용자 시작한 루프백 일회용 PostgreSQL 17.11에서 빈 DB `0015` upgrade/check·`0014` rollback/reapply/check와 required-PostgreSQL 전체 **224 통과, 실패/skip 0**, 제품 테이블 **35개 모두 0행**을 확인했다. 새 migration은 없고 사용자가 컨테이너 중지를 완료했다. HEAD/무시된 초안을 보존하고 커밋·푸시·외부 연결하지 않았다. 전체 Gate A/운영 계약·공급자/Phase B/C는 미완료로 유지했다. [검증 기록](docs/CareerGround_Phase_A_Local_Validation_2026-09-30.md) |
+| 2026-10-01 | 사용자 요청한 세 후속 항목을 로컬에서 구현·검증했다. E08-T02의 안전한 예외/로그·DB bind 숨김, Web/MCP 공유 account quota와 SQLite/PostgreSQL 동시 예약 검사를 추가했다. migration `0016` 빈 DB upgrade/check·`0015` rollback/reapply/check, required-PostgreSQL **232 pass, 실패/skip 0**, 제품 테이블 **36개 모두 0행**. 사용자가 컨테이너 중지했고 루프백 포트 닫힘·임시 비밀번호 파일 삭제를 확인했다. 실제 Chrome 150의 키보드 전체 여정·320px/200% 텍스트·접근성 tree 등 **359 assertion pass**, CI Ruff check/format **108개** 통과. MCP 13개 도구에 공통 응답/schema와 읽기 전용 부분 삭제 preview를 연결하고 미구현 A 도구 10개/승인 증명/운영 경계를 명시했다. 전체 Gate A와 운영·공급자 결정은 미완료이며 공개 마운트·커밋·푸시·외부 AI 연결은 하지 않았다. [검증 기록](docs/CareerGround_Phase_A_Security_Accessibility_Contracts_2026-10-01.md) |
+
+| 2026-10-01 | 승인된 후속 1–4의 로컬 구현·검증을 완료했다. 무요청 카운터/승인 메타데이터 정리·안전한 집계, 실제 브라우저가 완료한 사실/문구/내보내기의 MCP 증명·private resource, 부분 삭제 상태를 추가해 합성 도구19개가 됐다. rootless PostgreSQL17.11에서 migration0017 upgrade/check·0016 rollback/reapply/check, 전체 **258 pass/실패·skip0**, CI Ruff/format117개, 제품37 tables 모두0을 확인하고 DB·포트·credential·설치를 정리했다. Firefox383/실제Chrome200%확대361/새승인Chrome·Firefox각53/실제Orca발화요청11 checks 통과. 초안20 hashes와 HEAD 보존, 커밋·푸시·외부 AI 없음. 전체 Gate A·실사용자 청취/접근성·공급자/운영 삭제는 미완료다. [최신 기록](docs/CareerGround_Phase_A_Browser_MCP_Closeout_2026-10-01.md) |
+
+| 2026-10-01 | 추가 승인된 권장1–4를 완료했다. 기존 모순·경계 domain의 브라우저 정확 승인/MCP 증명, 선택 JD/POTENTIAL 연결/정확 R1(별도 문구 검토), 128KiB MCP 입구와 malformed tool 공유 read quota, 별도 내부 삭제 후 상태 capability를 연결했다. 합성24도구(Phase A 이름19+보조5), migration0018/0019→0017 rollback/reapply/check, required-PG17.11 **295 pass/실패·skip0**, CI Ruff/format131개. 실제 Chrome/Firefox 정책12시나리오788검사, JD1–5발췌 전체10여정2030검사 통과. 승인 전 원문DB복제 없음·선택 근거 명시·서로 다른 동시 요청 잠금 순서·R1 두 문구 순서도 검증했다. 제품37테이블 모두0/revision0019 확인 후 rootless DB·루프백36837·credential/빌드 설치 정리, 초안20 hashes/HEAD 보존. 공개 Gate A·의미 분석/R2/R3·공급자/운영 삭제·실사용자 접근성은 미완료, 커밋·푸시 없음. [현재 기록](docs/CareerGround_Phase_A_Review_JD_Hardening_2026-10-01.md) |
 
 ## 10. Decision log
 
