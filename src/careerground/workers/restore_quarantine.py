@@ -36,6 +36,7 @@ from careerground.storage.jd_artifact_models import (
 from careerground.storage.models import (
     Account,
     AuthIdentity,
+    BrowserOperation,
     CareerProfile,
     ErasureLedger,
     PrivateObject,
@@ -137,6 +138,7 @@ class RestoreQuarantine:
     @staticmethod
     def _reject_graph(session: Session, account_id: str, profile_id: str | None = None) -> None:
         for model in (
+            BrowserOperation,
             ProfileChangeSet,
             ProfileArchive,
             Claim,

@@ -55,13 +55,43 @@ LLM/realtime provider adoption and paid cloud resources remain separate decision
 - [Phase A local journey, adapter coverage and remaining gates](docs/CareerGround_Phase_A_Local_Validation_2026-09-30.md)
 - [Local security, actual browser checks and MCP envelope verification](docs/CareerGround_Phase_A_Security_Accessibility_Contracts_2026-10-01.md)
 - [Idle cleanup, browser–MCP receipts, private exports and accessibility](docs/CareerGround_Phase_A_Browser_MCP_Closeout_2026-10-01.md)
-- [Latest: exact policy review, selected JD/R1 and local request hardening](docs/CareerGround_Phase_A_Review_JD_Hardening_2026-10-01.md)
+- [Exact policy review, selected JD/R1 and local request hardening](docs/CareerGround_Phase_A_Review_JD_Hardening_2026-10-01.md)
+- [Latest: disposable demo, offline JD proposals and mock deletion](docs/CareerGround_Phase_A_Local_Demo_Release_2026-10-01.md)
 
 ## Core principle
 
 Every career claim should be traceable to evidence. User confirmation, external
 verification and permission to publish are separate decisions. Interview discoveries
 remain candidates until explicit review; ownership wording must respect its scope.
+
+## Disposable synthetic demo
+
+With the locked development dependencies installed:
+
+```bash
+uv run --locked python -m careerground.local_demo --port 8008
+```
+
+Open the printed `http://127.0.0.1:8008/demo` address and explicitly choose
+synthetic account A or B. Start with **경력 정리**, enter synthetic bullets, review
+facts and use eligibility, then follow JD → R1 → wording approval → export.
+The **MCP 시험** console calls the authenticated local MCP with those same accounts;
+mutating operations open a separate browser confirmation before acknowledgment.
+**JD 모의 분석** shows deterministic, unapproved source spans and unmapped requirements;
+only a separate confirmation stores selected excerpts. It performs no semantic
+analysis or external AI call. **합성 삭제** offers impact preview, a separate mock
+reauthentication and final consent, then deletes known local rows and shows a
+five-minute status view. External services/backups remain unverified; it never
+certifies complete erasure.
+
+This entrypoint ignores configured DB/Auth0 settings, creates a new owner-only
+temporary SQLite database and in-memory keys, and binds only to `127.0.0.1`.
+Use synthetic content only. `Ctrl+C` stops the server and removes its temporary
+DB; another start begins empty. Account selection replaces the current browser
+session, invalidating its previous approvals/status view. At most 128 simultaneous
+browser sessions are kept until shutdown. Use `--port 0` for an available local
+port. No Docker, real account, provider or paid resource is needed.
+The public application entrypoint remains separate.
 
 ## Local foundation
 

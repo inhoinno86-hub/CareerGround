@@ -32,6 +32,7 @@ from careerground.storage.models import (
     Account,
     AuthIdentity,
     Base,
+    BrowserOperation,
     CareerProfile,
     ErasureLedger,
     PrivateObject,
@@ -163,6 +164,42 @@ class RestoreQuarantineTests(unittest.TestCase):
                 self.assertIsNotNone(
                     get_owned_profile(session, account_id="acct-b", profile_id="profile-b")
                 )
+        finally:
+            restored.dispose()
+
+    def test_browser_operation_only_snapshot_remains_quarantined(self):
+        restored = engine_for(self.old_path)
+        gate = RestoreQuarantine()
+        try:
+            with Session(restored) as session:
+                session.add(
+                    BrowserOperation(
+                        id="old-browser-operation",
+                        account_id="acct-a",
+                        profile_id="profile-a",
+                        connection_key="a" * 64,
+                        client_id="synthetic-client",
+                        request_key="b" * 64,
+                        action="PROFILE_EXPORT",
+                        target_id="profile-a",
+                        profile_version=1,
+                        format="JSON",
+                        status="WAITING",
+                        created_at=self.now,
+                        expires_at=self.now + timedelta(minutes=5),
+                    )
+                )
+                session.commit()
+                with self.assertRaises(QuarantineRejected):
+                    gate.reconcile(
+                        session,
+                        ledger_rows=self.ledger,
+                        expected_manifest=self.manifest,
+                        secret=SECRET,
+                    )
+                self.assertFalse(gate.ready)
+                self.assertIsNotNone(session.get(BrowserOperation, "old-browser-operation"))
+                self.assertEqual(session.get(Account, "acct-a").status, "ACTIVE")
         finally:
             restored.dispose()
 
