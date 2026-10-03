@@ -7,7 +7,7 @@ from typing import Literal
 
 from mcp.server.auth.middleware.auth_context import get_access_token
 from mcp.server.mcpserver.exceptions import ResourceError
-from mcp.types import ToolAnnotations
+from mcp.types import Resource, ToolAnnotations
 from pydantic import BaseModel, ConfigDict
 from sqlalchemy import case, func, select
 
@@ -19,10 +19,12 @@ from careerground.domain.browser_operations import (
 from careerground.domain.profile_export_selection import ProfileExportSelection, VersionSelector
 from careerground.domain.request_limits import RequestLimitExceeded
 from careerground.domain.safe_events import record_result
-from careerground.storage.models import DeletionRequest, DeletionWorkItem
+from careerground.mcp.management_navigation import validate_management_origin
+from careerground.storage.models import BrowserOperation, DeletionRequest, DeletionWorkItem
 
 EXPORT_SCOPE = "career.export"
 ARTIFACT_WRITE_SCOPE = "career.artifact.write"
+MAX_INLINE_EXPORT_BYTES = 64 * 1024
 ACTION_SCOPES = {
     "FACT_REVIEW": "career.profile.write",
     "CONFLICT_REVIEW": "career.profile.write",
@@ -35,6 +37,7 @@ ACTION_SCOPES = {
     "RESUME_EXPORT": EXPORT_SCOPE,
 }
 TOOL_SCOPES = {
+    "get_confirmation_status": "career.profile.read",
     "analyze_jd": ARTIFACT_WRITE_SCOPE,
     "execute_data_deletion": "career.delete",
     "request_user_confirmation": tuple(ACTION_SCOPES.values()),
@@ -59,6 +62,7 @@ class ConfirmationRequestOutput(StrictOutput):
     request_id: str
     status: Literal["WAITING", "DONE", "CONSUMED"]
     confirmation_path: str
+    confirmation_url: str | None = None
     expires_at: datetime
     user_message: str
 
@@ -68,6 +72,13 @@ class FactReceiptOutput(StrictOutput):
     profile_id: str
     version_after: int
     completed_in_browser: Literal[True]
+
+
+class ConfirmationStatusOutput(StrictOutput):
+    request_id: str
+    status: Literal["WAITING", "DONE", "CONSUMED"]
+    approval_receipt: str | None = None
+    completed_in_browser: bool
 
 
 class WordingReceiptOutput(StrictOutput):
@@ -95,6 +106,8 @@ class ExportReceiptOutput(StrictOutput):
     expires_at: datetime
     completed_in_browser: Literal[True]
     inclusion: dict[str, bool] | None = None
+    content_delivery: Literal["INLINE", "RESOURCE_ONLY"]
+    content: str | None
 
 
 class SelectedJDReceiptOutput(StrictOutput):
@@ -144,7 +157,10 @@ def register_confirmation_tools(
     current_account_id,
     service: BrowserOperationService,
     limiter,
+    management_origin: str | None = None,
 ):
+    origin = validate_management_origin(management_origin)
+
     def principal(session, scope):
         account_id = current_account_id(session, scope)
         access = get_access_token()
@@ -155,6 +171,62 @@ def register_confirmation_tools(
             service.connection_key(settings.issuer, access.subject, access.client_id, access.token),
             access.client_id,
         )
+
+    def list_private_exports() -> list[Resource]:
+        """Expose only readable, consumed exports on the originating credential."""
+        try:
+            with session_factory() as session:
+                account, connection, _ = principal(session, EXPORT_SCOPE)
+                limiter.consume(account, "read")
+                now = datetime.now(UTC)
+                rows = session.scalars(
+                    select(BrowserOperation)
+                    .where(
+                        BrowserOperation.account_id == account,
+                        BrowserOperation.connection_key == connection,
+                        BrowserOperation.status == "CONSUMED",
+                        BrowserOperation.action.in_(("PROFILE_EXPORT", "RESUME_EXPORT")),
+                        BrowserOperation.expires_at > now,
+                    )
+                    .order_by(BrowserOperation.created_at.desc(), BrowserOperation.id)
+                    .limit(10)
+                )
+                resources = []
+                for row in rows:
+                    try:
+                        # Reuse erasure, ownership and exact content-hash checks.
+                        service.read_export(
+                            session,
+                            account_id=account,
+                            connection_key=connection,
+                            operation_id=row.id,
+                            now=now,
+                        )
+                    except BrowserOperationRejected:
+                        continue
+                    resources.append(
+                        Resource(
+                            uri="careerground://exports/" + row.id,
+                            name="CareerGround confirmed " + row.format + " export",
+                            description="Short-lived browser-confirmed export for this connection only.",
+                            mime_type="application/json"
+                            if row.format == "JSON"
+                            else "text/markdown",
+                        )
+                    )
+                record_result("mcp", "OK")
+                return resources
+        except PermissionError:
+            record_result("mcp", "FORBIDDEN")
+            return []
+        except RequestLimitExceeded:
+            record_result("mcp", "RATE_LIMITED")
+            raise ResourceError("RATE_LIMITED") from None
+        except Exception:  # noqa: BLE001 - metadata failures must not expose payloads
+            record_result("mcp", "INTERNAL_ERROR")
+            raise ResourceError("Export unavailable") from None
+
+    server.list_private_export_resources = list_private_exports
 
     write = ToolAnnotations(read_only_hint=False, destructive_hint=False, open_world_hint=False)
 
@@ -201,6 +273,7 @@ def register_confirmation_tools(
                 request_id=row.id,
                 status=row.status,
                 confirmation_path="/mcp/confirm/" + row.id,
+                confirmation_url=origin + "/mcp/confirm/" + row.id if origin else None,
                 expires_at=row.expires_at.replace(tzinfo=UTC)
                 if row.expires_at.tzinfo is None
                 else row.expires_at.astimezone(UTC),
@@ -208,6 +281,33 @@ def register_confirmation_tools(
             )
             session.commit()
             return result
+
+    @server.tool(
+        name="get_confirmation_status",
+        annotations=ToolAnnotations(
+            read_only_hint=True, destructive_hint=False, open_world_hint=False
+        ),
+        structured_output=True,
+        description="Read one browser confirmation on the same authenticated connection. WAITING has no receipt. After the human confirms in the management browser, return its receipt without consuming or creating approval. Requires profile read and the operation-specific scope; ask again only when the user returns, never poll in a loop.",
+    )
+    def get_confirmation_status(request_id: str) -> ConfirmationStatusOutput:
+        with session_factory() as session:
+            account, connection, _ = principal(session, "career.profile.read")
+            row = service.confirmation_status(
+                session,
+                account_id=account,
+                connection_key=connection,
+                operation_id=request_id,
+                now=datetime.now(UTC),
+            )
+            current_account_id(session, ACTION_SCOPES[row.action])
+            done = row.status in {"DONE", "CONSUMED"}
+            return ConfirmationStatusOutput(
+                request_id=row.id,
+                status=row.status,
+                approval_receipt=service.receipt(row) if done else None,
+                completed_in_browser=done,
+            )
 
     def consume(scope, action, target, receipt, version=None, format=None, inclusion=None):
         with session_factory() as session:
@@ -224,6 +324,20 @@ def register_confirmation_tools(
                 inclusion=inclusion,
                 now=datetime.now(UTC),
             )
+            if action in {"PROFILE_EXPORT", "RESUME_EXPORT"}:
+                content = service.read_export(
+                    session,
+                    account_id=account,
+                    connection_key=connection,
+                    operation_id=receipt.split(".")[0],
+                    now=datetime.now(UTC),
+                )
+                inline = len(content.encode("utf-8")) <= MAX_INLINE_EXPORT_BYTES
+                result = {
+                    **result,
+                    "content_delivery": "INLINE" if inline else "RESOURCE_ONLY",
+                    "content": content if inline else None,
+                }
             session.commit()
             return result
 
@@ -322,7 +436,7 @@ def register_confirmation_tools(
         name="export_profile_data",
         annotations=write,
         structured_output=True,
-        description="Consume exact browser JSON export consent for an explicit numeric version or frozen CURRENT and selected personal-data fields; live drafts remain unapproved and expired bodies are not restored.",
+        description="Consume exact browser JSON export consent for an explicit numeric version or frozen CURRENT and selected personal-data fields. Return exact approved content inline up to 64 KiB, otherwise RESOURCE_ONLY with no truncated body. Live drafts remain unapproved and expired bodies are not restored.",
     )
     def export_profile_data(
         profile_id: str,
@@ -347,7 +461,7 @@ def register_confirmation_tools(
         name="export_resume",
         annotations=write,
         structured_output=True,
-        description="Consume explicit browser R1/R2 export consent and return a short authenticated resource; each read rechecks current owner, source eligibility, lineage and hash.",
+        description="Consume explicit browser R1/R2 export consent. Return exact approved content inline up to 64 KiB, otherwise RESOURCE_ONLY with no truncated body, plus a short authenticated resource. Each delivery rechecks current owner, source eligibility, lineage and hash.",
     )
     def export_resume(
         artifact_id: str, format: Literal["JSON", "MARKDOWN"], approval_receipt: str

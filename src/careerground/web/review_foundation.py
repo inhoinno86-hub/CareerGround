@@ -1636,6 +1636,7 @@ def _render_operation_receipt(row, receipt) -> str:
         + _operation_recipient(row)
         + "<p>표시한 내용을 직접 확인한 작업이 완료됐습니다. 아래 짧은 완료 증명은 요청을 시작한 연결 앱에서만 사용할 수 있습니다.</p>"
         + f"<p>완료 증명: <code id='approval-receipt'>{escape(receipt)}</code></p>"
+        + "<p>작업을 시작한 ChatGPT 대화로 돌아가 ‘관리 화면에서 확인했어. 이어서 진행해줘’라고 알려주세요. 연결 앱이 이 확인 결과를 조회할 수 있으므로 증명을 직접 복사할 필요는 없습니다.</p>"
         + "<p>증명은 유효 기한 뒤 사용할 수 없습니다. 다른 앱이나 대화에 공유하지 마세요.</p>"
         + "<p><a href='/profiling/start'>시작 화면에서 현재 상태 확인하기</a></p></main></html>"
     )

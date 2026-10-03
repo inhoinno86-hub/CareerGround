@@ -20,12 +20,13 @@ from mcp.server.auth.settings import AuthSettings
 from mcp.server.mcpserver import MCPServer
 from mcp.server.mcpserver.exceptions import ToolError, UnexpectedToolError
 from mcp.server.transport_security import TransportSecuritySettings
-from mcp.types import CallToolResult, TextContent, ToolAnnotations
+from mcp.types import CallToolResult, Resource, TextContent, ToolAnnotations
 from pydantic import AnyHttpUrl, BaseModel, ConfigDict, Field
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 from starlette.types import ASGIApp
 
+from careerground.domain.account_initialization import initialize_account_profile
 from careerground.domain.authorization import (
     AuthenticationRequired,
     ResourceNotFound,
@@ -64,6 +65,11 @@ from careerground.domain.profile_export_selection import (
     resolve_profile_version,
     selection_values,
 )
+from careerground.domain.profiling_draft_extraction import (
+    DraftSpan,
+    DraftSpanRejected,
+    propose_source_span_drafts_once,
+)
 from careerground.domain.profiling_protocol_workspace import get_protocol_question_plan
 from careerground.domain.profiling_workspace import (
     InputKind,
@@ -80,6 +86,7 @@ from careerground.domain.profiling_workspace import (
 from careerground.domain.profiling_workspace import (
     get_profiling_session as read_profiling_session,
 )
+from careerground.domain.project_scope_guard import deleted_project_scope_exists
 from careerground.domain.request_limits import (
     DEFAULT_REQUEST_LIMITS,
     AccountRequestLimiter,
@@ -104,6 +111,12 @@ from careerground.mcp.oauth_resource import (
     OAuthToolDeclarations,
 )
 from careerground.storage.graph_models import Claim
+from careerground.storage.models import (
+    CareerProfile,
+    ProfilingDraft,
+    ProfilingInput,
+    ProfilingSession,
+)
 
 PROFILE_READ_SCOPE = "career.profile.read"
 PROFILE_WRITE_SCOPE = "career.profile.write"
@@ -112,6 +125,18 @@ DELETE_SCOPE = "career.delete"
 
 _TOOL_ARGUMENTS = {
     "get_account_profile": frozenset(),
+    "get_my_profile": frozenset(),
+    "get_confirmation_status": frozenset({"request_id"}),
+    "initialize_career_profile": frozenset({"policy_version"}),
+    "propose_profiling_drafts": frozenset(
+        {
+            "profiling_session_id",
+            "source_input_id",
+            "base_profile_version",
+            "experience_scope_id",
+            "spans",
+        }
+    ),
     "get_owned_profile_metadata": frozenset({"profile_id"}),
     "get_profiling_session": frozenset({"profiling_session_id"}),
     "get_career_profile": frozenset({"profile_id", "profile_version"}),
@@ -161,6 +186,11 @@ class StrictProductMCPServer(MCPServer):
 
     guard_call: Callable[[str, dict[str, Any]], None]
     guard_invalid: Callable[[], None]
+    list_private_export_resources: Callable[[], list[Resource]]
+
+    async def list_resources(self) -> list[Resource]:
+        resources = await super().list_resources()
+        return resources + self.list_private_export_resources()
 
     def invalid_tool_call(self) -> CallToolResult:
         # Every authenticated malformed tool call reserves the shared read lane.
@@ -223,6 +253,19 @@ class StrictProductMCPServer(MCPServer):
                         )
                     )
                 ):
+                    continue
+                if field == "spans":
+                    if (
+                        type(value) is not list
+                        or not 1 <= len(value) <= 5
+                        or any(
+                            type(span) is not dict
+                            or set(span) != {"start", "end"}
+                            or any(type(v) is not int for v in span.values())
+                            for span in value
+                        )
+                    ):
+                        return self.invalid_tool_call()
                     continue
                 if field == "target_ids":
                     if (
@@ -317,6 +360,22 @@ def _functional_error(code: str, *, retry_after_seconds: int | None = None) -> C
     return _tool_result(payload, error=True)
 
 
+class SourceSpanInput(BaseModel):
+    model_config = ConfigDict(extra="forbid", strict=True)
+    start: int = Field(ge=0)
+    end: int = Field(gt=0)
+
+
+class ProfilingDraftProposalOutput(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    ok: bool = True
+    error_code: str | None = None
+    drafts: list[dict[str, str | int]] = Field(default_factory=list)
+    canonical_saved: Literal[False] = False
+    review_required: Literal[True] = True
+    atomicity: Literal["UNVERIFIED"] = "UNVERIFIED"
+
+
 class AccountProfile(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -380,6 +439,23 @@ class ProfileMetadata(BaseModel):
     found: bool
     profile_id: str | None = Field(default=None, min_length=1)
     version: int | None = Field(default=None, ge=0)
+
+
+class InitializationOutput(ProfileMetadata):
+    ok: bool = True
+    error_code: str | None = None
+
+
+class PendingProfilingMetadata(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    profiling_session_id: str
+    base_profile_version: int
+    experience_scope_ids: list[str]
+
+
+class OwnedProfileDiscovery(ProfileMetadata):
+    pending_profiling_sessions: list[PendingProfilingMetadata] = Field(default_factory=list)
 
 
 class ProfilingSessionMetadata(BaseModel):
@@ -575,6 +651,8 @@ def build_product_foundation_app(
     presentation_signing_secret: bytes | None = None,
     token_is_revoked: Callable[[str], bool] | None = None,
     local_deletion_adapter: Callable[..., dict] | None = None,
+    enrollment_account_id: Callable[[VerifiedIdentity], str | None] | None = None,
+    management_origin: str | None = None,
 ) -> ASGIApp:
     """Build isolated product auth/ownership checks for synthetic local tests."""
 
@@ -601,11 +679,14 @@ def build_product_foundation_app(
         issuer=settings.issuer,
         session_factory=session_factory,
         token_is_revoked=token_is_revoked,
+        enrollment_account_id=enrollment_account_id,
     )
     server = StrictProductMCPServer(
         name="careerground-product-foundation",
         version="0.1.0",
-        instructions="Synthetic-only CareerGround foundation with scoped profiling input and read tools.",
+        instructions=(
+            "Synthetic-only CareerGround. Get get_my_profile before starting; initialize_career_profile only after an explicit request. Store only explicit task input; propose_profiling_drafts accepts exact source character ranges, never inferred facts. Prepare review, open confirmation_url in the authenticated management browser, then submit its receipt on this connection. Conversation yes is not approval."
+        ),
         token_verifier=verifier,
         auth=AuthSettings(
             issuer_url=AnyHttpUrl(settings.issuer),
@@ -630,11 +711,16 @@ def build_product_foundation_app(
 
     def guard_call(name: str, arguments: dict[str, Any]) -> None:
         write = name in {
+            "initialize_career_profile",
+            "propose_profiling_drafts",
             "start_profiling",
             "add_profiling_input",
             "pause_profiling",
             "prepare_claim_review",
-        } or (name in TOOL_SCOPES and name not in {"get_deletion_status", "analyze_jd"})
+        } or (
+            name in TOOL_SCOPES
+            and name not in {"get_deletion_status", "get_confirmation_status", "analyze_jd"}
+        )
         scope = (
             PROFILE_WRITE_SCOPE
             if write
@@ -651,14 +737,36 @@ def build_product_foundation_app(
                 else TOOL_SCOPES[name]
             )
         with session_factory() as session:
-            account_id = current_account_id(session, scope)
+            try:
+                account_id = current_account_id(session, scope)
+            except PermissionError:
+                access = get_access_token()
+                if (
+                    name not in {"initialize_career_profile", "get_my_profile"}
+                    or access is None
+                    or scope not in access.scopes
+                ):
+                    raise
+                identity = VerifiedIdentity(settings.issuer, access.subject)
+                account_id = enrollment_account_id(identity) if enrollment_account_id else None
+                if not account_id:
+                    raise PermissionError from None
         limiter.consume(account_id, "write" if write else "read")
 
     server.guard_call = guard_call
 
     def guard_invalid() -> None:
         with session_factory() as session:
-            account_id = current_account_id(session, "")
+            try:
+                account_id = current_account_id(session, "")
+            except PermissionError:
+                access = get_access_token()
+                identity = VerifiedIdentity(settings.issuer, access.subject) if access else None
+                account_id = (
+                    enrollment_account_id(identity) if identity and enrollment_account_id else None
+                )
+                if not account_id:
+                    raise PermissionError from None
         limiter.consume(account_id, "read")
 
     server.guard_invalid = guard_invalid
@@ -669,6 +777,7 @@ def build_product_foundation_app(
         current_account_id=current_account_id,
         service=operation_service,
         limiter=limiter,
+        management_origin=management_origin,
     )
 
     @server.tool(
@@ -813,6 +922,182 @@ def build_product_foundation_app(
     def get_account_profile() -> AccountProfile:
         with session_factory() as session:
             return AccountProfile(id=current_account_id(session))
+
+    @server.tool(
+        name="get_my_profile",
+        description="Discover the active owned profile ID/version and up to 10 current unexpired profiling sessions with pending experience scopes. No source text, receipts or other account IDs are returned. Use these server IDs to resume an interrupted review; ask which experience if ambiguous.",
+        annotations=ToolAnnotations(
+            read_only_hint=True, destructive_hint=False, open_world_hint=False
+        ),
+        structured_output=True,
+    )
+    def get_my_profile() -> OwnedProfileDiscovery:
+        with session_factory() as session:
+            try:
+                account_id = current_account_id(session)
+            except PermissionError:
+                return OwnedProfileDiscovery(found=False)
+            profile = session.scalar(
+                select(CareerProfile).where(
+                    CareerProfile.account_id == account_id, CareerProfile.status == "ACTIVE"
+                )
+            )
+            pending = []
+            now = datetime.now(UTC)
+            if profile is not None:
+                works = session.scalars(
+                    select(ProfilingSession)
+                    .where(
+                        ProfilingSession.account_id == account_id,
+                        ProfilingSession.profile_id == profile.id,
+                        ProfilingSession.status == "ACTIVE",
+                        ProfilingSession.base_profile_version == profile.version,
+                        ProfilingSession.retention_expires_at > now,
+                    )
+                    .order_by(ProfilingSession.last_activity_at.desc(), ProfilingSession.id)
+                    .limit(10)
+                )
+                for work in works:
+                    scopes = session.scalars(
+                        select(ProfilingDraft.scope_key)
+                        .join(ProfilingInput, ProfilingInput.id == ProfilingDraft.source_input_id)
+                        .where(
+                            ProfilingDraft.account_id == account_id,
+                            ProfilingDraft.session_id == work.id,
+                            ProfilingDraft.status.in_(("DRAFT", "IN_REVIEW", "EDIT_REQUIRED")),
+                            ProfilingDraft.expires_at > now,
+                            ProfilingInput.account_id == account_id,
+                            ProfilingInput.session_id == work.id,
+                            ProfilingInput.protocol_cycle == work.protocol_cycle,
+                        )
+                        .distinct()
+                        .order_by(ProfilingDraft.scope_key)
+                        .limit(10)
+                    )
+                    pending.append(
+                        PendingProfilingMetadata(
+                            profiling_session_id=work.id,
+                            base_profile_version=work.base_profile_version,
+                            experience_scope_ids=[
+                                scope
+                                for scope in scopes
+                                if not deleted_project_scope_exists(
+                                    session,
+                                    account_id=account_id,
+                                    profile_id=profile.id,
+                                    scope_key=scope,
+                                )
+                            ],
+                        )
+                    )
+            return OwnedProfileDiscovery(
+                found=profile is not None,
+                profile_id=profile.id if profile else None,
+                version=profile.version if profile else None,
+                pending_profiling_sessions=pending,
+            )
+
+    @server.tool(
+        name="initialize_career_profile",
+        description="Explicit first-use initialization under product-policy-v0.1. Identity comes only from verified OAuth; enrollment requires a trusted server admission. Does not approve facts.",
+        annotations=ToolAnnotations(
+            read_only_hint=False,
+            destructive_hint=False,
+            idempotent_hint=True,
+            open_world_hint=False,
+        ),
+        structured_output=True,
+    )
+    def initialize_career_profile(policy_version: str) -> InitializationOutput:
+        if policy_version != "product-policy-v0.1":
+            return InitializationOutput(found=False, ok=False, error_code="VALIDATION_FAILED")
+        access = get_access_token()
+        if access is None or not access.subject or PROFILE_WRITE_SCOPE not in access.scopes:
+            raise PermissionError
+        identity = VerifiedIdentity(settings.issuer, access.subject)
+        with session_factory() as session:
+            try:
+                profile = initialize_account_profile(
+                    session,
+                    identity=identity,
+                    enrollment_account_id=enrollment_account_id(identity)
+                    if enrollment_account_id
+                    else None,
+                )
+                output = InitializationOutput(
+                    found=True, profile_id=profile.id, version=profile.version
+                )
+                session.commit()
+                return output
+            except AuthenticationRequired:
+                return InitializationOutput(found=False, ok=False, error_code="FORBIDDEN")
+
+    @server.tool(
+        name="propose_profiling_drafts",
+        description="Propose 1-5 nonoverlapping exact single-line source ranges (Python Unicode character offsets, end exclusive). Only unapproved CONTRIBUTION drafts are stored. No inferred wording, approval, metrics, owner or Claim type may be supplied. Requires owned current session/input/version.",
+        annotations=ToolAnnotations(
+            read_only_hint=False,
+            destructive_hint=False,
+            idempotent_hint=True,
+            open_world_hint=False,
+        ),
+        structured_output=True,
+    )
+    def propose_profiling_drafts(
+        profiling_session_id: str,
+        source_input_id: str,
+        base_profile_version: int,
+        experience_scope_id: str,
+        spans: list[SourceSpanInput],
+    ) -> ProfilingDraftProposalOutput:
+        with session_factory() as session:
+            account_id = current_account_id(session, PROFILE_WRITE_SCOPE)
+            try:
+                view = read_profiling_session(
+                    session,
+                    account_id=account_id,
+                    profiling_session_id=profiling_session_id,
+                    now=datetime.now(UTC),
+                )
+                if (
+                    view.current_profile_version != base_profile_version
+                    or view.base_profile_version != base_profile_version
+                ):
+                    return ProfilingDraftProposalOutput(ok=False, error_code="VERSION_CONFLICT")
+                drafts = propose_source_span_drafts_once(
+                    session,
+                    account_id=account_id,
+                    profiling_session_id=profiling_session_id,
+                    source_input_id=source_input_id,
+                    scope_key=experience_scope_id,
+                    spans=tuple(DraftSpan(p.start, p.end) for p in spans),
+                    now=datetime.now(UTC),
+                )
+                result = ProfilingDraftProposalOutput(
+                    drafts=[
+                        {
+                            "draft_id": draft.id,
+                            "source_input_id": draft.source_input_id,
+                            "scope_key": draft.scope_key,
+                            "claim_type": draft.claim_type,
+                            "exact_text": draft.exact_text,
+                            "status": draft.status,
+                            "source_start": span.start,
+                            "source_end": span.end,
+                        }
+                        for draft, span in zip(drafts, spans, strict=True)
+                    ]
+                )
+                session.commit()
+                return result
+            except (ProfilingUnavailable, ReviewUnavailable):
+                return ProfilingDraftProposalOutput(ok=False, error_code="NOT_FOUND")
+            except ProfilingExpired:
+                return ProfilingDraftProposalOutput(ok=False, error_code="SESSION_EXPIRED")
+            except ReviewStale:
+                return ProfilingDraftProposalOutput(ok=False, error_code="VERSION_CONFLICT")
+            except (DraftSpanRejected, ValueError):
+                return ProfilingDraftProposalOutput(ok=False, error_code="VALIDATION_FAILED")
 
     @server.tool(
         name="get_owned_profile_metadata",
@@ -1332,6 +1617,9 @@ def build_product_foundation_app(
         functional_headers=True,
         tool_scopes={
             "get_account_profile": PROFILE_READ_SCOPE,
+            "get_my_profile": PROFILE_READ_SCOPE,
+            "initialize_career_profile": PROFILE_WRITE_SCOPE,
+            "propose_profiling_drafts": PROFILE_WRITE_SCOPE,
             "get_owned_profile_metadata": PROFILE_READ_SCOPE,
             "get_profiling_session": PROFILE_READ_SCOPE,
             "get_career_profile": PROFILE_READ_SCOPE,

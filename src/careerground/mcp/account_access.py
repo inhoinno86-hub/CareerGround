@@ -10,7 +10,7 @@ import asyncio
 from collections.abc import Callable
 
 from mcp.server.auth.provider import AccessToken, TokenVerifier
-from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from careerground.domain.authorization import (
@@ -18,6 +18,7 @@ from careerground.domain.authorization import (
     VerifiedIdentity,
     resolve_account_id,
 )
+from careerground.storage.models import Account, AuthIdentity
 
 
 class ActiveAccountTokenVerifier:
@@ -34,11 +35,15 @@ class ActiveAccountTokenVerifier:
         issuer: str,
         session_factory: Callable[[], Session],
         token_is_revoked: Callable[[str], bool] | None = None,
+        enrollment_account_id: Callable[[VerifiedIdentity], str | None] | None = None,
+        enrollment_scope: str = "career.profile.write",
     ) -> None:
         self._token_verifier = token_verifier
         self._issuer = issuer
         self._session_factory = session_factory
         self._token_is_revoked = token_is_revoked
+        self._enrollment_account_id = enrollment_account_id
+        self._enrollment_scope = enrollment_scope
 
     async def verify_token(self, token: str) -> AccessToken | None:
         if self._token_is_revoked is not None:
@@ -50,15 +55,35 @@ class ActiveAccountTokenVerifier:
         access = await self._token_verifier.verify_token(token)
         if access is None or not access.subject:
             return None
-        if not await asyncio.to_thread(self._has_active_account, access.subject):
+        if not await asyncio.to_thread(
+            self._has_active_account, access.subject, self._enrollment_scope in access.scopes
+        ):
             return None
         return access
 
-    def _has_active_account(self, subject: str) -> bool:
+    def _has_active_account(self, subject: str, enrollment_scope: bool = False) -> bool:
         try:
             with self._session_factory() as session:
-                resolve_account_id(session, VerifiedIdentity(self._issuer, subject))
+                identity = VerifiedIdentity(self._issuer, subject)
+                try:
+                    resolve_account_id(session, identity)
+                except AuthenticationRequired:
+                    if not enrollment_scope or self._enrollment_account_id is None:
+                        return False
+                    # Linked blocked accounts never enter enrollment. An erased
+                    # identity's stable admission ID also remains unavailable.
+                    if (
+                        session.scalar(
+                            select(AuthIdentity.id).where(
+                                AuthIdentity.issuer == self._issuer, AuthIdentity.subject == subject
+                            )
+                        )
+                        is not None
+                    ):
+                        return False
+                    admission = self._enrollment_account_id(identity)
+                    return bool(admission) and session.get(Account, admission) is None
             return True
-        except (AuthenticationRequired, SQLAlchemyError):
+        except Exception:  # noqa: BLE001 - enrollment adapter failure must deny access
             # Unknown, disabled, deleted, or temporarily unreadable: deny.
             return False

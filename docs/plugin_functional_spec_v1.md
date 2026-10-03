@@ -40,7 +40,9 @@ CareerGround Plugin
 
 The MCP server owns all authorization and data changes. The model may propose a tool call but does not decide resource ownership, approval validity, retention or publication eligibility.
 
-The review UI is recommended for comparing, editing and confirming Claim batches. Every tool still returns a complete structured result so the workflow works without custom UI.
+The review UI is recommended for comparing, editing and confirming Claim batches. Every tool returns a complete structured result. The 2026-10-03 approved Phase A delivery uses ChatGPT for conversation and the CareerGround management browser for exact fact/use/wording review, export permission and deletion confirmation. Embedded ChatGPT UI is optional; these sensitive operations require the server-verified management confirmation even when no embedded component is installed. A conversational “yes” is not an approval receipt.
+
+Phase A first-use helpers discover the owned profile without client-supplied IDs and initialize it explicitly from a verified identity and trusted enrollment admission. ChatGPT may propose up to five exact source character ranges for temporary drafts; it cannot supply ownership, a new fact, or approval. After browser confirmation, the originating MCP connection can retrieve its receipt and continue without asking the user to copy the receipt. See [implementation and trial](CareerGround_ChatGPT_Management_Journey_2026-10-03.md).
 
 ## 3. Scope
 

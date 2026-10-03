@@ -620,6 +620,13 @@ class BrowserOperationService:
         session.flush()
         return row
 
+    def confirmation_status(self, session, *, account_id, connection_key, operation_id, now):
+        """Observe only the exact originating connection's human confirmation."""
+        row = self._owned(session, account_id, operation_id, now)
+        if not hmac.compare_digest(row.connection_key, connection_key):
+            raise BrowserOperationUnavailable
+        return row
+
     def receipt(self, row):
         if row.status not in {"DONE", "CONSUMED"} or not row.browser_key:
             raise BrowserOperationRejected

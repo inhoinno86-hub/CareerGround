@@ -13,6 +13,7 @@ import unittest
 from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
+from unittest.mock import patch
 
 import jwt
 from cryptography.hazmat.primitives.asymmetric import rsa
@@ -366,8 +367,15 @@ class BrowserMCPConfirmationTests(unittest.TestCase):
             exported = self.call(client, "export_resume", args)
             self.assertEqual(exported["status"], "ok", exported)
             uri = exported["data"]["resource_uri"]
+            self.assertEqual(exported["data"]["content_delivery"], "INLINE")
+            listed = self.rpc(client, "resources/list", {}).json()["result"]["resources"]
+            self.assertEqual([resource["uri"] for resource in listed], [uri])
+            self.assertNotIn(PHRASE, str(listed))
             resource = self.rpc(client, "resources/read", {"uri": uri})
             self.assertEqual(resource.status_code, 200)
+            self.assertEqual(
+                exported["data"]["content"], resource.json()["result"]["contents"][0]["text"]
+            )
             self.assertEqual(
                 re.sub(r"\\(.)", r"\1", resource.json()["result"]["contents"][0]["text"]),
                 "- " + PHRASE + "\n",
@@ -380,10 +388,15 @@ class BrowserMCPConfirmationTests(unittest.TestCase):
                 denied = self.rpc(client, "resources/read", {"uri": uri}, **identity)
                 self.assertIn("error", denied.json())
                 self.assertNotIn(PHRASE, denied.text)
+                listed = self.rpc(client, "resources/list", {}, **identity).json()
+                self.assertEqual(listed["result"]["resources"], [])
             with self.sessions() as session:
                 session.get(CareerProfile, "profile-a").status = "DELETING"
                 session.commit()
             self.assertIn("error", self.rpc(client, "resources/read", {"uri": uri}).json())
+            self.assertEqual(
+                self.rpc(client, "resources/list", {}).json()["result"]["resources"], []
+            )
             with self.sessions() as session:
                 session.get(CareerProfile, "profile-a").status = "ACTIVE"
                 row = session.get(BrowserOperation, request["request_id"])
@@ -391,6 +404,9 @@ class BrowserMCPConfirmationTests(unittest.TestCase):
                 row.expires_at = datetime.now(UTC) - timedelta(seconds=1)
                 session.commit()
             self.assertIn("error", self.rpc(client, "resources/read", {"uri": uri}).json())
+            self.assertEqual(
+                self.rpc(client, "resources/list", {}).json()["result"]["resources"], []
+            )
             self.assertEqual(self.call(client, "export_resume", args)["status"], "error")
         with self.sessions() as session:
             self.assertEqual(
@@ -414,7 +430,13 @@ class BrowserMCPConfirmationTests(unittest.TestCase):
             request = self.request(client, "PROFILE_EXPORT", "profile-a", 0, "JSON")
             uri = "careerground://exports/" + request["request_id"]
             self.assertIn("error", self.rpc(client, "resources/read", {"uri": uri}).json())
+            self.assertEqual(
+                self.rpc(client, "resources/list", {}).json()["result"]["resources"], []
+            )
             consent = self.confirm(browser, request["confirmation_path"])
+            self.assertEqual(
+                self.rpc(client, "resources/list", {}).json()["result"]["resources"], []
+            )
             exported = self.call(
                 client,
                 "export_profile_data",
@@ -426,11 +448,29 @@ class BrowserMCPConfirmationTests(unittest.TestCase):
                 },
             )
             self.assertEqual(exported["status"], "ok", exported)
+            listed = self.rpc(client, "resources/list", {}).json()["result"]["resources"]
+            self.assertEqual([resource["uri"] for resource in listed], [uri])
             body = self.rpc(client, "resources/read", {"uri": uri}).json()["result"]["contents"][0][
                 "text"
             ]
             self.assertIsInstance(json.loads(body), dict)
+            self.assertEqual(exported["data"]["content_delivery"], "INLINE")
+            self.assertEqual(exported["data"]["content"], body)
             self.assertNotIn("approval_receipt", body)
+            with patch("careerground.mcp.confirmation_tools.MAX_INLINE_EXPORT_BYTES", 1):
+                resource_only = self.call(
+                    client,
+                    "export_profile_data",
+                    {
+                        "profile_id": "profile-a",
+                        "profile_version": 0,
+                        "format": "JSON",
+                        "approval_receipt": consent,
+                    },
+                )["data"]
+            self.assertEqual(resource_only["content_delivery"], "RESOURCE_ONLY")
+            self.assertIsNone(resource_only["content"])
+            self.assertEqual(resource_only["content_hash"], exported["data"]["content_hash"])
             self.assertEqual(
                 self.call(
                     client,
@@ -452,6 +492,9 @@ class BrowserMCPConfirmationTests(unittest.TestCase):
                 renewed, self.key, algorithm="RS256", headers={"kid": "synthetic-key"}
             )
             self.assertIn("error", self.rpc(client, "resources/read", {"uri": uri}).json())
+            self.assertEqual(
+                self.rpc(client, "resources/list", {}).json()["result"]["resources"], []
+            )
             self.tokens[identity] = original
 
     def test_deletion_status_counts_without_internal_secrets_and_no_false_completion(self):

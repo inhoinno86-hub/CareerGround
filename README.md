@@ -8,7 +8,7 @@ Career Graph v1 domain/schema validation, Career Profiling Protocol v1, approved
 text-MVP product policy, Schema v1.1 policy addendum, Plugin Functional Specification
 v1, Interview Package Schema v1 and Voice Interview Agent Specification v1. Synthetic
 fixtures cover Career Graph ownership, signed Interview Packages and Voice Agent
-state/policy cases. The local backend now has 19 migrations for identity, profiling,
+state/policy cases. The local backend now has 20 migrations for identity, profiling,
 exact fact review, canonical Claim/Evidence archives, separate Claim use review,
 JD/R1 artifacts and retention/erasure foundations. Isolated MCP and Web/BFF factories
 exercise authenticated synthetic flows. The document-free browser journey starts
@@ -59,7 +59,8 @@ LLM/realtime provider adoption and paid cloud resources remain separate decision
 - [Disposable demo, offline JD proposals and mock deletion](docs/CareerGround_Phase_A_Local_Demo_Release_2026-10-01.md)
 - [MCP contracts, offline proposal checks and persistent runtime](docs/CareerGround_Phase_A_Contracts_Development_Runtime_2026-10-02.md)
 - [CURRENT/options, R2 approval/export and partial erasure](docs/CareerGround_Phase_A_Local_Contract_Completion_2026-10-03.md)
-- [Latest: identity, Korean AI evaluation and operations preparation](docs/CareerGround_External_Gate_Preparation_2026-10-03.md)
+- [Identity, Korean AI evaluation and operations preparation](docs/CareerGround_External_Gate_Preparation_2026-10-03.md)
+- [Latest: ChatGPT conversation and management browser journey](docs/CareerGround_ChatGPT_Management_Journey_2026-10-03.md)
 
 ## Core principle
 
@@ -148,7 +149,7 @@ The future private-MCP account gate is implemented separately and tested through
 synthetic, DB-backed probe factory. The running PoC is deliberately unchanged: no
 product MCP entrypoint, production account erasure, or per-connection revocation exists
 yet. Do not attach career data to the PoC entrypoint.
-The **local-only product MCP factory** exposes 24 tools under
+The **local-only product MCP factory** exposes 30 tools under
 `career.profile.read`, `career.profile.write`, `career.artifact.read`,
 `career.artifact.write`, `career.export` and `career.delete` scopes.
 All product tools return a common success/error envelope with advertised schemas,

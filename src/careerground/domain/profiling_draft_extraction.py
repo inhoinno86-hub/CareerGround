@@ -167,7 +167,7 @@ def propose_verbatim_span_drafts(
     )
 
 
-def propose_explicit_bullet_drafts_once(
+def _propose_source_drafts_once(
     session: Session,
     *,
     account_id: str,
@@ -175,8 +175,9 @@ def propose_explicit_bullet_drafts_once(
     source_input_id: str,
     scope_key: str,
     now: datetime,
+    proposed_spans: Sequence[DraftSpan] | None = None,
 ) -> tuple[ProfilingDraft, ...]:
-    """Make at most five temporary CONTRIBUTION drafts from user-formatted bullets.
+    """Make at most five temporary CONTRIBUTION drafts from exact source spans.
 
     Stable IDs make a repeated confirmed browser form return the same exact rows.
     The caller owns the transaction; a partial or changed set is rejected.
@@ -200,12 +201,16 @@ def propose_explicit_bullet_drafts_once(
             ProfilingInput.id == source_input_id,
             ProfilingInput.account_id == account_id,
             ProfilingInput.session_id == profiling_session_id,
-            ProfilingInput.content_kind == "USER_STATEMENT",
+            ProfilingInput.content_kind.in_(
+                ("USER_STATEMENT", "CORRECTION")
+                if proposed_spans is not None
+                else ("USER_STATEMENT",)
+            ),
         )
     )
     if source is None or source.protocol_cycle != work.protocol_cycle:
         raise ReviewUnavailable
-    spans = extract_explicit_bullet_spans(source.body)
+    spans = extract_explicit_bullet_spans(source.body) if proposed_spans is None else proposed_spans
     candidates = validate_draft_spans(source.body, spans)
     draft_ids = tuple(
         str(
@@ -259,4 +264,48 @@ def propose_explicit_bullet_drafts_once(
             draft_id=draft_id,
         )
         for draft_id, candidate in zip(draft_ids, candidates, strict=True)
+    )
+
+
+def propose_explicit_bullet_drafts_once(
+    session: Session,
+    *,
+    account_id: str,
+    profiling_session_id: str,
+    source_input_id: str,
+    scope_key: str,
+    now: datetime,
+) -> tuple[ProfilingDraft, ...]:
+    """Preserve the existing browser path for explicitly formatted bullets."""
+    return _propose_source_drafts_once(
+        session,
+        account_id=account_id,
+        profiling_session_id=profiling_session_id,
+        source_input_id=source_input_id,
+        scope_key=scope_key,
+        now=now,
+    )
+
+
+def propose_source_span_drafts_once(
+    session: Session,
+    *,
+    account_id: str,
+    profiling_session_id: str,
+    source_input_id: str,
+    scope_key: str,
+    spans: Sequence[DraftSpan],
+    now: datetime,
+) -> tuple[ProfilingDraft, ...]:
+    """Validate untrusted ranges and persist one replay-safe, unapproved source set."""
+    if not isinstance(spans, (tuple, list)) or not spans:
+        raise DraftSpanRejected("source spans required")
+    return _propose_source_drafts_once(
+        session,
+        account_id=account_id,
+        profiling_session_id=profiling_session_id,
+        source_input_id=source_input_id,
+        scope_key=scope_key,
+        now=now,
+        proposed_spans=spans,
     )

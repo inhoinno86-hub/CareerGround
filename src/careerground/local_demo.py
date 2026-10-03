@@ -139,6 +139,7 @@ class LocalDemo:
             review_signing_secret=self.review_secret,
             presentation_signing_secret=self.presentation_secret,
             signing_key=lambda _token: self.key.public_key(),
+            management_origin=self.origin,
             token_is_revoked=self.token_is_revoked,
             local_deletion_adapter=lambda **kwargs: self.deletion_connection.request_or_execute(
                 **kwargs

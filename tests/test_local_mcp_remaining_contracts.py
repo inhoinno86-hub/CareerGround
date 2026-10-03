@@ -191,7 +191,7 @@ class LocalMcpRemainingContractsTests(unittest.TestCase):
             json={"jsonrpc": "2.0", "id": 2, "method": "tools/list"},
         )
         tools = listing.json()["result"]["tools"]
-        self.assertEqual(len(tools), 26)
+        self.assertEqual(len(tools), 30)
         self.assertTrue(all(item["inputSchema"]["additionalProperties"] is False for item in tools))
 
     def test_profile_deletion_requires_browser_receipt_and_preserves_other_account(self):

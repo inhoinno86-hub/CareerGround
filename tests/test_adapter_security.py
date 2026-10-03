@@ -490,7 +490,7 @@ class AdapterSecurityTests(unittest.TestCase):
 
             tools = listing()
             self.assertEqual(tools, listing(), "listing must not repeatedly nest envelopes")
-            self.assertEqual(len(tools), 26)
+            self.assertEqual(len(tools), 30)
             for tool in tools:
                 with self.subTest(tool=tool["name"]):
                     self.assertIs(tool["inputSchema"]["additionalProperties"], False)

@@ -136,6 +136,9 @@ class ProductFoundationTests(unittest.TestCase):
                 {tool["name"] for tool in tools},
                 {
                     "get_account_profile",
+                    "get_my_profile",
+                    "initialize_career_profile",
+                    "propose_profiling_drafts",
                     "get_owned_profile_metadata",
                     "get_profiling_session",
                     "get_career_profile",
@@ -155,6 +158,8 @@ class ProductFoundationTests(unittest.TestCase):
                 expected_scope = {
                     "get_jd_analysis": ARTIFACT_READ_SCOPE,
                     "get_resume_trace": ARTIFACT_READ_SCOPE,
+                    "initialize_career_profile": PROFILE_WRITE_SCOPE,
+                    "propose_profiling_drafts": PROFILE_WRITE_SCOPE,
                     "start_profiling": PROFILE_WRITE_SCOPE,
                     "add_profiling_input": PROFILE_WRITE_SCOPE,
                     "pause_profiling": PROFILE_WRITE_SCOPE,
@@ -175,11 +180,14 @@ class ProductFoundationTests(unittest.TestCase):
                     tool["annotations"]["readOnlyHint"],
                     tool["name"]
                     not in {
+                        "initialize_career_profile",
+                        "propose_profiling_drafts",
                         "start_profiling",
                         "add_profiling_input",
                         "pause_profiling",
                         "prepare_claim_review",
-                        *set(TOOL_SCOPES) - {"get_deletion_status", "analyze_jd"},
+                        *set(TOOL_SCOPES)
+                        - {"get_deletion_status", "get_confirmation_status", "analyze_jd"},
                     },
                 )
             account_tool = next(tool for tool in tools if tool["name"] == "get_account_profile")
