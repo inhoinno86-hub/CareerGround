@@ -38,6 +38,11 @@ from careerground.domain.profile_export_presentation import (
     ProfileExportPresentationRejected,
     ProfileExportPresentationService,
 )
+from careerground.domain.profile_export_selection import (
+    ProfileSelectionRejected,
+    resolve_profile_version,
+    selection_values,
+)
 from careerground.domain.resume_export_presentation import (
     ResumeExportPresentationRejected,
     ResumeExportPresentationService,
@@ -147,20 +152,30 @@ class BrowserOperationService:
         client_id: str,
         action: str,
         target_id: str,
-        profile_version: int,
+        profile_version: int | str,
         format: str,
         idempotency_key: str,
         now: datetime,
+        inclusion: dict | None = None,
     ) -> BrowserOperation:
         now = _utc(now)
         if (
             action not in OPERATIONS
             or type(target_id) is not str
             or not 1 <= len(target_id) <= 36
-            or type(profile_version) is not int
-            or profile_version < 0
+            or (
+                profile_version != "CURRENT"
+                and (type(profile_version) is not int or profile_version < 0)
+            )
+            or (profile_version == "CURRENT" and action != "PROFILE_EXPORT")
+            or (inclusion is not None and action != "PROFILE_EXPORT")
         ):
             raise BrowserOperationRejected
+        selector = profile_version
+        try:
+            choices = selection_values(inclusion) if action == "PROFILE_EXPORT" else None
+        except ProfileSelectionRejected:
+            raise BrowserOperationRejected from None
         if format not in (
             {"JSON", "MARKDOWN"}
             if action == "RESUME_EXPORT"
@@ -211,7 +226,23 @@ class BrowserOperationService:
             select(BrowserOperation).where(BrowserOperation.request_key == key)
         )
         if existing is not None:
-            return self._same_request(existing, action, target_id, profile_version, format, now)
+            if action == "PROFILE_EXPORT" and self._export_options(existing) != (selector, choices):
+                raise BrowserOperationRejected
+            return self._same_request(
+                existing,
+                action,
+                target_id,
+                existing.profile_version if selector == "CURRENT" else profile_version,
+                format,
+                now,
+            )
+        if selector == "CURRENT":
+            try:
+                profile_version = resolve_profile_version(
+                    session, account_id=account_id, profile_id=profile_id, selector=selector
+                )
+            except ProfileSelectionRejected:
+                raise BrowserOperationRejected from None
         candidate = BrowserOperation(
             id=str(uuid4()),
             account_id=account_id,
@@ -223,6 +254,11 @@ class BrowserOperationService:
             target_id=target_id,
             profile_version=profile_version,
             format=format,
+            export_options_json=json.dumps(
+                {"selector": selector, "inclusion": choices}, sort_keys=True, separators=(",", ":")
+            )
+            if choices is not None
+            else None,
             status="WAITING",
             created_at=now,
             expires_at=now + TTL,
@@ -239,8 +275,27 @@ class BrowserOperationService:
             )
             if existing is None:
                 raise BrowserOperationRejected from None
+            if action == "PROFILE_EXPORT" and self._export_options(existing) != (selector, choices):
+                raise BrowserOperationRejected
             return self._same_request(existing, action, target_id, profile_version, format, now)
         return candidate
+
+    @staticmethod
+    def _export_options(row):
+        if row.export_options_json is None:
+            return row.profile_version, selection_values()
+        try:
+            options = json.loads(row.export_options_json)
+            if type(options) is not dict or set(options) != {"selector", "inclusion"}:
+                raise BrowserOperationRejected
+            selector = options["selector"]
+            if selector != "CURRENT" and (
+                type(selector) is not int or selector != row.profile_version
+            ):
+                raise BrowserOperationRejected
+            return selector, selection_values(options["inclusion"])
+        except (ValueError, TypeError):
+            raise BrowserOperationRejected from None
 
     @staticmethod
     def _same_request(row, action, target_id, version, format, now):
@@ -308,8 +363,27 @@ class BrowserOperationService:
         if row.action == "WORDING_REVIEW":
             return self.wording.present(session, artifact_id=row.target_id, **common)
         if row.action == "PROFILE_EXPORT":
+            selector, inclusion = self._export_options(row)
+            if selector == "CURRENT":
+                try:
+                    if (
+                        resolve_profile_version(
+                            session,
+                            account_id=row.account_id,
+                            profile_id=row.profile_id,
+                            selector=selector,
+                        )
+                        != row.profile_version
+                    ):
+                        raise BrowserOperationRejected
+                except ProfileSelectionRejected:
+                    raise BrowserOperationRejected from None
             return self.profile_export.present(
-                session, profile_id=row.target_id, profile_version=row.profile_version, **common
+                session,
+                profile_id=row.target_id,
+                profile_version=row.profile_version,
+                inclusion=inclusion,
+                **common,
             )
         return self.resume_export.present(
             session, artifact_id=row.target_id, format=row.format, **common
@@ -508,11 +582,13 @@ class BrowserOperationService:
             }
         else:
             if row.action == "PROFILE_EXPORT":
+                self._view(session, row, browser_session_id, now)
                 export = self.profile_export.submit(
                     session,
                     profile_id=row.target_id,
                     profile_version=row.profile_version,
                     export_token=payload["inner_token"],
+                    inclusion=self._export_options(row)[1],
                     **common,
                 )
                 size = len(export.content_json.encode())
@@ -533,6 +609,8 @@ class BrowserOperationService:
                 "content_bytes": size,
                 "expires_at": _utc(row.expires_at).isoformat(),
             }
+            if row.action == "PROFILE_EXPORT":
+                result["inclusion"] = export.inclusion
         row.browser_key = browser_key
         row.confirmation_key = confirmation_key
         row.result_json = json.dumps(
@@ -559,6 +637,7 @@ class BrowserOperationService:
         now,
         profile_version=None,
         format=None,
+        inclusion=None,
     ):
         if type(receipt) is not str or len(receipt) != 101 or receipt.count(".") != 1:
             raise BrowserOperationRejected
@@ -572,6 +651,18 @@ class BrowserOperationService:
             or not hmac.compare_digest(receipt, self.receipt(row))
         ):
             raise BrowserOperationRejected
+        if profile_version == "CURRENT":
+            if row.action != "PROFILE_EXPORT" or self._export_options(row)[0] != "CURRENT":
+                raise BrowserOperationRejected
+            profile_version = row.profile_version
+        if inclusion is not None:
+            try:
+                if row.action != "PROFILE_EXPORT" or self._export_options(row)[
+                    1
+                ] != selection_values(inclusion):
+                    raise BrowserOperationRejected
+            except ProfileSelectionRejected:
+                raise BrowserOperationRejected from None
         if (profile_version is not None and row.profile_version != profile_version) or (
             format is not None and row.format != format
         ):
@@ -596,6 +687,7 @@ class BrowserOperationService:
                 account_id=account_id,
                 profile_id=row.target_id,
                 profile_version=row.profile_version,
+                inclusion=self._export_options(row)[1],
             )
             content = export.content_json
         else:

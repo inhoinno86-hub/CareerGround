@@ -316,7 +316,7 @@ class DeletionPreviewTests(unittest.TestCase):
                 DeletionRequest(
                     id="request-bad",
                     account_id="acct-a",
-                    scope="EVIDENCE",
+                    scope="INVALID",
                     target_id="profile-a",
                     status="DELETING",
                     impact_digest="0" * 64,

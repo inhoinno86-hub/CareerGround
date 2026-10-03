@@ -58,6 +58,12 @@ from careerground.domain.graph_projection import (
 )
 from careerground.domain.jd_analysis import JDUnavailable, get_jd_analysis
 from careerground.domain.jd_mapping import JDMappingRejected, get_jd_mapping
+from careerground.domain.profile_export_selection import (
+    ProfileSelectionRejected,
+    VersionSelector,
+    resolve_profile_version,
+    selection_values,
+)
 from careerground.domain.profiling_protocol_workspace import get_protocol_question_plan
 from careerground.domain.profiling_workspace import (
     InputKind,
@@ -128,6 +134,10 @@ _TOOL_ARGUMENTS = {
         {"profiling_session_id", "experience_scope_id", "base_profile_version", "idempotency_key"}
     ),
     "preview_data_deletion": frozenset({"scope", "target_ids"}),
+    "analyze_jd": frozenset({"profile_id", "profile_version", "jd_text"}),
+    "execute_data_deletion": frozenset(
+        {"scope", "target_id", "profile_version", "idempotency_key", "approval_receipt"}
+    ),
     "request_user_confirmation": frozenset(
         {"action", "target_id", "profile_version", "format", "idempotency_key"}
     ),
@@ -177,10 +187,43 @@ class StrictProductMCPServer(MCPServer):
     async def call_tool(self, name: str, arguments: dict[str, Any], context=None):
         try:
             allowed = _TOOL_ARGUMENTS.get(name)
-            if type(arguments) is not dict or allowed is None or set(arguments) != allowed:
+            optional = (
+                {"inclusion"}
+                if name in {"request_user_confirmation", "export_profile_data"}
+                else set()
+            )
+            if (
+                type(arguments) is not dict
+                or allowed is None
+                or not allowed <= set(arguments)
+                or set(arguments) - allowed - optional
+            ):
                 return self.invalid_tool_call()
             # Reject SDK coercion and errors containing submitted values.
             for field, value in arguments.items():
+                if field == "inclusion":
+                    if (
+                        name == "request_user_confirmation"
+                        and arguments.get("action") != "PROFILE_EXPORT"
+                    ):
+                        return self.invalid_tool_call()
+                    try:
+                        selection_values(value)
+                    except ProfileSelectionRejected:
+                        return self.invalid_tool_call()
+                    continue
+                if (
+                    field == "profile_version"
+                    and value == "CURRENT"
+                    and (
+                        name in {"get_career_profile", "export_profile_data"}
+                        or (
+                            name == "request_user_confirmation"
+                            and arguments.get("action") == "PROFILE_EXPORT"
+                        )
+                    )
+                ):
+                    continue
                 if field == "target_ids":
                     if (
                         type(value) is not list
@@ -280,10 +323,51 @@ class AccountProfile(BaseModel):
     id: str = Field(min_length=1)
 
 
+class JDRequirementProposalOutput(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    ordinal: int
+    exact_text: str
+    source_start: int
+    source_end: int
+    requirement_type: Literal["UNCLASSIFIED"]
+    gap_status: Literal["NOT_MAPPED"]
+
+
+class JDProposalOutput(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    ok: bool = True
+    error_code: str | None = None
+    profile_id: str | None = None
+    profile_version: int | None = None
+    mode: Literal["MOCK_ONLY"] = "MOCK_ONLY"
+    source_hash: str | None = None
+    source_length: int | None = None
+    requirements: list[JDRequirementProposalOutput] = Field(default_factory=list)
+    canonical_saved: Literal[False] = False
+    analysis_kind: Literal["UNAPPROVED_MOCK_PROPOSAL"] = "UNAPPROVED_MOCK_PROPOSAL"
+    review_required: Literal[True] = True
+
+
+class LocalDeletionOutput(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    ok: bool = True
+    error_code: str | None = None
+    mode: Literal["MOCK_ONLY"] = "MOCK_ONLY"
+    status: Literal["WAITING", "DELETING"] | None = None
+    request_id: str | None = None
+    erasure_request_id: str | None = None
+    confirmation_path: str | None = None
+    expires_at: datetime | None = None
+    user_message: str | None = None
+    coverage: Literal["FOUNDATION_ONLY"] = "FOUNDATION_ONLY"
+    completed_in_browser: bool = False
+    ready_to_execute: Literal[False] = False
+
+
 class DeletionPreviewOutput(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    scope: Literal["ACCOUNT", "PROFILE"]
+    scope: Literal["ACCOUNT", "PROFILE", "SESSION", "EVIDENCE", "PROJECT"]
     found: bool = True
     coverage: Literal["FOUNDATION_ONLY"] = "FOUNDATION_ONLY"
     ready_to_execute: Literal[False] = False
@@ -465,6 +549,7 @@ class ResumeUnitTraceOutput(BaseModel):
     original_input_refs: list[str]
     wording_level: str
     review_status: str
+    source_unit_id: str | None = None
 
 
 class ResumeTraceOutput(BaseModel):
@@ -477,6 +562,7 @@ class ResumeTraceOutput(BaseModel):
     jd_id: str | None = None
     stale_relative_to_current_profile: bool | None = None
     units: list[ResumeUnitTraceOutput] = Field(default_factory=list)
+    source_artifact_id: str | None = None
 
 
 def build_product_foundation_app(
@@ -487,6 +573,8 @@ def build_product_foundation_app(
     signing_key: Callable[[str], object] | None = None,
     request_limits: RequestLimitPolicy = DEFAULT_REQUEST_LIMITS,
     presentation_signing_secret: bytes | None = None,
+    token_is_revoked: Callable[[str], bool] | None = None,
+    local_deletion_adapter: Callable[..., dict] | None = None,
 ) -> ASGIApp:
     """Build isolated product auth/ownership checks for synthetic local tests."""
 
@@ -512,6 +600,7 @@ def build_product_foundation_app(
         ),
         issuer=settings.issuer,
         session_factory=session_factory,
+        token_is_revoked=token_is_revoked,
     )
     server = StrictProductMCPServer(
         name="careerground-product-foundation",
@@ -545,7 +634,7 @@ def build_product_foundation_app(
             "add_profiling_input",
             "pause_profiling",
             "prepare_claim_review",
-        } or (name in TOOL_SCOPES and name != "get_deletion_status")
+        } or (name in TOOL_SCOPES and name not in {"get_deletion_status", "analyze_jd"})
         scope = (
             PROFILE_WRITE_SCOPE
             if write
@@ -583,16 +672,117 @@ def build_product_foundation_app(
     )
 
     @server.tool(
+        name="analyze_jd",
+        title="Preview synthetic JD proposal",
+        description="MOCK_ONLY explicit bullet span proposal. Read-only, not saved, no semantic classification or coverage. Store selected excerpts separately through browser JD_PASTE confirmation.",
+        annotations=ToolAnnotations(
+            read_only_hint=True, destructive_hint=False, open_world_hint=False
+        ),
+        structured_output=True,
+    )
+    def analyze_jd(profile_id: str, profile_version: int, jd_text: str) -> JDProposalOutput:
+        from careerground.domain.text_proposal_validation import (
+            MockTextAnalyzer,
+            TextProposalRejected,
+            prepare_mock_jd_text_proposal,
+        )
+
+        with session_factory() as session:
+            account_id = current_account_id(session, ARTIFACT_WRITE_SCOPE)
+            try:
+                proposal = prepare_mock_jd_text_proposal(
+                    session,
+                    account_id=account_id,
+                    profile_id=profile_id,
+                    profile_version=profile_version,
+                    source_text=jd_text,
+                    analyzer=MockTextAnalyzer(),
+                )
+            except TextProposalRejected:
+                return JDProposalOutput(ok=False, error_code="VALIDATION_FAILED")
+        return JDProposalOutput.model_validate(
+            {
+                "profile_id": proposal.profile_id,
+                "profile_version": proposal.profile_version,
+                "source_hash": proposal.source_hash,
+                "source_length": len(jd_text),
+                "requirements": [
+                    JDRequirementProposalOutput(
+                        ordinal=item.ordinal,
+                        exact_text=item.exact_text,
+                        source_start=item.source_start,
+                        source_end=item.source_end,
+                        requirement_type=item.requirement_type,
+                        gap_status=item.gap_status,
+                    )
+                    for item in proposal.candidates
+                ],
+                "canonical_saved": False,
+                "analysis_kind": "UNAPPROVED_MOCK_PROPOSAL",
+                "review_required": True,
+            }
+        )
+
+    @server.tool(
+        name="execute_data_deletion",
+        title="Approve and execute local synthetic deletion",
+        description="MOCK_ONLY local adapter. Empty approval_receipt requests a bound browser confirmation; valid receipt from separate impact review/mock step-up/final approval executes only that same connection and exact scope/version. No production erasure guarantee. Account deletion revokes ordinary MCP access.",
+        annotations=ToolAnnotations(
+            read_only_hint=False, destructive_hint=True, open_world_hint=False, idempotent_hint=True
+        ),
+        structured_output=True,
+    )
+    def execute_data_deletion(
+        scope: Literal["ACCOUNT", "PROFILE", "SESSION", "EVIDENCE", "PROJECT"],
+        target_id: str,
+        profile_version: int,
+        idempotency_key: str,
+        approval_receipt: str,
+    ) -> LocalDeletionOutput:
+        if local_deletion_adapter is None:
+            return LocalDeletionOutput(ok=False, error_code="REVIEW_REQUIRED")
+        from careerground.domain.deletion_preview import DeletionTargetUnavailable
+        from careerground.domain.local_deletion_connection import LocalDeletionConnectionRejected
+        from careerground.domain.synthetic_deletion_journey import MockDeletionJourneyRejected
+
+        with session_factory() as session:
+            account_id = current_account_id(session, DELETE_SCOPE)
+        access = get_access_token()
+        connection = operation_service.connection_key(
+            settings.issuer, access.subject, access.client_id, access.token
+        )
+        try:
+            return LocalDeletionOutput.model_validate(
+                local_deletion_adapter(
+                    account_id=account_id,
+                    connection=connection,
+                    connection_expires_at=access.expires_at,
+                    scope=scope,
+                    target_id=target_id,
+                    profile_version=profile_version,
+                    idempotency_key=idempotency_key,
+                    approval_receipt=approval_receipt,
+                )
+            )
+        except (
+            LocalDeletionConnectionRejected,
+            MockDeletionJourneyRejected,
+            DeletionTargetUnavailable,
+        ):
+            return LocalDeletionOutput(ok=False, error_code="REVIEW_REQUIRED")
+
+    @server.tool(
         name="preview_data_deletion",
         title="Preview known local deletion counts",
-        description="Synthetic incomplete ACCOUNT/PROFILE counts only. No digest or deletion execution; ready_to_execute=false.",
+        description="Synthetic known local impact counts for an exact owned scope. No digest or deletion execution; ready_to_execute=false.",
         annotations=ToolAnnotations(
             read_only_hint=True, destructive_hint=False, open_world_hint=False
         ),
         structured_output=True,
     )
     def preview_data_deletion(
-        scope: Literal["ACCOUNT", "PROFILE"], target_ids: list[str]
+        scope: Literal["ACCOUNT", "PROFILE", "SESSION", "EVIDENCE", "PROJECT"],
+        target_ids: list[str],
     ) -> DeletionPreviewOutput:
         with session_factory() as session:
             account_id = current_account_id(session, DELETE_SCOPE)
@@ -853,19 +1043,22 @@ def build_product_foundation_app(
         ),
         structured_output=True,
     )
-    def get_career_profile_tool(profile_id: str, profile_version: int) -> CareerProfileOutput:
-        if isinstance(profile_version, bool) or profile_version < 0:
-            return CareerProfileOutput(found=False)
+    def get_career_profile_tool(
+        profile_id: str, profile_version: VersionSelector
+    ) -> CareerProfileOutput:
         with session_factory() as session:
             account_id = current_account_id(session)
             try:
+                profile_version = resolve_profile_version(
+                    session, account_id=account_id, profile_id=profile_id, selector=profile_version
+                )
                 view = get_career_profile(
                     session,
                     account_id=account_id,
                     profile_id=profile_id,
                     profile_version=profile_version,
                 )
-            except GraphUnavailable:
+            except (GraphUnavailable, ProfileSelectionRejected):
                 return CareerProfileOutput(found=False)
             return CareerProfileOutput(
                 found=True,
@@ -1099,8 +1292,8 @@ def build_product_foundation_app(
 
     @server.tool(
         name="get_resume_trace",
-        title="Get owned R1 resume draft trace",
-        description="Return exact R1 draft units and their eligible Claim and selected Evidence references.",
+        title="Get owned R1/R2 resume trace",
+        description="Return exact R1/R2 units, source lineage and eligible Claim and selected Evidence references.",
         annotations=ToolAnnotations(
             read_only_hint=True, destructive_hint=False, open_world_hint=False
         ),
@@ -1121,6 +1314,7 @@ def build_product_foundation_app(
                 jd_id=view.jd_id,
                 stale_relative_to_current_profile=view.stale_relative_to_current_profile,
                 units=[ResumeUnitTraceOutput.model_validate(asdict(unit)) for unit in view.units],
+                source_artifact_id=view.source_artifact_id,
             )
 
     hostname = urlsplit(settings.resource_url).netloc

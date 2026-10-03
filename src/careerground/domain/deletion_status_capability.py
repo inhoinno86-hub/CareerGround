@@ -21,12 +21,15 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
 from careerground.domain.deletion_preview import DeletionScope, VerifiedDeletionApproval
+from careerground.storage.graph_models import EvidenceItem
 from careerground.storage.models import (
     Account,
     CareerProfile,
     DeletionRequest,
     DeletionWorkItem,
     ErasureLedger,
+    ProfilingSession,
+    ProjectScope,
 )
 
 _PURPOSE = "SYNTHETIC_DELETION_STATUS_V1"
@@ -279,6 +282,30 @@ class DeletionStatusCapabilityService:
                 and profile.account_id == request.account_id
                 and profile.status == "DELETING"
             )
+        if request.scope in {"SESSION", "EVIDENCE", "PROJECT"}:
+            ledger = session.get(ErasureLedger, request.id)
+            profile = session.get(CareerProfile, ledger.profile_id) if ledger else None
+            if (
+                account is None
+                or account.status != "ACTIVE"
+                or ledger is None
+                or profile is None
+                or profile.account_id != request.account_id
+                or profile.status != "ACTIVE"
+                or type(ledger.profile_version_after) is not int
+                or profile.version < ledger.profile_version_after
+            ):
+                return False
+            if request.scope == "PROJECT":
+                project = session.get(ProjectScope, request.target_id)
+                return (
+                    project is not None
+                    and project.account_id == request.account_id
+                    and project.profile_id == profile.id
+                    and project.status == "DELETING"
+                )
+            model = ProfilingSession if request.scope == "SESSION" else EvidenceItem
+            return session.get(model, request.target_id) is None
         return False
 
     def _require_ready(self) -> None:

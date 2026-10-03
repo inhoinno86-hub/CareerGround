@@ -433,7 +433,7 @@ class AdapterSecurityTests(unittest.TestCase):
             malformed = self.call(
                 client,
                 "preview_data_deletion",
-                {"scope": "EVIDENCE", "target_ids": ["anything"]},
+                {"scope": "INVALID", "target_ids": ["anything"]},
                 scope="career.delete",
             )
             self.assertEqual(
@@ -490,7 +490,7 @@ class AdapterSecurityTests(unittest.TestCase):
 
             tools = listing()
             self.assertEqual(tools, listing(), "listing must not repeatedly nest envelopes")
-            self.assertEqual(len(tools), 24)
+            self.assertEqual(len(tools), 26)
             for tool in tools:
                 with self.subTest(tool=tool["name"]):
                     self.assertIs(tool["inputSchema"]["additionalProperties"], False)

@@ -49,6 +49,7 @@ _PREVIEW_KEYS = frozenset(
 )
 _STEP_KEYS = _PREVIEW_KEYS | {"preview_token", "preview_hash", "step_expires_at"}
 _ORDER = {
+    "PARTIAL_LOCAL_DATA": -1,
     "PROFILING_INPUT": 0,
     "PROFILING_PROTOCOL_STEP": 1,
     "PROFILING_DRAFT": 2,
@@ -136,7 +137,7 @@ class MockDeletionJourney:
                 type(value) is not str or not 1 <= len(value) <= 128
                 for value in (account_id, profile_id, browser_session_id)
             )
-            or scope not in {"ACCOUNT", "PROFILE"}
+            or scope not in {scope.value for scope in DeletionScope}
             or type(scope) is not str
         ):
             raise MockDeletionJourneyRejected
@@ -149,12 +150,20 @@ class MockDeletionJourney:
         profile_id: str,
         browser_session_id: str,
         scope: str,
+        target_id: str | None = None,
         now: datetime,
     ) -> PreviewView:
         now = _utc(now)
         self._identity(account_id, profile_id, browser_session_id, scope)
         profile = self._owner(session, account_id, profile_id)
-        target = account_id if scope == "ACCOUNT" else profile.id
+        if scope == "ACCOUNT":
+            target = account_id
+        elif scope == "PROFILE":
+            target = profile.id
+        elif type(target_id) is str and 1 <= len(target_id) <= 36:
+            target = target_id
+        else:
+            raise MockDeletionJourneyRejected
         try:
             view = self._preview.preview(
                 session,
@@ -196,11 +205,16 @@ class MockDeletionJourney:
             or payload["account_id"] != account_id
             or payload["profile_id"] != profile_id
             or payload["browser_session_id"] != browser_session_id
-            or payload["scope"] not in {"ACCOUNT", "PROFILE"}
+            or payload["scope"] not in {scope.value for scope in DeletionScope}
             or type(payload["profile_version"]) is not int
             or type(payload["digest"]) is not str
             or type(payload["target_id"]) is not str
-            or payload["target_id"] != (account_id if payload["scope"] == "ACCOUNT" else profile_id)
+            or (
+                payload["scope"] in {"ACCOUNT", "PROFILE"}
+                and payload["target_id"]
+                != (account_id if payload["scope"] == "ACCOUNT" else profile_id)
+            )
+            or not 1 <= len(payload["target_id"]) <= 36
             or expires <= now
         ):
             raise MockDeletionJourneyRejected
@@ -390,9 +404,6 @@ class MockDeletionJourney:
                 now=now,
             )
             session.flush()
-            capability = self._status.issue(
-                session, trusted_issuer=TrustedDeletionStatusIssuer(request.id, approval), now=now
-            )
             work = tuple(
                 session.scalars(
                     select(DeletionWorkItem).where(
@@ -401,9 +412,12 @@ class MockDeletionJourney:
                     )
                 )
             )
-            for item in sorted(work, key=lambda item: (_ORDER[item.kind], item.target_id)):
+            for item in sorted(work, key=lambda item: (_ORDER.get(item.kind, 20), item.target_id)):
                 apply_deletion_work(session, item.id)
             session.flush()
+            capability = self._status.issue(
+                session, trusted_issuer=TrustedDeletionStatusIssuer(request.id, approval), now=now
+            )
         except (
             DeletionConfirmationRejected,
             DeletionStatusCapabilityRejected,

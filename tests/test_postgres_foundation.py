@@ -237,7 +237,7 @@ class PostgreSQLFoundationTests(unittest.TestCase):
                 try:
                     self.assertEqual(
                         connection.scalar(text("SELECT version_num FROM alembic_version")),
-                        "20261001_0019",
+                        "20261003_0020",
                     )
                     with Session(
                         bind=connection, join_transaction_mode="create_savepoint"

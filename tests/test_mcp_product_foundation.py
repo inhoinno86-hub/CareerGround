@@ -179,7 +179,7 @@ class ProductFoundationTests(unittest.TestCase):
                         "add_profiling_input",
                         "pause_profiling",
                         "prepare_claim_review",
-                        *set(TOOL_SCOPES) - {"get_deletion_status"},
+                        *set(TOOL_SCOPES) - {"get_deletion_status", "analyze_jd"},
                     },
                 )
             account_tool = next(tool for tool in tools if tool["name"] == "get_account_profile")

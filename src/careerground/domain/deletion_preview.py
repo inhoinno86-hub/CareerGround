@@ -54,6 +54,7 @@ from careerground.storage.models import (
     ProfilingReviewBatch,
     ProfilingReviewItem,
     ProfilingSession,
+    ProjectScope,
 )
 
 _DIGEST_PATTERN = re.compile(r"v1\.([0-9]{10,13})\.([0-9a-f]{64})\Z")
@@ -62,6 +63,9 @@ _DIGEST_PATTERN = re.compile(r"v1\.([0-9]{10,13})\.([0-9a-f]{64})\Z")
 class DeletionScope(StrEnum):
     ACCOUNT = "ACCOUNT"
     PROFILE = "PROFILE"
+    SESSION = "SESSION"
+    EVIDENCE = "EVIDENCE"
+    PROJECT = "PROJECT"
 
 
 class DeletionTargetUnavailable(Exception):
@@ -225,6 +229,8 @@ class DeletionPreviewService:
             items.extend(self._graph_items(session, account_id, profile_id=profile.id))
             items.extend(self._derived_items(session, account_id, profile_id=profile.id))
             return tuple(sorted(items, key=lambda item: (item.kind, item.target_id)))
+        if scope in {DeletionScope.SESSION, DeletionScope.EVIDENCE, DeletionScope.PROJECT}:
+            return self._partial_items(session, account_id, scope, target_id)
         if scope != DeletionScope.ACCOUNT or target_id != account_id:
             raise DeletionTargetUnavailable
 
@@ -254,6 +260,313 @@ class DeletionPreviewService:
         items.extend(self._private_object_items(session, account_id))
         items.extend(self._graph_items(session, account_id))
         items.extend(self._derived_items(session, account_id))
+        return tuple(sorted(items, key=lambda item: (item.kind, item.target_id)))
+
+    @staticmethod
+    def _partial_items(session, account_id, scope, target_id):
+        """Collect a fixed target and every stored profile payload that may quote it."""
+
+        if scope == DeletionScope.SESSION:
+            target = session.scalar(
+                select(ProfilingSession).where(
+                    ProfilingSession.id == target_id,
+                    ProfilingSession.account_id == account_id,
+                    ProfilingSession.status.in_(("ACTIVE", "PAUSED", "EXPIRED")),
+                )
+            )
+        elif scope == DeletionScope.EVIDENCE:
+            target = session.scalar(
+                select(EvidenceItem).where(
+                    EvidenceItem.id == target_id,
+                    EvidenceItem.account_id == account_id,
+                    EvidenceItem.status == "ACTIVE",
+                )
+            )
+        else:
+            target = session.scalar(
+                select(ProjectScope).where(
+                    ProjectScope.id == target_id,
+                    ProjectScope.account_id == account_id,
+                    ProjectScope.status == "ACTIVE",
+                )
+            )
+        if target is None:
+            raise DeletionTargetUnavailable
+        try:
+            profile = get_owned_profile(
+                session, account_id=account_id, profile_id=target.profile_id
+            )
+        except ResourceNotFound as exc:
+            raise DeletionTargetUnavailable from exc
+
+        def ids(model, *conditions):
+            return set(
+                session.scalars(
+                    select(model.id).where(
+                        model.account_id == account_id,
+                        model.profile_id == profile.id,
+                        *conditions,
+                    )
+                )
+            )
+
+        def account_ids(model, *conditions):
+            return set(
+                session.scalars(select(model.id).where(model.account_id == account_id, *conditions))
+            )
+
+        selected: dict[str, set[str]] = {
+            "PROFILE_VERSION": {profile.id},
+        }
+
+        def include(kind, values):
+            selected.setdefault(kind, set()).update(values)
+
+        if scope == DeletionScope.SESSION:
+            include("PROFILING_SESSION", {target.id})
+            inputs = account_ids(ProfilingInput, ProfilingInput.session_id == target.id)
+            include("PROFILING_INPUT", inputs)
+            include(
+                "PROFILING_PROTOCOL_STEP",
+                account_ids(ProfilingProtocolStep, ProfilingProtocolStep.session_id == target.id),
+            )
+            include(
+                "PROFILING_DRAFT",
+                account_ids(ProfilingDraft, ProfilingDraft.session_id == target.id),
+            )
+            batches = account_ids(
+                ProfilingReviewBatch, ProfilingReviewBatch.session_id == target.id
+            )
+            include("PROFILING_REVIEW_BATCH", batches)
+            include(
+                "PROFILING_REVIEW_ITEM",
+                account_ids(ProfilingReviewItem, ProfilingReviewItem.session_id == target.id),
+            )
+            claims = set(
+                session.scalars(
+                    select(ClaimReview.claim_id).where(
+                        ClaimReview.account_id == account_id,
+                        ClaimReview.profile_id == profile.id,
+                        ClaimReview.review_batch_id.in_(batches),
+                    )
+                )
+            )
+            constraints = ids(ClaimConstraint, ClaimConstraint.review_batch_id.in_(batches))
+            sources = ids(EvidenceSource, EvidenceSource.source_ref.in_(inputs))
+        elif scope == DeletionScope.EVIDENCE:
+            claims, constraints, batches, sources = set(), set(), set(), set()
+        else:
+            include("PROJECT_SCOPE", {target.id})
+            claims = ids(Claim, Claim.scope_key == target.scope_key)
+            constraints = ids(ClaimConstraint, ClaimConstraint.scope_key == target.scope_key)
+            batches = ids(ProfilingReviewBatch, ProfilingReviewBatch.scope_key == target.scope_key)
+            include("PROFILING_REVIEW_BATCH", batches)
+            include(
+                "PROFILING_REVIEW_ITEM",
+                account_ids(ProfilingReviewItem, ProfilingReviewItem.scope_key == target.scope_key),
+            )
+            include(
+                "PROFILING_DRAFT",
+                account_ids(ProfilingDraft, ProfilingDraft.scope_key == target.scope_key),
+            )
+            sources = set()
+
+        evidence = {target.id} if scope == DeletionScope.EVIDENCE else set()
+        evidence.update(ids(EvidenceItem, EvidenceItem.source_id.in_(sources)))
+        evidence.update(
+            session.scalars(
+                select(EvidenceClaimLink.evidence_id).where(
+                    EvidenceClaimLink.account_id == account_id,
+                    EvidenceClaimLink.profile_id == profile.id,
+                    EvidenceClaimLink.claim_id.in_(claims),
+                )
+            )
+        )
+        # A selected excerpt or project claim may have been copied from a raw
+        # input. Close over every owned raw session that contains such a source:
+        # one input can also contain other excerpts and temporary candidates.
+        # The resulting wider impact is visible in the exact signed preview.
+        candidate_sources = ids(
+            EvidenceSource,
+            EvidenceSource.id.in_(
+                select(EvidenceItem.source_id).where(EvidenceItem.id.in_(evidence))
+            ),
+        )
+        input_refs = set(
+            session.scalars(
+                select(EvidenceSource.source_ref).where(
+                    EvidenceSource.account_id == account_id,
+                    EvidenceSource.profile_id == profile.id,
+                    EvidenceSource.id.in_(candidate_sources),
+                )
+            )
+        )
+        for kind, model in (
+            ("PROFILING_DRAFT", ProfilingDraft),
+            ("PROFILING_REVIEW_ITEM", ProfilingReviewItem),
+        ):
+            if selected.get(kind):
+                input_refs.update(
+                    session.scalars(
+                        select(model.source_input_id).where(model.id.in_(selected[kind]))
+                    )
+                )
+        review_item_ids = set()
+        if claims:
+            review_item_ids.update(
+                session.scalars(
+                    select(ClaimReview.review_item_id).where(
+                        ClaimReview.account_id == account_id,
+                        ClaimReview.profile_id == profile.id,
+                        ClaimReview.claim_id.in_(claims),
+                    )
+                )
+            )
+        if constraints:
+            review_item_ids.update(
+                session.scalars(
+                    select(ClaimConstraint.review_item_id).where(
+                        ClaimConstraint.id.in_(constraints)
+                    )
+                )
+            )
+        if review_item_ids:
+            input_refs.update(
+                session.scalars(
+                    select(ProfilingReviewItem.source_input_id).where(
+                        ProfilingReviewItem.account_id == account_id,
+                        ProfilingReviewItem.id.in_(review_item_ids),
+                    )
+                )
+            )
+        affected_sessions = set(
+            session.scalars(
+                select(ProfilingInput.session_id)
+                .join(ProfilingSession, ProfilingSession.id == ProfilingInput.session_id)
+                .where(
+                    ProfilingInput.account_id == account_id,
+                    ProfilingInput.id.in_(input_refs),
+                    ProfilingSession.profile_id == profile.id,
+                )
+            )
+        )
+        if scope == DeletionScope.SESSION:
+            affected_sessions.add(target.id)
+        if affected_sessions:
+            include("PROFILING_SESSION", affected_sessions)
+            inputs = account_ids(ProfilingInput, ProfilingInput.session_id.in_(affected_sessions))
+            include("PROFILING_INPUT", inputs)
+            include(
+                "PROFILING_PROTOCOL_STEP",
+                account_ids(
+                    ProfilingProtocolStep, ProfilingProtocolStep.session_id.in_(affected_sessions)
+                ),
+            )
+            include(
+                "PROFILING_DRAFT",
+                account_ids(ProfilingDraft, ProfilingDraft.session_id.in_(affected_sessions)),
+            )
+            batches.update(
+                account_ids(
+                    ProfilingReviewBatch, ProfilingReviewBatch.session_id.in_(affected_sessions)
+                )
+            )
+            include("PROFILING_REVIEW_BATCH", batches)
+            include(
+                "PROFILING_REVIEW_ITEM",
+                account_ids(
+                    ProfilingReviewItem, ProfilingReviewItem.session_id.in_(affected_sessions)
+                ),
+            )
+            sources.update(ids(EvidenceSource, EvidenceSource.source_ref.in_(inputs)))
+            evidence.update(ids(EvidenceItem, EvidenceItem.source_id.in_(sources)))
+            constraints.update(ids(ClaimConstraint, ClaimConstraint.review_batch_id.in_(batches)))
+        if evidence:
+            candidate_sources = ids(
+                EvidenceSource,
+                EvidenceSource.id.in_(
+                    select(EvidenceItem.source_id).where(EvidenceItem.id.in_(evidence))
+                ),
+            )
+            for source_id in candidate_sources:
+                if ids(EvidenceItem, EvidenceItem.source_id == source_id) <= evidence:
+                    sources.add(source_id)
+            retained_claims_losing_support = (
+                set(
+                    session.scalars(
+                        select(EvidenceClaimLink.claim_id).where(
+                            EvidenceClaimLink.account_id == account_id,
+                            EvidenceClaimLink.profile_id == profile.id,
+                            EvidenceClaimLink.evidence_id.in_(evidence),
+                            EvidenceClaimLink.relation_type == "SUPPORTS",
+                        )
+                    )
+                )
+                - claims
+            )
+            include("CLAIM_REASSESS", retained_claims_losing_support)
+        for kind, model, column, values in (
+            ("CLAIM", Claim, Claim.id, claims),
+            ("CLAIM_CONSTRAINT", ClaimConstraint, ClaimConstraint.id, constraints),
+            ("EVIDENCE_SOURCE", EvidenceSource, EvidenceSource.id, sources),
+            ("EVIDENCE_ITEM", EvidenceItem, EvidenceItem.id, evidence),
+            ("EVIDENCE_CLAIM_LINK", EvidenceClaimLink, EvidenceClaimLink.evidence_id, evidence),
+            ("EVIDENCE_CLAIM_LINK", EvidenceClaimLink, EvidenceClaimLink.claim_id, claims),
+            ("CLAIM_ASSESSMENT", ClaimAssessment, ClaimAssessment.claim_id, claims),
+            ("CLAIM_REVIEW", ClaimReview, ClaimReview.claim_id, claims),
+            ("CLAIM_REVIEW", ClaimReview, ClaimReview.review_batch_id, batches),
+            ("CLAIM_BOUNDARY_REVIEW", ClaimBoundaryReview, ClaimBoundaryReview.claim_id, claims),
+            ("CLAIM_CONFLICT_REVIEW", ClaimConflictReview, ClaimConflictReview.claim_id, claims),
+            ("CLAIM_USE_REVIEW", ClaimUseReview, ClaimUseReview.claim_id, claims),
+            (
+                "CLAIM_USE_REVIEW",
+                ClaimUseReview,
+                ClaimUseReview.claim_id,
+                selected.get("CLAIM_REASSESS", set()),
+            ),
+            ("PROFILE_CHANGE_SET", ProfileChangeSet, ProfileChangeSet.review_batch_id, batches),
+        ):
+            if values:
+                include(kind, ids(model, column.in_(values)))
+        # Historical snapshots, wording, mapping and private MCP receipts may
+        # retain exact erased text. Remove all of these for the owned profile.
+        for kind, model in (
+            ("BROWSER_OPERATION", BrowserOperation),
+            ("PROFILE_ARCHIVE", ProfileArchive),
+            ("REQUIREMENT_CLAIM_MAP", RequirementClaimMap),
+            ("ARTIFACT_CLAIM_LINK", ArtifactClaimLink),
+            ("ARTIFACT_WORDING_REVIEW", ArtifactWordingReview),
+            ("ARTIFACT_UNIT", ArtifactUnit),
+            ("ARTIFACT", Artifact),
+        ):
+            include(kind, ids(model))
+        fingerprints = {}
+        for kind, model, field in (
+            ("PROJECT_SCOPE", ProjectScope, "scope_key"),
+            ("PROFILING_INPUT", ProfilingInput, "body"),
+            ("PROFILING_DRAFT", ProfilingDraft, "exact_text"),
+            ("PROFILING_REVIEW_ITEM", ProfilingReviewItem, "exact_text"),
+            ("CLAIM", Claim, "canonical_text"),
+            ("CLAIM_CONSTRAINT", ClaimConstraint, "exact_text"),
+            ("EVIDENCE_ITEM", EvidenceItem, "content_text"),
+            ("PROFILE_ARCHIVE", ProfileArchive, "snapshot_json"),
+            ("ARTIFACT_UNIT", ArtifactUnit, "exact_text"),
+            ("BROWSER_OPERATION", BrowserOperation, "result_json"),
+        ):
+            if selected.get(kind):
+                for row in session.scalars(select(model).where(model.id.in_(selected[kind]))):
+                    text = getattr(row, field) or ""
+                    fingerprints[(kind, row.id)] = hashlib.sha256(text.encode()).hexdigest()
+        items = [
+            DeletionImpactItem(
+                kind,
+                row_id,
+                profile.version if kind == "PROFILE_VERSION" else None,
+                fingerprints.get((kind, row_id)),
+            )
+            for kind, values in selected.items()
+            for row_id in values
+        ]
         return tuple(sorted(items, key=lambda item: (item.kind, item.target_id)))
 
     @staticmethod
@@ -366,6 +679,7 @@ class DeletionPreviewService:
             ("CLAIM_CONFLICT_REVIEW", ClaimConflictReview),
             ("CLAIM_USE_REVIEW", ClaimUseReview),
             ("CLAIM_CONSTRAINT", ClaimConstraint),
+            ("PROJECT_SCOPE", ProjectScope),
         ):
             query = select(model.id).where(model.account_id == account_id)
             if profile_id is not None:

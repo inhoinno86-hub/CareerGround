@@ -291,6 +291,16 @@ def build_synthetic_review_app(
             raise HTTPException(503) from None
         return principal
 
+    from careerground.web.local_contract_extensions import attach_contract_extensions
+
+    attach_contract_extensions(
+        app,
+        session_factory=session_factory,
+        identity=identity,
+        review_secret=review_signing_secret,
+        presentation_secret=presentation_signing_secret,
+    )
+
     @app.get("/profiling/start", response_class=HTMLResponse)
     async def show_profiling_start(request: Request) -> HTMLResponse:
         auth_response = Response()
@@ -838,10 +848,37 @@ def build_synthetic_review_app(
 
     @app.get("/profile/{profile_id}/export/{profile_version}", response_class=HTMLResponse)
     async def show_profile_export(
-        profile_id: str, profile_version: int, request: Request
+        profile_id: str, profile_version: str, request: Request
     ) -> HTMLResponse:
         auth_response = Response()
         principal = await identity(request, auth_response)
+        selector = (
+            profile_version
+            if profile_version == "CURRENT"
+            else (
+                int(profile_version)
+                if profile_version.isascii()
+                and profile_version.isdecimal()
+                and len(profile_version) <= 10
+                else None
+            )
+        )
+        if selector is None:
+            raise HTTPException(404)
+        inclusion = None
+        if request.query_params:
+            names = {"claims", "evidence", "boundaries", "drafts", "unavailable_references"}
+            if (
+                set(request.query_params) - names - {"selection"}
+                or request.query_params.get("selection") != "explicit"
+                or any(
+                    len(request.query_params.getlist(key)) != 1
+                    or request.query_params[key] != "yes"
+                    for key in set(request.query_params) - {"selection"}
+                )
+            ):
+                raise HTTPException(400)
+            inclusion = {key: request.query_params.get(key) == "yes" for key in names}
         with session_factory() as session:
             try:
                 view = export_service.present(
@@ -849,7 +886,8 @@ def build_synthetic_review_app(
                     account_id=principal.account_id,
                     browser_session_id=principal.session_id,
                     profile_id=profile_id,
-                    profile_version=profile_version,
+                    profile_version=selector,
+                    inclusion=inclusion,
                     now=datetime.now(UTC),
                 )
             except ProfileExportPresentationRejected as exc:
@@ -1890,8 +1928,19 @@ def _render_export_form(view: ProfileExportPresentation) -> str:
         "<!doctype html><html lang='ko'><meta charset='utf-8'>"
         "<title>CareerGround 프로필 내보내기</title><main>"
         "<h1>보관된 프로필 버전 내보내기</h1>"
-        "<p>확인된 canonical 경력 사실과 선택 근거 발췌만 JSON으로 내보냅니다. "
-        "임시 초안과 만료된 전체 대화 원문은 포함되지 않습니다.</p>"
+        "<p>선택한 본인용 데이터만 JSON으로 내보냅니다. 미확인 초안은 별도 상태로 표시하며 "
+        "만료된 대화 원문과 삭제한 내용은 복원하지 않습니다.</p>"
+        + (
+            "<p>임시 초안과 만료된 전체 대화 원문은 포함되지 않습니다.</p>"
+            if not view.inclusion["drafts"]
+            else "<p>미승인 임시 초안은 확정한 경력 사실과 별도로 표시합니다.</p>"
+        )
+        + "<ul>"
+        + "".join(
+            f"<li>{escape({'claims': '경력 사실', 'evidence': '선택 근거 발췌', 'boundaries': '사용 경계', 'drafts': '미승인 임시 초안', 'unavailable_references': '불가 원문 참조 metadata'}[key])}: {'포함' if value else '제외'}</li>"
+            for key, value in view.inclusion.items()
+        )
+        + "</ul>"
         f"<p>프로필 {escape(view.profile_id)} · 버전 {view.profile_version} · "
         f"크기 {view.content_bytes}바이트 · SHA-256 {escape(view.content_hash)}</p>"
         f"<form method='post' action='/profile/{escape(view.profile_id, quote=True)}"
@@ -1907,9 +1956,9 @@ def _render_resume_export_form(view: ResumeExportPresentation) -> str:
     artifact_id = escape(view.artifact_id, quote=True)
     return (
         "<!doctype html><html lang='ko'><meta charset='utf-8'>"
-        "<title>CareerGround R1 이력서 내보내기</title><main>"
-        "<h1>검토한 R1 이력서 문구 내보내기</h1>"
-        "<p>현재 승인된 R1 문구와 기록된 근거만 내보냅니다. "
+        f"<title>CareerGround {view.wording_level} 이력서 내보내기</title><main>"
+        f"<h1>검토한 {view.wording_level} 이력서 문구 내보내기</h1>"
+        f"<p>현재 승인된 {view.wording_level} 문구와 기록된 근거만 내보냅니다. "
         "외부 전송이나 채용 결과를 뜻하지 않습니다.</p>"
         f"<p>초안 버전 {view.artifact_version} · 프로필 버전 {view.profile_version} "
         f"· 형식 {escape(view.format)} · 크기 {view.content_bytes}바이트 "
@@ -2339,13 +2388,19 @@ def _render_resume_trace(view: ResumeTrace) -> str:
             "이 문구를 직접 검토</a></p>"
         )
     if not view.stale_relative_to_current_profile and all(
-        unit.wording_level == "R1" and unit.review_status == "WORDING_REVIEWED"
+        unit.wording_level in {"R1", "R2"} and unit.review_status == "WORDING_REVIEWED"
         for unit in view.units
     ):
         artifact_id = escape(view.artifact_id, quote=True)
         parts.append(
             f"<p><a href='/resume/{artifact_id}/export/JSON'>JSON 다운로드</a> · "
             f"<a href='/resume/{artifact_id}/export/MARKDOWN'>Markdown 다운로드</a></p>"
+        )
+    if not view.stale_relative_to_current_profile and all(
+        unit.wording_level == "R1" for unit in view.units
+    ):
+        parts.append(
+            f"<p><a href='/resume/{escape(view.artifact_id, quote=True)}/r2'>R2 문구를 따로 제안하고 승인하기</a></p>"
         )
     parts.append("<p><a href='/artifacts'>초안 목록으로 돌아가기</a></p></main></html>")
     return "".join(parts)

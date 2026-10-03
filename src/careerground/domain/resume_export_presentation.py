@@ -1,4 +1,4 @@
-"""Explicit, session-bound synthetic download of a reviewed R1 resume."""
+"""Explicit, session-bound synthetic download of a reviewed R1 or R2 resume."""
 
 from __future__ import annotations
 
@@ -41,6 +41,7 @@ class ResumeExportPresentation:
     content_hash: str
     content_bytes: int
     export_token: str
+    wording_level: str = "R1"
 
 
 class ResumeExportPresentationService:
@@ -67,7 +68,7 @@ class ResumeExportPresentationService:
         except WordingReviewRejected as exc:
             raise ResumeExportPresentationRejected from exc
         payload = {
-            "purpose": "R1_RESUME_EXPORT_FORM_V1",
+            "purpose": f"{export.wording_level}_RESUME_EXPORT_FORM_V1",
             "account_id": account_id,
             "browser_session_id": browser_session_id,
             "artifact_id": artifact_id,
@@ -83,6 +84,7 @@ class ResumeExportPresentationService:
             content_hash=export.content_hash,
             content_bytes=len(export.content_text.encode()),
             export_token=self._tokens.sign(payload),
+            wording_level=export.wording_level,
         )
 
     def submit(
@@ -104,7 +106,7 @@ class ResumeExportPresentationService:
         except (BrowserFormTokenRejected, TypeError, ValueError) as exc:
             raise ResumeExportPresentationRejected from exc
         if (
-            payload["purpose"] != "R1_RESUME_EXPORT_FORM_V1"
+            payload["purpose"] not in {"R1_RESUME_EXPORT_FORM_V1", "R2_RESUME_EXPORT_FORM_V1"}
             or payload["account_id"] != account_id
             or payload["browser_session_id"] != browser_session_id
             or payload["artifact_id"] != artifact_id
@@ -119,7 +121,10 @@ class ResumeExportPresentationService:
             )
         except WordingReviewRejected as exc:
             raise ResumeExportPresentationRejected from exc
-        if export.content_hash != payload["content_hash"]:
+        if (
+            export.content_hash != payload["content_hash"]
+            or payload["purpose"] != f"{export.wording_level}_RESUME_EXPORT_FORM_V1"
+        ):
             raise ResumeExportPresentationRejected
         return export
 

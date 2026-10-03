@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import hmac
 from collections.abc import Sequence
+from datetime import UTC
 
 from sqlalchemy import delete, select, update
 from sqlalchemy.orm import Session
@@ -42,6 +43,7 @@ from careerground.storage.models import (
     PrivateObject,
     ProfilingInput,
     ProfilingSession,
+    ProjectScope,
 )
 
 
@@ -89,6 +91,8 @@ class RestoreQuarantine:
                     scope=row.scope,
                     target_id=row.target_id,
                     created_at=row.created_at,
+                    profile_id=row.profile_id,
+                    profile_version_after=row.profile_version_after,
                 )
                 if not hmac.compare_digest(row.signature, expected):
                     raise QuarantineRejected("erasure record failed authentication")
@@ -123,6 +127,8 @@ class RestoreQuarantine:
                             "private object versions require provider verification"
                         )
                     self._quarantine_profile(session, row.account_id, row.target_id)
+                elif row.scope in {"SESSION", "EVIDENCE", "PROJECT"}:
+                    self._reject_partial_restore(session, row, ledger_rows)
                 else:
                     raise QuarantineRejected("invalid erasure scope")
             session.commit()
@@ -130,6 +136,89 @@ class RestoreQuarantine:
             session.rollback()
             raise
         self.ready = True
+
+    @staticmethod
+    def _reject_partial_restore(
+        session: Session, row: ErasureLedger, ledger_rows: Sequence[ErasureLedger]
+    ) -> None:
+        if any(
+            later.account_id == row.account_id
+            and (
+                later.created_at.replace(tzinfo=UTC)
+                if later.created_at.tzinfo is None
+                else later.created_at.astimezone(UTC)
+            )
+            >= (
+                row.created_at.replace(tzinfo=UTC)
+                if row.created_at.tzinfo is None
+                else row.created_at.astimezone(UTC)
+            )
+            and (
+                later.scope == "ACCOUNT"
+                or (later.scope == "PROFILE" and later.target_id == row.profile_id)
+            )
+            for later in ledger_rows
+        ):
+            return
+        if (
+            type(row.profile_id) is not str
+            or type(row.profile_version_after) is not int
+            or row.profile_version_after < 1
+        ):
+            raise QuarantineRejected("partial erasure checkpoint metadata missing")
+        account = session.get(Account, row.account_id)
+        profile = session.get(CareerProfile, row.profile_id)
+        if (
+            account is None
+            or account.status != "ACTIVE"
+            or profile is None
+            or profile.account_id != row.account_id
+            or profile.status != "ACTIVE"
+            or profile.version < row.profile_version_after
+        ):
+            raise QuarantineRejected("restored partial profile is stale")
+        if row.scope == "SESSION":
+            if session.get(ProfilingSession, row.target_id) is not None:
+                raise QuarantineRejected("erased session restored")
+        elif row.scope == "EVIDENCE":
+            if session.get(EvidenceItem, row.target_id) is not None:
+                raise QuarantineRejected("erased evidence restored")
+        else:
+            project = session.get(ProjectScope, row.target_id)
+            if (
+                project is None
+                or project.account_id != row.account_id
+                or project.profile_id != profile.id
+                or project.status != "DELETING"
+            ):
+                raise QuarantineRejected("project tombstone missing")
+            if (
+                session.scalar(
+                    select(Claim.id)
+                    .where(
+                        Claim.account_id == row.account_id,
+                        Claim.profile_id == profile.id,
+                        Claim.scope_key == project.scope_key,
+                    )
+                    .limit(1)
+                )
+                is not None
+            ):
+                raise QuarantineRejected("erased project claim restored")
+        for model in (ProfileArchive, Artifact, RequirementClaimMap, BrowserOperation):
+            if (
+                session.scalar(
+                    select(model.id)
+                    .where(
+                        model.account_id == row.account_id,
+                        model.profile_id == profile.id,
+                        model.profile_version < row.profile_version_after,
+                    )
+                    .limit(1)
+                )
+                is not None
+            ):
+                raise QuarantineRejected("erased derived payload restored")
 
     def assert_ready(self) -> None:
         if not self.ready:
@@ -151,6 +240,7 @@ class RestoreQuarantine:
             ClaimConflictReview,
             ClaimUseReview,
             ClaimConstraint,
+            ProjectScope,
             ArtifactClaimLink,
             RequirementClaimMap,
             ArtifactUnit,

@@ -18,6 +18,7 @@ from sqlalchemy.orm import Session
 
 from careerground.domain.claim_review_workspace import ReviewUnavailable, propose_verbatim_draft
 from careerground.domain.profiling_workspace import MAX_INPUT_CHARS, _as_utc, _owned_work
+from careerground.domain.project_scope_guard import deleted_project_scope_exists
 from careerground.storage.models import ProfilingDraft, ProfilingInput
 
 MAX_DRAFT_SPANS = 5
@@ -188,6 +189,10 @@ def propose_explicit_bullet_drafts_once(
         work.status not in {"ACTIVE", "PAUSED"}
         or _as_utc(work.retention_expires_at) <= now
         or profile.version != work.base_profile_version
+    ):
+        raise ReviewUnavailable
+    if deleted_project_scope_exists(
+        session, account_id=account_id, profile_id=profile.id, scope_key=scope_key
     ):
         raise ReviewUnavailable
     source = session.scalar(

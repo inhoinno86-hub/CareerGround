@@ -71,15 +71,25 @@ def demo_page(title, body):
 class LocalDemo:
     """Two synthetic accounts, in-memory keys and owner-only temporary SQLite."""
 
-    def __init__(self, port=8008):
+    def __init__(self, port=8008, *, runtime_store=None):
         if type(port) is not int or not 1 <= port <= 65535:
             raise ValueError("invalid local port")
         self.port = port
         self.origin = f"http://127.0.0.1:{port}"
         self.closed = False
-        self.folder = tempfile.TemporaryDirectory(prefix="careerground-local-demo-")
-        self.database_path = Path(self.folder.name) / "synthetic.sqlite"
-        self.database_path.touch(mode=0o600)
+        self.runtime_store = runtime_store
+        self.folder = (
+            None
+            if runtime_store
+            else tempfile.TemporaryDirectory(prefix="careerground-local-demo-")
+        )
+        self.database_path = (
+            Path(runtime_store.database_path)
+            if runtime_store
+            else Path(self.folder.name) / "synthetic.sqlite"
+        )
+        if runtime_store is None:
+            self.database_path.touch(mode=0o600)
         self.engine = create_engine(
             "sqlite+pysqlite:///" + str(self.database_path), hide_parameters=True
         )
@@ -91,13 +101,20 @@ class LocalDemo:
 
         Base.metadata.create_all(self.engine)
         self.sessions = sessionmaker(self.engine)
-        self.review_secret = secrets.token_bytes(32)
-        self.presentation_secret = secrets.token_bytes(32)
+        self.review_secret = (
+            runtime_store.review_secret if runtime_store else secrets.token_bytes(32)
+        )
+        self.presentation_secret = (
+            runtime_store.presentation_secret if runtime_store else secrets.token_bytes(32)
+        )
         self.tokens = BrowserFormTokenCodec(self.presentation_secret)
         self.key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
         self.browsers = {}
+        self.revoked_tokens = {}
         with self.sessions() as session:
-            for label, (account, profile) in ACCOUNTS.items():
+            for label, (account, profile) in (
+                ACCOUNTS.items() if runtime_store is None or runtime_store.seed_accounts else []
+            ):
                 session.add(Account(id=account))
                 session.flush()
                 session.add(
@@ -122,6 +139,10 @@ class LocalDemo:
             review_signing_secret=self.review_secret,
             presentation_signing_secret=self.presentation_secret,
             signing_key=lambda _token: self.key.public_key(),
+            token_is_revoked=self.token_is_revoked,
+            local_deletion_adapter=lambda **kwargs: self.deletion_connection.request_or_execute(
+                **kwargs
+            ),
         )
         self._register_routes()
         from careerground.web.local_demo_deletion import register_mock_deletion_routes
@@ -168,6 +189,31 @@ class LocalDemo:
         except HTTPException:
             return None
         return TrustedBrowserIdentity(state["account_id"], state["session_id"])
+
+    def token_is_revoked(self, token):
+        if self.runtime_store is not None:
+            return self.runtime_store.token_is_revoked(token)
+        self.revoked_tokens = {
+            key: expiry for key, expiry in self.revoked_tokens.items() if expiry > time.time()
+        }
+        return token in self.revoked_tokens
+
+    def revoke_browser(self, cookie):
+        state = self.browsers.get(cookie)
+        if state and state.get("access_token"):
+            if self.runtime_store is not None:
+                self.runtime_store.revoke_token(state["access_token"], state["access_expiry"])
+            else:
+                self.revoked_tokens[state["access_token"]] = state["access_expiry"]
+        self.browsers.pop(cookie, None)
+
+    def before_deletion_commit(self, session):
+        if self.runtime_store is not None:
+            self.runtime_store.before_deletion_commit(session)
+
+    def after_deletion_commit(self):
+        if self.runtime_store is not None:
+            self.runtime_store.after_deletion_commit()
 
     def form_token(self, purpose, state=None):
         return self.tokens.sign(
@@ -274,11 +320,20 @@ class LocalDemo:
         @self.web.get("/demo")
         async def home(request: Request):
             token = self.form_token("DEMO_SELECT")
-            body = "<p>실제 경력·계정 정보는 입력하지 마세요. 종료하면 이 체험의 입력과 임시 계정이 사라집니다.</p>"
+            body = "<p>실제 경력·계정 정보는 입력하지 마세요.</p>"
+            body += (
+                "<p>영속 합성 개발 환경: 저장된 합성 입력은 재시작 후 유지되며, 브라우저·MCP 연결은 다시 시작해야 합니다.</p>"
+                if self.runtime_store
+                else "<p>종료하면 이 체험의 입력과 임시 계정이 사라집니다.</p>"
+            )
             state = self.browsers.get(request.cookies.get(COOKIE, ""))
             if state:
                 body += f"<p>선택된 합성 계정: {escape(state['label'].upper())}</p><p><a href='/profiling/start'>경력 정리 시작</a> · <a href='/jd'>JD 목록</a> · <a href='/demo/jd-analysis'>JD 모의 분석</a> · <a href='/resume'>R1 목록</a> · <a href='/demo/mcp'>합성 MCP 연결 시험</a> · <a href='/demo/deletion'>합성 삭제 체험</a></p>"
+                profile_path = escape(state["profile_id"], quote=True)
+                body += f"<p><a href='/profile/{profile_path}/export-options/CURRENT'>프로필 내보내기 범위 선택</a> · <a href='/profile/{profile_path}/projects'>프로젝트 범위 등록</a></p>"
             body += f"<form method='post' action='/demo/account'><input type='hidden' name='form_token' value='{escape(token, quote=True)}'><label for='account'>체험할 합성 계정</label><select id='account' name='account' required><option value='' selected>직접 선택</option><option value='a'>합성 계정 A</option><option value='b'>합성 계정 B</option></select><button type='submit'>합성 계정으로 시작</button></form>"
+            if state:
+                body += f"<form method='post' action='/demo/logout'><input type='hidden' name='form_token' value='{escape(self.form_token('DEMO_LOGOUT', state), quote=True)}'><button type='submit'>합성 연결 로그아웃·토큰 철회</button></form>"
             return demo_page("CareerGround 로컬 체험", body)
 
         @self.web.post("/demo/account")
@@ -291,7 +346,7 @@ class LocalDemo:
             with self.sessions() as session:
                 if session.get(Account, ACCOUNTS[label][0]).status != "ACTIVE":
                     raise HTTPException(409)
-            self.browsers.pop(request.cookies.get(COOKIE, ""), None)
+            self.revoke_browser(request.cookies.get(COOKIE, ""))
             # This disposable process serves bounded local sessions only.
             if len(self.browsers) >= 128:
                 raise HTTPException(429)
@@ -304,6 +359,19 @@ class LocalDemo:
             }
             response = RedirectResponse("/demo", status_code=303)
             response.set_cookie(COOKIE, cookie, httponly=True, samesite="strict", path="/")
+            response.headers["cache-control"] = "no-store"
+            return response
+
+        @self.web.post("/demo/logout")
+        async def logout(request: Request):
+            state = self.browser(request, active=False)
+            fields = await bounded_form(request)
+            if set(fields) != {"form_token"}:
+                raise HTTPException(400)
+            self.verify_form(fields["form_token"], "DEMO_LOGOUT", state)
+            self.revoke_browser(request.cookies.get(COOKIE, ""))
+            response = RedirectResponse("/demo", status_code=303)
+            response.delete_cookie(COOKIE, path="/")
             response.headers["cache-control"] = "no-store"
             return response
 
@@ -328,8 +396,9 @@ class LocalDemo:
                     .get("structuredContent", {})
                     .get("data", {})
                     .get("confirmation_path", "")
+                    or ""
                 )
-                if re.fullmatch(r"/mcp/confirm/[0-9a-f-]{36}", path):
+                if re.fullmatch(r"/(?:mcp/confirm|demo/deletion/confirmation)/[0-9a-f-]{36}", path):
                     body += f"<p><a href='{path}'>정확한 내용을 직접 확인하고 승인</a></p>"
             return demo_page("합성 MCP 연결 시험", body)
 
@@ -353,7 +422,17 @@ class LocalDemo:
             _, result = await self.rpc(
                 state, "tools/call", {"name": fields["tool"], "arguments": arguments}
             )
+            if self.browser_is_deleted(state):
+                return demo_page(
+                    "합성 삭제 실행 접수",
+                    "<p>계정의 일반 제품 접근이 차단됐습니다.</p><p><a href='/demo/deletion/status'>제한된 삭제 상태 확인</a></p>",
+                )
             return await console(request, result)
+
+    def browser_is_deleted(self, state):
+        with self.sessions() as session:
+            account = session.get(Account, state["account_id"])
+            return account is None or account.status != "ACTIVE"
 
     async def __call__(self, scope, receive, send):
         if scope["type"] == "lifespan":
@@ -390,6 +469,9 @@ class LocalDemo:
     def close(self):
         self.closed = True
         self.browsers.clear()
+        self.revoked_tokens.clear()
+        self.deletion_connection.pending.clear()
+        self.deletion_connection = None
         self.key = None
         self.tokens = None
         self.review_secret = None
@@ -397,7 +479,8 @@ class LocalDemo:
         self.web = None
         self.mcp = None
         self.engine.dispose()
-        self.folder.cleanup()
+        if self.folder is not None:
+            self.folder.cleanup()
 
     def __enter__(self):
         return self

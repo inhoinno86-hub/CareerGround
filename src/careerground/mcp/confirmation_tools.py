@@ -16,6 +16,7 @@ from careerground.domain.browser_operations import (
     BrowserOperationService,
     BrowserOperationUnavailable,
 )
+from careerground.domain.profile_export_selection import ProfileExportSelection, VersionSelector
 from careerground.domain.request_limits import RequestLimitExceeded
 from careerground.domain.safe_events import record_result
 from careerground.storage.models import DeletionRequest, DeletionWorkItem
@@ -34,6 +35,8 @@ ACTION_SCOPES = {
     "RESUME_EXPORT": EXPORT_SCOPE,
 }
 TOOL_SCOPES = {
+    "analyze_jd": ARTIFACT_WRITE_SCOPE,
+    "execute_data_deletion": "career.delete",
     "request_user_confirmation": tuple(ACTION_SCOPES.values()),
     "submit_claim_review": "career.profile.write",
     "resolve_claim_conflict": "career.profile.write",
@@ -91,6 +94,7 @@ class ExportReceiptOutput(StrictOutput):
     content_bytes: int
     expires_at: datetime
     completed_in_browser: Literal[True]
+    inclusion: dict[str, bool] | None = None
 
 
 class SelectedJDReceiptOutput(StrictOutput):
@@ -173,9 +177,10 @@ def register_confirmation_tools(
             "R1_DRAFT",
         ],
         target_id: str,
-        profile_version: int,
+        profile_version: VersionSelector,
         format: Literal["NONE", "JSON", "MARKDOWN"],
         idempotency_key: str,
+        inclusion: ProfileExportSelection | None = None,
     ) -> ConfirmationRequestOutput:
         with session_factory() as session:
             account, connection, client = principal(session, ACTION_SCOPES[action])
@@ -190,6 +195,7 @@ def register_confirmation_tools(
                 format=format,
                 idempotency_key=idempotency_key,
                 now=datetime.now(UTC),
+                inclusion=inclusion,
             )
             result = ConfirmationRequestOutput(
                 request_id=row.id,
@@ -203,7 +209,7 @@ def register_confirmation_tools(
             session.commit()
             return result
 
-    def consume(scope, action, target, receipt, version=None, format=None):
+    def consume(scope, action, target, receipt, version=None, format=None, inclusion=None):
         with session_factory() as session:
             account, connection, _ = principal(session, scope)
             result = service.consume(
@@ -215,6 +221,7 @@ def register_confirmation_tools(
                 receipt=receipt,
                 profile_version=version,
                 format=format,
+                inclusion=inclusion,
                 now=datetime.now(UTC),
             )
             session.commit()
@@ -315,10 +322,14 @@ def register_confirmation_tools(
         name="export_profile_data",
         annotations=write,
         structured_output=True,
-        description="Consume explicit browser JSON export consent and return a short authenticated canonical-only resource. No temporary draft or expired source restoration.",
+        description="Consume exact browser JSON export consent for an explicit numeric version or frozen CURRENT and selected personal-data fields; live drafts remain unapproved and expired bodies are not restored.",
     )
     def export_profile_data(
-        profile_id: str, profile_version: int, format: Literal["JSON"], approval_receipt: str
+        profile_id: str,
+        profile_version: VersionSelector,
+        format: Literal["JSON"],
+        approval_receipt: str,
+        inclusion: ProfileExportSelection | None = None,
     ) -> ExportReceiptOutput:
         return ExportReceiptOutput(
             **consume(
@@ -328,6 +339,7 @@ def register_confirmation_tools(
                 approval_receipt,
                 profile_version,
                 format,
+                inclusion=inclusion,
             )
         )
 
@@ -335,7 +347,7 @@ def register_confirmation_tools(
         name="export_resume",
         annotations=write,
         structured_output=True,
-        description="Consume explicit browser R1 export consent and return a short authenticated resource; each read rechecks current owner, source eligibility and hash.",
+        description="Consume explicit browser R1/R2 export consent and return a short authenticated resource; each read rechecks current owner, source eligibility, lineage and hash.",
     )
     def export_resume(
         artifact_id: str, format: Literal["JSON", "MARKDOWN"], approval_receipt: str

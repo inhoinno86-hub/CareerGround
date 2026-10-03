@@ -83,6 +83,7 @@ class BrowserOperation(Base):
     target_id: Mapped[str] = mapped_column(String(36), nullable=False)
     profile_version: Mapped[int] = mapped_column(Integer, nullable=False)
     format: Mapped[str] = mapped_column(String(8), nullable=False)
+    export_options_json: Mapped[str | None] = mapped_column(Text)
     status: Mapped[str] = mapped_column(String(12), nullable=False, default="WAITING")
     browser_key: Mapped[str | None] = mapped_column(String(64))
     confirmation_key: Mapped[str | None] = mapped_column(String(64))
@@ -156,7 +157,10 @@ class DeletionRequest(Base):
 
     __tablename__ = "deletion_requests"
     __table_args__ = (
-        CheckConstraint("scope IN ('ACCOUNT', 'PROFILE')", name="ck_deletion_requests_scope"),
+        CheckConstraint(
+            "scope IN ('ACCOUNT', 'PROFILE', 'SESSION', 'EVIDENCE', 'PROJECT')",
+            name="ck_deletion_requests_scope",
+        ),
         CheckConstraint(
             "status IN ('DELETING', 'ERASED', 'FAILED')", name="ck_deletion_requests_status"
         ),
@@ -391,15 +395,44 @@ class ErasureLedger(Base):
 
     __tablename__ = "erasure_ledger"
     __table_args__ = (
-        CheckConstraint("scope IN ('ACCOUNT', 'PROFILE')", name="ck_erasure_ledger_scope"),
+        CheckConstraint(
+            "scope IN ('ACCOUNT', 'PROFILE', 'SESSION', 'EVIDENCE', 'PROJECT')",
+            name="ck_erasure_ledger_scope",
+        ),
     )
 
     request_id: Mapped[str] = mapped_column(String(36), primary_key=True)
     account_id: Mapped[str] = mapped_column(String(36), nullable=False, index=True)
     scope: Mapped[str] = mapped_column(String(16), nullable=False)
     target_id: Mapped[str] = mapped_column(String(36), nullable=False)
+    profile_id: Mapped[str | None] = mapped_column(String(36))
+    profile_version_after: Mapped[int | None] = mapped_column(Integer)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     signature: Mapped[str] = mapped_column(String(64), nullable=False)
+
+
+class ProjectScope(Base):
+    """Explicitly registered owned project context; never inferred from text."""
+
+    __tablename__ = "project_scopes"
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["profile_id", "account_id"],
+            ["career_profiles.id", "career_profiles.account_id"],
+            name="fk_project_scope_owned_profile",
+            ondelete="RESTRICT",
+        ),
+        UniqueConstraint("account_id", "profile_id", "scope_key", name="uq_project_scope_key"),
+        CheckConstraint("status IN ('ACTIVE', 'DELETING')", name="ck_project_scope_status"),
+        CheckConstraint("length(scope_key) BETWEEN 1 AND 64", name="ck_project_scope_key"),
+    )
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    account_id: Mapped[str] = mapped_column(String(36), nullable=False, index=True)
+    profile_id: Mapped[str] = mapped_column(String(36), nullable=False, index=True)
+    scope_key: Mapped[str] = mapped_column(String(64), nullable=False)
+    status: Mapped[str] = mapped_column(String(16), nullable=False, default="ACTIVE")
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
 
 
 class PrivateObject(Base):

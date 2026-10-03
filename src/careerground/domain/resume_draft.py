@@ -37,6 +37,7 @@ class ResumeUnitTrace:
     original_input_refs: tuple[str, ...]
     wording_level: str
     review_status: str
+    source_unit_id: str | None = None
 
 
 @dataclass(frozen=True)
@@ -47,6 +48,7 @@ class ResumeTrace:
     jd_id: str
     stale_relative_to_current_profile: bool
     units: tuple[ResumeUnitTrace, ...]
+    source_artifact_id: str | None = None
 
 
 def generate_resume_draft(
@@ -266,8 +268,30 @@ def get_resume_trace(session: Session, *, account_id: str, artifact_id: str) -> 
     )
     if not 1 <= len(units) <= 5:
         raise ResumeDraftUnavailable
+    if artifact.source_artifact_id is None:
+        source_units = None
+    else:
+        source = session.scalar(
+            select(Artifact).where(
+                Artifact.id == artifact.source_artifact_id,
+                Artifact.account_id == account_id,
+                Artifact.profile_id == artifact.profile_id,
+                Artifact.jd_id == artifact.jd_id,
+                Artifact.profile_version == artifact.profile_version,
+            )
+        )
+        if (
+            source is None
+            or source.source_artifact_id is not None
+            or source.status not in {"REVIEW_REQUIRED", "WORDING_REVIEWED"}
+        ):
+            raise ResumeDraftUnavailable
+        source_trace = get_resume_trace(session, account_id=account_id, artifact_id=source.id)
+        if source_trace.source_artifact_id is not None or len(source_trace.units) != len(units):
+            raise ResumeDraftUnavailable
+        source_units = source_trace.units
     results = []
-    for unit in units:
+    for index, unit in enumerate(units):
         links = tuple(
             session.scalars(
                 select(ArtifactClaimLink).where(
@@ -277,7 +301,15 @@ def get_resume_trace(session: Session, *, account_id: str, artifact_id: str) -> 
                 )
             )
         )
-        if len(links) != 1 or unit.wording_level != "R1":
+        if len(links) != 1 or links[0].link_role != "FACTUAL_BASIS":
+            raise ResumeDraftUnavailable
+        if source_units is None:
+            if unit.wording_level != "R1" or unit.source_artifact_unit_id is not None:
+                raise ResumeDraftUnavailable
+        elif (
+            unit.wording_level != "R2"
+            or unit.source_artifact_unit_id != source_units[index].unit_id
+        ):
             raise ResumeDraftUnavailable
         claim = session.scalar(
             select(Claim).where(
@@ -313,9 +345,31 @@ def get_resume_trace(session: Session, *, account_id: str, artifact_id: str) -> 
             )
         except JDMappingRejected as exc:
             raise ResumeDraftUnavailable from exc
-        if unit.exact_text != trace.claim.exact_text or claim.canonical_text != unit.exact_text:
+        if claim.canonical_text != trace.claim.exact_text:
             raise ResumeDraftUnavailable
         supporting = tuple(item for item in trace.evidence if item.relation_type == "SUPPORTS")
+        if source_units is None:
+            if unit.exact_text != trace.claim.exact_text:
+                raise ResumeDraftUnavailable
+        else:
+            source_unit = source_units[index]
+            if (
+                source_unit.claim_id != claim.id
+                or source_unit.evidence_ids != tuple(item.evidence_id for item in supporting)
+                or source_unit.evidence_excerpts != tuple(item.exact_excerpt for item in supporting)
+                or source_unit.original_input_refs
+                != tuple(item.original_input_ref for item in supporting)
+            ):
+                raise ResumeDraftUnavailable
+            from careerground.domain.text_proposal_validation import (  # local: avoids cycle
+                TextProposalRejected,
+                _wording_guard,
+            )
+
+            try:
+                _wording_guard(source_unit.exact_text, unit.exact_text)
+            except TextProposalRejected as exc:
+                raise ResumeDraftUnavailable from exc
         results.append(
             ResumeUnitTrace(
                 unit_id=unit.id,
@@ -326,6 +380,7 @@ def get_resume_trace(session: Session, *, account_id: str, artifact_id: str) -> 
                 original_input_refs=tuple(item.original_input_ref for item in supporting),
                 wording_level=unit.wording_level,
                 review_status=unit.review_status,
+                source_unit_id=unit.source_artifact_unit_id,
             )
         )
     return ResumeTrace(
@@ -335,4 +390,5 @@ def get_resume_trace(session: Session, *, account_id: str, artifact_id: str) -> 
         jd_id=artifact.jd_id,
         stale_relative_to_current_profile=profile.version != artifact.profile_version,
         units=tuple(results),
+        source_artifact_id=artifact.source_artifact_id,
     )

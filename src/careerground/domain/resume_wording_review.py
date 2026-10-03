@@ -67,6 +67,7 @@ class ResumeExport:
     format: str
     content_hash: str
     content_text: str
+    wording_level: str = "R1"
 
 
 class WordingReviewService:
@@ -302,9 +303,10 @@ class WordingReviewService:
             )
             .execution_options(populate_existing=True)
         )
+        expected_action = "ACCEPT_R2" if artifact.source_artifact_id is not None else "ACCEPT_R1"
         if (
             review is None
-            or review.action != "ACCEPT_R1"
+            or review.action != expected_action
             or review.artifact_version != artifact.artifact_version
             or review.profile_version != artifact.profile_version
         ):
@@ -313,8 +315,9 @@ class WordingReviewService:
             trace = get_resume_trace(session, account_id=account_id, artifact_id=artifact_id)
         except ResumeDraftUnavailable as exc:
             raise WordingReviewRejected from exc
+        wording_level = "R2" if expected_action == "ACCEPT_R2" else "R1"
         if trace.stale_relative_to_current_profile or any(
-            unit.review_status != "WORDING_REVIEWED" or unit.wording_level != "R1"
+            unit.review_status != "WORDING_REVIEWED" or unit.wording_level != wording_level
             for unit in trace.units
         ):
             raise WordingReviewRejected
@@ -326,11 +329,18 @@ class WordingReviewService:
         if format == "JSON":
             body = json.dumps(
                 {
-                    "schema": "careerground-resume-text-v1",
+                    "schema": "careerground-resume-text-v2"
+                    if wording_level == "R2"
+                    else "careerground-resume-text-v1",
                     "artifact_id": artifact.id,
                     "artifact_version": artifact.artifact_version,
                     "profile_version": artifact.profile_version,
                     "jd_id": artifact.jd_id,
+                    **(
+                        {"source_artifact_id": artifact.source_artifact_id}
+                        if wording_level == "R2"
+                        else {}
+                    ),
                     "units": [
                         {
                             "text": unit.exact_text,
@@ -339,6 +349,11 @@ class WordingReviewService:
                             "evidence_ids": list(unit.evidence_ids),
                             "evidence_excerpts": list(unit.evidence_excerpts),
                             "original_input_refs": list(unit.original_input_refs),
+                            **(
+                                {"source_unit_id": unit.source_unit_id}
+                                if wording_level == "R2"
+                                else {}
+                            ),
                         }
                         for unit in trace.units
                     ],
@@ -358,6 +373,7 @@ class WordingReviewService:
             format=format,
             content_hash=hashlib.sha256(body.encode()).hexdigest(),
             content_text=body,
+            wording_level=wording_level,
         )
 
     def _view(
@@ -400,6 +416,37 @@ class WordingReviewService:
     def _digest(
         self, account_id: str, trace: ResumeTrace, review_id: str, expires_at: datetime
     ) -> str:
+        if trace.source_artifact_id is not None:
+            payload = {
+                "purpose": "R2_EXACT_WORDING_APPROVAL",
+                "review_id": review_id,
+                "account_id": account_id,
+                "artifact_id": trace.artifact_id,
+                "source_artifact_id": trace.source_artifact_id,
+                "artifact_version": trace.artifact_version,
+                "profile_version": trace.profile_version,
+                "jd_id": trace.jd_id,
+                "expires_at": _utc(expires_at).isoformat(),
+                "units": [
+                    {
+                        "unit_id": unit.unit_id,
+                        "source_unit_id": unit.source_unit_id,
+                        "exact_text": unit.exact_text,
+                        "claim_id": unit.claim_id,
+                        "evidence_ids": unit.evidence_ids,
+                        "evidence_excerpts": unit.evidence_excerpts,
+                        "original_input_refs": unit.original_input_refs,
+                    }
+                    for unit in trace.units
+                ],
+            }
+            return hmac.new(
+                self._secret,
+                json.dumps(
+                    payload, sort_keys=True, ensure_ascii=False, separators=(",", ":")
+                ).encode(),
+                hashlib.sha256,
+            ).hexdigest()
         payload = {
             "purpose": "R1_WORDING_REVIEW",
             "review_id": review_id,

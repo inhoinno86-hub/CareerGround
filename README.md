@@ -56,7 +56,9 @@ LLM/realtime provider adoption and paid cloud resources remain separate decision
 - [Local security, actual browser checks and MCP envelope verification](docs/CareerGround_Phase_A_Security_Accessibility_Contracts_2026-10-01.md)
 - [Idle cleanup, browser–MCP receipts, private exports and accessibility](docs/CareerGround_Phase_A_Browser_MCP_Closeout_2026-10-01.md)
 - [Exact policy review, selected JD/R1 and local request hardening](docs/CareerGround_Phase_A_Review_JD_Hardening_2026-10-01.md)
-- [Latest: disposable demo, offline JD proposals and mock deletion](docs/CareerGround_Phase_A_Local_Demo_Release_2026-10-01.md)
+- [Disposable demo, offline JD proposals and mock deletion](docs/CareerGround_Phase_A_Local_Demo_Release_2026-10-01.md)
+- [MCP contracts, offline proposal checks and persistent runtime](docs/CareerGround_Phase_A_Contracts_Development_Runtime_2026-10-02.md)
+- [CURRENT/options, R2 approval/export and partial erasure](docs/CareerGround_Phase_A_Local_Contract_Completion_2026-10-03.md)
 
 ## Core principle
 
@@ -71,6 +73,29 @@ With the locked development dependencies installed:
 ```bash
 uv run --locked python -m careerground.local_demo --port 8008
 ```
+
+To keep synthetic inputs across restarts, use the separate owner-only development store:
+
+```bash
+uv run --locked python -m careerground.development_runtime --state-dir "$PWD/.careerground-development" --port 8008
+```
+
+For an existing exact 0019 synthetic store, add `--upgrade-store` once. It creates an
+owner-only sibling backup, validates a migrated copy and preserves the original on
+failure. Unknown schemas are refused. See the latest contract report for details.
+
+The store is ignored by Git. Restart preserves synthetic data, but invalidates browser/MCP
+connections. Logout revokes the current local bearer. An independent signed deletion
+checkpoint is verified before startup; an old DB containing erased Graph data is refused.
+Only one process may open a store. Actual Auth0, configured DB URLs and AI providers are
+unused. Ctrl+C stops the server; this development store remains. The disposable command
+above still discards its own store on exit.
+
+The MCP console now lists 26 tools. `analyze_jd` returns an unapproved mock proposal;
+`execute_data_deletion` requires a connection-bound browser receipt after impact review,
+mock reauthentication and final consent for five deletion scopes. CURRENT/selected exports
+and separate R2 approvals are available. See the [walkthrough and boundaries](docs/CareerGround_Phase_A_Local_Contract_Completion_2026-10-03.md)
+for exact arguments and remaining production contracts.
 
 Open the printed `http://127.0.0.1:8008/demo` address and explicitly choose
 synthetic account A or B. Start with **경력 정리**, enter synthetic bullets, review

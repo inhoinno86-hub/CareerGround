@@ -10,8 +10,14 @@ __pycache__/
 src/*.egg-info/
 /to-do-prompts/
 /intent-docs/
+/.careerground-development/
+/..careerground-development-pre-*.sqlite
+/..careerground-development-upgrade-*.sqlite
 
 # Auth0 credentials
 .auth0-mcp-state.json
 
 .auth0-mcp-writes.log
+
+# Local explanatory reports
+/reports/

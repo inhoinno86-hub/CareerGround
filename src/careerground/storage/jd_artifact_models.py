@@ -145,6 +145,12 @@ class Artifact(Base):
             ondelete="RESTRICT",
         ),
         CheckConstraint("artifact_type IN ('RESUME_TEXT')", name="ck_artifact_type"),
+        ForeignKeyConstraint(
+            ["source_artifact_id", "account_id", "profile_id"],
+            ["artifacts.id", "artifacts.account_id", "artifacts.profile_id"],
+            name="fk_artifact_owned_source",
+            ondelete="RESTRICT",
+        ),
         CheckConstraint(
             "artifact_version >= 1 AND profile_version >= 0", name="ck_artifact_versions"
         ),
@@ -161,6 +167,7 @@ class Artifact(Base):
     artifact_version: Mapped[int] = mapped_column(Integer, nullable=False)
     profile_version: Mapped[int] = mapped_column(Integer, nullable=False)
     jd_id: Mapped[str | None] = mapped_column(String(36))
+    source_artifact_id: Mapped[str | None] = mapped_column(String(36))
     status: Mapped[str] = mapped_column(String(32), nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
 
@@ -177,6 +184,12 @@ class ArtifactUnit(Base):
             ondelete="RESTRICT",
         ),
         CheckConstraint("ordinal >= 1", name="ck_artifact_unit_ordinal"),
+        ForeignKeyConstraint(
+            ["source_artifact_unit_id", "account_id", "profile_id"],
+            ["artifact_units.id", "artifact_units.account_id", "artifact_units.profile_id"],
+            name="fk_artifact_unit_owned_source",
+            ondelete="RESTRICT",
+        ),
         CheckConstraint(
             "unit_type IN ('RESUME_BULLET', 'SUMMARY_SENTENCE', 'SKILL_ENTRY')",
             name="ck_artifact_unit_type",
@@ -193,6 +206,7 @@ class ArtifactUnit(Base):
     account_id: Mapped[str] = mapped_column(String(36), nullable=False, index=True)
     profile_id: Mapped[str] = mapped_column(String(36), nullable=False, index=True)
     artifact_id: Mapped[str] = mapped_column(String(36), nullable=False, index=True)
+    source_artifact_unit_id: Mapped[str | None] = mapped_column(String(36))
     ordinal: Mapped[int] = mapped_column(Integer, nullable=False)
     unit_type: Mapped[str] = mapped_column(String(24), nullable=False)
     exact_text: Mapped[str] = mapped_column(Text, nullable=False)
@@ -239,7 +253,7 @@ class ArtifactWordingReview(Base):
             ondelete="RESTRICT",
         ),
         UniqueConstraint("artifact_id", name="uq_wording_review_artifact"),
-        CheckConstraint("action IN ('ACCEPT_R1')", name="ck_wording_review_action"),
+        CheckConstraint("action IN ('ACCEPT_R1', 'ACCEPT_R2')", name="ck_wording_review_action"),
         CheckConstraint(
             "artifact_version >= 1 AND profile_version >= 0", name="ck_wording_review_versions"
         ),

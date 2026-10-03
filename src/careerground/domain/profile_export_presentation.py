@@ -13,6 +13,7 @@ from careerground.domain.profile_export import (
     ProfileExportUnavailable,
     export_profile_data,
 )
+from careerground.domain.profile_export_selection import ProfileSelectionRejected, selection_values
 
 EXPORT_TOKEN_TTL = timedelta(minutes=5)
 _TOKEN_KEYS = frozenset(
@@ -23,6 +24,7 @@ _TOKEN_KEYS = frozenset(
         "profile_id",
         "profile_version",
         "content_hash",
+        "inclusion",
         "expires_at",
     }
 )
@@ -39,6 +41,7 @@ class ProfileExportPresentation:
     content_hash: str
     content_bytes: int
     export_token: str
+    inclusion: dict
 
 
 class ProfileExportPresentationService:
@@ -52,8 +55,9 @@ class ProfileExportPresentationService:
         account_id: str,
         browser_session_id: str,
         profile_id: str,
-        profile_version: int,
+        profile_version: int | str,
         now: datetime,
+        inclusion: dict | None = None,
     ) -> ProfileExportPresentation:
         now = _aware_utc(now)
         _require_identity(account_id, browser_session_id, profile_id, profile_version)
@@ -63,6 +67,8 @@ class ProfileExportPresentationService:
                 account_id=account_id,
                 profile_id=profile_id,
                 profile_version=profile_version,
+                inclusion=inclusion,
+                now=now,
             )
         except ProfileExportUnavailable as exc:
             raise ProfileExportPresentationRejected from exc
@@ -71,16 +77,18 @@ class ProfileExportPresentationService:
             "account_id": account_id,
             "browser_session_id": browser_session_id,
             "profile_id": profile_id,
-            "profile_version": profile_version,
+            "profile_version": export.profile_version,
             "content_hash": export.content_hash,
+            "inclusion": export.inclusion,
             "expires_at": (now + EXPORT_TOKEN_TTL).isoformat(),
         }
         return ProfileExportPresentation(
             profile_id=profile_id,
-            profile_version=profile_version,
+            profile_version=export.profile_version,
             content_hash=export.content_hash,
             content_bytes=len(export.content_json.encode()),
             export_token=self._tokens.sign(payload),
+            inclusion=export.inclusion,
         )
 
     def submit(
@@ -93,6 +101,7 @@ class ProfileExportPresentationService:
         profile_version: int,
         export_token: str,
         now: datetime,
+        inclusion: dict | None = None,
     ) -> CanonicalProfileExport:
         now = _aware_utc(now)
         _require_identity(account_id, browser_session_id, profile_id, profile_version)
@@ -113,11 +122,19 @@ class ProfileExportPresentationService:
         ):
             raise ProfileExportPresentationRejected
         try:
+            choices = selection_values(payload["inclusion"])
+            if inclusion is not None and choices != selection_values(inclusion):
+                raise ProfileExportPresentationRejected
+        except ProfileSelectionRejected:
+            raise ProfileExportPresentationRejected from None
+        try:
             export = export_profile_data(
                 session,
                 account_id=account_id,
                 profile_id=profile_id,
                 profile_version=profile_version,
+                inclusion=choices,
+                now=now,
             )
         except ProfileExportUnavailable as exc:
             raise ProfileExportPresentationRejected from exc
@@ -142,7 +159,9 @@ def _require_identity(
         or not 16 <= len(browser_session_id) <= 128
         or not isinstance(profile_id, str)
         or not profile_id
-        or type(profile_version) is not int
-        or profile_version < 0
+        or (
+            profile_version != "CURRENT"
+            and (type(profile_version) is not int or profile_version < 0)
+        )
     ):
         raise ProfileExportPresentationRejected

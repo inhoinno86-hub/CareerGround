@@ -18,6 +18,7 @@ from careerground.domain.claim_review_workspace import (
     _stored_utc,
 )
 from careerground.domain.profile_archive import ensure_profile_archive
+from careerground.domain.project_scope_guard import deleted_project_scope_exists
 from careerground.storage.graph_models import (
     Claim,
     ClaimAssessment,
@@ -114,6 +115,14 @@ def submit_synthetic_review(
         .execution_options(populate_existing=True)
     )
     if profile is None or profile.status != "ACTIVE":
+        raise ReviewSubmissionRejected
+    # The account/profile locks serialize this final check with partial erasure.
+    if deleted_project_scope_exists(
+        session,
+        account_id=approval.account_id,
+        profile_id=profile.id,
+        scope_key=batch.scope_key,
+    ):
         raise ReviewSubmissionRejected
     work = session.scalar(
         select(ProfilingSession)

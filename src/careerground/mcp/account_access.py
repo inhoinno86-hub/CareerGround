@@ -33,12 +33,20 @@ class ActiveAccountTokenVerifier:
         *,
         issuer: str,
         session_factory: Callable[[], Session],
+        token_is_revoked: Callable[[str], bool] | None = None,
     ) -> None:
         self._token_verifier = token_verifier
         self._issuer = issuer
         self._session_factory = session_factory
+        self._token_is_revoked = token_is_revoked
 
     async def verify_token(self, token: str) -> AccessToken | None:
+        if self._token_is_revoked is not None:
+            try:
+                if self._token_is_revoked(token):
+                    return None
+            except Exception:  # noqa: BLE001 - unavailable revocation gate must fail closed
+                return None
         access = await self._token_verifier.verify_token(token)
         if access is None or not access.subject:
             return None

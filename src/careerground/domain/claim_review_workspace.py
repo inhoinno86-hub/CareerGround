@@ -12,6 +12,7 @@ from uuid import UUID, uuid4, uuid5
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from careerground.domain.project_scope_guard import deleted_project_scope_exists
 from careerground.storage.models import (
     Account,
     CareerProfile,
@@ -68,6 +69,10 @@ def propose_verbatim_draft(
         raise ValueError("invalid bounded draft")
     work, profile = _owned_work(session, account_id, profiling_session_id)
     if work.status not in {"ACTIVE", "PAUSED"} or _stored_utc(work.retention_expires_at) <= now:
+        raise ReviewUnavailable
+    if deleted_project_scope_exists(
+        session, account_id=account_id, profile_id=profile.id, scope_key=scope_key
+    ):
         raise ReviewUnavailable
     source = session.scalar(
         select(ProfilingInput).where(
@@ -145,6 +150,10 @@ class ClaimReviewPreparation:
         ordered = [by_id[draft_id] for draft_id in draft_ids]
         if len({draft.scope_key for draft in ordered}) != 1:
             raise ValueError("mixed experience scopes are not reviewable together")
+        if deleted_project_scope_exists(
+            session, account_id=account_id, profile_id=profile.id, scope_key=ordered[0].scope_key
+        ):
+            raise ReviewUnavailable
         for draft in ordered:
             source = session.scalar(
                 select(ProfilingInput).where(
@@ -239,6 +248,10 @@ class ClaimReviewPreparation:
             or work.base_profile_version != base_profile_version
         ):
             raise ReviewStale
+        if deleted_project_scope_exists(
+            session, account_id=account_id, profile_id=profile.id, scope_key=scope_key
+        ):
+            raise ReviewUnavailable
         batch_id = str(uuid5(_PREPARE_NAMESPACE, f"{account_id}:{idempotency_key}"))
         existing = session.get(ProfilingReviewBatch, batch_id)
         if existing is not None:
