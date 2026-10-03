@@ -1,0 +1,107 @@
+{
+  "schema": "careerground-external-gate-preparation-v1",
+  "policy": {
+    "external_execution_approved": false,
+    "approved_requests": 0,
+    "approved_ai_cost": 0,
+    "approved_cloud_cost": 0,
+    "currency": "UNSELECTED"
+  },
+  "documents": {
+    "G-I": {
+      "path": "docs/CareerGround_Identity_Gate_Preparation_2026-10-03.md",
+      "sha256": "8fe21e72556e068ae670409ef79a5327500ef0615293898520c01ad2b796a82b"
+    },
+    "G-L": {
+      "path": "docs/CareerGround_AI_Gate_Preparation_2026-10-03.md",
+      "sha256": "9b644f775008d5f30dc9b6805f71467994db1721796a1fb5cce3b27054f60af6"
+    },
+    "G-P/G-C": {
+      "path": "docs/CareerGround_Operations_Gate_Preparation_2026-10-03.md",
+      "sha256": "6c43dbf787780c6945973603ef52eb9c426b55c0f3c9da00dfe35f275f711101"
+    }
+  },
+  "corpus": {
+    "path": "tests/fixtures/korean_generation_quality_cases.json",
+    "sha256": "dfd5a833b21f89ef301dff9baa10948ac47df04ebed54f77d11444d40fb5b21c",
+    "cases_per_task": 9
+  },
+  "gates": {
+    "G-I": {
+      "status": "WAITING_EXTERNAL_APPROVAL",
+      "required_cases": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06",
+        "I07",
+        "I08",
+        "I09",
+        "I10",
+        "I11",
+        "I12"
+      ],
+      "external_evidence": []
+    },
+    "G-L": {
+      "status": "WAITING_EXTERNAL_APPROVAL",
+      "required_cases": [
+        "extract-01",
+        "extract-02",
+        "extract-03",
+        "extract-04",
+        "extract-05",
+        "extract-06",
+        "extract-07",
+        "extract-08",
+        "extract-09",
+        "jd-01",
+        "jd-02",
+        "jd-03",
+        "jd-04",
+        "jd-05",
+        "jd-06",
+        "jd-07",
+        "jd-08",
+        "jd-09",
+        "r2-01",
+        "r2-02",
+        "r2-03",
+        "r2-04",
+        "r2-05",
+        "r2-06",
+        "r2-07",
+        "r2-08",
+        "r2-09",
+        "r3-01",
+        "r3-02",
+        "r3-03",
+        "r3-04",
+        "r3-05",
+        "r3-06",
+        "r3-07",
+        "r3-08",
+        "r3-09"
+      ],
+      "external_evidence": []
+    },
+    "G-P/G-C": {
+      "status": "WAITING_EXTERNAL_APPROVAL",
+      "required_cases": [
+        "O01",
+        "O02",
+        "O03",
+        "O04",
+        "O05",
+        "O06",
+        "O07",
+        "O08",
+        "O09",
+        "O10"
+      ],
+      "external_evidence": []
+    }
+  }
+}

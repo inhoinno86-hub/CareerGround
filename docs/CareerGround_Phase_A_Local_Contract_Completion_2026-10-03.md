@@ -117,3 +117,7 @@ PostgreSQL CI는 local `*_test` DB와 `CAREERGROUND_REQUIRE_POSTGRES_TEST=1`을 
 ## 작업 이력 파일
 
 사용자 요청한 saved working_list: `/home/inno/.codex/working_list/2026-10-03/working_list_2026-10-03_CareerGround_phase-a-local-contract-completion.md`. 승인된 목표, 기존 작업 트리, 변경 목록, 실제 검증·명령 증거, 다음4번 순서를 함께 저장했다.
+
+### 2026-10-03 후속 준비 완료
+
+위 4-1→4-2→4-3의 인증 12개 시험 절차, 한국어 의미 평가 자료 36개와 품질/비용 기준 초안, 운영 10개 시험·삭제/복원/예산 설계를 준비했다. 관련 로컬 unittest 45개와 기존 오프라인 경계53/53, 준비 JSON/hash/CI Ruff 검사를 통과했다. 실제 외부 요청과 모델 평가·공급자 선정·운영 Gate 통과는 없으며 다음 한 단계는 개발 tenant/두 합성 계정의 인증 재시험 범위 승인이다. [후속 수행 이력과 검사 방법](CareerGround_External_Gate_Preparation_2026-10-03.md)

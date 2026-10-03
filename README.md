@@ -59,6 +59,7 @@ LLM/realtime provider adoption and paid cloud resources remain separate decision
 - [Disposable demo, offline JD proposals and mock deletion](docs/CareerGround_Phase_A_Local_Demo_Release_2026-10-01.md)
 - [MCP contracts, offline proposal checks and persistent runtime](docs/CareerGround_Phase_A_Contracts_Development_Runtime_2026-10-02.md)
 - [CURRENT/options, R2 approval/export and partial erasure](docs/CareerGround_Phase_A_Local_Contract_Completion_2026-10-03.md)
+- [Latest: identity, Korean AI evaluation and operations preparation](docs/CareerGround_External_Gate_Preparation_2026-10-03.md)
 
 ## Core principle
 
