@@ -479,4 +479,7 @@ def _b64(value: bytes) -> str:
 def _unb64(value: str) -> bytes:
     if not value or len(value) % 4 == 1:
         raise ValueError("invalid base64")
-    return base64.b64decode(value + "=" * (-len(value) % 4), altchars=b"-_", validate=True)
+    decoded = base64.b64decode(value + "=" * (-len(value) % 4), altchars=b"-_", validate=True)
+    if _b64(decoded) != value:
+        raise ValueError("noncanonical base64url")
+    return decoded

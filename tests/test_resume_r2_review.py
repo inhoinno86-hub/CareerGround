@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import base64
 import hashlib
 import json
 import unittest
@@ -209,10 +210,14 @@ class R2ReviewTests(unittest.TestCase):
                     proposals=(r3,),
                     now=self.now,
                 )
+            body, signature = view.approval_token.split(".")
+            replacement = "A" if signature[0] != "A" else "B"
+            tampered_token = f"{body}.{replacement}{signature[1:]}"
+            self.assertNotEqual(tampered_token, view.approval_token)
             for account, browser, token, now in (
                 ("acct-b", SESSION_ID, view.approval_token, self.now),
                 ("acct-a", "foreign-browser-session", view.approval_token, self.now),
-                ("acct-a", SESSION_ID, view.approval_token[:-1] + "A", self.now),
+                ("acct-a", SESSION_ID, tampered_token, self.now),
                 ("acct-a", SESSION_ID, view.approval_token, self.now + timedelta(minutes=4)),
             ):
                 with self.assertRaises(R2ProposalRejected):
@@ -224,6 +229,42 @@ class R2ReviewTests(unittest.TestCase):
                         now=now,
                     )
             self.assertEqual(session.scalar(select(func.count()).select_from(Artifact)), 1)
+
+    def test_noncanonical_token_aliases_are_rejected_without_persistence(self) -> None:
+        with Session(self.engine) as session:
+            view = self.prepare(session)
+            body, signature = view.approval_token.split(".")
+            alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_"
+            # A SHA-256 signature has two unused bits in its final base64url character.
+            alias = signature[:-1] + alphabet[alphabet.index(signature[-1]) + 1]
+            self.assertNotEqual(alias, signature)
+            self.assertEqual(
+                base64.urlsafe_b64decode(alias + "="),
+                base64.urlsafe_b64decode(signature + "="),
+            )
+            for kind, token in (
+                ("unused_bits", f"{body}.{alias}"),
+                ("signature_padding", f"{body}.{signature}="),
+                ("body_padding", f"{body}=.{signature}"),
+            ):
+                with self.subTest(representation=kind), self.assertRaises(R2ProposalRejected):
+                    self.service.submit(
+                        session,
+                        account_id="acct-a",
+                        browser_session_id=SESSION_ID,
+                        approval_token=token,
+                        now=self.now,
+                    )
+            self.assertEqual(session.scalar(select(func.count()).select_from(Artifact)), 1)
+            artifact = self.service.submit(
+                session,
+                account_id="acct-a",
+                browser_session_id=SESSION_ID,
+                approval_token=view.approval_token,
+                now=self.now,
+            )
+            self.assertEqual(artifact.status, "WORDING_REVIEWED")
+            self.assertEqual(session.scalar(select(func.count()).select_from(Artifact)), 2)
 
     def test_source_and_r2_lineage_rechecked_before_export(self) -> None:
         wording = WordingReviewService(SECRET)
