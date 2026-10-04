@@ -178,7 +178,11 @@ def build_synthetic_review_app(
     presentation_signing_secret: bytes,
     request_limits: RequestLimitPolicy = DEFAULT_REQUEST_LIMITS,
 ) -> FastAPI:
-    """Build a local-only test app with no server entrypoint or real auth adapter."""
+    """Legacy-named development factory with caller-supplied identity verification.
+
+    Local fixtures and the opt-in Auth0 trial share these ownership/approval
+    routes. This factory itself creates no login, provider or public server.
+    """
 
     service = ReviewPresentationService(
         ClaimReviewPreparation(review_signing_secret), presentation_signing_secret

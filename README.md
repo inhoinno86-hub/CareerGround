@@ -20,9 +20,13 @@ implemented. A bounded MCP ingress and internal deletion status capability add
 local protections; the status capability has no public route. Local Firefox, native Chrome zoom and isolated Orca
 speech-request checks supplement the Chrome keyboard/reflow checks.
 
-These factories have **no public product entrypoint** and use synthetic data only.
+These factories have **no public product entrypoint**. Trials use synthetic career text.
 The public app provides health routes and optionally configured Auth0 login;
 the separate development authentication PoC is historical provider evidence.
+An opt-in Auth0 development assembly now connects actual development login to
+explicit empty-profile setup and management approvals using synthetic career text.
+Its product MCP independently validates OAuth against the same account database;
+live ChatGPT product scopes/consent have not been verified.
 Deletion previews remain `FOUNDATION_ONLY`, `ready_to_execute=false`. Full MCP
 contracts, production erasure/restore, accessibility and operations gates remain
 open. Managed signing and the Voice Interview App are not implemented. Identity,
@@ -61,7 +65,8 @@ LLM/realtime provider adoption and paid cloud resources remain separate decision
 - [CURRENT/options, R2 approval/export and partial erasure](docs/CareerGround_Phase_A_Local_Contract_Completion_2026-10-03.md)
 - [Identity, Korean AI evaluation and operations preparation](docs/CareerGround_External_Gate_Preparation_2026-10-03.md)
 - [ChatGPT conversation and management browser journey](docs/CareerGround_ChatGPT_Management_Journey_2026-10-03.md)
-- [Latest: existing ChatGPT account, local identity boundary and acceptance evidence](docs/CareerGround_Phase_A_Account_Quality_Release_2026-10-03.md)
+- [Existing ChatGPT account, local identity boundary and acceptance evidence](docs/CareerGround_Phase_A_Account_Quality_Release_2026-10-03.md)
+- [Latest: CareerGround Auth0 login, shared account and BrowserOS evidence](docs/CareerGround_Phase_A_Auth0_Login_2026-10-04.md)
 
 ## Core principle
 
@@ -120,6 +125,29 @@ session, invalidating its previous approvals/status view. At most 128 simultaneo
 browser sessions are kept until shutdown. Use `--port 0` for an available local
 port. No Docker, real account, provider or paid resource is needed.
 The public application entrypoint remains separate.
+
+## CareerGround login trial with existing Auth0 development configuration
+
+```bash
+uv run --locked --env-file .env --env-file .env.poc \
+  python -m careerground.auth0_development_runtime --allow-development-login
+```
+
+Open the printed origin (currently `http://localhost:5000`), choose **CareerGround
+로그인**, then explicitly create the empty trial profile. Google login through the
+existing Auth0 development client works; OpenAI app registration is not required.
+Use the same provider/account in the eventual ChatGPT OAuth connection. Browser
+logout revokes the current CareerGround session and starts Auth0 logout; it does
+not revoke separately issued MCP bearer tokens. Every adapter checks fresh account
+status. The trial's process-local browser sessions expire after one hour.
+
+The trial binds only to loopback, has its own disposable owner-only SQLite DB,
+and leaves the existing synthetic store and configured PostgreSQL untouched.
+Use synthetic career text only. `Ctrl+C` removes the trial database. Restart
+begins empty; this is not persistent user signup or a public release. This command
+starts no model API, tunnel, tenant registration or paid resource. Existing
+`careerground:probe` permission alone cannot authorize the product MCP tools.
+See the latest report for verification results and the remaining OAuth gate.
 
 ## Local foundation
 
