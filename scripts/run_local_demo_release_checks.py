@@ -23,7 +23,7 @@ import time
 from pathlib import Path
 from urllib.parse import urlsplit
 
-from playwright.sync_api import sync_playwright
+from playwright.sync_api import expect, sync_playwright
 
 SOURCE = "- 합성 테스트 경험\n- 합성 문서 작성"
 SCRIPT_SOURCE = "- <script>window.__cg_demo_executed = true</script>"
@@ -130,8 +130,10 @@ def _submit(page, text, checks):
     button = page.get_by_role("button", name=text)
     _check(button.count() == 1, f"named button {text}", checks)
     _focus(page, f"button:has-text('{text}')", checks)
-    page.keyboard.press("Enter")
-    page.wait_for_timeout(350)
+    # Locator.press waits for the navigation initiated by the real Enter key.
+    # Invalid forms remain on the current document without a fixed sleep.
+    button.press("Enter", no_wait_after=False)
+    page.wait_for_load_state("load")
 
 
 def _audit(page, title, checks):
@@ -274,11 +276,9 @@ def _case(playwright, browser_name, scope):
             response = page.goto(origin + "/profile/not-an-id/1")
             _check(response.status == 404, "missing profile returns 404", checks)
             _check(page.get_by_role("alert").count() == 1, "error alert", checks)
-            _check(
-                page.locator("main").evaluate("el => document.activeElement === el"),
-                "error focuses main",
-                checks,
-            )
+            # Browser autofocus can finish after the navigation load event.
+            expect(page.locator("main")).to_be_focused(timeout=10000)
+            checks.append("error focuses main")
             _focus(page, "p a[href='/profiling/start']", checks)
             page.keyboard.press("Enter")
             page.wait_for_url("**/profiling/start", timeout=10000)
