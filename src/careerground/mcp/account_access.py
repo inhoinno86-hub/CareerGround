@@ -35,6 +35,7 @@ class ActiveAccountTokenVerifier:
         issuer: str,
         session_factory: Callable[[], Session],
         token_is_revoked: Callable[[str], bool] | None = None,
+        connection_is_revoked: Callable[[AccessToken], bool] | None = None,
         enrollment_account_id: Callable[[VerifiedIdentity], str | None] | None = None,
         enrollment_scope: str = "career.profile.write",
     ) -> None:
@@ -42,6 +43,7 @@ class ActiveAccountTokenVerifier:
         self._issuer = issuer
         self._session_factory = session_factory
         self._token_is_revoked = token_is_revoked
+        self._connection_is_revoked = connection_is_revoked
         self._enrollment_account_id = enrollment_account_id
         self._enrollment_scope = enrollment_scope
 
@@ -55,6 +57,12 @@ class ActiveAccountTokenVerifier:
         access = await self._token_verifier.verify_token(token)
         if access is None or not access.subject:
             return None
+        if self._connection_is_revoked is not None:
+            try:
+                if self._connection_is_revoked(access):
+                    return None
+            except Exception:  # noqa: BLE001 - deny if the authoritative gate is unavailable
+                return None
         if not await asyncio.to_thread(
             self._has_active_account, access.subject, self._enrollment_scope in access.scopes
         ):

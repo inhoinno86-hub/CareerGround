@@ -19,6 +19,7 @@ from urllib.parse import parse_qs, urlencode, urlsplit
 
 from fastapi import HTTPException, Request, Response
 from fastapi.responses import RedirectResponse
+from mcp.server.auth.provider import AccessToken
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -29,10 +30,12 @@ from careerground.domain.authorization import (
     resolve_account_id,
 )
 from careerground.domain.browser_form_token import BrowserFormTokenCodec, BrowserFormTokenRejected
+from careerground.domain.chatgpt_proposal_review import ChatGPTProposalInbox
 from careerground.mcp.oauth_resource import McpOAuthSettings
 from careerground.mcp.product_server import build_product_foundation_app
 from careerground.providers.oidc_identity import IdentityLoginRejected, IdentityOnlyLogin
 from careerground.storage.models import CareerProfile
+from careerground.web.chatgpt_proposal_routes import attach_chatgpt_proposal_routes
 from careerground.web.review_foundation import _html_response, build_synthetic_review_app
 from careerground.web.verified_browser_sessions import VerifiedBrowserSessions
 
@@ -106,6 +109,13 @@ class AuthenticatedManagement:
         presentation_secret: bytes,
         mcp_settings: McpOAuthSettings,
         signing_key: Callable[[str], object] | None = None,
+        deletion_store=None,
+        require_deletion_mfa: bool = False,
+        connection_is_revoked: Callable[[AccessToken], bool] | None = None,
+        deletion_passkeys=None,
+        allow_passkey_enrollment: bool = False,
+        connection_registry=None,
+        connection_client_id: str | None = None,
         clock=time.time,
     ):
         parsed = urlsplit(origin)
@@ -122,12 +132,52 @@ class AuthenticatedManagement:
             or login.settings.issuer != mcp_settings.issuer
         ):
             raise ValueError("Invalid authenticated management configuration")
+        if deletion_store is not None and deletion_store.sessions is not session_factory:
+            raise ValueError("Deletion checkpoint and management must share the same store")
+        if type(require_deletion_mfa) is not bool or (
+            require_deletion_mfa and deletion_store is None
+        ):
+            raise ValueError("MFA deletion policy requires the isolated deletion store")
+        if type(allow_passkey_enrollment) is not bool or (
+            allow_passkey_enrollment and deletion_passkeys is None
+        ):
+            raise ValueError("Passkey enrollment requires an explicitly supplied registry")
+        if deletion_passkeys is not None and (
+            deletion_store is None
+            or require_deletion_mfa
+            or deletion_passkeys.origin != origin
+            or deletion_passkeys.binding["store"]
+            != hashlib.sha256(
+                deletion_store.admission_secret + deletion_store.binding_digest.encode()
+            ).hexdigest()
+        ):
+            raise ValueError(
+                "Passkeys require the same isolated store/origin and separate MFA mode"
+            )
         self.origin, self.login, self.sessions = origin, login, session_factory
+        self.require_deletion_mfa = require_deletion_mfa
+        self.deletion_passkeys = deletion_passkeys
+        self.passkeys = None
+        self.connections = None
+        if connection_registry is not None:
+            if connection_is_revoked is not None:
+                raise ValueError("Only one connection denial policy may be supplied")
+            from careerground.web.development_connections import DevelopmentConnectionControls
+
+            self.connections = DevelopmentConnectionControls(
+                self, connection_registry, connection_client_id
+            )
+            connection_is_revoked = connection_registry.is_revoked
+        elif connection_client_id is not None:
+            raise ValueError("Connection client requires an explicit denial registry")
         self._admission, self._clock = account_admission, clock
         self._pending: dict[str, _PendingSetup] = {}
         self._lock = Lock()
         self.browser = VerifiedBrowserSessions(session_factory, clock=clock)
         self.forms = BrowserFormTokenCodec(presentation_secret)
+        self.proposals = ChatGPTProposalInbox(
+            session_factory, review_secret, presentation_secret, clock=clock
+        )
         self.web = build_synthetic_review_app(
             session_factory=session_factory,
             authenticate_browser=self.browser,
@@ -141,11 +191,29 @@ class AuthenticatedManagement:
             review_signing_secret=review_secret,
             presentation_signing_secret=presentation_secret,
             signing_key=signing_key,
+            connection_is_revoked=connection_is_revoked,
             management_origin=origin,
             # First use requires the authenticated browser's explicit setup.
             enrollment_account_id=None,
+            chatgpt_proposal_inbox=self.proposals,
         )
         self._routes()
+        if self.connections is not None:
+            self.connections.mount()
+        attach_chatgpt_proposal_routes(self.web, inbox=self.proposals, authenticate=self.browser)
+        self.deletion = None
+        if deletion_store is not None:
+            from careerground.web.authenticated_deletion import AuthenticatedProfileDeletion
+
+            self.deletion = AuthenticatedProfileDeletion(self, deletion_store)
+            self.deletion.mount()
+        if deletion_passkeys is not None:
+            from careerground.web.development_passkeys import DevelopmentPasskeyEnrollment
+
+            self.passkeys = DevelopmentPasskeyEnrollment(
+                self, deletion_passkeys, allow_enrollment=allow_passkey_enrollment
+            )
+            self.passkeys.mount()
 
     def _pending_get(self, request: Request, *, consume: bool = False):
         cookie = _cookie(request, SETUP_COOKIE)
@@ -212,6 +280,8 @@ class AuthenticatedManagement:
     def _routes(self):
         @self.web.middleware("http")
         async def web_origin(request, call_next):
+            if self.deletion is not None and self.deletion.unavailable:
+                return _page("저장 상태 확인이 필요합니다", "", status=503)
             if request.headers.get("host") != urlsplit(self.origin).netloc:
                 return _page("허용되지 않은 주소입니다", "", status=403)
             if request.method not in {"GET", "HEAD", "OPTIONS"}:
@@ -242,7 +312,12 @@ class AuthenticatedManagement:
 
         @self.web.get("/auth/login", include_in_schema=False)
         async def start_login():
+            from careerground.web.authenticated_deletion import REAUTH_COOKIE
+            from careerground.web.development_passkeys import PASSKEY_ENROLLMENT_COOKIE
+
             response = RedirectResponse("/", status_code=303)
+            _clear(response, REAUTH_COOKIE)
+            _clear(response, PASSKEY_ENROLLMENT_COOKIE)
             try:
                 binding = secrets.token_urlsafe(32)
                 response.headers["location"] = self.login.begin(binding)
@@ -262,6 +337,13 @@ class AuthenticatedManagement:
 
         @self.web.get("/auth/callback", include_in_schema=False)
         async def callback(request: Request):
+            from careerground.web.authenticated_deletion import REAUTH_COOKIE
+            from careerground.web.development_passkeys import PASSKEY_ENROLLMENT_COOKIE
+
+            if self.passkeys is not None and PASSKEY_ENROLLMENT_COOKIE in request.cookies:
+                return await self.passkeys.callback(request)
+            if self.deletion is not None and REAUTH_COOKIE in request.cookies:
+                return await self.deletion.callback(request)
             response = RedirectResponse("/account/setup", status_code=303)
             _clear(response, LOGIN_COOKIE)
             try:
@@ -365,13 +447,32 @@ class AuthenticatedManagement:
                 f"<p><a href='/profile/{escape(profile_id)}/{version}'>내 경력 자료 확인</a></p>"
                 "<p><a href='/profiling/start'>경력 정리 시작</a></p>"
                 "<p>ChatGPT에서 준비한 승인 링크도 이 로그인 상태에서 확인합니다.</p>"
-                "<form method='post' action='/auth/logout'>"
+                + (
+                    f"<p><a href='/deletion/development/profile/{escape(profile_id)}'>"
+                    "개발 프로필의 로컬 자료 삭제 검토</a></p>"
+                    if self.deletion is not None
+                    else ""
+                )
+                + (
+                    "<p><a href='/security/development/passkey'>삭제 확인용 패스키</a></p>"
+                    if self.passkeys is not None
+                    else ""
+                )
+                + (
+                    "<p><a href='/connections/development'>ChatGPT 연결 접근 차단 검토</a></p>"
+                    if self.connections is not None
+                    else ""
+                )
+                + "<form method='post' action='/auth/logout'>"
                 f"<input type='hidden' name='token' value='{escape(token)}'>"
                 "<button type='submit'>로그아웃</button></form>",
             )
 
         @self.web.post("/auth/logout", include_in_schema=False)
         async def logout(request: Request):
+            from careerground.web.authenticated_deletion import REAUTH_COOKIE
+            from careerground.web.development_passkeys import PASSKEY_ENROLLMENT_COOKIE
+
             principal = await self.browser(request, Response())
             if principal is None:
                 raise HTTPException(401)
@@ -394,6 +495,8 @@ class AuthenticatedManagement:
             self._pending_get(request, consume=True)
             _clear(response, SETUP_COOKIE)
             _clear(response, LOGIN_COOKIE)
+            _clear(response, REAUTH_COOKIE)
+            _clear(response, PASSKEY_ENROLLMENT_COOKIE)
             return response
 
         @self.web.get("/health/live", include_in_schema=False)
@@ -401,6 +504,13 @@ class AuthenticatedManagement:
             return {"status": "live", "mode": "authenticated-development"}
 
     async def __call__(self, scope, receive, send):
+        if scope["type"] == "http" and self.deletion is not None and self.deletion.unavailable:
+            await _page(
+                "저장 상태 확인이 필요합니다",
+                "<p>삭제 저장 검증을 완료할 수 없어 접근을 중지했습니다.</p>",
+                status=503,
+            )(scope, receive, send)
+            return
         if scope["type"] == "lifespan" or (
             scope["type"] == "http"
             and (

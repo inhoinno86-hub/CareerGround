@@ -23,6 +23,10 @@ import jwt
 
 from careerground.domain.authorization import VerifiedIdentity
 
+REAUTHENTICATION_TRANSACTION_TTL_SECONDS = 600
+FRESH_AUTHENTICATION_MAX_AGE_SECONDS = 180
+MFA_AUTHENTICATION_CONTEXT = "http://schemas.openid.net/pape/policies/2007/06/multi-factor"
+
 
 class IdentityLoginRejected(Exception):
     """A login failed without disclosing credentials or provider responses."""
@@ -81,6 +85,17 @@ class _Transaction:
     verifier: str
     nonce: str
     expires_at: float
+    reauthentication: bool = False
+    requested_at: float = 0
+
+
+@dataclass(frozen=True, repr=False)
+class FreshIdentityAuthentication:
+    """Signed provider exchange freshness, not proof of upstream MFA/password entry."""
+
+    identity: VerifiedIdentity
+    authenticated_at: int
+    authentication_methods: tuple[str, ...] = ()
 
 
 class IdentityOnlyLogin:
@@ -102,6 +117,16 @@ class IdentityOnlyLogin:
         self._lock = Lock()
 
     def begin(self, browser_binding: str) -> str:
+        return self._begin(browser_binding, reauthentication=False)
+
+    def begin_reauthentication(self, browser_binding: str, *, require_mfa: bool = False) -> str:
+        if type(require_mfa) is not bool:
+            raise IdentityLoginRejected
+        return self._begin(browser_binding, reauthentication=True, require_mfa=require_mfa)
+
+    def _begin(
+        self, browser_binding: str, *, reauthentication: bool, require_mfa: bool = False
+    ) -> str:
         if (
             type(browser_binding) is not str
             or not browser_binding.isascii()
@@ -117,7 +142,14 @@ class IdentityOnlyLogin:
             }
             if len(self._transactions) >= 128:
                 raise IdentityLoginRejected
-            self._transactions[state] = _Transaction(browser_binding, verifier, nonce, now + 180)
+            self._transactions[state] = _Transaction(
+                browser_binding,
+                verifier,
+                nonce,
+                now + (REAUTHENTICATION_TRANSACTION_TTL_SECONDS if reauthentication else 180),
+                reauthentication,
+                now,
+            )
         return (
             self.settings.authorization_endpoint
             + "?"
@@ -131,17 +163,28 @@ class IdentityOnlyLogin:
                     "nonce": nonce,
                     "code_challenge": challenge.decode().rstrip("="),
                     "code_challenge_method": "S256",
+                    **({"max_age": "0", "prompt": "login"} if reauthentication else {}),
+                    **({"acr_values": MFA_AUTHENTICATION_CONTEXT} if require_mfa else {}),
                 }
             )
         )
 
     def finish(self, *, state: str, code: str, browser_binding: str) -> VerifiedIdentity:
+        return self._finish(state, code, browser_binding, reauthentication=False).identity
+
+    def finish_reauthentication(
+        self, *, state: str, code: str, browser_binding: str
+    ) -> FreshIdentityAuthentication:
+        return self._finish(state, code, browser_binding, reauthentication=True)
+
+    def _finish(self, state, code, browser_binding, *, reauthentication):
         if type(state) is not str or not 1 <= len(state) <= 128:
             raise IdentityLoginRejected
         with self._lock:
             transaction = self._transactions.pop(state, None)
         if (
             transaction is None
+            or transaction.reauthentication is not reauthentication
             or type(code) is not str
             or not 1 <= len(code) <= 4096
             or type(browser_binding) is not str
@@ -189,8 +232,28 @@ class IdentityOnlyLogin:
                 or (type(claims["aud"]) is list and len(claims["aud"]) > 1 and "azp" not in claims)
             ):
                 raise IdentityLoginRejected
+            auth_time = claims.get("auth_time")
+            if reauthentication and (
+                type(auth_time) is not int
+                or auth_time < int(transaction.requested_at)
+                or auth_time > self._clock() + 5
+                or auth_time > claims["iat"] + 5
+                or self._clock() - auth_time > FRESH_AUTHENTICATION_MAX_AGE_SECONDS
+            ):
+                raise IdentityLoginRejected
+            methods = claims.get("amr", [])
+            if reauthentication and (
+                type(methods) is not list
+                or len(methods) > 16
+                or any(type(value) is not str or not 1 <= len(value) <= 64 for value in methods)
+            ):
+                raise IdentityLoginRejected
             # Email/name/picture and raw tokens are neither ownership keys nor persisted.
-            return VerifiedIdentity(self.settings.issuer, claims["sub"])
+            return FreshIdentityAuthentication(
+                VerifiedIdentity(self.settings.issuer, claims["sub"]),
+                auth_time if reauthentication else 0,
+                tuple(methods) if reauthentication else (),
+            )
         except Exception:  # noqa: BLE001 - upstream credentials never enter error output
             raise IdentityLoginRejected from None
 

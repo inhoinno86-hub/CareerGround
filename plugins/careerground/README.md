@@ -13,6 +13,10 @@ uv run python scripts/build_chatgpt_plugin.py \
 Use the exact server ID observed in the registered plugin's downloaded `.app.json`.
 The `plugin_asdk_app_...` page route is a UI wrapper; the server mapping uses the
 actual `asdk_app_...` ID. Do not guess a mapping or overwrite an existing archive.
+For an existing private plugin update, also preserve the plugin name from its
+downloaded `.codex-plugin/plugin.json`; ChatGPT rejects an update with a different
+name. Preserve its observed `.app.json` binding when replacing the skill and
+incrementing the version. The portable builder's name is for a new package.
 `--mcp-url` is an alternative for an explicitly reviewed HTTPS resource endpoint.
 Without either option the archive is skills-only and still needs a CareerGround
 MCP connection to perform data actions.

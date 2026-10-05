@@ -1,0 +1,186 @@
+{
+  "observed_on": "2026-10-04",
+  "baseline_head": "d88ad6255eb110cd265b0cc26c581578bc7564a0",
+  "environment": "private existing development OAuth and tunnel; separate local persistent QA store",
+  "career_content": "synthetic_only",
+  "actors": {
+    "provider_oauth_consent": "user manually accepted six product scopes",
+    "product_web_approvals": "BrowserOS agent under authorized synthetic testing",
+    "database_checks": "local read-only queries"
+  },
+  "privacy": "No account names, provider subjects, actual profile IDs, client IDs, tokens, approval receipts or private tunnel URLs retained here.",
+  "connection": {
+    "name": "CareerGround Phase A Dev",
+    "visibility": "private",
+    "authentication": "actual OAuth bearer verified by product runtime",
+    "tools": {"total": 34, "read": 15, "write": 19},
+    "identity_scopes": ["openid", "profile", "email"],
+    "product_scopes": [
+      "career.profile.read", "career.profile.write",
+      "career.artifact.read", "career.artifact.write",
+      "career.export", "career.delete"
+    ],
+    "new_auth0_clients_created": 0,
+    "additional_auth0_grants_for_new_connection_created": 0,
+    "existing_cimd_registration_reused": true,
+    "offline_access_requested": false,
+    "probe_scope_requested_by_new_connection": false,
+    "original_poc_catalog": "Read 1; product tools unavailable",
+    "journey_skill_version": "1.0.1",
+    "latest_installed_skill_version": "1.0.2",
+    "latest_skill_version_browser_verified": true,
+    "chatgpt_ui_model": "GPT-6.1 Sol",
+    "chatgpt_ui_effort": "Light",
+    "api_model_id": null
+  },
+  "journey": [
+    {
+      "step": "initial_identity",
+      "web_and_chatgpt_same_profile": true,
+      "profile_version": 0,
+      "canonical_claims_before_fact_approval": 0,
+      "canonical_evidence_before_fact_approval": 0
+    },
+    {
+      "step": "explicit_fact_review",
+      "source_text": "합성 CareerGround 시험에서 테스트 문서를 작성했습니다.",
+      "source_position_convention": "Python Unicode code points; half-open",
+      "source_span": [0, 36],
+      "claim_type": "CONTRIBUTION",
+      "web_fact_approval_and_mcp_receipt_consumption": true,
+      "canonical_claims": 1,
+      "canonical_evidence": 1,
+      "profile_version": 1,
+      "fact_status": "USER_CONFIRMED",
+      "use_status": "REVIEW_REQUIRED"
+    },
+    {
+      "step": "separate_use_review",
+      "web_review_action": "R1 사용 가능 여부 검토",
+      "explicit_consistency_and_use_approval": true,
+      "consistency": "CONSISTENT",
+      "use_status": "ALLOWED",
+      "profile_version": 2,
+      "controller_issue": "Initially requested BOUNDARY_CHANGE for use; model produced a BOUNDARY_REVIEW link. This unsubmitted constraint form was not a use approval.",
+      "boundary_form_submitted": false,
+      "follow_up": "Correct Web use review performed; distinction documented in installed skill 1.0.2. Full product journey used 1.0.1."
+    },
+    {
+      "step": "jd_proposal_subset",
+      "source_text": "테스트 문서 작성 경험\nPython 경험",
+      "proposed_spans": [[0, 12], [13, 22]],
+      "selected_requirement_text": "테스트 문서 작성 경험",
+      "canonical_job_descriptions": 1,
+      "canonical_requirements": 1,
+      "canonical_mappings_immediately_after_jd_save": 0,
+      "unselected_python_experience_saved": false,
+      "automatic_mapping": false,
+      "proposal_status": "DONE"
+    },
+    {
+      "step": "explicit_jd_link",
+      "selected_requirement_and_claim_source_reviewed": true,
+      "separate_web_confirmation_and_mcp_consumption": true,
+      "canonical_mappings": 1,
+      "mapping_status": "POTENTIAL"
+    },
+    {
+      "step": "r1_then_r2",
+      "explicit_r1_source_selection_and_web_approval": true,
+      "r1_text": "합성 CareerGround 시험에서 테스트 문서를 작성했습니다.",
+      "r1_status": "REVIEW_REQUIRED",
+      "r2_text": "합성 CareerGround 시험에서 테스트 문서를 작성했습니다",
+      "r2_status": "WORDING_REVIEWED",
+      "r2_change": "remove final period only",
+      "r2_source_hash_and_existing_unit_trace_used": true,
+      "explicit_r2_comparison_approval": true,
+      "r1_retained": true,
+      "r2_lineage_and_same_claim_evidence_input_references_verified": true,
+      "canonical_artifacts": 2,
+      "canonical_artifact_units": 2
+    },
+    {
+      "step": "separate_r2_export",
+      "format": "MARKDOWN",
+      "separate_web_export_approval": true,
+      "delivery": "INLINE",
+      "reported_bytes": 74,
+      "reported_sha256": "dd614e9c89b9817af24e78d35bb6673214d77ad6432d4e70187ad09a8b7e533e",
+      "expected_utf8_body": "- 합성 CareerGround 시험에서 테스트 문서를 작성했습니다\n",
+      "independent_expected_body_hash_and_length_match": true,
+      "displayed_synthetic_line_matches": true,
+      "raw_mcp_body_independently_extracted": false,
+      "limitation": "DOM rendered text does not independently verify final newline bytes. Returned metadata matches the independently calculated expected body.",
+      "ui_issue": "R2 target card had a static R1 label; target, hash and exported body were R2.",
+      "label_fix": "검토된 이력서 문구 내보내기",
+      "label_fix_static_checks_passed": true,
+      "label_fix_fresh_browser_observation": false
+    },
+    {
+      "step": "runtime_restart",
+      "old_web_cookie_response_status": 401,
+      "sso_relogin_response_status": 200,
+      "same_profile": true,
+      "profile_version": 2,
+      "fact_jd_r1_r2_retained": true
+    },
+    {
+      "step": "web_logout",
+      "web_account_response_status": 401,
+      "chatgpt_profile_and_r1_r2_trace_succeed_without_reconnect": true,
+      "profile_version": 2,
+      "provider_token_revocation_claimed": false
+    },
+    {
+      "step": "actual_deletion_refusal",
+      "scope": "PROFILE",
+      "profile_version": 2,
+      "approval_receipt_supplied": false,
+      "real_deletion_step_up_adapter_present": false,
+      "result": "REVIEW_REQUIRED",
+      "local_readonly_counts_unchanged": true,
+      "deletion_requests": 0,
+      "erasure_ledger": 0,
+      "deletion_success_tested": false
+    }
+  ],
+  "final_readonly_counts": {
+    "career_profiles": 1, "claims": 1, "evidence_items": 1,
+    "claim_use_reviews": 1, "job_descriptions": 1, "jd_requirements": 1,
+    "requirement_claim_maps": 1, "artifacts": 2, "artifact_units": 2,
+    "deletion_requests": 0, "erasure_ledger": 0
+  },
+  "verification": {
+    "full_unittest_run": {"run": 431, "passed": 396, "postgresql_skipped": 35},
+    "full_run_timing": "Before final label and skill guidance edits and strengthening the existing six-test restart verification; no increase in full test count.",
+    "persistent_store_tests_after_restart_assertion_strengthening": {"run": 6, "passed": 6},
+    "proposal_boundary_tests": {"run": 9, "passed": 9},
+    "offline_proposal_fixtures": {"run": 53, "mismatches": 0},
+    "independent_quality_release_gate_passed": false,
+    "current_change_github_ci_executed": false
+  },
+  "cleanup": {
+    "trial_web_and_product_mcp_stopped": true,
+    "existing_private_tunnel_process_stopped": true,
+    "local_ports_5000_and_8001_closed": true,
+    "private_qa_database_retained_for_resume": true,
+    "qa_state_directory_mode": "0700",
+    "qa_state_file_modes": "0600",
+    "preserved_original_file_hashes": 31,
+    "preserved_tunnel_config_file_hashes": 2,
+    "preservation_mismatches": 0,
+    "product_journey_and_plugin_detail_browser_tabs_retained": true
+  },
+  "remaining_gates": [
+    "actual provider token refresh and revocation",
+    "actual deletion reauthentication, execution and recovery verification",
+    "second actual account isolation (deferred)",
+    "PostgreSQL regression on these changes and post-push CI",
+    "independent full quality rerun and approved release thresholds",
+    "production storage, key management, backup/restore, privacy/deletion policy, hosting and availability acceptance"
+  ],
+  "new_paid_resources": false,
+  "server_ai_added": false,
+  "committed_or_pushed": false,
+  "phase_a_complete": false
+}

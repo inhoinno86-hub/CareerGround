@@ -239,8 +239,9 @@ def execute_synthetic_deletion(
 ) -> DeletionRequest:
     """Lock, reconfirm, block reads and stage work in one caller-owned transaction.
 
-    Only an internal test harness may supply VerifiedDeletionApproval today. No
-    real step-up issuer or public route exists, so this is not a product API.
+    A trusted internal adapter supplies VerifiedDeletionApproval. The isolated
+    development Web adapter uses fresh OIDC authentication; the synthetic demo
+    uses an explicit mock. Neither supplies a public production erasure API.
     """
 
     if now.tzinfo is None or now.utcoffset() is None:

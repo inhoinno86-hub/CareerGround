@@ -1,0 +1,186 @@
+{
+  "schema": "careerground-authenticated-development-deletion-observation-v1",
+  "date": "2026-10-05",
+  "environment_alias": "isolated-development-profile-delete",
+  "synthetic_only": true,
+  "career_text": "합성 삭제 시험에서 체크리스트를 작성했습니다.",
+  "method": "BrowserOS native Web flow on a new owner-only authenticated development store; existing approved Auth0 development login; no new tunnel",
+  "actual_steps": {
+    "initial_login_and_profile_enrollment": true,
+    "fact_review_explicitly_approved": true,
+    "persisted_profile_version": 1,
+    "deletion_impact_displayed": true,
+    "impact_checkbox_and_form_submitted": true,
+    "local_authentication_bridge_displayed": true,
+    "authorization_request_https": true,
+    "authorization_request_max_age_zero": true,
+    "authorization_request_prompt_login": true,
+    "authorization_request_pkce_s256": true,
+    "actual_provider_login_screen_reached": true,
+    "fresh_reauthentication_completed": false,
+    "actual_signed_authentication_method_verified": false,
+    "final_deletion_approval_submitted": false,
+    "actual_deletion_executed": false,
+    "fresh_signed_provider_exchange_verified": true,
+    "same_owner_verified": true,
+    "fresh_reauthentication_completion_note": "Fresh signed provider exchange and same owner passed; the full deletion reauthentication policy remains unmet because the required signed method was unconfirmed."
+  },
+  "status": "REJECTED_AUTHENTICATION_METHOD_UNCONFIRMED",
+  "observed_counts_before_reauthentication": {
+    "claims": 1,
+    "evidence_items": 1,
+    "profiling_inputs": 1,
+    "deletion_requests": 0,
+    "erasure_ledger": 0,
+    "profile_version": 1,
+    "profile_status": "ACTIVE"
+  },
+  "browser_findings": [
+    {
+      "case_id": "local-form-to-provider",
+      "observed": "Valid form submission did not navigate to the external provider before the bridge change.",
+      "inference": "The application form-action self policy and Chromium redirect behavior explain the block; console violation event was not captured.",
+      "fix": "Complete the local POST with a 200 page and navigate using an explicit HTTPS provider link; keep CSP unchanged.",
+      "verified_provider_login_screen_after_fix": true
+    },
+    {
+      "case_id": "interrupted-reauthentication-normal-login",
+      "observed": "After restart, an interrupted reauthentication cookie sent a normal login callback to the deletion handler; freshness verification had not completed.",
+      "fix": "Clear the deletion reauthentication cookie on normal login start and logout.",
+      "verified_normal_login_and_same_persisted_profile_after_fix": true,
+      "automated_stale_callback_cannot_delete": true
+    }
+  ],
+  "automated_validation": {
+    "postgres_full_tests_before_last_three_cases": 441,
+    "postgres_full_tests_passed": 441,
+    "postgres_full_tests_skipped": 0,
+    "final_authentication_subset_tests": 39,
+    "final_authentication_subset_passed": 39,
+    "current_discovered_test_inventory": 446,
+    "claim_and_evidence_erasure_after_separate_approval": true,
+    "signed_method_missing_or_social_only_refused": true,
+    "signed_checkpoint_restart_preserves_erasure": true,
+    "database_only_rollback_quarantined": true,
+    "checkpoint_write_failure_closes_web_and_mcp": true,
+    "logout_during_form_read_refused": true,
+    "note": "Synthetic signed provider responses exercise deletion success; this is not an actual provider deletion-success observation.",
+    "four_minute_login_with_fresh_result_accepted": true,
+    "stale_authentication_or_ten_minute_transaction_expiry_refused": true,
+    "final_approval_expires_after_three_minutes": true,
+    "reason_specific_refusal_message_subset_tests": 11,
+    "reason_specific_refusal_message_subset_passed": 11
+  },
+  "preservation": {
+    "prior_files_checked": 45,
+    "prior_files_unchanged": 45,
+    "prior_hybrid_profile_v2_store_unchanged": true,
+    "new_store_files_owner_only": true
+  },
+  "runtime_state": "LOCAL_RUNTIME_STOPPED_AFTER_REVIEW",
+  "postgres_container_stopped_by_user": true,
+  "postgres_local_port_closed": true,
+  "new_paid_resources_created": 0,
+  "external_model_api_calls": 0,
+  "new_tunnels_started": 0,
+  "phase_a_completed": false,
+  "limitations": [
+    "Fresh signed authentication time and same owner passed in the actual provider response. Required signed password/MFA method was unconfirmed; final approval and deletion did not execute.",
+    "Provider password/MFA is entered by the user; no credentials, tokens, cookies or account identifiers are included here.",
+    "The authentication request expires after ten minutes and must be restarted after expiry.",
+    "Only the opt-in local Web PROFILE path has this authentication adapter. MCP deletion remains REVIEW_REQUIRED.",
+    "Coverage is FOUNDATION_ONLY, excluding provider accounts, external copies, production backups and full-directory rollback protection."
+  ],
+  "resume_observation": {
+    "observed_at_utc": "2026-10-04T15:34:13.645306+00:00",
+    "user_reported_login": true,
+    "normal_management_login_verified": true,
+    "prior_deletion_request_expired": true,
+    "browseros_transport_interrupted": true,
+    "existing_browseros_launcher_restarted": true,
+    "browseros_mcp_reconnected": true,
+    "browser_control_listeners_loopback_only": true,
+    "normal_management_login_preserved_after_browser_restart": true,
+    "new_deletion_authentication_request_needed": true,
+    "new_deletion_authentication_request_started_at_utc": "2026-10-04T15:35:33.790439+00:00",
+    "new_provider_login_screen_reached": true,
+    "counts_before_new_reauthentication": {
+      "claims": 1,
+      "evidence_items": 1,
+      "profiling_inputs": 1,
+      "deletion_requests": 0,
+      "erasure_ledger": 0
+    },
+    "user_reported_reauthentication": true,
+    "browser_history_sanitized_steps": [
+      "profile_delete_preview",
+      "local_authentication_bridge",
+      "auth0_login",
+      "google_accountchooser",
+      "normal_login_callback_failure",
+      "management_account"
+    ],
+    "signed_freshness_or_method_not_verified_on_this_attempt": true,
+    "expiry_inference": "The callback returned the normal-login failure page rather than deletion verification; the short deletion cookie had expired or was absent. The user response arrived more than four minutes after the three-minute request began. No signed freshness/method result was obtained.",
+    "login_window_fix": {
+      "transaction_seconds": 600,
+      "deletion_cookie_seconds": 600,
+      "impact_preview_seconds": 900,
+      "maximum_authentication_age_seconds": 180,
+      "final_approval_expires_at_authentication_time_plus_seconds": 180
+    },
+    "fix_verified_at_utc": "2026-10-04T15:43:42.795095+00:00",
+    "ten_minute_retry": {
+      "started_at_utc": "2026-10-04T15:45:07.559321+00:00",
+      "bridge_displays_ten_minute_login_and_three_minute_final_approval": true,
+      "https_max_age_zero_prompt_login_s256": true,
+      "status": "SUPERSEDED_BY_USER_REQUESTED_RETRY"
+    }
+  },
+  "user_requested_retries": [
+    {
+      "started_at_utc": "2026-10-05T07:26:36.701230+00:00",
+      "reason": "User requested a new request after missing the previous ten-minute window.",
+      "normal_web_session_renewed_through_existing_provider_sso": true,
+      "fresh_deletion_impact_reviewed": true,
+      "transaction_seconds": 600,
+      "status": "REJECTED_AUTHENTICATION_METHOD_UNCONFIRMED",
+      "deletion_executed": false,
+      "checks": {
+        "freshness": true,
+        "owner": true,
+        "method": false
+      },
+      "callback_http_status": 409
+    }
+  ],
+  "actual_provider_result": {
+    "observed_at_utc": "2026-10-05T07:34:27.351388+00:00",
+    "http_status": 409,
+    "checks": {
+      "freshness": true,
+      "owner": true,
+      "method": false
+    },
+    "source": "BrowserOS callback document and sanitized server log; no raw tokens or method values recorded",
+    "counts_after_refusal": {
+      "claims": 1,
+      "evidence_items": 1,
+      "profiling_inputs": 1,
+      "deletion_requests": 0,
+      "erasure_ledger": 0,
+      "profile_version": 1,
+      "profile_status": "ACTIVE"
+    },
+    "deletion_executed": false
+  },
+  "cleanup": {
+    "local_ports_closed": {
+      "5000": true,
+      "8001": true,
+      "55432": true
+    },
+    "new_profile_store_retained_owner_only": true,
+    "browseros_user_application_retained": true
+  }
+}

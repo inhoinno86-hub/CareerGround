@@ -16,6 +16,7 @@ from sqlalchemy import delete, select
 from careerground.domain.account_initialization import initialize_account_profile
 from careerground.domain.authorization import AuthenticationRequired, VerifiedIdentity
 from careerground.providers.oidc_identity import (
+    MFA_AUTHENTICATION_CONTEXT,
     IdentityClientSettings,
     IdentityLoginRejected,
     IdentityOnlyLogin,
@@ -146,6 +147,71 @@ class IdentityLoginTests(unittest.TestCase):
             with self.assertRaises(IdentityLoginRejected) as error:
                 self.login.finish(**args)
             self.assertEqual(str(error.exception), "")
+
+    def start_reauthentication(self):
+        self.query = parse_qs(urlsplit(self.login.begin_reauthentication(BINDING)).query)
+        return {
+            "state": self.query["state"][0],
+            "code": "synthetic-code",
+            "browser_binding": BINDING,
+        }
+
+    def test_reauthentication_requires_signed_fresh_auth_time(self):
+        self.overrides = {"auth_time": int(self.now)}
+        result = self.login.finish_reauthentication(**self.start_reauthentication())
+        self.assertEqual(self.query["max_age"], ["0"])
+        self.assertEqual(self.query["prompt"], ["login"])
+        self.assertEqual(result.identity, VerifiedIdentity(ISSUER, "synthetic-a"))
+        self.assertEqual(result.authenticated_at, int(self.now))
+
+    def test_mfa_request_is_opt_in_and_normal_login_does_not_request_it(self):
+        for begin in (self.login.begin, self.login.begin_reauthentication):
+            query = parse_qs(urlsplit(begin(BINDING)).query)
+            self.assertNotIn("acr_values", query)
+        query = parse_qs(
+            urlsplit(self.login.begin_reauthentication(BINDING, require_mfa=True)).query
+        )
+        self.assertEqual(query["acr_values"], [MFA_AUTHENTICATION_CONTEXT])
+        self.assertEqual(query["max_age"], ["0"])
+        self.assertEqual(query["prompt"], ["login"])
+        self.assertEqual(query["scope"], ["openid profile email"])
+        with self.assertRaises(IdentityLoginRejected):
+            self.login.begin_reauthentication(BINDING, require_mfa="true")
+
+    def test_reauthentication_rejects_absent_old_future_and_wrong_type_auth_time(self):
+        for value in (None, int(self.now) - 1, int(self.now) + 10, True, str(int(self.now))):
+            self.overrides = {} if value is None else {"auth_time": value}
+            with self.subTest(value=value), self.assertRaises(IdentityLoginRejected):
+                self.login.finish_reauthentication(**self.start_reauthentication())
+
+    def test_slow_interactive_reauthentication_needs_a_fresh_result_and_bounded_transaction(self):
+        for delay, stale in ((240, False), (240, True), (601, False)):
+            with self.subTest(delay=delay, stale=stale):
+                self.now = time.time() - delay
+                args = self.start_reauthentication()
+                requested_at = int(self.now)
+                self.now += delay
+                self.overrides = {"auth_time": requested_at if stale else int(self.now)}
+                if stale or delay > 600:
+                    with self.assertRaises(IdentityLoginRejected):
+                        self.login.finish_reauthentication(**args)
+                else:
+                    self.assertEqual(
+                        self.login.finish_reauthentication(**args).authenticated_at, int(self.now)
+                    )
+
+    def test_normal_login_and_reauthentication_transactions_cannot_be_interchanged(self):
+        self.overrides = {"auth_time": int(self.now)}
+        for start, finish in (
+            (self.start, self.login.finish_reauthentication),
+            (self.start_reauthentication, self.login.finish),
+        ):
+            args = start()
+            with self.assertRaises(IdentityLoginRejected):
+                finish(**args)
+            with self.assertRaises(IdentityLoginRejected):
+                finish(**args)
+        self.assertEqual(self.exchanges, [])
 
     def test_transactions_are_bounded_expire_and_fail_after_restart(self):
         args = self.start()

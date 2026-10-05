@@ -1623,7 +1623,7 @@ def _operation_recipient(row) -> str:
         "R1_DRAFT": "정확한 R1 초안 생성",
         "WORDING_REVIEW": "R1 문구 검토",
         "PROFILE_EXPORT": "프로필 JSON 내보내기",
-        "RESUME_EXPORT": "검토된 R1 내보내기",
+        "RESUME_EXPORT": "검토된 이력서 문구 내보내기",
     }[row.action]
     return (
         "<section aria-label='연결 앱 확인'><h2>이 결과를 받을 연결 앱</h2>"

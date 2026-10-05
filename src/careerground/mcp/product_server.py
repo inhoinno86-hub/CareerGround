@@ -6,6 +6,7 @@ must not be pointed at real user data before provider and erasure gates pass.
 
 from __future__ import annotations
 
+import hashlib
 import json
 from collections import Counter
 from collections.abc import Callable
@@ -16,6 +17,7 @@ from typing import Any, Literal
 from urllib.parse import urlsplit
 
 from mcp.server.auth.middleware.auth_context import get_access_token
+from mcp.server.auth.provider import AccessToken
 from mcp.server.auth.settings import AuthSettings
 from mcp.server.mcpserver import MCPServer
 from mcp.server.mcpserver.exceptions import ToolError, UnexpectedToolError
@@ -96,6 +98,10 @@ from careerground.domain.request_limits import (
 from careerground.domain.resume_draft import ResumeDraftUnavailable, get_resume_trace
 from careerground.domain.safe_events import record_result
 from careerground.mcp.account_access import ActiveAccountTokenVerifier
+from careerground.mcp.chatgpt_proposal_tools import (
+    CHATGPT_PROPOSAL_SCOPES,
+    register_chatgpt_proposal_tools,
+)
 from careerground.mcp.confirmation_tools import (
     ACTION_SCOPES,
     ARTIFACT_WRITE_SCOPE,
@@ -124,6 +130,7 @@ ARTIFACT_READ_SCOPE = "career.artifact.read"
 DELETE_SCOPE = "career.delete"
 
 _TOOL_ARGUMENTS = {
+    "get_chatgpt_jd_source_context": frozenset({"profile_id", "profile_version", "jd_text"}),
     "get_account_profile": frozenset(),
     "get_my_profile": frozenset(),
     "get_confirmation_status": frozenset({"request_id"}),
@@ -160,6 +167,11 @@ _TOOL_ARGUMENTS = {
     ),
     "preview_data_deletion": frozenset({"scope", "target_ids"}),
     "analyze_jd": frozenset({"profile_id", "profile_version", "jd_text"}),
+    "prepare_chatgpt_jd_review": frozenset(
+        {"profile_id", "profile_version", "jd_text", "proposal_json", "idempotency_key"}
+    ),
+    "prepare_chatgpt_r2_review": frozenset({"artifact_id", "proposals_json", "idempotency_key"}),
+    "get_chatgpt_proposal_status": frozenset({"proposal_id"}),
     "execute_data_deletion": frozenset(
         {"scope", "target_id", "profile_version", "idempotency_key", "approval_receipt"}
     ),
@@ -626,6 +638,7 @@ class ResumeUnitTraceOutput(BaseModel):
     wording_level: str
     review_status: str
     source_unit_id: str | None = None
+    source_hash: str
 
 
 class ResumeTraceOutput(BaseModel):
@@ -650,9 +663,11 @@ def build_product_foundation_app(
     request_limits: RequestLimitPolicy = DEFAULT_REQUEST_LIMITS,
     presentation_signing_secret: bytes | None = None,
     token_is_revoked: Callable[[str], bool] | None = None,
+    connection_is_revoked: Callable[[AccessToken], bool] | None = None,
     local_deletion_adapter: Callable[..., dict] | None = None,
     enrollment_account_id: Callable[[VerifiedIdentity], str | None] | None = None,
     management_origin: str | None = None,
+    chatgpt_proposal_inbox=None,
 ) -> ASGIApp:
     """Build isolated product auth/ownership checks for synthetic local tests."""
 
@@ -679,6 +694,7 @@ def build_product_foundation_app(
         issuer=settings.issuer,
         session_factory=session_factory,
         token_is_revoked=token_is_revoked,
+        connection_is_revoked=connection_is_revoked,
         enrollment_account_id=enrollment_account_id,
     )
     server = StrictProductMCPServer(
@@ -718,8 +734,9 @@ def build_product_foundation_app(
             "pause_profiling",
             "prepare_claim_review",
         } or (
-            name in TOOL_SCOPES
+            name in (TOOL_SCOPES | CHATGPT_PROPOSAL_SCOPES)
             and name not in {"get_deletion_status", "get_confirmation_status", "analyze_jd"}
+            and name not in {"get_chatgpt_proposal_status", "get_chatgpt_jd_source_context"}
         )
         scope = (
             PROFILE_WRITE_SCOPE
@@ -736,6 +753,8 @@ def build_product_foundation_app(
                 if name == "request_user_confirmation"
                 else TOOL_SCOPES[name]
             )
+        elif name in CHATGPT_PROPOSAL_SCOPES:
+            scope = CHATGPT_PROPOSAL_SCOPES[name]
         with session_factory() as session:
             try:
                 account_id = current_account_id(session, scope)
@@ -779,6 +798,14 @@ def build_product_foundation_app(
         limiter=limiter,
         management_origin=management_origin,
     )
+    if chatgpt_proposal_inbox is not None:
+        register_chatgpt_proposal_tools(
+            server,
+            inbox=chatgpt_proposal_inbox,
+            session_factory=session_factory,
+            current_account_id=current_account_id,
+            management_origin=management_origin,
+        )
 
     @server.tool(
         name="analyze_jd",
@@ -1598,7 +1625,15 @@ def build_product_foundation_app(
                 profile_version=view.profile_version,
                 jd_id=view.jd_id,
                 stale_relative_to_current_profile=view.stale_relative_to_current_profile,
-                units=[ResumeUnitTraceOutput.model_validate(asdict(unit)) for unit in view.units],
+                units=[
+                    ResumeUnitTraceOutput.model_validate(
+                        {
+                            **asdict(unit),
+                            "source_hash": hashlib.sha256(unit.exact_text.encode()).hexdigest(),
+                        }
+                    )
+                    for unit in view.units
+                ],
                 source_artifact_id=view.source_artifact_id,
             )
 
@@ -1633,6 +1668,7 @@ def build_product_foundation_app(
             "prepare_claim_review": PROFILE_WRITE_SCOPE,
             "preview_data_deletion": DELETE_SCOPE,
             **TOOL_SCOPES,
+            **(CHATGPT_PROPOSAL_SCOPES if chatgpt_proposal_inbox is not None else {}),
         },
     )
     application = LocalMetadataPathAlias(declarations, urlsplit(settings.resource_url).path)

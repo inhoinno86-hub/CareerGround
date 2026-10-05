@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import logging
 import re
 import time
@@ -154,7 +155,15 @@ class AuthenticatedManagementTests(unittest.TestCase):
         return re.search(r"href='/profile/([^/']+)/(\d+)'", result.text).group(1)
 
     def bearer(self, subject="user-a", scope=SCOPES, **overrides):
-        return jwt.encode(
+        # A confirmation belongs to one exact OAuth connection. Reissuing its
+        # JWT on each call changed iat at second boundaries and made the test
+        # accidentally switch connections between prepare and status.
+        if not hasattr(self, "_bearers"):
+            self._bearers = {}
+        key = json.dumps([subject, scope, overrides], sort_keys=True)
+        if key in self._bearers:
+            return self._bearers[key]
+        token = jwt.encode(
             {
                 "iss": ISSUER,
                 "sub": subject,
@@ -169,6 +178,8 @@ class AuthenticatedManagementTests(unittest.TestCase):
             algorithm="RS256",
             headers={"kid": "synthetic"},
         )
+        self._bearers[key] = token
+        return token
 
     def rpc_response(self, client, name, args=None, subject="user-a", **claims):
         return client.post(

@@ -11,6 +11,7 @@ src/*.egg-info/
 /to-do-prompts/
 /intent-docs/
 /.careerground-development/
+/.careerground-authenticated-development/
 /..careerground-development-pre-*.sqlite
 /..careerground-development-upgrade-*.sqlite
 
