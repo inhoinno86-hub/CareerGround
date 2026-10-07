@@ -1,0 +1,23 @@
+{
+  "schema": "careerground-actual-mcp-synthetic-draft-v1",
+  "actor": "B",
+  "tool": "propose_profiling_drafts",
+  "prompt_submissions": 1,
+  "owner_session_source_verified": true,
+  "draft_count": 1,
+  "exact_text_matches_source_span": true,
+  "source_hash_verified": true,
+  "span": {
+    "start": 9,
+    "end": 59,
+    "offsets": "Python Unicode, end exclusive"
+  },
+  "source_characters": 83,
+  "draft_characters": 50,
+  "draft_status": "DRAFT",
+  "invented_metric_added": false,
+  "claims": 0,
+  "browser_operations": 0,
+  "deletion_requests": 0,
+  "scope": "unapproved exact-source draft fixture; not installed latest skill or human fact/use approval"
+}

@@ -1,0 +1,22 @@
+{
+  "schema": "careerground-actual-mcp-account-discovery-v1",
+  "actor": "A",
+  "method": "BrowserOS temporary personalized ChatGPT conversation through existing private product connection",
+  "expected_profile_ids_withheld_from_prompt": true,
+  "prompt_normalized_before_submission": true,
+  "submissions": 1,
+  "response_profile_matches_A": true,
+  "response_profile_matches_B": false,
+  "response_version": 0,
+  "user_oauth_reconnection_reported": true,
+  "ui_authentication_update_required_cleared": true,
+  "user_personalization_enabled": true,
+  "server_guard": {
+    "actor": "A",
+    "lane": "read",
+    "observed_window_requests": 1,
+    "shared_with_web": true,
+    "exclusive_mcp_call_count_inferred": false
+  },
+  "scope": "Actual A identity discovery only; no full account isolation or journey acceptance"
+}

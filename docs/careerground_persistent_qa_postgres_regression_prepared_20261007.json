@@ -1,0 +1,25 @@
+{
+  "scope": "focused_real_postgresql_regression_prepared_not_executed",
+  "observed_at": "2026-10-07T14:14:58.222155+00:00",
+  "new_expired_review_renewal_test": {
+    "file": "tests/test_postgres_foundation.py",
+    "case": "test_expired_claim_review_renews_without_reviving_old_snapshot",
+    "old_snapshot_and_expiry_immutable": true,
+    "new_review_reuses_single_owned_draft_without_canonical_claim_promotion": true,
+    "test_fixture_outer_transaction_rolled_back": true,
+    "local_loopback_postgresql_test_database_guard": true
+  },
+  "collected_cases": 12,
+  "postgres_runtime_test_result": "NOT_RUN_WAITING_FOR_USER_DOCKER_START",
+  "missing_database_check": "skipped=1; not treated as PASS",
+  "ruff_check_and_format": "PASS",
+  "docker_cli_available": true,
+  "docker_unprivileged_and_cached_sudo_access": false,
+  "private_env_and_test_driver_prepared": true,
+  "loopback_port": 55432,
+  "database_name": "careerground_test",
+  "postgres_image": "postgres:17",
+  "permanent_volume": false,
+  "paid_resources_added": false,
+  "phase_A_complete": false
+}

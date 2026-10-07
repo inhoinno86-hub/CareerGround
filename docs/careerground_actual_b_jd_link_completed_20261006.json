@@ -1,0 +1,16 @@
+{
+  "schema": "careerground-actual-b-jd-link-completed-v1",
+  "observed_at_utc": "2026-10-06T06:07:19.424549+00:00",
+  "human_web_approval_saved": true,
+  "same_originating_connection_confirmation_status": "DONE",
+  "link_jd_requirement_status": "ok",
+  "operation_status_after": "CONSUMED",
+  "profile_version": 2,
+  "mapping_count": 1,
+  "mapping_type_from_store": "RELATED",
+  "coverage_level_from_store": "POTENTIAL",
+  "limits": [
+    "Potential relevance only; no coverage certification",
+    "No B R1 artifact or wording/export approval yet"
+  ]
+}

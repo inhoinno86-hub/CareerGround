@@ -1,0 +1,151 @@
+{
+  "payload": {
+    "schema_version": "1.0.0",
+    "min_consumer_version": "1.0.0",
+    "required_capabilities": [
+      "EVIDENCE_AWARE_QUESTIONS",
+      "CONSTRAINT_GUARDS",
+      "ONLINE_STATUS_CHECK",
+      "SINGLE_SESSION_START"
+    ],
+    "package_id": "11111111-1111-4111-8111-111111111111",
+    "issuer": "https://api.careerground.example",
+    "subject_id": "acct-synthetic-001",
+    "audience": "CAREERGROUND_VOICE_APP",
+    "purpose": "MOCK_INTERVIEW",
+    "signature_profile": "careerground-jcs-detached-jws-v1",
+    "issued_at": "2026-09-23T00:00:00Z",
+    "not_before": "2026-09-23T00:00:00Z",
+    "expires_at": "2026-09-30T00:00:00Z",
+    "provenance": {
+      "profile": {
+        "profile_id": "CP-SYNTHETIC-001",
+        "version": 12,
+        "content_hash": "EbIxjbLjRbpFksx-F85kos17Whxh1ojQYf-s7Obm6zM"
+      },
+      "jd_analysis": {
+        "artifact_id": "JD-A-SYNTHETIC-001",
+        "version": 1,
+        "content_hash": "n-Vdod0-gLz9mEj3k9QBGWTYtnjQPgPq9mKqpQc2CtU"
+      },
+      "resume": {
+        "artifact_id": "RESUME-SYNTHETIC-001",
+        "version": 4,
+        "content_hash": "EyY2V6vEXdXl_krZrSa5jVAKGaMHDPw8X6LGfUK-uJQ"
+      },
+      "interview_plan": {
+        "artifact_id": "PLAN-SYNTHETIC-001",
+        "version": 2,
+        "content_hash": "xxzOdSF96qQFIwsaiBsG8-XP3U_7qoxTLZybkAXObSA"
+      }
+    },
+    "candidate": {
+      "display_name": "합성 지원자",
+      "preferred_language": "ko-KR"
+    },
+    "target": {
+      "role_title": "자율주행 소프트웨어 엔지니어",
+      "organization_name": "합성 모빌리티",
+      "interview_type": "JD_TARGETED"
+    },
+    "claims": [
+      {
+        "claim_id": "CLAIM-SYNTHETIC-001",
+        "text": "주행 기능의 목표 속도 로직 구현을 담당했다.",
+        "claim_type": "CONTRIBUTION",
+        "knowledge_status": "USER_CONFIRMED",
+        "consistency_status": "CONSISTENT",
+        "usage_policy": "ALLOWED",
+        "ownership": {
+          "level": "DIRECT_CONTRIBUTOR",
+          "scope_type": "TASK",
+          "scope_description": "목표 속도 로직 구현 범위",
+          "decision_authority": "CONTRIBUTOR"
+        },
+        "content_hash": "h26jYStUjDYlsYauzF8xczox0MEuleLLUPtYC-VpNdA"
+      }
+    ],
+    "evidence": [
+      {
+        "evidence_id": "EVIDENCE-SYNTHETIC-001",
+        "source_type": "PROFILE_CONVERSATION",
+        "excerpt": "목표 속도 계산 로직을 구현하고 검증 결과를 팀에 공유했다.",
+        "source_date": "2026-09-20T09:00:00Z",
+        "claim_ids": ["CLAIM-SYNTHETIC-001"],
+        "support_type": "SUPPORTS",
+        "sensitivity": "NORMAL",
+        "content_hash": "y_DzBaHEuUT7VGiI6Ndktsf4JZD0BwCSHtt0NYmiSfQ"
+      }
+    ],
+    "claim_evidence_links": [
+      {
+        "claim_id": "CLAIM-SYNTHETIC-001",
+        "evidence_id": "EVIDENCE-SYNTHETIC-001",
+        "relation_type": "SUPPORTS"
+      }
+    ],
+    "constraints": [
+      {
+        "constraint_id": "CONSTRAINT-SYNTHETIC-001",
+        "type": "OWNERSHIP_LIMIT",
+        "target_type": "CLAIM",
+        "target_ids": ["CLAIM-SYNTHETIC-001"],
+        "instruction": "전체 시스템을 단독 소유하거나 최종 결정했다고 표현하지 않는다.",
+        "content_hash": "saaldBixyHILGOWfhCmwm3O4vyyIw6IC5Yyut9O7n0w"
+      }
+    ],
+    "jd_requirements": [
+      {
+        "requirement_id": "JDREQ-SYNTHETIC-001",
+        "text": "주행 기능 로직 개발 경험",
+        "priority": "REQUIRED",
+        "claim_ids": ["CLAIM-SYNTHETIC-001"],
+        "content_hash": "hLHwlT05rYh3zxPn-ohDNTg1n2dJXTWml_8wgK-W0UQ"
+      }
+    ],
+    "resume_units": [
+      {
+        "unit_id": "RESUME-UNIT-SYNTHETIC-001",
+        "text": "주행 기능의 목표 속도 로직 구현을 담당했다.",
+        "claim_ids": ["CLAIM-SYNTHETIC-001"],
+        "evidence_ids": ["EVIDENCE-SYNTHETIC-001"],
+        "constraint_ids": ["CONSTRAINT-SYNTHETIC-001"],
+        "content_hash": "AP8ppg3zksbmvMIy8ROyi5GXftU3j2Rw3qmV97WpNRs"
+      }
+    ],
+    "interview_plan": {
+      "plan_id": "PLAN-SYNTHETIC-001",
+      "version": 2,
+      "duration_minutes": 30,
+      "objectives": ["구현 범위와 의사결정 권한을 구체적으로 설명한다."],
+      "follow_up_mode": "EVIDENCE_AWARE",
+      "core_questions": [
+        {
+          "question_id": "QUESTION-SYNTHETIC-001",
+          "prompt": "목표 속도 로직에서 본인이 맡은 범위와 검증 방법을 설명해 주세요.",
+          "goal": "VERIFY_SCOPE",
+          "claim_ids": ["CLAIM-SYNTHETIC-001"],
+          "jd_requirement_ids": ["JDREQ-SYNTHETIC-001"],
+          "constraint_ids": ["CONSTRAINT-SYNTHETIC-001"],
+          "time_budget_minutes": 5
+        }
+      ]
+    },
+    "integrity_manifest": [
+      {"object_type": "PROFILE", "object_id": "CP-SYNTHETIC-001", "version": 12, "content_hash": "EbIxjbLjRbpFksx-F85kos17Whxh1ojQYf-s7Obm6zM"},
+      {"object_type": "JD_ANALYSIS", "object_id": "JD-A-SYNTHETIC-001", "version": 1, "content_hash": "n-Vdod0-gLz9mEj3k9QBGWTYtnjQPgPq9mKqpQc2CtU"},
+      {"object_type": "RESUME", "object_id": "RESUME-SYNTHETIC-001", "version": 4, "content_hash": "EyY2V6vEXdXl_krZrSa5jVAKGaMHDPw8X6LGfUK-uJQ"},
+      {"object_type": "INTERVIEW_PLAN", "object_id": "PLAN-SYNTHETIC-001", "version": 2, "content_hash": "xxzOdSF96qQFIwsaiBsG8-XP3U_7qoxTLZybkAXObSA"},
+      {"object_type": "CLAIM", "object_id": "CLAIM-SYNTHETIC-001", "content_hash": "h26jYStUjDYlsYauzF8xczox0MEuleLLUPtYC-VpNdA"},
+      {"object_type": "EVIDENCE", "object_id": "EVIDENCE-SYNTHETIC-001", "content_hash": "y_DzBaHEuUT7VGiI6Ndktsf4JZD0BwCSHtt0NYmiSfQ"},
+      {"object_type": "CONSTRAINT", "object_id": "CONSTRAINT-SYNTHETIC-001", "content_hash": "saaldBixyHILGOWfhCmwm3O4vyyIw6IC5Yyut9O7n0w"},
+      {"object_type": "JD_REQUIREMENT", "object_id": "JDREQ-SYNTHETIC-001", "content_hash": "hLHwlT05rYh3zxPn-ohDNTg1n2dJXTWml_8wgK-W0UQ"},
+      {"object_type": "RESUME_UNIT", "object_id": "RESUME-UNIT-SYNTHETIC-001", "content_hash": "AP8ppg3zksbmvMIy8ROyi5GXftU3j2Rw3qmV97WpNRs"}
+    ]
+  },
+  "proof": {
+    "format": "JWS_COMPACT_DETACHED",
+    "canonicalization": "JCS-RFC8785",
+    "value": "eyJhbGciOiJFUzI1NiIsImN0eSI6ImFwcGxpY2F0aW9uL3ZuZC5jYXJlZXJncm91bmQuaW50ZXJ2aWV3LXBhY2thZ2UranNvbiIsImtpZCI6ImNhcmVlcmdyb3VuZC10ZXN0LWVzMjU2LTIwMjYtMDkiLCJ0eXAiOiJjYXJlZXJncm91bmQtaW50ZXJ2aWV3LXBhY2thZ2UrandzIn0..X8bg3-zDRIzXiLZpURbIiMZWqwpa1Vb-lotklBXPf0TuxorOo2dE8m4DiJz7DmSOCeL7New5JFYifQUuMLb6Qg"
+  }
+}

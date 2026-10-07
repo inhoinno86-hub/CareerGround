@@ -1,0 +1,22 @@
+{
+  "status": "RENEWED_WAITING_HUMAN_REVIEW",
+  "old_batch_status": "EXPIRED",
+  "new_batch_status": "PREPARED",
+  "same_session_source_and_drafts": true,
+  "new_review_items": 2,
+  "claims": 0,
+  "profile_version": 0,
+  "expires_at_utc": "2026-10-06 00:19:58.350335",
+  "validation": {
+    "tests_passed": 41,
+    "tests_skipped": 8,
+    "skip_reason": "PostgreSQL not connected",
+    "ruff": "PASS",
+    "diff_check": "PASS"
+  },
+  "limits": [
+    "new human approval required",
+    "no old token revived",
+    "not yet canonical fact promotion"
+  ]
+}

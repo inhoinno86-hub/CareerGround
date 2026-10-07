@@ -1,0 +1,53 @@
+{
+  "scope": "release_qa_resume_and_ci_launcher_test_discovery",
+  "previous_block_recovery_preserved": true,
+  "non_quota_tables_unchanged_at_resume": 37,
+  "ignored_drafts_preserved": 20,
+  "local_runtime_and_existing_tunnel_restart": true,
+  "detached_spawn_survival_verified": false,
+  "launchers": {
+    "pytest_tests": 13,
+    "result": "PASS",
+    "existing_unittest_discovery_does_not_collect_function_tests": true,
+    "explicit_pytest_step_added_to_ci": true,
+    "remote_ci_for_current_worktree_executed": false
+  },
+  "connection_recovery": {
+    "unittest_tests": 3,
+    "result": "PASS"
+  },
+  "static_checks": {
+    "ruff_check": "PASS",
+    "ruff_format_files": 13,
+    "diff_check": "PASS"
+  },
+  "plugin_update": {
+    "prepared_version": "1.0.3",
+    "generic_new_plugin_dialog_file_selected_then_cancelled": true,
+    "add_button_submitted": false,
+    "new_plugin_created": false,
+    "existing_plugin_update_or_install_verified": false
+  },
+  "BrowserOS_obstacle": {
+    "page_2_auth_navigation": "CDP_Page_navigate_timeout",
+    "following_page_2_evaluation": "run_timeout",
+    "tab_discovery": "succeeded",
+    "runtime_health": 200,
+    "tunnel_ready": 200,
+    "native_file_dialog_cause_confirmed": false,
+    "human_check_requested": true,
+    "new_background_management_tab": "page 8 login required; snapshot succeeded",
+    "page_4_snapshot": "succeeded",
+    "page_8_login_click": "no visible navigation"
+  },
+  "phase_A_complete": false,
+  "commit_or_push_performed": false,
+  "subsequent_resolution": {
+    "user_reported_menu_opens": true,
+    "foreground_browser_actions_then_succeeded": true,
+    "A_Web_existing_SSO_login_completed": true,
+    "cause_confirmed": false,
+    "plugin_update_evidence": "careerground_persistent_qa_private_plugin_update_20261007.json",
+    "file_dialog_check_withdrawn": true
+  }
+}

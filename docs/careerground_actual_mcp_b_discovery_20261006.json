@@ -1,0 +1,31 @@
+{
+  "schema": "careerground-actual-mcp-account-discovery-v1",
+  "actor": "B",
+  "method": "BrowserOS temporary ChatGPT conversation through the existing private product connection",
+  "prompt": "CareerGround 개발 연결의 계정 확인 시험입니다. CareerGround Phase A Dev의 이번에 연결한 ‘프로필B’ 연결을 사용해 get_my_profile을 정확히 한 번 호출하세요. 실제 도구 응답의 profile_id, profile_version, current_policy_version만 JSON으로 보여주세요. 기존 대화나 메모리에서 ID를 가져오거나 추측하지 마세요. start_profiling·쓰기·승인·내보내기·삭제 및 다른 서비스 도구는 호출하지 마세요. 도구가 없거나 호출이 실패하면 그 사실만 알리고 연결 성공을 주장하지 마세요. 인증 토큰·승인 증명·개인정보는 출력하지 마세요.",
+  "expected_profile_ids_withheld_from_prompt": true,
+  "prompt_normalized_before_submission": true,
+  "submissions": 1,
+  "response_profile_matches_B": true,
+  "response_profile_matches_A": false,
+  "response_version": 0,
+  "server_account_guard": {
+    "actor": "B",
+    "lane": "read",
+    "requests_in_observed_window": 1
+  },
+  "post_probe": {
+    "profiles": 2,
+    "profiling_sessions": 0,
+    "profiling_inputs": 0,
+    "browser_operations": 0,
+    "deletion_requests": 0,
+    "erasure_ledger": 0
+  },
+  "oauth_account_chooser_displayed": false,
+  "user_reported_connection_complete": true,
+  "ui_label_used": "프로필B",
+  "raw_oauth_token_or_provider_subject_recorded": false,
+  "current_policy_version_verified": false,
+  "scope": "B identity discovery/read only; not full account-isolation or product journey acceptance"
+}

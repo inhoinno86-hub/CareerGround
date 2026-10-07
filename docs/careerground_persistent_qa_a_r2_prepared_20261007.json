@@ -1,0 +1,19 @@
+{
+  "scope": "actual_corrected_A_R2_review_prepared",
+  "observed_at": "2026-10-07T06:05:53.297067+00:00",
+  "R1_wording_completion_evidence": "careerground_persistent_qa_a_r1_wording_completed_20261007.json",
+  "actual_prepare_ok": true,
+  "actual_prepare_error_code": null,
+  "latest_corrected_attempt_once": true,
+  "source_artifact_is_owned_approved_R1": true,
+  "profile_version": 2,
+  "before_text": "개발 시험에서 장애 로그를 분류하고 팀에 확인 절차를 공유했습니다.",
+  "after_text": "개발 시험에서 장애 로그를 분류하고 팀에 확인 절차를 공유했다.",
+  "change_kind": "matching_past_tense_ending_only",
+  "fact_review": "NO_NEW_FACTS",
+  "Web_heading": "ChatGPT R2 문구 직접 검토",
+  "Web_before_after_and_version_match": true,
+  "human_final_submission_pending": true,
+  "export_approval_implied": false,
+  "phase_A_complete": false
+}

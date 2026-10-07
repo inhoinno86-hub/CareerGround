@@ -1,0 +1,17 @@
+{
+  "scope": "actual_R2_rejected_proposal_and_source_guard_diagnosis",
+  "observed_at": "2026-10-07T06:04:12.140073+00:00",
+  "original_text": "개발 시험에서 장애 로그를 분류하고 팀에 확인 절차를 공유했습니다.",
+  "first_proposed_text": "개발 시험에서 장애 로그를 분류하고, 팀에 확인 절차를 공유했습니다.",
+  "actual_ChatGPT_prepare_result": "VALIDATION_FAILED",
+  "ChatGPT_reported_unrequested_shape_retry": true,
+  "no_R2_confirmation_or_saved_artifact_from_rejected_attempts": true,
+  "local_readonly_wording_guard_reproduction": "FACT_OR_QUALIFIER_CHANGED",
+  "corrected_proposed_text": "개발 시험에서 장애 로그를 분류하고 팀에 확인 절차를 공유했다.",
+  "corrected_text_local_guard": "PASS",
+  "full_actual_corrected_MCP_result_not_yet_observed": false,
+  "guard_policy_weakened": false,
+  "scope_limit": "Current conservative guard allows normalized whitespace/terminal punctuation or matching past-tense ending changes; internal comma insertion is rejected.",
+  "phase_A_complete": false,
+  "corrected_actual_result_evidence": "careerground_persistent_qa_a_r2_prepared_20261007.json"
+}

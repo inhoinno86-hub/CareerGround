@@ -1,0 +1,102 @@
+{
+  "schema": "careerground-actual-r1-web-get-isolation-v1",
+  "rows": [
+    {
+      "label": "A_own",
+      "route": "/trace",
+      "status": 200,
+      "heading": "이력서 문구와 근거",
+      "forms": 0,
+      "body_hash": "64839a574996108ea45c83ebdc3b7c7fecb2a466b9ac3f12a251a8fdc233798f",
+      "target_id_present": false,
+      "claim_text_present": true
+    },
+    {
+      "label": "B_foreign",
+      "route": "/trace",
+      "status": 404,
+      "heading": "요청한 내용을 찾을 수 없습니다",
+      "forms": 0,
+      "body_hash": "399065de64fd312c0ee462aaf485a49e1fe65c3a4284f42b5927ac65df130a2e",
+      "target_id_present": false,
+      "claim_text_present": false
+    },
+    {
+      "label": "B_nonexistent",
+      "route": "/trace",
+      "status": 404,
+      "heading": "요청한 내용을 찾을 수 없습니다",
+      "forms": 0,
+      "body_hash": "399065de64fd312c0ee462aaf485a49e1fe65c3a4284f42b5927ac65df130a2e",
+      "target_id_present": false,
+      "claim_text_present": false
+    },
+    {
+      "label": "A_own",
+      "route": "/wording",
+      "status": 200,
+      "heading": "R1 이력서 문구 직접 검토",
+      "forms": 1,
+      "body_hash": "51ab668a707b9f60d485a039064e92f28a05b2b031d20072a726dfd290fb4086",
+      "target_id_present": false,
+      "claim_text_present": true
+    },
+    {
+      "label": "B_foreign",
+      "route": "/wording",
+      "status": 404,
+      "heading": "요청한 내용을 찾을 수 없습니다",
+      "forms": 0,
+      "body_hash": "399065de64fd312c0ee462aaf485a49e1fe65c3a4284f42b5927ac65df130a2e",
+      "target_id_present": false,
+      "claim_text_present": false
+    },
+    {
+      "label": "B_nonexistent",
+      "route": "/wording",
+      "status": 404,
+      "heading": "요청한 내용을 찾을 수 없습니다",
+      "forms": 0,
+      "body_hash": "399065de64fd312c0ee462aaf485a49e1fe65c3a4284f42b5927ac65df130a2e",
+      "target_id_present": false,
+      "claim_text_present": false
+    },
+    {
+      "label": "A_own",
+      "route": "/export/JSON",
+      "status": 404,
+      "heading": "요청한 내용을 찾을 수 없습니다",
+      "forms": 0,
+      "body_hash": "399065de64fd312c0ee462aaf485a49e1fe65c3a4284f42b5927ac65df130a2e",
+      "target_id_present": false,
+      "claim_text_present": false
+    },
+    {
+      "label": "B_foreign",
+      "route": "/export/JSON",
+      "status": 404,
+      "heading": "요청한 내용을 찾을 수 없습니다",
+      "forms": 0,
+      "body_hash": "399065de64fd312c0ee462aaf485a49e1fe65c3a4284f42b5927ac65df130a2e",
+      "target_id_present": false,
+      "claim_text_present": false
+    },
+    {
+      "label": "B_nonexistent",
+      "route": "/export/JSON",
+      "status": 404,
+      "heading": "요청한 내용을 찾을 수 없습니다",
+      "forms": 0,
+      "body_hash": "399065de64fd312c0ee462aaf485a49e1fe65c3a4284f42b5927ac65df130a2e",
+      "target_id_present": false,
+      "claim_text_present": false
+    }
+  ],
+  "own_artifact_unreviewed_export_get_denied": true,
+  "non_quota_tables_unchanged": 37,
+  "limits": [
+    "A R1 artifact only; reverse B artifact absent",
+    "Own export unavailable before wording review; cross export execution not tested",
+    "GET only; no foreign wording or export final POST submitted"
+  ]
+}

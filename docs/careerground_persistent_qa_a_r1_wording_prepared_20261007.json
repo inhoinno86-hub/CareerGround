@@ -1,0 +1,13 @@
+{
+  "scope": "actual_A_separate_R1_wording_review_prepared",
+  "observed_at": "2026-10-07T06:00:51.939533+00:00",
+  "owner_action_target_profile_version_match": true,
+  "profile_version": 2,
+  "status_at_observation": "DONE",
+  "expires_at": "2026-10-07 06:04:31.750637",
+  "Web_heading": "R1 이력서 문구 직접 검토",
+  "exact_synthetic_R1_text_and_evidence_presented": true,
+  "human_final_submission_pending": true,
+  "export_approval_created": false,
+  "phase_A_complete": false
+}

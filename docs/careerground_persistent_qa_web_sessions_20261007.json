@@ -1,0 +1,66 @@
+{
+  "schema": "careerground-persistent-qa-web-session-check-v1",
+  "date": "2026-10-07",
+  "method": "BrowserOS top-level navigation; NavigationTiming responseStatus; in-context denial comparison",
+  "observations": [
+    {
+      "actor": "A",
+      "rows": [
+        {
+          "target": "own",
+          "status": 200,
+          "forms": 0,
+          "heading": "보관 프로필 사실",
+          "requested_id_visible": true
+        },
+        {
+          "target": "foreign",
+          "status": 404,
+          "forms": 0,
+          "heading": "요청한 내용을 찾을 수 없습니다",
+          "requested_id_visible": false
+        },
+        {
+          "target": "absent",
+          "status": 404,
+          "forms": 0,
+          "heading": "요청한 내용을 찾을 수 없습니다",
+          "requested_id_visible": false
+        }
+      ],
+      "foreign_absent_same_body": true
+    },
+    {
+      "actor": "B",
+      "rows": [
+        {
+          "target": "own",
+          "status": 200,
+          "forms": 0,
+          "heading": "보관 프로필 사실",
+          "requested_id_visible": true
+        },
+        {
+          "target": "foreign",
+          "status": 404,
+          "forms": 0,
+          "heading": "요청한 내용을 찾을 수 없습니다",
+          "requested_id_visible": false
+        },
+        {
+          "target": "absent",
+          "status": 404,
+          "forms": 0,
+          "heading": "요청한 내용을 찾을 수 없습니다",
+          "requested_id_visible": false
+        }
+      ],
+      "foreign_absent_same_body": true
+    }
+  ],
+  "failed_fetch_probe": {
+    "status": "inconclusive",
+    "reason": "browser fetch rejected; no server acceptance inferred"
+  },
+  "scope": "fresh A/B Web login binding and profile GET only; earlier full evidence reused"
+}

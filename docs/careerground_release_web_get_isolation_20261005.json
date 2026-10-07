@@ -1,0 +1,98 @@
+{
+  "schema": "careerground-actual-web-get-isolation-v1",
+  "scope": "Actual distinct provider-verified A/B sessions in separate BrowserOS contexts; empty new QA profiles; GET only",
+  "observations": [
+    {
+      "actor": "A",
+      "route": "profile",
+      "own_status": 200,
+      "foreign_status": 404,
+      "absent_status": 404,
+      "foreign_absent_identical": true,
+      "foreign_id_disclosed": false,
+      "foreign_form_count": 0,
+      "pass": true
+    },
+    {
+      "actor": "A",
+      "route": "profile_export",
+      "own_status": 200,
+      "foreign_status": 404,
+      "absent_status": 404,
+      "foreign_absent_identical": true,
+      "foreign_id_disclosed": false,
+      "foreign_form_count": 0,
+      "pass": true
+    },
+    {
+      "actor": "A",
+      "route": "deletion_preview",
+      "own_status": 200,
+      "foreign_status": 404,
+      "absent_status": 404,
+      "foreign_absent_identical": true,
+      "foreign_id_disclosed": false,
+      "foreign_form_count": 0,
+      "pass": true
+    },
+    {
+      "actor": "A",
+      "route": "development_deletion",
+      "own_status": 200,
+      "foreign_status": 404,
+      "absent_status": 404,
+      "foreign_absent_identical": true,
+      "foreign_id_disclosed": false,
+      "foreign_form_count": 0,
+      "pass": true
+    },
+    {
+      "actor": "B",
+      "route": "profile",
+      "own_status": 200,
+      "foreign_status": 404,
+      "absent_status": 404,
+      "foreign_absent_identical": true,
+      "foreign_id_disclosed": false,
+      "foreign_form_count": 0,
+      "pass": true
+    },
+    {
+      "actor": "B",
+      "route": "profile_export",
+      "own_status": 200,
+      "foreign_status": 404,
+      "absent_status": 404,
+      "foreign_absent_identical": true,
+      "foreign_id_disclosed": false,
+      "foreign_form_count": 0,
+      "pass": true
+    },
+    {
+      "actor": "B",
+      "route": "deletion_preview",
+      "own_status": 200,
+      "foreign_status": 404,
+      "absent_status": 404,
+      "foreign_absent_identical": true,
+      "foreign_id_disclosed": false,
+      "foreign_form_count": 0,
+      "pass": true
+    },
+    {
+      "actor": "B",
+      "route": "development_deletion",
+      "own_status": 200,
+      "foreign_status": 404,
+      "absent_status": 404,
+      "foreign_absent_identical": true,
+      "foreign_id_disclosed": false,
+      "foreign_form_count": 0,
+      "pass": true
+    }
+  ],
+  "all_passed": true,
+  "actual_mcp_cross_account_verified": false,
+  "post_mutations_verified": false,
+  "nonempty_source_artifact_verified": false
+}

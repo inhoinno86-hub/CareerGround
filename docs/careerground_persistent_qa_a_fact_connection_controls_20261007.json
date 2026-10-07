@@ -1,0 +1,53 @@
+{
+  "scope": "A_user_fact_completion_and_shared_client_block_preparation",
+  "observed_at": "2026-10-07T02:15:15.517771+00:00",
+  "A_fact_review": {
+    "user_reported_completed": true,
+    "server_confirmation_DONE": true,
+    "same_origin_connection_result_consumed": true,
+    "final_status": "CONSUMED",
+    "claims": 1,
+    "profile_version": 1,
+    "text_matches_synthetic_fixture": true,
+    "receipt_printed_saved_or_shared": false,
+    "separate_use_or_export_approval_created": false
+  },
+  "B_client_observation": {
+    "actual_ChatGPT_request_user_confirmation": "PROFILE_EXPORT",
+    "status": "WAITING",
+    "export_executed": false,
+    "human_consent_submitted": false,
+    "observed_verified_A_and_B_client_ids_equal": true
+  },
+  "A_confirmation_status_boundary": {
+    "foreign_B_operation": "REVIEW_REQUIRED",
+    "absent_operation": "REVIEW_REQUIRED",
+    "same_error_envelope": true,
+    "receipt_disclosed": false
+  },
+  "connection_controls": {
+    "enabled_on_same_persistent_store": true,
+    "new_signed_registry_initialized": true,
+    "denial_count_at_observation": 1,
+    "restart_non_quota_tables_count_and_hashes_unchanged": 37,
+    "runtime_live_http_status": 200,
+    "existing_tunnel_ready_http_status": 200,
+    "A_and_B_Web_own_profile_links_verified_after_restart": true,
+    "A_native_MCP_after_restart": {
+      "status": "ok",
+      "version": 1
+    },
+    "B_ChatGPT_MCP_after_restart": {
+      "status": "ok",
+      "version": 0
+    },
+    "exact_A_offline_recovery_helper_prepared": true,
+    "recovery_helper_refused_while_runtime_active": true,
+    "runtime_store_exclusive_lock_confirmed": true,
+    "actual_unblock_not_executed": true,
+    "human_block_submission_pending": false
+  },
+  "provider_grants_or_settings_changed": false,
+  "paid_resources_added": false,
+  "phase_A_complete": false
+}

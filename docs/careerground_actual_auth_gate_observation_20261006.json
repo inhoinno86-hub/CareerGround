@@ -1,0 +1,27 @@
+{
+  "schema": "careerground-actual-auth-gate-observation-v1",
+  "actor_A_mcp": {
+    "get_my_profile_prompt_submissions": 1,
+    "actual_tool_call_confirmed": false,
+    "model_reported_call_unavailable": true,
+    "server_A_read_bucket_observed": false,
+    "existing_connection_alias": "프로필A",
+    "ui_authentication_update_required": true,
+    "reconnection_dialog_prepared": true,
+    "human_oauth_step_pending": true
+  },
+  "new_web_session_access": {
+    "A_foreign_B_session": {
+      "http_status": 401,
+      "heading": "로그인이 필요합니다",
+      "forms": 0
+    },
+    "B_own_session": {
+      "http_status": 401,
+      "heading": "로그인이 필요합니다",
+      "forms": 0
+    },
+    "cross_account_isolation_accepted": false
+  },
+  "scope": "Authentication availability observation; not proof of A identity, provider token expiry cause, or authenticated source isolation"
+}

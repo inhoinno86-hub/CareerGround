@@ -1,0 +1,14 @@
+{
+  "schema": "careerground-actual-b-r1-use-review-v1",
+  "observed_at_utc": "2026-10-06T05:59:45.949757+00:00",
+  "human_separate_use_review_saved": true,
+  "use_reviews": 1,
+  "profile_version_after": 2,
+  "consistency_attested": true,
+  "use_authorized": true,
+  "scope": "One existing synthetic B checklist Claim",
+  "limits": [
+    "No B JD or R1 artifact yet",
+    "No wording/export/deletion approval"
+  ]
+}

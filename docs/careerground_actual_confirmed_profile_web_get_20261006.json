@@ -1,0 +1,58 @@
+{
+  "schema": "careerground-actual-confirmed-profile-web-get-v1",
+  "scope": "A synthetic profile version 1 after human fact confirmation; B denied; GET only",
+  "observations": [
+    {
+      "actor": "B",
+      "route": "profile",
+      "own_A_status": 200,
+      "foreign_A_status": 404,
+      "absent_status": 404,
+      "foreign_absent_identical": true,
+      "foreign_forms": 0,
+      "foreign_quote_or_id_exposed": false,
+      "pass": true
+    },
+    {
+      "actor": "B",
+      "route": "claim",
+      "own_A_status": 200,
+      "foreign_A_status": 404,
+      "absent_status": 404,
+      "foreign_absent_identical": true,
+      "foreign_forms": 0,
+      "foreign_quote_or_id_exposed": false,
+      "pass": true
+    },
+    {
+      "actor": "B",
+      "route": "use_review",
+      "own_A_status": 200,
+      "foreign_A_status": 404,
+      "absent_status": 404,
+      "foreign_absent_identical": true,
+      "foreign_forms": 0,
+      "foreign_quote_or_id_exposed": false,
+      "pass": true
+    },
+    {
+      "actor": "B",
+      "route": "export_review",
+      "own_A_status": 200,
+      "foreign_A_status": 404,
+      "absent_status": 404,
+      "foreign_absent_identical": true,
+      "foreign_forms": 0,
+      "foreign_quote_or_id_exposed": false,
+      "pass": true
+    }
+  ],
+  "requests": 12,
+  "limitations": [
+    "Only B to A confirmed profile; B has no confirmed claims yet",
+    "No actual export download or approval POST",
+    "Incorrect export URL preliminary 404 discarded after source route check; correct route positive control required",
+    "DOM fetch blocked; used native browser navigation without weakening CSP",
+    "No valid receipt copied or foreign receipt submit tested"
+  ]
+}

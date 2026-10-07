@@ -1,0 +1,42 @@
+{
+  "scope": "actual_human_A_passkey_registration_and_same_store_managed_QA_restart",
+  "observed_at": "2026-10-07T12:02:59.553320+00:00",
+  "user_reported_A_registration_complete": true,
+  "Web_registered_passkey_heading_observed": true,
+  "signed_registry_signature_valid": true,
+  "origin": "http://localhost:5000",
+  "A_credential_registered": true,
+  "B_credential_registered": false,
+  "registry_credentials": 1,
+  "biometric_PIN_private_key_read_or_saved_by_agent": false,
+  "profiles_before_deletion": {
+    "A_version": 2,
+    "B_version": 0,
+    "claims": 1,
+    "artifacts": 2,
+    "deletion_requests": 0,
+    "erasure_ledger": 0
+  },
+  "existing_processes_closed_at_resume": {
+    "loopback_5000_8001_18081": "connection_refused",
+    "cause_confirmed": false
+  },
+  "managed_local_QA": {
+    "transient_user_units": [
+      "careerground-phase-a-release-qa.service",
+      "careerground-phase-a-release-tunnel.service"
+    ],
+    "systemwide_service_or_persistent_autostart_created": false,
+    "QA_and_tunnel_active": true,
+    "tunnel_binds_to_owned_QA": true,
+    "same_initialized_store_and_keys_reused": true,
+    "runtime_live": 200,
+    "existing_tunnel_ready": 200,
+    "new_cloud_or_paid_resources_added": false,
+    "new_terminal_independence_after_separate_calls_observed": true
+  },
+  "A_Web_existing_SSO_login_and_profile_version_2_verified_after_restart": true,
+  "B_account_scoped_tables_unchanged": 34,
+  "human_final_deletion_performed": false,
+  "phase_A_complete": false
+}

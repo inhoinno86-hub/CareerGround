@@ -1,0 +1,19 @@
+{
+  "scope": "user_A_JD_excerpt_saved_without_mapping",
+  "observed_at": "2026-10-07T05:41:54.418460+00:00",
+  "user_reported_complete": true,
+  "Web_completion_heading_observed": true,
+  "owned_JD_count": 1,
+  "requirement_count": 1,
+  "exact_text": "장애 로그 분류 및 팀 확인 절차 공유 경험",
+  "source_hash_matches_original": true,
+  "source_span": [
+    0,
+    24
+  ],
+  "owner_profile_matches_A": true,
+  "profile_version": 2,
+  "requirement_claim_maps": 0,
+  "artifacts": 0,
+  "phase_A_complete": false
+}

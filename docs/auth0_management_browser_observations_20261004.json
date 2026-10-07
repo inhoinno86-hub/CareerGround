@@ -1,0 +1,25 @@
+{
+  "date": "2026-10-04",
+  "observer": "BrowserOS",
+  "career_data": "synthetic only",
+  "actual_authentication": "existing Auth0 development client and Google session",
+  "cases": [
+    {"id": "auth0-login", "result": "passed", "observed": "CareerGround account setup screen after verified callback"},
+    {"id": "explicit-empty-profile", "result": "passed", "observed": "CareerGround management screen after explicit setup"},
+    {"id": "browser-logout", "result": "passed", "observed": "protected management screen requires login"},
+    {"id": "auth0-synthetic-fact-review", "result": "passed", "observed": "native browser fact approval reflected at profile version 1"},
+    {"id": "auth0-relogin", "result": "passed", "observed": "existing profile version 1 retained in same disposable database"},
+    {"id": "synthetic-owner-view", "result": "passed", "observed": "synthetic account A opens its own profile"},
+    {"id": "synthetic-cross-account-denial", "result": "passed", "observed": "synthetic account B receives resource-not-found screen for account A profile"}
+  ],
+  "not_verified": [
+    "live ChatGPT product OAuth scopes and tool calls",
+    "two actual Auth0 users",
+    "actual MCP JWT revocation, refresh and step-up",
+    "PostgreSQL regression in this execution",
+    "persistent signup and public deployment"
+  ],
+  "preservation": {"files": 31, "changed": 0},
+  "automatic_integration": {"run": 7, "passed": 7, "skipped": 0},
+  "related_regression": {"run": 47, "passed": 46, "skipped": 1}
+}

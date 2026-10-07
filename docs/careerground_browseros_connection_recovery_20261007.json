@@ -1,0 +1,49 @@
+{
+  "scope": "user_reported_original_pc_read_only_connection_check",
+  "date": "2026-10-07",
+  "browser_window_opened": true,
+  "launch": {
+    "existing_launcher": "careerground-browseros",
+    "background": true,
+    "ozone_platform": "x11",
+    "disable_gpu": true,
+    "profile_reset": false,
+    "root_cause_of_initial_window_failure_established": false
+  },
+  "previous_followup_connection_refused": {
+    "user_confirmed_ctrl_c_before_check": true,
+    "adopted_as_spontaneous_crash_evidence": false
+  },
+  "connection": {
+    "cdp_version_http_status": 200,
+    "devtools_endpoint_advertised": true,
+    "cdp_targets_http_status": 200,
+    "page_count": 1,
+    "mcp_health_http_status": 200,
+    "mcp_protocol": "connected",
+    "listed_tool_count": 24,
+    "more_tools_available": false,
+    "browser_tools_called": 0
+  },
+  "listeners": {
+    "snapshot_complete": true,
+    "9000": "127.0.0.1",
+    "9100": "127.0.0.1",
+    "9201": "127.0.0.1"
+  },
+  "limits": {
+    "user_interface": "orca_codex_cli",
+    "effective_orca_codex_browseros_config_enabled": true,
+    "effective_orca_codex_browseros_url_matches_expected": true,
+    "user_reported_current_codex_mcp_status": "connected_after_resume",
+    "current_agent_orca_runtime_access": "runtime_unavailable",
+    "process_role_and_option_flags_not_used_as_acceptance_evidence": true,
+    "current_agent_browseros_tools_available": true,
+    "current_agent_browser_tool_execution": "succeeded_after_user_full_access",
+    "current_agent_loopback_access": "available",
+    "product_browser_acceptance_executed_in_this_check": false,
+    "new_persistent_qa_runtime_initialized": true,
+    "secrets_or_browser_payloads_saved": false
+  },
+  "latest_activation_evidence": "careerground_persistent_qa_activation_20261007.json"
+}

@@ -1,0 +1,31 @@
+{
+  "observed_at_utc": "2026-10-06T00:19:24.995989+00:00",
+  "scope": "A synthetic facts only",
+  "web": {
+    "status": "DONE",
+    "batch_status": "SUBMITTED",
+    "claims": 2,
+    "profile_version_after": 1,
+    "receipt_present": true,
+    "receipt_extracted_by_agent": false
+  },
+  "actual_same_connection_mcp": {
+    "confirmation_status": "DONE",
+    "submit_status": "ok",
+    "operation_after": "CONSUMED",
+    "profile_version_after_projection": null,
+    "version_verified_from_store": 1
+  },
+  "claim_assessments": {
+    "knowledge_status": "USER_CONFIRMED",
+    "consistency_status": "NOT_EVALUATED",
+    "usage_policy": "REVIEW_REQUIRED"
+  },
+  "claim_use_reviews": 0,
+  "deletion_requests": 0,
+  "limits": [
+    "human fact approval is not R1 use approval",
+    "no external verification or export/deletion approval",
+    "model null profile_version_after not treated as tool field"
+  ]
+}

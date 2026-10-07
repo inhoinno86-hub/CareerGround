@@ -1,0 +1,1042 @@
+{
+  "schema_version": "career-graph-v1",
+  "profile": {
+    "id": "CP-B",
+    "user_id": "USER-SYNTHETIC-B",
+    "display_name": "Synthetic Fixture B — Supporting Contribution",
+    "current_version": 12,
+    "status": "ACTIVE",
+    "created_at": "2026-09-21T00:00:00Z",
+    "updated_at": "2026-09-21T00:00:00Z"
+  },
+  "career": {
+    "organizations": [],
+    "roles": [
+      {
+        "id": "R-B",
+        "profile_id": "CP-B",
+        "organization_id": null,
+        "title": "Synthetic role placeholder — supporting engineer",
+        "role_type": "SYNTHETIC_FIXTURE",
+        "employment_type": null,
+        "start_date": null,
+        "end_date": null,
+        "summary": "Synthetic schema-validation role derived from request §5 Fixture B; not a real career record.",
+        "created_in_version": 12,
+        "retired_in_version": null
+      }
+    ],
+    "projects": [
+      {
+        "id": "P-B",
+        "profile_id": "CP-B",
+        "role_id": "R-B",
+        "name": "DL Trajectory Generation (synthetic fixture)",
+        "summary": "Synthetic request §5 Fixture B scenario; no company, dates, metrics, or external verification asserted.",
+        "goal": null,
+        "start_date": null,
+        "end_date": null,
+        "created_in_version": 12,
+        "retired_in_version": null
+      }
+    ],
+    "responsibilities": [],
+    "contributions": [
+      {
+        "id": "CT-B-dataset",
+        "profile_id": "CP-B",
+        "role_id": null,
+        "project_id": "P-B",
+        "contribution_type": "SUPPORT",
+        "action": "contributed",
+        "object_text": "dataset definition",
+        "summary": "Contributed to dataset definition for the DL Trajectory Generation project.",
+        "start_date": null,
+        "end_date": null,
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "CT-B-io",
+        "profile_id": "CP-B",
+        "role_id": null,
+        "project_id": "P-B",
+        "contribution_type": "SUPPORT",
+        "action": "contributed",
+        "object_text": "input and output definition",
+        "summary": "Contributed to input and output definition for the DL Trajectory Generation project.",
+        "start_date": null,
+        "end_date": null,
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "CT-B-model-analysis",
+        "profile_id": "CP-B",
+        "role_id": null,
+        "project_id": "P-B",
+        "contribution_type": "ANALYSIS",
+        "action": "supported",
+        "object_text": "model analysis",
+        "summary": "Supported model analysis for the DL Trajectory Generation project.",
+        "start_date": null,
+        "end_date": null,
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "CT-B-architecture",
+        "profile_id": "CP-B",
+        "role_id": null,
+        "project_id": "P-B",
+        "contribution_type": "DESIGN",
+        "action": "contributed",
+        "object_text": "post-selection system architecture",
+        "summary": "Contributed to system architecture after model selection.",
+        "start_date": null,
+        "end_date": null,
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "CT-B-integration",
+        "profile_id": "CP-B",
+        "role_id": null,
+        "project_id": "P-B",
+        "contribution_type": "INTEGRATION",
+        "action": "contributed",
+        "object_text": "post-selection integration design",
+        "summary": "Contributed to integration design after model selection.",
+        "start_date": null,
+        "end_date": null,
+        "created_in_version": 12,
+        "retired_in_version": null
+      }
+    ],
+    "ownership_records": [
+      {
+        "id": "O-B-dataset",
+        "profile_id": "CP-B",
+        "contribution_id": "CT-B-dataset",
+        "responsibility_id": null,
+        "project_id": null,
+        "ownership_level": "SUPPORTING_CONTRIBUTOR",
+        "scope_type": "TASK",
+        "scope_description": "Dataset definition participation only.",
+        "decision_authority": "UNKNOWN",
+        "execution_responsibility": "Contributed to dataset definition.",
+        "validation_responsibility": null,
+        "team_context": null,
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "O-B-io",
+        "profile_id": "CP-B",
+        "contribution_id": "CT-B-io",
+        "responsibility_id": null,
+        "project_id": null,
+        "ownership_level": "SUPPORTING_CONTRIBUTOR",
+        "scope_type": "TASK",
+        "scope_description": "Input and output definition participation only.",
+        "decision_authority": "UNKNOWN",
+        "execution_responsibility": "Contributed to input and output definition.",
+        "validation_responsibility": null,
+        "team_context": null,
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "O-B-model-analysis",
+        "profile_id": "CP-B",
+        "contribution_id": "CT-B-model-analysis",
+        "responsibility_id": null,
+        "project_id": null,
+        "ownership_level": "SUPPORTING_CONTRIBUTOR",
+        "scope_type": "TASK",
+        "scope_description": "Model analysis support only.",
+        "decision_authority": "UNKNOWN",
+        "execution_responsibility": "Supported model analysis.",
+        "validation_responsibility": null,
+        "team_context": null,
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "O-B-architecture",
+        "profile_id": "CP-B",
+        "contribution_id": "CT-B-architecture",
+        "responsibility_id": null,
+        "project_id": null,
+        "ownership_level": "SUPPORTING_CONTRIBUTOR",
+        "scope_type": "SYSTEM",
+        "scope_description": "System architecture contribution only after model selection.",
+        "decision_authority": "UNKNOWN",
+        "execution_responsibility": "Contributed after model selection.",
+        "validation_responsibility": null,
+        "team_context": null,
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "O-B-integration",
+        "profile_id": "CP-B",
+        "contribution_id": "CT-B-integration",
+        "responsibility_id": null,
+        "project_id": null,
+        "ownership_level": "SUPPORTING_CONTRIBUTOR",
+        "scope_type": "TASK",
+        "scope_description": "Integration design contribution only after model selection.",
+        "decision_authority": "UNKNOWN",
+        "execution_responsibility": "Contributed after model selection.",
+        "validation_responsibility": null,
+        "team_context": null,
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "O-B-tcn-decision",
+        "profile_id": "CP-B",
+        "contribution_id": null,
+        "responsibility_id": null,
+        "project_id": "P-B",
+        "ownership_level": "UNKNOWN",
+        "scope_type": "DECISION",
+        "scope_description": "TCN model-selection decision only.",
+        "decision_authority": "NONE",
+        "execution_responsibility": null,
+        "validation_responsibility": null,
+        "team_context": "Synthetic request §5 Fixture B explicitly states no TCN model-selection decision ownership.",
+        "created_in_version": 12,
+        "retired_in_version": null
+      }
+    ],
+    "skills": [],
+    "technologies": [],
+    "outcomes": [],
+    "validation_activities": []
+  },
+  "claims": [
+    {
+      "id": "C-B-dataset",
+      "profile_id": "CP-B",
+      "claim_type": "CONTRIBUTION",
+      "canonical_text": "Contributed to dataset definition for the DL Trajectory Generation project.",
+      "predicate": "contributed",
+      "object_text": "dataset definition",
+      "importance": "NORMAL",
+      "created_in_version": 12,
+      "retired_in_version": null,
+      "supersedes_claim_id": null,
+      "created_at": "2026-09-21T00:00:00Z",
+      "contexts": [
+        {
+          "type": "CONTRIBUTION",
+          "id": "CT-B-dataset",
+          "role": "PRIMARY"
+        }
+      ]
+    },
+    {
+      "id": "C-B-io",
+      "profile_id": "CP-B",
+      "claim_type": "CONTRIBUTION",
+      "canonical_text": "Contributed to input and output definition for the DL Trajectory Generation project.",
+      "predicate": "contributed",
+      "object_text": "input and output definition",
+      "importance": "NORMAL",
+      "created_in_version": 12,
+      "retired_in_version": null,
+      "supersedes_claim_id": null,
+      "created_at": "2026-09-21T00:00:00Z",
+      "contexts": [
+        {
+          "type": "CONTRIBUTION",
+          "id": "CT-B-io",
+          "role": "PRIMARY"
+        }
+      ]
+    },
+    {
+      "id": "C-B-model-analysis",
+      "profile_id": "CP-B",
+      "claim_type": "CONTRIBUTION",
+      "canonical_text": "Supported model analysis for the DL Trajectory Generation project.",
+      "predicate": "supported",
+      "object_text": "model analysis",
+      "importance": "NORMAL",
+      "created_in_version": 12,
+      "retired_in_version": null,
+      "supersedes_claim_id": null,
+      "created_at": "2026-09-21T00:00:00Z",
+      "contexts": [
+        {
+          "type": "CONTRIBUTION",
+          "id": "CT-B-model-analysis",
+          "role": "PRIMARY"
+        }
+      ]
+    },
+    {
+      "id": "C-B-post-selection-architecture",
+      "profile_id": "CP-B",
+      "claim_type": "CONTRIBUTION",
+      "canonical_text": "Contributed to system architecture after model selection.",
+      "predicate": "contributed",
+      "object_text": "post-selection system architecture",
+      "importance": "NORMAL",
+      "created_in_version": 12,
+      "retired_in_version": null,
+      "supersedes_claim_id": null,
+      "created_at": "2026-09-21T00:00:00Z",
+      "contexts": [
+        {
+          "type": "CONTRIBUTION",
+          "id": "CT-B-architecture",
+          "role": "PRIMARY"
+        }
+      ]
+    },
+    {
+      "id": "C-B-post-selection-integration",
+      "profile_id": "CP-B",
+      "claim_type": "CONTRIBUTION",
+      "canonical_text": "Contributed to integration design after model selection.",
+      "predicate": "contributed",
+      "object_text": "post-selection integration design",
+      "importance": "NORMAL",
+      "created_in_version": 12,
+      "retired_in_version": null,
+      "supersedes_claim_id": null,
+      "created_at": "2026-09-21T00:00:00Z",
+      "contexts": [
+        {
+          "type": "CONTRIBUTION",
+          "id": "CT-B-integration",
+          "role": "PRIMARY"
+        }
+      ]
+    },
+    {
+      "id": "C-B-tcn-selection",
+      "profile_id": "CP-B",
+      "claim_type": "OWNERSHIP",
+      "canonical_text": "Selected TCN as the production model.",
+      "predicate": "selected",
+      "object_text": "TCN as the production model",
+      "importance": "HIGH",
+      "created_in_version": 12,
+      "retired_in_version": null,
+      "supersedes_claim_id": null,
+      "created_at": "2026-09-21T00:00:00Z",
+      "contexts": [
+        {
+          "type": "PROJECT",
+          "id": "P-B",
+          "role": "BOUNDARY_TEST"
+        }
+      ]
+    },
+    {
+      "id": "C-B-project-owner",
+      "profile_id": "CP-B",
+      "claim_type": "OWNERSHIP",
+      "canonical_text": "Led the entire DL Trajectory Generation project.",
+      "predicate": "led",
+      "object_text": "entire DL Trajectory Generation project",
+      "importance": "HIGH",
+      "created_in_version": 12,
+      "retired_in_version": null,
+      "supersedes_claim_id": null,
+      "created_at": "2026-09-21T00:00:00Z",
+      "contexts": [
+        {
+          "type": "PROJECT",
+          "id": "P-B",
+          "role": "BOUNDARY_TEST"
+        }
+      ]
+    },
+    {
+      "id": "C-B-model-owner",
+      "profile_id": "CP-B",
+      "claim_type": "OWNERSHIP",
+      "canonical_text": "Owned overall model development.",
+      "predicate": "owned",
+      "object_text": "overall model development",
+      "importance": "HIGH",
+      "created_in_version": 12,
+      "retired_in_version": null,
+      "supersedes_claim_id": null,
+      "created_at": "2026-09-21T00:00:00Z",
+      "contexts": [
+        {
+          "type": "PROJECT",
+          "id": "P-B",
+          "role": "BOUNDARY_TEST"
+        }
+      ]
+    }
+  ],
+  "claim_assessments": [
+    {
+      "id": "CA-B-dataset",
+      "profile_id": "CP-B",
+      "claim_id": "C-B-dataset",
+      "knowledge_status": "USER_CONFIRMED",
+      "consistency_status": "CONSISTENT",
+      "usage_policy": "ALLOWED",
+      "confidence": null,
+      "rationale": "Synthetic USER_CONFIRMED state from a simulated fixture review; not a real review or external verification.",
+      "assessed_by_type": "SIMULATED_USER_REVIEW",
+      "assessed_by_id": null,
+      "profile_version": 12,
+      "assessed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CA-B-io",
+      "profile_id": "CP-B",
+      "claim_id": "C-B-io",
+      "knowledge_status": "USER_CONFIRMED",
+      "consistency_status": "CONSISTENT",
+      "usage_policy": "ALLOWED",
+      "confidence": null,
+      "rationale": "Synthetic USER_CONFIRMED state from a simulated fixture review; not a real review or external verification.",
+      "assessed_by_type": "SIMULATED_USER_REVIEW",
+      "assessed_by_id": null,
+      "profile_version": 12,
+      "assessed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CA-B-model-analysis",
+      "profile_id": "CP-B",
+      "claim_id": "C-B-model-analysis",
+      "knowledge_status": "USER_CLAIMED",
+      "consistency_status": "CONTRADICTED",
+      "usage_policy": "REVIEW_REQUIRED",
+      "confidence": null,
+      "rationale": "Synthetic conflict: both supporting and contradicting simulated evidence are retained. Exclude from resume/JD positive path pending review.",
+      "assessed_by_type": "SYSTEM_CONSISTENCY_CHECK",
+      "assessed_by_id": null,
+      "profile_version": 12,
+      "assessed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CA-B-architecture",
+      "profile_id": "CP-B",
+      "claim_id": "C-B-post-selection-architecture",
+      "knowledge_status": "USER_CONFIRMED",
+      "consistency_status": "CONSISTENT",
+      "usage_policy": "ALLOWED",
+      "confidence": null,
+      "rationale": "Synthetic USER_CONFIRMED state from a simulated fixture review; contribution begins after model selection.",
+      "assessed_by_type": "SIMULATED_USER_REVIEW",
+      "assessed_by_id": null,
+      "profile_version": 12,
+      "assessed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CA-B-integration",
+      "profile_id": "CP-B",
+      "claim_id": "C-B-post-selection-integration",
+      "knowledge_status": "USER_CONFIRMED",
+      "consistency_status": "CONSISTENT",
+      "usage_policy": "ALLOWED",
+      "confidence": null,
+      "rationale": "Synthetic USER_CONFIRMED state from a simulated fixture review; contribution begins after model selection.",
+      "assessed_by_type": "SIMULATED_USER_REVIEW",
+      "assessed_by_id": null,
+      "profile_version": 12,
+      "assessed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CA-B-tcn-selection",
+      "profile_id": "CP-B",
+      "claim_id": "C-B-tcn-selection",
+      "knowledge_status": "UNKNOWN",
+      "consistency_status": "CONTRADICTED",
+      "usage_policy": "DO_NOT_CLAIM",
+      "confidence": null,
+      "rationale": "The positive ownership Claim is contradicted by the synthetic source-supported negative boundary; confirmation of the boundary does not confirm this Claim.",
+      "assessed_by_type": "SYSTEM_CONSISTENCY_CHECK",
+      "assessed_by_id": null,
+      "profile_version": 12,
+      "assessed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CA-B-project-owner",
+      "profile_id": "CP-B",
+      "claim_id": "C-B-project-owner",
+      "knowledge_status": "UNKNOWN",
+      "consistency_status": "CONTRADICTED",
+      "usage_policy": "DO_NOT_CLAIM",
+      "confidence": null,
+      "rationale": "Blocked positive ownership overclaim contradicted by the synthetic scope-boundary source.",
+      "assessed_by_type": "SYSTEM_CONSISTENCY_CHECK",
+      "assessed_by_id": null,
+      "profile_version": 12,
+      "assessed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CA-B-model-owner",
+      "profile_id": "CP-B",
+      "claim_id": "C-B-model-owner",
+      "knowledge_status": "UNKNOWN",
+      "consistency_status": "CONTRADICTED",
+      "usage_policy": "DO_NOT_CLAIM",
+      "confidence": null,
+      "rationale": "Blocked positive ownership overclaim contradicted by the synthetic scope-boundary source.",
+      "assessed_by_type": "SYSTEM_CONSISTENCY_CHECK",
+      "assessed_by_id": null,
+      "profile_version": 12,
+      "assessed_at": "2026-09-21T00:00:00Z"
+    }
+  ],
+  "claim_constraints": [
+    {
+      "id": "K-B-no-tcn-selection",
+      "profile_id": "CP-B",
+      "constraint_type": "NO_DECISION_OWNERSHIP",
+      "text": "Do not claim ownership of the TCN model-selection decision.",
+      "severity": "BLOCKING",
+      "created_in_version": 12,
+      "retired_in_version": null,
+      "created_at": "2026-09-21T00:00:00Z",
+      "targets": [
+        {
+          "type": "CLAIM",
+          "id": "C-B-tcn-selection"
+        },
+        {
+          "type": "PROJECT",
+          "id": "P-B"
+        },
+        {
+          "type": "OWNERSHIP",
+          "id": "O-B-tcn-decision"
+        }
+      ]
+    },
+    {
+      "id": "K-B-no-project-owner",
+      "profile_id": "CP-B",
+      "constraint_type": "MAX_OWNERSHIP_SCOPE",
+      "text": "Do not expand supporting contributions into leadership of the entire project.",
+      "severity": "BLOCKING",
+      "created_in_version": 12,
+      "retired_in_version": null,
+      "created_at": "2026-09-21T00:00:00Z",
+      "targets": [
+        {
+          "type": "CLAIM",
+          "id": "C-B-project-owner"
+        },
+        {
+          "type": "PROJECT",
+          "id": "P-B"
+        }
+      ]
+    },
+    {
+      "id": "K-B-no-model-owner",
+      "profile_id": "CP-B",
+      "constraint_type": "MAX_OWNERSHIP_SCOPE",
+      "text": "Do not expand model-analysis support into overall model-development ownership.",
+      "severity": "BLOCKING",
+      "created_in_version": 12,
+      "retired_in_version": null,
+      "created_at": "2026-09-21T00:00:00Z",
+      "targets": [
+        {
+          "type": "CLAIM",
+          "id": "C-B-model-owner"
+        },
+        {
+          "type": "OWNERSHIP",
+          "id": "O-B-model-analysis"
+        }
+      ]
+    }
+  ],
+  "evidence": {
+    "sources": [
+      {
+        "id": "ES-B",
+        "profile_id": "CP-B",
+        "source_type": "PROFILE_CONVERSATION",
+        "title": "Synthetic simulated profiling conversation — request §5 Fixture B",
+        "source_uri": null,
+        "object_ref": null,
+        "content_hash": null,
+        "source_owner": "SYNTHETIC_FIXTURE",
+        "captured_at": null,
+        "created_at": "2026-09-21T00:00:00Z"
+      },
+      {
+        "id": "ES-B-CONFLICT",
+        "profile_id": "CP-B",
+        "source_type": "USER_DOCUMENT",
+        "title": "Synthetic contradiction-injection document — request §7 Test F",
+        "source_uri": null,
+        "object_ref": null,
+        "content_hash": null,
+        "source_owner": "SYNTHETIC_FIXTURE",
+        "captured_at": null,
+        "created_at": "2026-09-21T00:00:00Z"
+      }
+    ],
+    "items": [
+      {
+        "id": "E-B-definitions",
+        "profile_id": "CP-B",
+        "source_id": "ES-B",
+        "evidence_type": "SIMULATED_PROFILE_TURN",
+        "content_text": "Synthetic answer: I contributed to dataset definition and input/output definition.",
+        "locator": {
+          "request_ref": "§5 Fixture B — Supporting Contribution",
+          "simulated_turn": 1
+        },
+        "speaker": "SYNTHETIC_USER",
+        "start_ms": null,
+        "end_ms": null,
+        "content_hash": null,
+        "created_in_version": 12,
+        "retired_in_version": null,
+        "created_at": "2026-09-21T00:00:00Z"
+      },
+      {
+        "id": "E-B-model-support",
+        "profile_id": "CP-B",
+        "source_id": "ES-B",
+        "evidence_type": "SIMULATED_PROFILE_TURN",
+        "content_text": "Synthetic answer: I supported model analysis.",
+        "locator": {
+          "request_ref": "§5 Fixture B — Supporting Contribution",
+          "simulated_turn": 2
+        },
+        "speaker": "SYNTHETIC_USER",
+        "start_ms": null,
+        "end_ms": null,
+        "content_hash": null,
+        "created_in_version": 12,
+        "retired_in_version": null,
+        "created_at": "2026-09-21T00:00:00Z"
+      },
+      {
+        "id": "E-B-post-selection",
+        "profile_id": "CP-B",
+        "source_id": "ES-B",
+        "evidence_type": "SIMULATED_PROFILE_TURN",
+        "content_text": "Synthetic answer: after model selection, I contributed to system architecture and integration design.",
+        "locator": {
+          "request_ref": "§5 Fixture B — Supporting Contribution",
+          "simulated_turn": 3
+        },
+        "speaker": "SYNTHETIC_USER",
+        "start_ms": null,
+        "end_ms": null,
+        "content_hash": null,
+        "created_in_version": 12,
+        "retired_in_version": null,
+        "created_at": "2026-09-21T00:00:00Z"
+      },
+      {
+        "id": "E-B-no-selection",
+        "profile_id": "CP-B",
+        "source_id": "ES-B",
+        "evidence_type": "SIMULATED_PROFILE_TURN",
+        "content_text": "Synthetic answer: I did not select TCN and did not own the project or overall model development.",
+        "locator": {
+          "request_ref": "§5 Fixture B — Supporting Contribution",
+          "simulated_turn": 4
+        },
+        "speaker": "SYNTHETIC_USER",
+        "start_ms": null,
+        "end_ms": null,
+        "content_hash": null,
+        "created_in_version": 12,
+        "retired_in_version": null,
+        "created_at": "2026-09-21T00:00:00Z"
+      },
+      {
+        "id": "E-B-model-conflict",
+        "profile_id": "CP-B",
+        "source_id": "ES-B-CONFLICT",
+        "evidence_type": "SYNTHETIC_CONTRADICTION",
+        "content_text": "Synthetic Test F contradiction: the person did not support model analysis.",
+        "locator": {
+          "request_ref": "§7 Test F — Contradiction",
+          "simulated_document_paragraph": 1
+        },
+        "speaker": null,
+        "start_ms": null,
+        "end_ms": null,
+        "content_hash": null,
+        "created_in_version": 12,
+        "retired_in_version": null,
+        "created_at": "2026-09-21T00:00:00Z"
+      }
+    ],
+    "claim_links": [
+      {
+        "id": "ECL-B-dataset",
+        "profile_id": "CP-B",
+        "evidence_id": "E-B-definitions",
+        "claim_id": "C-B-dataset",
+        "relation_type": "SUPPORTS",
+        "support_strength": null,
+        "notes": "Atomic dataset claim split from compound synthetic answer.",
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "ECL-B-io",
+        "profile_id": "CP-B",
+        "evidence_id": "E-B-definitions",
+        "claim_id": "C-B-io",
+        "relation_type": "SUPPORTS",
+        "support_strength": null,
+        "notes": "Atomic I/O claim split from compound synthetic answer.",
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "ECL-B-model-support",
+        "profile_id": "CP-B",
+        "evidence_id": "E-B-model-support",
+        "claim_id": "C-B-model-analysis",
+        "relation_type": "SUPPORTS",
+        "support_strength": null,
+        "notes": "Retained beside contradictory evidence.",
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "ECL-B-model-conflict",
+        "profile_id": "CP-B",
+        "evidence_id": "E-B-model-conflict",
+        "claim_id": "C-B-model-analysis",
+        "relation_type": "CONTRADICTS",
+        "support_strength": null,
+        "notes": "Synthetic contradiction retained; Claim is REVIEW_REQUIRED and excluded from output paths.",
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "ECL-B-architecture-support",
+        "profile_id": "CP-B",
+        "evidence_id": "E-B-post-selection",
+        "claim_id": "C-B-post-selection-architecture",
+        "relation_type": "SUPPORTS",
+        "support_strength": null,
+        "notes": "Supports the bounded architecture contribution.",
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "ECL-B-architecture-qualifies",
+        "profile_id": "CP-B",
+        "evidence_id": "E-B-no-selection",
+        "claim_id": "C-B-post-selection-architecture",
+        "relation_type": "QUALIFIES",
+        "support_strength": null,
+        "notes": "Limits the contribution to work after model selection; does not independently prove the contribution.",
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "ECL-B-integration",
+        "profile_id": "CP-B",
+        "evidence_id": "E-B-post-selection",
+        "claim_id": "C-B-post-selection-integration",
+        "relation_type": "SUPPORTS",
+        "support_strength": null,
+        "notes": "Atomic integration claim split from compound synthetic answer.",
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "ECL-B-dataset-context",
+        "profile_id": "CP-B",
+        "evidence_id": "E-B-post-selection",
+        "claim_id": "C-B-dataset",
+        "relation_type": "CONTEXTUALIZES",
+        "support_strength": null,
+        "notes": "Provides project sequence context only; does not independently support dataset participation.",
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "ECL-B-tcn-boundary",
+        "profile_id": "CP-B",
+        "evidence_id": "E-B-no-selection",
+        "claim_id": "C-B-tcn-selection",
+        "relation_type": "CONTRADICTS",
+        "support_strength": null,
+        "notes": "Directly contradicts the prohibited positive ownership Claim.",
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "ECL-B-project-boundary",
+        "profile_id": "CP-B",
+        "evidence_id": "E-B-no-selection",
+        "claim_id": "C-B-project-owner",
+        "relation_type": "CONTRADICTS",
+        "support_strength": null,
+        "notes": "Directly contradicts the prohibited positive project-ownership Claim.",
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "ECL-B-model-boundary",
+        "profile_id": "CP-B",
+        "evidence_id": "E-B-no-selection",
+        "claim_id": "C-B-model-owner",
+        "relation_type": "CONTRADICTS",
+        "support_strength": null,
+        "notes": "Directly contradicts the prohibited positive model-ownership Claim.",
+        "created_in_version": 12,
+        "retired_in_version": null
+      }
+    ]
+  },
+  "artifacts": {
+    "items": [
+      {
+        "id": "A-B-resume",
+        "profile_id": "CP-B",
+        "artifact_type": "RESUME",
+        "artifact_version": 1,
+        "profile_version": 12,
+        "title": "Synthetic Fixture B draft resume",
+        "status": "DRAFT",
+        "storage_ref": null,
+        "content_hash": null,
+        "created_at": "2026-09-21T00:00:00Z"
+      }
+    ],
+    "units": [
+      {
+        "id": "AU-B-resume",
+        "artifact_id": "A-B-resume",
+        "unit_type": "RESUME_BULLET",
+        "ordinal": 1,
+        "text": "Contributed to dataset definition for the DL Trajectory Generation project. Contributed to input and output definition for the DL Trajectory Generation project. Contributed to system architecture after model selection. Contributed to integration design after model selection.",
+        "metadata": {
+          "synthetic": true,
+          "composition": "exact canonical_text concatenation in link order",
+          "excluded_claim_id": "C-B-model-analysis"
+        }
+      }
+    ],
+    "claim_links": [
+      {
+        "id": "ACL-B-dataset",
+        "artifact_unit_id": "AU-B-resume",
+        "claim_id": "C-B-dataset",
+        "link_role": "PRIMARY"
+      },
+      {
+        "id": "ACL-B-io",
+        "artifact_unit_id": "AU-B-resume",
+        "claim_id": "C-B-io",
+        "link_role": "SUPPORTING"
+      },
+      {
+        "id": "ACL-B-architecture",
+        "artifact_unit_id": "AU-B-resume",
+        "claim_id": "C-B-post-selection-architecture",
+        "link_role": "SUPPORTING"
+      },
+      {
+        "id": "ACL-B-integration",
+        "artifact_unit_id": "AU-B-resume",
+        "claim_id": "C-B-post-selection-integration",
+        "link_role": "SUPPORTING"
+      }
+    ],
+    "constraint_links": [
+      {
+        "id": "ACK-B-tcn",
+        "artifact_unit_id": "AU-B-resume",
+        "constraint_id": "K-B-no-tcn-selection",
+        "effect": "WORDING_BOUNDARY"
+      },
+      {
+        "id": "ACK-B-project",
+        "artifact_unit_id": "AU-B-resume",
+        "constraint_id": "K-B-no-project-owner",
+        "effect": "WORDING_BOUNDARY"
+      },
+      {
+        "id": "ACK-B-model",
+        "artifact_unit_id": "AU-B-resume",
+        "constraint_id": "K-B-no-model-owner",
+        "effect": "WORDING_BOUNDARY"
+      }
+    ]
+  },
+  "jd": {
+    "items": [
+      {
+        "id": "JD-B",
+        "profile_id": "CP-B",
+        "company_name": null,
+        "job_title": "Synthetic JD placeholder — integration engineer",
+        "source_url": null,
+        "source_document_ref": "request §7 Test C synthetic input",
+        "raw_text": "Synthetic requirement only; no real employer or vacancy.",
+        "content_hash": null,
+        "captured_at": null,
+        "created_at": "2026-09-21T00:00:00Z"
+      }
+    ],
+    "requirements": [
+      {
+        "id": "JDR-B-architecture",
+        "jd_id": "JD-B",
+        "requirement_type": "EXPERIENCE",
+        "text": "Synthetic requirement: system architecture contribution.",
+        "normalized_concept": "system architecture",
+        "priority_source": "SYNTHETIC_FIXTURE",
+        "ordinal": 1,
+        "metadata": {
+          "synthetic": true
+        }
+      },
+      {
+        "id": "JDR-B-integration",
+        "jd_id": "JD-B",
+        "requirement_type": "EXPERIENCE",
+        "text": "Synthetic requirement: integration design contribution.",
+        "normalized_concept": "integration design",
+        "priority_source": "SYNTHETIC_FIXTURE",
+        "ordinal": 2,
+        "metadata": {
+          "synthetic": true
+        }
+      }
+    ],
+    "claim_maps": [
+      {
+        "id": "RCM-B-architecture",
+        "requirement_id": "JDR-B-architecture",
+        "claim_id": "C-B-post-selection-architecture",
+        "mapping_type": "DIRECT",
+        "coverage_level": "PARTIAL",
+        "rationale": "Synthetic relevance mapping; excludes overall architecture ownership.",
+        "created_by_type": "SYSTEM_FIXTURE",
+        "created_at": "2026-09-21T00:00:00Z"
+      },
+      {
+        "id": "RCM-B-integration",
+        "requirement_id": "JDR-B-integration",
+        "claim_id": "C-B-post-selection-integration",
+        "mapping_type": "DIRECT",
+        "coverage_level": "PARTIAL",
+        "rationale": "Synthetic relevance mapping; does not change Claim truth status.",
+        "created_by_type": "SYSTEM_FIXTURE",
+        "created_at": "2026-09-21T00:00:00Z"
+      }
+    ]
+  },
+  "interviews": {
+    "sessions": [],
+    "turns": [],
+    "evidence_candidates": []
+  },
+  "audit": {
+    "change_sets": []
+  },
+  "claim_reviews": [
+    {
+      "id": "CR-C-B-dataset",
+      "profile_id": "CP-B",
+      "claim_id": "C-B-dataset",
+      "review_action": "USER_ACCEPTED",
+      "reviewer_type": "USER",
+      "reviewer_id": "USER-SYNTHETIC-B",
+      "notes": "SYNTHETIC review only; confirmed exact proposition/scope: Contributed to dataset definition for the DL Trajectory Generation project.",
+      "profile_version": 12,
+      "reviewed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CR-C-B-io",
+      "profile_id": "CP-B",
+      "claim_id": "C-B-io",
+      "review_action": "USER_ACCEPTED",
+      "reviewer_type": "USER",
+      "reviewer_id": "USER-SYNTHETIC-B",
+      "notes": "SYNTHETIC review only; confirmed exact proposition/scope: Contributed to input and output definition for the DL Trajectory Generation project.",
+      "profile_version": 12,
+      "reviewed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CR-C-B-model-analysis",
+      "profile_id": "CP-B",
+      "claim_id": "C-B-model-analysis",
+      "review_action": "SYSTEM_FLAGGED",
+      "reviewer_type": "SYSTEM",
+      "reviewer_id": null,
+      "notes": "SYNTHETIC conflict review; retain opposing evidence and publication restriction.",
+      "profile_version": 12,
+      "reviewed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CR-C-B-post-selection-architecture",
+      "profile_id": "CP-B",
+      "claim_id": "C-B-post-selection-architecture",
+      "review_action": "USER_ACCEPTED",
+      "reviewer_type": "USER",
+      "reviewer_id": "USER-SYNTHETIC-B",
+      "notes": "SYNTHETIC review only; confirmed exact proposition/scope: Contributed to system architecture after model selection.",
+      "profile_version": 12,
+      "reviewed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CR-C-B-post-selection-integration",
+      "profile_id": "CP-B",
+      "claim_id": "C-B-post-selection-integration",
+      "review_action": "USER_ACCEPTED",
+      "reviewer_type": "USER",
+      "reviewer_id": "USER-SYNTHETIC-B",
+      "notes": "SYNTHETIC review only; confirmed exact proposition/scope: Contributed to integration design after model selection.",
+      "profile_version": 12,
+      "reviewed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CR-C-B-tcn-selection",
+      "profile_id": "CP-B",
+      "claim_id": "C-B-tcn-selection",
+      "review_action": "SYSTEM_FLAGGED",
+      "reviewer_type": "SYSTEM",
+      "reviewer_id": null,
+      "notes": "SYNTHETIC conflict review; retain opposing evidence and publication restriction.",
+      "profile_version": 12,
+      "reviewed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CR-C-B-project-owner",
+      "profile_id": "CP-B",
+      "claim_id": "C-B-project-owner",
+      "review_action": "SYSTEM_FLAGGED",
+      "reviewer_type": "SYSTEM",
+      "reviewer_id": null,
+      "notes": "SYNTHETIC conflict review; retain opposing evidence and publication restriction.",
+      "profile_version": 12,
+      "reviewed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CR-C-B-model-owner",
+      "profile_id": "CP-B",
+      "claim_id": "C-B-model-owner",
+      "review_action": "SYSTEM_FLAGGED",
+      "reviewer_type": "SYSTEM",
+      "reviewer_id": null,
+      "notes": "SYNTHETIC conflict review; retain opposing evidence and publication restriction.",
+      "profile_version": 12,
+      "reviewed_at": "2026-09-21T00:00:00Z"
+    }
+  ]
+}

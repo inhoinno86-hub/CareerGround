@@ -1,0 +1,126 @@
+{
+  "schema": "careerground-actual-mcp-a-negative-boundaries-v1",
+  "actor": "A",
+  "method": "Existing private product connection in personalized temporary ChatGPT; one tool per prompt",
+  "observations": [
+    {
+      "case_id": "A_PROFILE_foreign_B",
+      "actor": "A",
+      "tool": "get_career_profile",
+      "target": "foreign_B",
+      "status": "error",
+      "error_code": "NOT_FOUND",
+      "submissions": 1
+    },
+    {
+      "case_id": "A_PROFILE_ABSENT",
+      "actor": "A",
+      "tool": "get_career_profile",
+      "target": "absent",
+      "status": "error",
+      "error_code": "NOT_FOUND",
+      "submissions": 1
+    },
+    {
+      "case_id": "A_SESSION_foreign_B",
+      "actor": "A",
+      "tool": "get_profiling_session",
+      "target": "foreign_B",
+      "status": "error",
+      "error_code": "NOT_FOUND",
+      "submissions": 1
+    },
+    {
+      "case_id": "A_SESSION_absent",
+      "actor": "A",
+      "tool": "get_profiling_session",
+      "target": "absent",
+      "status": "error",
+      "error_code": "NOT_FOUND",
+      "submissions": 1
+    },
+    {
+      "case_id": "A_START_foreign_B",
+      "actor": "A",
+      "tool": "start_profiling",
+      "target": "foreign_B",
+      "status": "error",
+      "error_code": "NOT_FOUND",
+      "submissions": 1
+    },
+    {
+      "case_id": "A_START_absent",
+      "actor": "A",
+      "tool": "start_profiling",
+      "target": "absent",
+      "status": "error",
+      "error_code": "NOT_FOUND",
+      "submissions": 1
+    },
+    {
+      "case_id": "A_INPUT_foreign_B",
+      "actor": "A",
+      "tool": "add_profiling_input",
+      "target": "foreign_B",
+      "status": "error",
+      "error_code": "NOT_FOUND",
+      "submissions": 1,
+      "browser_reply_recovered_after_transport_output_missing": true
+    },
+    {
+      "case_id": "A_INPUT_absent",
+      "actor": "A",
+      "tool": "add_profiling_input",
+      "target": "absent",
+      "status": "error",
+      "error_code": "NOT_FOUND",
+      "submissions": 1
+    },
+    {
+      "case_id": "A_EXPORT_foreign_B",
+      "actor": "A",
+      "tool": "request_user_confirmation",
+      "target": "foreign_B",
+      "status": "error",
+      "error_code": "REVIEW_REQUIRED",
+      "submissions": 1
+    },
+    {
+      "case_id": "A_EXPORT_absent",
+      "actor": "A",
+      "tool": "request_user_confirmation",
+      "target": "absent",
+      "status": "error",
+      "error_code": "REVIEW_REQUIRED",
+      "submissions": 1
+    },
+    {
+      "case_id": "A_PREVIEW_foreign_B",
+      "actor": "A",
+      "tool": "preview_data_deletion",
+      "target": "foreign_B",
+      "status": "error",
+      "error_code": "NOT_FOUND",
+      "submissions": 1
+    },
+    {
+      "case_id": "A_PREVIEW_absent",
+      "actor": "A",
+      "tool": "preview_data_deletion",
+      "target": "absent",
+      "status": "error",
+      "error_code": "NOT_FOUND",
+      "submissions": 1
+    }
+  ],
+  "same_foreign_and_absent_rejection": true,
+  "integrity_check": {
+    "compared_tables": 38,
+    "non_quota_tables_count_and_content_unchanged": 37,
+    "changed_tables": [
+      "request_limit_buckets"
+    ]
+  },
+  "canonical_mutations_created": false,
+  "scope": "Profile/session reads, session creation and input writes, profile export request and deletion preview rejection; not artifact access, valid receipt cross-use or export/deletion execution"
+}

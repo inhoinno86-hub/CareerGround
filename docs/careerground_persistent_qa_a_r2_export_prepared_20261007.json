@@ -1,0 +1,14 @@
+{
+  "scope": "actual_A_separate_R2_Markdown_export_review_prepared",
+  "observed_at": "2026-10-07T06:09:29.096465+00:00",
+  "owned_R2_target_action_version_format_match": true,
+  "profile_version": 2,
+  "format": "MARKDOWN",
+  "status_at_observation": "DONE",
+  "expires_at": "2026-10-07 06:12:17.647583",
+  "Web_heading": "검토한 R2 이력서 문구 내보내기",
+  "actual_confirmation_url_from_ChatGPT": true,
+  "human_scope_and_receiving_connection_confirmation_pending": true,
+  "export_content_not_received_or_executed_by_MCP_yet": true,
+  "phase_A_complete": false
+}

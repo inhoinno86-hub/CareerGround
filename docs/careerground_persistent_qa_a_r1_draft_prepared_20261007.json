@@ -1,0 +1,17 @@
+{
+  "scope": "new_actual_A_R1_confirmation_preparation_from_saved_owned_mapping",
+  "observed_at": "2026-10-07T05:50:40.437649+00:00",
+  "actual_ChatGPT_confirmation_url_observed": true,
+  "owner_target_action_profile_version_match": true,
+  "profile_version": 2,
+  "status_at_observation": "WAITING",
+  "expires_at": "2026-10-07 05:54:13.962567",
+  "Web_heading": "정확한 R1 초안 선택 직접 확인",
+  "selected_claim_text": "개발 시험에서 장애 로그를 분류하고 팀에 확인 절차를 공유했습니다.",
+  "selected_claim_use_previously_human_authorized": true,
+  "agent_non_final_choice_and_exact_review_preparation_only": true,
+  "human_final_confirmation_pending": true,
+  "artifacts_at_observation": 0,
+  "prior_expired_JD_receipt_not_revived_or_reused": true,
+  "phase_A_complete": false
+}

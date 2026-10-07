@@ -1,0 +1,18 @@
+{
+  "schema": "careerground-actual-mcp-confirmed-profile-v1",
+  "actor": "A",
+  "method": "Existing private A connection; one get_career_profile call after human fact review and receipt consumption",
+  "profile_version": 1,
+  "tool_status": "ok",
+  "claim_count": 2,
+  "claims_match_store": true,
+  "knowledge_status": "USER_CONFIRMED",
+  "consistency_status": "NOT_EVALUATED",
+  "usage_policy": "REVIEW_REQUIRED",
+  "claim_use_reviews": 0,
+  "limitations": [
+    "Fact confirmation only; no R1 use approval",
+    "B post-confirmation MCP comparison pending reconnect; not passed",
+    "No receipt, token or provider identity recorded"
+  ]
+}

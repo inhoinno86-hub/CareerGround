@@ -1,0 +1,21 @@
+{
+  "scope": "human_A_R2_saved_separately_with_original_R1_retained",
+  "observed_at": "2026-10-07T06:06:51.667985+00:00",
+  "user_reported_complete": true,
+  "owned_R2_source_R1_and_version_match": true,
+  "profile_version": 2,
+  "R1_retained": true,
+  "R1_text": "개발 시험에서 장애 로그를 분류하고 팀에 확인 절차를 공유했습니다.",
+  "R2_text": "개발 시험에서 장애 로그를 분류하고 팀에 확인 절차를 공유했다.",
+  "R2_wording_level": "R2",
+  "R2_review_status": "WORDING_REVIEWED",
+  "artifact_count": 2,
+  "new_claims_created": false,
+  "export_approval_implied": false,
+  "phase_A_complete": false,
+  "same_connection_actual_proposal_status": {
+    "status": "DONE",
+    "result_id_matches_saved_R2": true
+  },
+  "actual_get_resume_trace_R2_text_and_wording_level_match": true
+}

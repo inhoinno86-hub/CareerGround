@@ -1,0 +1,36 @@
+{
+  "schema": "careerground-actual-reviewed-b-r1-export-web-get-v1",
+  "rows": [
+    {
+      "label": "B_own",
+      "status": 200,
+      "heading": "검토한 R1 이력서 문구 내보내기",
+      "forms": 1,
+      "body_hash": "4308e22e9e76d4e525f4e45d9c5f4ec73b13840e07bc1a0f0e12d59d7e76a0f2",
+      "target_id_present": false,
+      "claim_text_present": false
+    },
+    {
+      "label": "A_foreign",
+      "status": 404,
+      "heading": "요청한 내용을 찾을 수 없습니다",
+      "forms": 0,
+      "body_hash": "399065de64fd312c0ee462aaf485a49e1fe65c3a4284f42b5927ac65df130a2e",
+      "target_id_present": false,
+      "claim_text_present": false
+    },
+    {
+      "label": "A_nonexistent",
+      "status": 404,
+      "heading": "요청한 내용을 찾을 수 없습니다",
+      "forms": 0,
+      "body_hash": "399065de64fd312c0ee462aaf485a49e1fe65c3a4284f42b5927ac65df130a2e",
+      "target_id_present": false,
+      "claim_text_present": false
+    }
+  ],
+  "limits": [
+    "GET preparation only; no export final approval or download",
+    "B artifact only"
+  ]
+}

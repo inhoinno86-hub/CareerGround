@@ -1,0 +1,27 @@
+{
+  "scope": "PROFILE",
+  "observed_at": "2026-10-07T12:14:12.829543+00:00",
+  "profile_version": 2,
+  "known_local_impact": {
+    "career_profiles": 1,
+    "claims": 1,
+    "job_descriptions": 1,
+    "jd_requirements": 1,
+    "requirement_claim_maps": 1,
+    "artifacts": 2,
+    "artifact_units": 2,
+    "artifact_wording_reviews": 2,
+    "artifact_claim_links": 2,
+    "browser_operations": 6
+  },
+  "Web_heading": "로컬 프로필 삭제 영향",
+  "user_fresh_same_A_login_device_signature_and_final_confirm_required": true,
+  "other_QA_and_provider_account_included": false,
+  "ChatGPT_conversation_external_copies_backups_covered": false,
+  "coverage": "FOUNDATION_ONLY",
+  "agent_final_delete_not_performed": true,
+  "deletion_requests_at_observation": 0,
+  "erasure_ledger_at_observation": 0,
+  "phase_A_complete": false,
+  "evidence_scope": "A_owned_nonempty_PROFILE_local_deletion_impact_review"
+}

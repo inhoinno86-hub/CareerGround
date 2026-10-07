@@ -1,0 +1,20 @@
+{
+  "schema": "careerground-actual-b-r1-draft-completed-v1",
+  "observed_at_utc": "2026-10-06T06:10:26.003159+00:00",
+  "human_web_creation_approval_saved": true,
+  "same_originating_connection_confirmation_status": "DONE",
+  "generate_resume_draft_status": "ok",
+  "operation_status_after": "CONSUMED",
+  "profile_version": 2,
+  "artifact_version": 1,
+  "artifact_status": "REVIEW_REQUIRED",
+  "unit_count": 1,
+  "unit_wording_level": "R1",
+  "unit_review_status": "REVIEW_REQUIRED",
+  "exact_claim_text": "가상 물류 프로젝트에서 점검 체크리스트 초안을 작성하고 동료 두 명의 의견을 정리했습니다.",
+  "claim_link_role": "FACTUAL_BASIS",
+  "limits": [
+    "R1 exact copy only; no R2 rewrite",
+    "No B wording or export approval yet"
+  ]
+}

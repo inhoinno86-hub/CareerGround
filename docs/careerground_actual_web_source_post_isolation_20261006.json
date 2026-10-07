@@ -1,0 +1,46 @@
+{
+  "schema": "careerground-actual-web-source-post-isolation-v1",
+  "method": "Normal signed own input form kept in its browser DOM; only action target changed for authorized synthetic negative trial",
+  "token_values_extracted": false,
+  "observations": [
+    {
+      "status": 409,
+      "body": "본문으로 바로가기\n화면의 정보가 바뀌었습니다\n\n이 요청은 저장되지 않았습니다.\n\n경력 정리 시작 화면에서 다시 확인하기",
+      "forms": 0,
+      "actor": "A",
+      "target": "foreign_B",
+      "own_form_status": 200,
+      "submissions": 1
+    },
+    {
+      "status": 409,
+      "body": "본문으로 바로가기\n화면의 정보가 바뀌었습니다\n\n이 요청은 저장되지 않았습니다.\n\n경력 정리 시작 화면에서 다시 확인하기",
+      "forms": 0,
+      "actor": "A",
+      "target": "absent",
+      "own_form_status": 200,
+      "submissions": 1
+    },
+    {
+      "status": 409,
+      "body": "본문으로 바로가기\n화면의 정보가 바뀌었습니다\n\n이 요청은 저장되지 않았습니다.\n\n경력 정리 시작 화면에서 다시 확인하기",
+      "forms": 0,
+      "actor": "B",
+      "target": "foreign_A",
+      "own_form_status": 200,
+      "submissions": 1
+    },
+    {
+      "status": 409,
+      "body": "본문으로 바로가기\n화면의 정보가 바뀌었습니다\n\n이 요청은 저장되지 않았습니다.\n\n경력 정리 시작 화면에서 다시 확인하기",
+      "forms": 0,
+      "actor": "B",
+      "target": "absent",
+      "own_form_status": 200,
+      "submissions": 1
+    }
+  ],
+  "same_foreign_and_absent_response_both_directions": true,
+  "canonical_approvals_submitted": false,
+  "scope": "Actual source append POST target/session binding rejection; not final fact approval, export or deletion POST"
+}

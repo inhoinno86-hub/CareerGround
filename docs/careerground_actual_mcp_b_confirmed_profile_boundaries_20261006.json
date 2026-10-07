@@ -1,0 +1,78 @@
+{
+  "schema": "careerground-actual-mcp-b-confirmed-profile-boundaries-v1",
+  "scope": "Actual reconnected B; A has 2 human-confirmed synthetic claims at profile version 1",
+  "discovery": {
+    "expected_id_withheld": true,
+    "matches_private_QA_B": true,
+    "matches_A": false,
+    "version": 0
+  },
+  "observations": [
+    {
+      "qa_case": "B_A_CONFIRMED_PROFILE",
+      "status": "error",
+      "error_code": "NOT_FOUND",
+      "submissions": 1,
+      "verdict": "OBSERVED_DENIAL"
+    },
+    {
+      "qa_case": "B_ABSENT_CONFIRMED_PROFILE",
+      "status": "error",
+      "error_code": "NOT_FOUND",
+      "submissions": 1,
+      "verdict": "OBSERVED_DENIAL"
+    },
+    {
+      "qa_case": "B_A_CONFIRMED_EVIDENCE",
+      "status": "error",
+      "error_code": "NOT_FOUND",
+      "submissions": 1,
+      "verdict": "OBSERVED_DENIAL"
+    },
+    {
+      "qa_case": "B_ABSENT_CONFIRMED_EVIDENCE",
+      "status": "error",
+      "error_code": "NOT_FOUND",
+      "submissions": 1,
+      "verdict": "OBSERVED_DENIAL"
+    },
+    {
+      "qa_case": "B_A_CONFIRMED_EXPORT_NO_RECEIPT",
+      "status": null,
+      "error_code": null,
+      "submissions": 1,
+      "verdict": "INCONCLUSIVE_NULL_PROJECTION"
+    },
+    {
+      "qa_case": "B_ABSENT_CONFIRMED_EXPORT_NO_RECEIPT",
+      "status": null,
+      "error_code": null,
+      "submissions": 1,
+      "verdict": "INCONCLUSIVE_NULL_PROJECTION"
+    },
+    {
+      "qa_case": "B_A_CONFIRMED_EXPORT_REQUEST",
+      "status": "error",
+      "error_code": "REVIEW_REQUIRED",
+      "submissions": 1,
+      "verdict": "OBSERVED_DENIAL"
+    },
+    {
+      "qa_case": "B_ABSENT_CONFIRMED_EXPORT_REQUEST",
+      "status": "error",
+      "error_code": "REVIEW_REQUIRED",
+      "submissions": 1,
+      "verdict": "OBSERVED_DENIAL"
+    }
+  ],
+  "non_quota_tables_checked": 37,
+  "non_quota_rows_and_counts_unchanged": true,
+  "operation_statuses_unchanged": true,
+  "limitations": [
+    "4 profile/evidence reads and 2 export confirmation requests observed denied",
+    "2 export execution calls with empty receipt had null projections and are not server denial proof",
+    "No receipt extracted, copied or used across accounts",
+    "Prior A completed confirmation expired before B reconnect, so valid completed receipt isolation not tested",
+    "Reverse confirmed B profile and artifact tests require fixtures and human approvals"
+  ]
+}

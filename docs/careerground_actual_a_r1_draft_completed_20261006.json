@@ -1,0 +1,19 @@
+{
+  "schema": "careerground-actual-a-r1-draft-completed-v1",
+  "observed_at_utc": "2026-10-06T05:40:35.120535+00:00",
+  "human_web_creation_approval_saved": true,
+  "operation_status_after": "CONSUMED",
+  "profile_version": 2,
+  "artifact_version": 1,
+  "artifact_status": "REVIEW_REQUIRED",
+  "unit_count": 1,
+  "unit_wording_level": "R1",
+  "unit_review_status": "REVIEW_REQUIRED",
+  "exact_claim_text": "가상 서비스의 오류 제보를 모아 재현 절차 문서 초안을 작성했습니다.",
+  "claim_link_role": "FACTUAL_BASIS",
+  "wording_review_count": 0,
+  "limits": [
+    "R1 exact copy only; no R2 rewrite",
+    "No wording or export approval yet"
+  ]
+}

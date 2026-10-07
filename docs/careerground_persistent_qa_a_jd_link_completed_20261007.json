@@ -1,0 +1,23 @@
+{
+  "scope": "human_A_JD_potential_link_approved",
+  "observed_at": "2026-10-07T05:46:18.649142+00:00",
+  "user_reported_complete": true,
+  "Web_completion_heading_observed": true,
+  "operation_status_at_observation": "DONE",
+  "mapping_count": 1,
+  "mapping_type": "RELATED",
+  "coverage_level": "POTENTIAL",
+  "profile_version": 2,
+  "new_fact_or_full_coverage_certified": false,
+  "same_connection_receipt_processing_requested": true,
+  "receipt_printed_saved_or_transferred_by_agent": false,
+  "phase_A_complete": false,
+  "same_connection_receipt_processing_actual": {
+    "get_confirmation_status_once": "REVIEW_REQUIRED",
+    "link_jd_requirement_executed": false,
+    "consumed": false,
+    "followup_R1_not_created_in_that_request": true,
+    "request_expired_at_later_inspection": true,
+    "exact_rpc_failure_cause_not_confirmed": true
+  }
+}

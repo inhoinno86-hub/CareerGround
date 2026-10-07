@@ -1,0 +1,25 @@
+.venv/
+.env
+.env.local
+.env.poc
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.coverage
+src/*.egg-info/
+/to-do-prompts/
+/intent-docs/
+/.careerground-development/
+/.careerground-authenticated-development/
+/.careerground-release-qa/
+/..careerground-development-pre-*.sqlite
+/..careerground-development-upgrade-*.sqlite
+
+# Auth0 credentials
+.auth0-mcp-state.json
+
+.auth0-mcp-writes.log
+
+# Local explanatory reports
+/reports/

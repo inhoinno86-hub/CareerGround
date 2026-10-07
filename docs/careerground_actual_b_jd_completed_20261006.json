@@ -1,0 +1,22 @@
+{
+  "schema": "careerground-actual-b-jd-completed-v1",
+  "observed_at_utc": "2026-10-06T06:03:20.586660+00:00",
+  "profile_version": 2,
+  "jd_version": 1,
+  "requirements": [
+    {
+      "ordinal": 1,
+      "exact_text": "점검 체크리스트를 작성한 경험",
+      "source_start": 2,
+      "source_end": 18
+    }
+  ],
+  "human_web_approval_saved": true,
+  "same_originating_connection_confirmation_status": "DONE",
+  "record_selected_jd_status": "ok",
+  "operation_status_after": "CONSUMED",
+  "limits": [
+    "Selected synthetic excerpt only; no semantic AI analysis",
+    "No B requirement Claim mapping or R1 artifact yet"
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "scope": "fresh_persistent_QA_A_actual_MCP_source_preparation",
+  "observed_at": "2026-10-07T02:00:02.594298+00:00",
+  "A_discovery": {
+    "actual_profile_matches_private_A": true,
+    "actual_profile_differs_from_B": true,
+    "profile_version": 0
+  },
+  "method": "native connected CareerGround app MCP calls in Codex",
+  "ChatGPT_browser_conversation_test": false,
+  "actual_tools": [
+    "get_my_profile",
+    "start_profiling",
+    "add_profiling_input",
+    "propose_profiling_drafts"
+  ],
+  "start_goal_validation_failure": {
+    "first_goal_rejected": "VALIDATION_FAILED",
+    "corrected_to_contract_ADD_EXPERIENCE": true
+  },
+  "synthetic_source": {
+    "characters": 72,
+    "sha256": "2d9f5057c6b38942254b942842529e41dcb6af2fef385e6f73a2c36de3f928cd",
+    "source_kind": "USER_STATEMENT",
+    "source_count": 1,
+    "draft_count": 1,
+    "exact_python_span": {
+      "start": 35,
+      "end": 72
+    },
+    "DB_owner_session_source_hash_text_match": true,
+    "draft_status": "DRAFT"
+  },
+  "canonical_claims": 0,
+  "approval_created": false,
+  "profile_version_changed": false,
+  "B_ChatGPT_login_pending": true,
+  "scope_complete": false
+}

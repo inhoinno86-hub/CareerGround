@@ -1,0 +1,12 @@
+{
+  "schema": "careerground-actual-chatgpt-source-mixing-observation-v1",
+  "actor": "A",
+  "tool": "propose_profiling_drafts",
+  "target": "own_session_with_foreign_B_source",
+  "submissions": 1,
+  "model_reported_security_check_block": true,
+  "actual_tool_call_confirmed": false,
+  "server_rejection_verified": false,
+  "remaining_similar_cross_source_calls_submitted": false,
+  "scope": "Client-reported safety refusal only; no server authorization pass inferred"
+}

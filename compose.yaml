@@ -1,0 +1,19 @@
+services:
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: careerground_dev
+      POSTGRES_DB: careerground_dev
+      POSTGRES_PASSWORD: ${CAREERGROUND_LOCAL_DB_PASSWORD:?Set a unique local-only password in .env.local}
+    ports:
+      - "127.0.0.1:54329:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U careerground_dev -d careerground_dev"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+    volumes:
+      - careerground_pgdata:/var/lib/postgresql/data
+
+volumes:
+  careerground_pgdata:

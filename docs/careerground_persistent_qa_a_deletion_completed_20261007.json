@@ -1,0 +1,29 @@
+{
+  "scope": "actual_human_A_nonempty_PROFILE_known_local_erasure_and_restart",
+  "observed_at": "2026-10-07T13:37:07.230554+00:00",
+  "user_reported_complete": true,
+  "Web_heading": "로컬 프로필 삭제 처리 결과",
+  "coverage": "FOUNDATION_ONLY",
+  "request_status": "DELETING",
+  "retained_A_profile_stub_status": "DELETING",
+  "ledger_count": 1,
+  "known_local_A_claim_source_JD_R1_R2_browser_approval_rows_removed": true,
+  "work_items": {
+    "ERASE_DONE": 7,
+    "VERIFY_DONE": 30,
+    "VERIFY_PENDING": 1,
+    "pending_kind": "UNVERIFIED_SCOPE",
+    "failed": 0
+  },
+  "overall_erasure_or_external_copy_completion_claimed": false,
+  "provider_account_or_MCP_deletion_receipt_created": false,
+  "after_actual_same_store_restart": {
+    "runtime_live_http": 200,
+    "signed_checkpoint_validation_in_startup_succeeded": true,
+    "A_profile_remains_DELETING": true,
+    "ledger_count": 1,
+    "A_graph_not_restored": true,
+    "B_account_scoped_34_table_counts_and_hashes_unchanged": true
+  },
+  "phase_A_complete": false
+}

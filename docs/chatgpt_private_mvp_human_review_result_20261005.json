@@ -1,0 +1,48 @@
+{
+  "schema": "careerground-private-mvp-human-review-result-v1",
+  "scope": "2026-10-05 private synthetic source-contract observation; not installed-plugin or product journey acceptance",
+  "reviewer_role": "project_owner",
+  "reviewer_reported_completion": true,
+  "independent_blind_human_evaluation": false,
+  "fixture_sha256": "31a1e87bf60cae8ff00c14cb6cfe6658941d7ef6a657f59ac734994447177e3a",
+  "observation_sha256": "a9fa47dc6d57eca4805445033441d0432a3e7aa320491049822458e42a0ea2f1",
+  "human_review_sha256": "4ca48c119911fbb839898c395a624b99fa15d80d848d4d900a7ab61a8c547369",
+  "criteria_status": "HUMAN_ACCEPTED",
+  "case_count": 36,
+  "by_task": {
+    "extract": {
+      "matched": 9,
+      "total": 9
+    },
+    "jd": {
+      "matched": 9,
+      "total": 9
+    },
+    "r2": {
+      "matched": 9,
+      "total": 9
+    },
+    "r3": {
+      "matched": 9,
+      "total": 9
+    }
+  },
+  "ratings": {
+    "meaning": {
+      "rated": 36,
+      "not_applicable": 0,
+      "minimum": 5,
+      "mean": 5.0
+    },
+    "naturalness": {
+      "rated": 36,
+      "not_applicable": 0,
+      "minimum": 5,
+      "mean": 5.0
+    }
+  },
+  "safety_violations": 0,
+  "quality_gate_passed": true,
+  "original_export_quality_gate_passed": false,
+  "historical_artifacts_modified": false
+}

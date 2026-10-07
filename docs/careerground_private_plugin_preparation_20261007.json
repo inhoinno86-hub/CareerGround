@@ -1,0 +1,27 @@
+{
+  "scope": "previously_authorized_existing_private_plugin_update_preparation",
+  "archive_relative_path": ".careerground-release-qa/release-20261007/packages/careerground-phase-a-dev-1.0.3.zip",
+  "archive_sha256": "ffc2488a818d6d9810e579841b2b34423272e87a09a6c125dbba75aff8b6bc2c",
+  "file_mode": "0600",
+  "directory_mode": "0700",
+  "members": [
+    ".app.json",
+    "plugin.json",
+    "skills/career-interview/SKILL.md"
+  ],
+  "package_name": "careerground",
+  "prepared_version": "1.0.3",
+  "registered_app_binding": "<PRIVATE_REGISTERED_APP_ID>",
+  "skill_sha256": "9fa7e666af11385290ce6cb6abbc31be147455330de73460c15f360c2495ea69",
+  "matches_previously_reviewed_skill": true,
+  "installed_1_0_2_skill_matches_prepared": false,
+  "source_files_unchanged": true,
+  "zip_integrity_verified": true,
+  "uploaded": false,
+  "installed": false,
+  "published": false,
+  "model_calls": 0,
+  "subsequent_actual_update_evidence": "careerground_persistent_qa_private_plugin_update_20261007.json",
+  "prepared_portable_name_not_valid_for_existing_plugin_update": true,
+  "original_preparation_claim_existing_name_preserved_corrected": true
+}

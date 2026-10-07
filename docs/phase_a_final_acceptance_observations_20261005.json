@@ -1,0 +1,74 @@
+{
+  "schema": "careerground-phase-a-final-acceptance-observations-v1",
+  "date": "2026-10-05",
+  "head": "d88ad6255eb110cd265b0cc26c581578bc7564a0",
+  "phase_a_complete": false,
+  "synthetic_career_data_only": true,
+  "external_setting_mutations": 0,
+  "new_paid_resources": 0,
+  "external_model_api_calls": 0,
+  "commit": false,
+  "push": false,
+  "auth0_readonly": {
+    "current_plan": "Free",
+    "displayed_price_usd": 0,
+    "existing_trial_days_remaining": 11,
+    "policy": "Never",
+    "otp_enabled": false,
+    "recovery_enabled": false,
+    "permanent_free_mfa_entitlement": false,
+    "trial_configuration_approval": "DEFERRED_BY_USER"
+  },
+  "local_verification": {
+    "version": "17.11",
+    "synthetic_only": true,
+    "last_command_seconds": 94.637,
+    "revision": "20261003_0020",
+    "product_tables": 38,
+    "product_rows": 0,
+    "passed": true,
+    "server_stopped": true,
+    "tests_run": 453,
+    "failed": 0,
+    "skipped": 0,
+    "unittest_seconds": 91.239
+  },
+  "ruff": {
+    "check": "PASS",
+    "format_files": 194
+  },
+  "quality": {
+    "new_cases": 8,
+    "matched_action": 6,
+    "independent_human_evaluation": false,
+    "gate_passed": false
+  },
+  "actual_gates": {
+    "mfa_deletion": "OTP_DEFERRED_DELETION_REAUTHENTICATION_ALTERNATIVE_UNRESOLVED",
+    "two_accounts": "PENDING_SECOND_DEVELOPMENT_IDENTITY",
+    "disconnect_revoke_expiry": "LOCAL_BACKEND_TESTED_ACTUAL_RUNTIME_NOT_ENABLED",
+    "refresh": "DEFER_RECOMMENDED_OFFLINE_ACCESS_NOT_REQUESTED",
+    "quality": "PENDING_CRITERIA_AND_INDEPENDENT_REVIEW",
+    "public_operations": "PENDING_SCOPE_POLICY_BUDGET_AND_RUNTIME_EVIDENCE",
+    "github_ci_latest_tree": "NOT_RUN_NO_COMMIT_OR_PUSH"
+  },
+  "preservation": {
+    "files": 45,
+    "changed": 0
+  },
+  "cleanup": {
+    "temporary_postgres_build_removed": true,
+    "temporary_clusters_removed": true,
+    "password_file_removed": true,
+    "preserved_original_files": 45,
+    "changed": 0
+  },
+  "user_decisions": {
+    "date": "2026-10-05",
+    "otp_mfa": "DEFERRED",
+    "trial_otp_configuration_request": "CLOSED_DEFERRED",
+    "server_ai": "DEFERRED",
+    "deletion_authentication_alternative": "NOT_SELECTED",
+    "deletion_verification_requirements_waived": false
+  }
+}

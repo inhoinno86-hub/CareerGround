@@ -1,0 +1,30 @@
+{
+  "observed_at_utc": "2026-10-06T00:11:21.896437+00:00",
+  "scope": "synthetic A fact review",
+  "web_result": {
+    "status": 409,
+    "heading": "화면의 정보가 바뀌었습니다",
+    "receipt_present": false,
+    "forms": 0
+  },
+  "operation": {
+    "status": "WAITING",
+    "created_at_utc": "2026-10-05 23:58:57.997504",
+    "expires_at_utc": "2026-10-06 00:03:57.997504",
+    "expired": true
+  },
+  "counts_after_failed_submission": {
+    "claims": 0,
+    "claim_reviews": 0,
+    "profiling_inputs": 2,
+    "profiling_drafts": 3,
+    "deletion_requests": 0
+  },
+  "result": "NOT_SAVED_EXPIRED_REQUEST",
+  "renewal": "new batch and operation with fresh idempotency keys; preserved source and drafts; human final decision required",
+  "limits": [
+    "expiry is sufficient to reject; no claim of exclusive cause from generic response",
+    "no TTL extension or automatic approval",
+    "display guidance change requires subsequent runtime restart"
+  ]
+}

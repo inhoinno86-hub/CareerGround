@@ -1,0 +1,27 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "careerground",
+  "version": "0.1.0",
+  "description": "Guide explicit career interviews with CareerGround MCP and human review in its management browser.",
+  "author": {
+    "name": "CareerGround"
+  },
+  "repository": "https://github.com/inhoinno86-hub/CareerGround",
+  "keywords": [
+    "career",
+    "resume"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "CareerGround",
+        "shortDescription": "경력 대화와 근거를 연결하고 관리 화면에서 직접 확인합니다.",
+        "defaultPrompt": [
+          "내가 제공하는 경력만 정리하고, 저장할 사실은 관리 화면에서 확인하게 해줘.",
+          "관리 화면에서 확인했어. 요청한 작업을 이어서 진행해줘."
+        ],
+        "developerName": "CareerGround"
+      }
+    }
+  }
+}

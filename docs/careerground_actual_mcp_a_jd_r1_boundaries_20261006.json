@@ -1,0 +1,114 @@
+{
+  "schema": "careerground-actual-mcp-a-jd-r1-boundaries-v1",
+  "a_discovery": {
+    "actual_profile_matches_a": true,
+    "status": "ok",
+    "found": true,
+    "model_profile_version": null,
+    "store_profile_version": 2,
+    "connection_alias_explicitly_selected": "profileA"
+  },
+  "excluded_observations": [
+    "Initial eligible-link client metadata error did not establish actual identity or server denial",
+    "Fresh generic discovery selected expired Primary; explicit profileA discovery succeeded"
+  ],
+  "cases": [
+    {
+      "case": "release-a-foreign-b-jd-read",
+      "tool": "get_jd_analysis",
+      "result": {
+        "qa_case": "release-a-foreign-b-jd-read",
+        "status": "error",
+        "code": "NOT_FOUND",
+        "found": null
+      },
+      "expected_code": "NOT_FOUND",
+      "passed": true,
+      "verdict": "PASS"
+    },
+    {
+      "case": "release-a-nonexistent-jd-read",
+      "tool": "get_jd_analysis",
+      "result": {
+        "qa_case": "release-a-nonexistent-jd-read",
+        "status": "error",
+        "code": "NOT_FOUND",
+        "found": null
+      },
+      "expected_code": "NOT_FOUND",
+      "passed": true,
+      "verdict": "PASS"
+    },
+    {
+      "case": "release-a-foreign-b-r1-trace",
+      "tool": "get_resume_trace",
+      "result": {
+        "qa_case": "release-a-foreign-b-r1-trace",
+        "status": "error",
+        "code": "NOT_FOUND",
+        "found": null
+      },
+      "expected_code": "NOT_FOUND",
+      "passed": true,
+      "verdict": "PASS"
+    },
+    {
+      "case": "release-a-nonexistent-r1-trace",
+      "tool": "get_resume_trace",
+      "result": {
+        "qa_case": "release-a-nonexistent-r1-trace",
+        "status": "error",
+        "code": "NOT_FOUND",
+        "found": null
+      },
+      "expected_code": "NOT_FOUND",
+      "passed": true,
+      "verdict": "PASS"
+    },
+    {
+      "case": "release-a-foreign-b-r1-export-request",
+      "tool": "request_user_confirmation",
+      "result": {
+        "qa_case": "release-a-foreign-b-r1-export-request",
+        "status": null,
+        "code": null,
+        "found": null
+      },
+      "expected_code": "REVIEW_REQUIRED",
+      "passed": false,
+      "verdict": "INCONCLUSIVE"
+    },
+    {
+      "case": "release-a-nonexistent-r1-export-request",
+      "tool": "request_user_confirmation",
+      "result": {
+        "qa_case": "release-a-nonexistent-r1-export-request",
+        "status": "error",
+        "code": "REVIEW_REQUIRED",
+        "found": null
+      },
+      "expected_code": "REVIEW_REQUIRED",
+      "passed": true,
+      "verdict": "PASS"
+    },
+    {
+      "case": "release-a-foreign-b-r1-export-request-single-02",
+      "tool": "request_user_confirmation",
+      "result": {
+        "qa_case": "release-a-foreign-b-r1-export-request-single-02",
+        "status": "error",
+        "code": "REVIEW_REQUIRED",
+        "found": null
+      },
+      "expected_code": "REVIEW_REQUIRED",
+      "passed": true,
+      "verdict": "PASS"
+    }
+  ],
+  "non_quota_tables_unchanged": 37,
+  "limits": [
+    "Read and confirmation request boundaries only; no valid receipt cross-submit or actual export/deletion execution",
+    "First foreign R1 export confirmation projection null preserved as INCONCLUSIVE; separate single-call actual error returned REVIEW_REQUIRED",
+    "Model discovery profile_version null is not treated as actual returned version; stored owned profile is version 2"
+  ]
+}

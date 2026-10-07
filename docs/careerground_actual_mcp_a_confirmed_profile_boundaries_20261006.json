@@ -1,0 +1,60 @@
+{
+  "schema": "careerground-actual-mcp-a-confirmed-profile-boundaries-v1",
+  "scope": "Reconnected A reads confirmed synthetic B profile/Claim at version 1; explicit export approval requests only",
+  "discovery": {
+    "expected_id_withheld": true,
+    "matches_private_QA_A": true,
+    "matches_B": false,
+    "version": 1,
+    "initial_null_projection_excluded": true,
+    "fresh_personalized_temporary_chat_verified": true
+  },
+  "observations": [
+    {
+      "qa_case": "A_CONFIRMED_B_PROFILE",
+      "status": "error",
+      "error_code": "NOT_FOUND",
+      "submissions": 1
+    },
+    {
+      "qa_case": "A_CONFIRMED_ABSENT_PROFILE",
+      "status": "error",
+      "error_code": "NOT_FOUND",
+      "submissions": 1
+    },
+    {
+      "qa_case": "A_CONFIRMED_B_EVIDENCE",
+      "status": "error",
+      "error_code": "NOT_FOUND",
+      "submissions": 1
+    },
+    {
+      "qa_case": "A_CONFIRMED_ABSENT_EVIDENCE",
+      "status": "error",
+      "error_code": "NOT_FOUND",
+      "submissions": 1
+    },
+    {
+      "qa_case": "A_CONFIRMED_B_EXPORT_REQUEST",
+      "status": "error",
+      "error_code": "REVIEW_REQUIRED",
+      "submissions": 1
+    },
+    {
+      "qa_case": "A_CONFIRMED_ABSENT_EXPORT_REQUEST",
+      "status": "error",
+      "error_code": "REVIEW_REQUIRED",
+      "submissions": 1
+    }
+  ],
+  "non_quota_tables_checked": 37,
+  "non_quota_counts_and_row_hashes_unchanged": true,
+  "claims_total": 3,
+  "claim_use_reviews": 0,
+  "limitations": [
+    "Actual export execution and valid receipt cross-submit remain unverified",
+    "No source or artifact mutations from negative requests",
+    "Artifact fixtures and subsequent R1/R2 approvals remain pending",
+    "No receipt or token copied"
+  ]
+}

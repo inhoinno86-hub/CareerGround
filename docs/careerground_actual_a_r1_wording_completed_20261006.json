@@ -1,0 +1,19 @@
+{
+  "schema": "careerground-actual-a-r1-wording-completed-v1",
+  "observed_at_utc": "2026-10-06T05:44:18.691172+00:00",
+  "human_web_wording_approval_saved": true,
+  "same_originating_connection_confirmation_status": "DONE",
+  "submit_resume_wording_review_status": "ok",
+  "operation_status_after": "CONSUMED",
+  "profile_version": 2,
+  "artifact_version": 1,
+  "artifact_status_from_store": "WORDING_REVIEWED",
+  "unit_review_status_from_store": "WORDING_REVIEWED",
+  "wording_level": "R1",
+  "wording_review_count": 1,
+  "model_artifact_status_null_not_accepted": true,
+  "limits": [
+    "Exact R1 copy approved; no R2 created",
+    "No export approval or execution yet"
+  ]
+}

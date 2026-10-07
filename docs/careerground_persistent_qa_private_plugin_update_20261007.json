@@ -1,0 +1,74 @@
+{
+  "scope": "authorized_existing_private_plugin_update_and_actual_read_round_trip",
+  "observed_at": "2026-10-07T02:46:31.598385+00:00",
+  "existing_plugin_name": "CareerGround Phase A Dev",
+  "visibility": "private",
+  "initial_prepared_archive_rejected": {
+    "reason": "Plugin upload name must match the existing plugin",
+    "portable_manifest_name_preserved_existing_name": false,
+    "installed_version_changed_by_rejected_attempt": false
+  },
+  "corrected_archive": {
+    "relative_path": ".careerground-release-qa/release-20261007/packages/careerground-phase-a-dev-existing-name-1.0.3.zip",
+    "sha256": "6f2605980398a4f5326e928d8793dfd3fd8b76326962e5f5077162dfb2611b67",
+    "manifest_member": ".codex-plugin/plugin.json",
+    "version": "1.0.3",
+    "actual_downloaded_original_name_preserved": true,
+    "original_app_binding_bytes_preserved": true,
+    "members": [
+      ".app.json",
+      ".codex-plugin/plugin.json",
+      "skills/career-interview/SKILL.md"
+    ]
+  },
+  "upload": {
+    "actual_menu": "existing plugin → additional actions → upload new version",
+    "success_dialog_observed": true,
+    "visible_version": "1.0.3",
+    "new_plugin_created": false,
+    "existing_connections_preserved": true
+  },
+  "downloaded_after_update": {
+    "version": "1.0.3",
+    "skill_matches_latest_source_exact_bytes": true,
+    "skill_sha256": "9fa7e666af11385290ce6cb6abbc31be147455330de73460c15f360c2495ea69",
+    "same_original_name_and_binding_verified": true
+  },
+  "actual_ChatGPT_read_round_trip": {
+    "new_conversation_after_upload": true,
+    "selected_connection_alias": "프로필A",
+    "expected_profile_id_not_supplied": true,
+    "actual_profile_matches_verified_A": true,
+    "version": 1,
+    "exact_synthetic_claim_text_matches": true,
+    "knowledge_status": "USER_CONFIRMED",
+    "consistency_status": "NOT_EVALUATED",
+    "usage_policy": "REVIEW_REQUIRED",
+    "fact_confirmation_not_treated_as_use_permission": true,
+    "writing_approval_export_or_delete_requested": false
+  },
+  "A_Web_login_and_profile": {
+    "fresh_background_tab": 8,
+    "existing_SSO_login_completed": true,
+    "profile_link_matches_A": true,
+    "version": 1,
+    "claim_evidence_path_observed_from_server_link": true
+  },
+  "read_round_trip_non_quota_tables_unchanged": 37,
+  "temporary_CDP_file_chooser_interception_restored": true,
+  "provider_configuration_or_grants_changed": false,
+  "paid_resources_added": false,
+  "phase_A_complete": false,
+  "human_step_pending": {
+    "step": "A_exact_synthetic_claim_use_review",
+    "web_page": 8,
+    "requested_at": "2026-10-07T02:47:25.340120+00:00",
+    "user_final_submission_required": true,
+    "approval_not_performed_by_agent": true
+  },
+  "installed_skill_UI": {
+    "usage_switch_checked": true,
+    "updated_contract_rendered": true,
+    "background_inspection_tab_closed": true
+  }
+}

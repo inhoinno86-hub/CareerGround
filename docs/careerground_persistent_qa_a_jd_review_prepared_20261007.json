@@ -1,0 +1,37 @@
+{
+  "scope": "user_A_reconnected_and_actual_latest_plugin_JD_review_prepared",
+  "observed_at": "2026-10-07T05:40:25.329818+00:00",
+  "user_reported_A_reconnection_complete": true,
+  "ChatGPT_automatically_resumed_original_requested_operation": true,
+  "duplicate_request_submitted": false,
+  "actual_MCP_reported_profile_version": 2,
+  "proposal_returned": {
+    "status": "WAITING",
+    "canonical_saved": false,
+    "expires_at_field_not_returned": true,
+    "ttl_seconds_by_server_contract": 180
+  },
+  "source_text": "장애 로그 분류 및 팀 확인 절차 공유 경험",
+  "source_hash": "c1b614a6900e6bb131e0110d0eeb3eadb8d5a55967fc2718e4079f26ed0dab39",
+  "source_span": [
+    0,
+    24
+  ],
+  "candidate_count": 1,
+  "claim_id": null,
+  "evidence_ids": [],
+  "A_Web": {
+    "confirmation_url_from_actual_ChatGPT_response": true,
+    "http_status": 200,
+    "heading": "ChatGPT JD 발췌 직접 검토",
+    "displayed_profile_version": 2,
+    "exact_source_text_and_span_match": true,
+    "displayed_connection_mapping": "none; semantic fitness unconfirmed",
+    "front_page": 8
+  },
+  "saved_JDs_before_human_submission": 0,
+  "artifacts_before_human_submission": 0,
+  "human_final_selection_and_confirmation_pending": true,
+  "form_token_read_saved_or_submitted_by_agent": false,
+  "phase_A_complete": false
+}

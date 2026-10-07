@@ -1,0 +1,19 @@
+{
+  "schema": "careerground-actual-a-reviewed-r1-trace-v1",
+  "observed_at_utc": "2026-10-06T05:45:27.562505+00:00",
+  "status": "ok",
+  "found": true,
+  "profile_version": 2,
+  "units": [
+    {
+      "exact_text": "가상 서비스의 오류 제보를 모아 재현 절차 문서 초안을 작성했습니다.",
+      "wording_level": "R1",
+      "review_status": "WORDING_REVIEWED"
+    }
+  ],
+  "non_quota_tables_unchanged": 37,
+  "limits": [
+    "Owned A trace only; B MCP attempt requires reauthentication",
+    "No export approval or execution"
+  ]
+}

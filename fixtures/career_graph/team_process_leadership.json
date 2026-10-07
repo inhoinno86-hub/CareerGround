@@ -1,0 +1,1425 @@
+{
+  "schema_version": "career-graph-v1",
+  "profile": {
+    "id": "CP-C",
+    "user_id": "USER-SYNTHETIC-C",
+    "display_name": "Synthetic Fixture C — Team and Process Leadership",
+    "current_version": 12,
+    "status": "ACTIVE",
+    "created_at": "2026-09-21T00:00:00Z",
+    "updated_at": "2026-09-21T00:00:00Z"
+  },
+  "career": {
+    "organizations": [],
+    "roles": [
+      {
+        "id": "R-C",
+        "profile_id": "CP-C",
+        "organization_id": null,
+        "title": "Synthetic role placeholder — V&V team lead",
+        "role_type": "SYNTHETIC_FIXTURE",
+        "employment_type": null,
+        "start_date": null,
+        "end_date": null,
+        "summary": "Synthetic schema-validation role derived from request §5 Fixture C; not a real career record.",
+        "created_in_version": 12,
+        "retired_in_version": null
+      }
+    ],
+    "projects": [
+      {
+        "id": "P-C",
+        "profile_id": "CP-C",
+        "role_id": "R-C",
+        "name": "Autonomous-driving Test & Verification team (synthetic fixture)",
+        "summary": "Synthetic request §5 Fixture C context; no company, dates, metrics, or product implementation ownership asserted.",
+        "goal": null,
+        "start_date": null,
+        "end_date": null,
+        "created_in_version": 12,
+        "retired_in_version": null
+      }
+    ],
+    "responsibilities": [
+      {
+        "id": "RESP-C-team",
+        "profile_id": "CP-C",
+        "role_id": null,
+        "project_id": "P-C",
+        "statement": "Lead the small V&V team and its operating process.",
+        "scope": "Team and process only; excludes perception, planning, and control implementation.",
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "RESP-C-process",
+        "profile_id": "CP-C",
+        "role_id": null,
+        "project_id": "P-C",
+        "statement": "Maintain feature-to-test traceability and validation evaluation processes.",
+        "scope": "V&V process and traceability only.",
+        "created_in_version": 12,
+        "retired_in_version": null
+      }
+    ],
+    "contributions": [
+      {
+        "id": "CT-C-team",
+        "profile_id": "CP-C",
+        "role_id": null,
+        "project_id": "P-C",
+        "contribution_type": "LEADERSHIP",
+        "action": "led",
+        "object_text": "small V&V team formation and operation",
+        "summary": "Led formation and operation of a small V&V team.",
+        "start_date": null,
+        "end_date": null,
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "CT-C-sprint",
+        "profile_id": "CP-C",
+        "role_id": null,
+        "project_id": "P-C",
+        "contribution_type": "PROCESS",
+        "action": "coordinated",
+        "object_text": "sprint planning",
+        "summary": "Coordinated sprint planning for the V&V team.",
+        "start_date": null,
+        "end_date": null,
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "CT-C-schedule",
+        "profile_id": "CP-C",
+        "role_id": null,
+        "project_id": "P-C",
+        "contribution_type": "PROCESS",
+        "action": "coordinated",
+        "object_text": "team schedule",
+        "summary": "Coordinated the V&V team schedule.",
+        "start_date": null,
+        "end_date": null,
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "CT-C-review",
+        "profile_id": "CP-C",
+        "role_id": null,
+        "project_id": "P-C",
+        "contribution_type": "REVIEW",
+        "action": "facilitated",
+        "object_text": "technical reviews",
+        "summary": "Facilitated technical reviews for V&V work.",
+        "start_date": null,
+        "end_date": null,
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "CT-C-coordination",
+        "profile_id": "CP-C",
+        "role_id": null,
+        "project_id": "P-C",
+        "contribution_type": "PROCESS",
+        "action": "coordinated",
+        "object_text": "V&V work",
+        "summary": "Coordinated V&V work across the team.",
+        "start_date": null,
+        "end_date": null,
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "CT-C-traceability",
+        "profile_id": "CP-C",
+        "role_id": null,
+        "project_id": "P-C",
+        "contribution_type": "DOCUMENTATION",
+        "action": "maintained",
+        "object_text": "feature-to-test-case traceability",
+        "summary": "Maintained feature-to-test-case traceability.",
+        "start_date": null,
+        "end_date": null,
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "CT-C-simulation",
+        "profile_id": "CP-C",
+        "role_id": null,
+        "project_id": "P-C",
+        "contribution_type": "PROCESS",
+        "action": "operated",
+        "object_text": "simulation evaluation process",
+        "summary": "Operated the simulation evaluation process.",
+        "start_date": null,
+        "end_date": null,
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "CT-C-field",
+        "profile_id": "CP-C",
+        "role_id": null,
+        "project_id": "P-C",
+        "contribution_type": "PROCESS",
+        "action": "operated",
+        "object_text": "field validation process",
+        "summary": "Operated the field validation process.",
+        "start_date": null,
+        "end_date": null,
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "CT-C-regression",
+        "profile_id": "CP-C",
+        "role_id": null,
+        "project_id": "P-C",
+        "contribution_type": "PROCESS",
+        "action": "operated",
+        "object_text": "regression evaluation process",
+        "summary": "Operated the regression evaluation process.",
+        "start_date": null,
+        "end_date": null,
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "CT-C-release",
+        "profile_id": "CP-C",
+        "role_id": null,
+        "project_id": "P-C",
+        "contribution_type": "PROCESS",
+        "action": "operated",
+        "object_text": "release evaluation process",
+        "summary": "Operated the release evaluation process.",
+        "start_date": null,
+        "end_date": null,
+        "created_in_version": 12,
+        "retired_in_version": null
+      }
+    ],
+    "ownership_records": [
+      {
+        "id": "O-C-team",
+        "profile_id": "CP-C",
+        "contribution_id": null,
+        "responsibility_id": "RESP-C-team",
+        "project_id": null,
+        "ownership_level": "OWNER",
+        "scope_type": "TASK",
+        "scope_description": "Small-team formation and operation only.",
+        "decision_authority": "UNKNOWN",
+        "execution_responsibility": "Led team operation, sprint, schedule, reviews, and coordination.",
+        "validation_responsibility": null,
+        "team_context": "Small autonomous-driving V&V team; synthetic fixture.",
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "O-C-process",
+        "profile_id": "CP-C",
+        "contribution_id": null,
+        "responsibility_id": "RESP-C-process",
+        "project_id": null,
+        "ownership_level": "OWNER",
+        "scope_type": "TASK",
+        "scope_description": "V&V traceability and evaluation process only.",
+        "decision_authority": "UNKNOWN",
+        "execution_responsibility": "Maintained traceability and operated evaluation processes.",
+        "validation_responsibility": "Process-level evaluation responsibility; no product-feature implementation ownership.",
+        "team_context": "Autonomous-driving V&V team; synthetic fixture.",
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "O-C-traceability",
+        "profile_id": "CP-C",
+        "contribution_id": "CT-C-traceability",
+        "responsibility_id": null,
+        "project_id": null,
+        "ownership_level": "DIRECT_CONTRIBUTOR",
+        "scope_type": "TASK",
+        "scope_description": "Feature-to-test-case traceability task only.",
+        "decision_authority": "UNKNOWN",
+        "execution_responsibility": "Maintained traceability.",
+        "validation_responsibility": null,
+        "team_context": null,
+        "created_in_version": 12,
+        "retired_in_version": null
+      }
+    ],
+    "skills": [],
+    "technologies": [],
+    "outcomes": [],
+    "validation_activities": [
+      {
+        "id": "VA-C-simulation",
+        "profile_id": "CP-C",
+        "project_id": "P-C",
+        "contribution_id": "CT-C-simulation",
+        "validation_type": "SIMULATION",
+        "statement": "Operated the simulation evaluation process.",
+        "environment": null,
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "VA-C-field",
+        "profile_id": "CP-C",
+        "project_id": "P-C",
+        "contribution_id": "CT-C-field",
+        "validation_type": "FIELD",
+        "statement": "Operated the field validation process.",
+        "environment": null,
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "VA-C-regression",
+        "profile_id": "CP-C",
+        "project_id": "P-C",
+        "contribution_id": "CT-C-regression",
+        "validation_type": "REGRESSION",
+        "statement": "Operated the regression evaluation process.",
+        "environment": null,
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "VA-C-release",
+        "profile_id": "CP-C",
+        "project_id": "P-C",
+        "contribution_id": "CT-C-release",
+        "validation_type": "RELEASE_EVALUATION",
+        "statement": "Operated the release evaluation process.",
+        "environment": null,
+        "created_in_version": 12,
+        "retired_in_version": null
+      }
+    ]
+  },
+  "claims": [
+    {
+      "id": "C-C-team-leadership",
+      "profile_id": "CP-C",
+      "claim_type": "OWNERSHIP",
+      "canonical_text": "Led operation of a small V&V team.",
+      "predicate": "led",
+      "object_text": "small V&V team operation",
+      "importance": "HIGH",
+      "created_in_version": 12,
+      "retired_in_version": null,
+      "supersedes_claim_id": null,
+      "created_at": "2026-09-21T00:00:00Z",
+      "contexts": [
+        {
+          "type": "OWNERSHIP",
+          "id": "O-C-team",
+          "role": "PRIMARY"
+        }
+      ]
+    },
+    {
+      "id": "C-C-sprint",
+      "profile_id": "CP-C",
+      "claim_type": "CONTRIBUTION",
+      "canonical_text": "Coordinated sprint planning for the V&V team.",
+      "predicate": "coordinated",
+      "object_text": "sprint planning",
+      "importance": "NORMAL",
+      "created_in_version": 12,
+      "retired_in_version": null,
+      "supersedes_claim_id": null,
+      "created_at": "2026-09-21T00:00:00Z",
+      "contexts": [
+        {
+          "type": "CONTRIBUTION",
+          "id": "CT-C-sprint",
+          "role": "PRIMARY"
+        }
+      ]
+    },
+    {
+      "id": "C-C-schedule",
+      "profile_id": "CP-C",
+      "claim_type": "CONTRIBUTION",
+      "canonical_text": "Coordinated the V&V team schedule.",
+      "predicate": "coordinated",
+      "object_text": "V&V team schedule",
+      "importance": "NORMAL",
+      "created_in_version": 12,
+      "retired_in_version": null,
+      "supersedes_claim_id": null,
+      "created_at": "2026-09-21T00:00:00Z",
+      "contexts": [
+        {
+          "type": "CONTRIBUTION",
+          "id": "CT-C-schedule",
+          "role": "PRIMARY"
+        }
+      ]
+    },
+    {
+      "id": "C-C-review",
+      "profile_id": "CP-C",
+      "claim_type": "CONTRIBUTION",
+      "canonical_text": "Facilitated technical reviews for V&V work.",
+      "predicate": "facilitated",
+      "object_text": "technical reviews",
+      "importance": "NORMAL",
+      "created_in_version": 12,
+      "retired_in_version": null,
+      "supersedes_claim_id": null,
+      "created_at": "2026-09-21T00:00:00Z",
+      "contexts": [
+        {
+          "type": "CONTRIBUTION",
+          "id": "CT-C-review",
+          "role": "PRIMARY"
+        }
+      ]
+    },
+    {
+      "id": "C-C-coordination",
+      "profile_id": "CP-C",
+      "claim_type": "CONTRIBUTION",
+      "canonical_text": "Coordinated V&V work across the team.",
+      "predicate": "coordinated",
+      "object_text": "V&V work",
+      "importance": "NORMAL",
+      "created_in_version": 12,
+      "retired_in_version": null,
+      "supersedes_claim_id": null,
+      "created_at": "2026-09-21T00:00:00Z",
+      "contexts": [
+        {
+          "type": "CONTRIBUTION",
+          "id": "CT-C-coordination",
+          "role": "PRIMARY"
+        }
+      ]
+    },
+    {
+      "id": "C-C-traceability",
+      "profile_id": "CP-C",
+      "claim_type": "CONTRIBUTION",
+      "canonical_text": "Maintained feature-to-test-case traceability.",
+      "predicate": "maintained",
+      "object_text": "feature-to-test-case traceability",
+      "importance": "HIGH",
+      "created_in_version": 12,
+      "retired_in_version": null,
+      "supersedes_claim_id": null,
+      "created_at": "2026-09-21T00:00:00Z",
+      "contexts": [
+        {
+          "type": "CONTRIBUTION",
+          "id": "CT-C-traceability",
+          "role": "PRIMARY"
+        }
+      ]
+    },
+    {
+      "id": "C-C-simulation",
+      "profile_id": "CP-C",
+      "claim_type": "VALIDATION",
+      "canonical_text": "Operated the simulation evaluation process.",
+      "predicate": "operated",
+      "object_text": "simulation evaluation process",
+      "importance": "NORMAL",
+      "created_in_version": 12,
+      "retired_in_version": null,
+      "supersedes_claim_id": null,
+      "created_at": "2026-09-21T00:00:00Z",
+      "contexts": [
+        {
+          "type": "VALIDATION_ACTIVITY",
+          "id": "VA-C-simulation",
+          "role": "PRIMARY"
+        }
+      ]
+    },
+    {
+      "id": "C-C-field",
+      "profile_id": "CP-C",
+      "claim_type": "VALIDATION",
+      "canonical_text": "Operated the field validation process.",
+      "predicate": "operated",
+      "object_text": "field validation process",
+      "importance": "NORMAL",
+      "created_in_version": 12,
+      "retired_in_version": null,
+      "supersedes_claim_id": null,
+      "created_at": "2026-09-21T00:00:00Z",
+      "contexts": [
+        {
+          "type": "VALIDATION_ACTIVITY",
+          "id": "VA-C-field",
+          "role": "PRIMARY"
+        }
+      ]
+    },
+    {
+      "id": "C-C-regression",
+      "profile_id": "CP-C",
+      "claim_type": "VALIDATION",
+      "canonical_text": "Operated the regression evaluation process.",
+      "predicate": "operated",
+      "object_text": "regression evaluation process",
+      "importance": "NORMAL",
+      "created_in_version": 12,
+      "retired_in_version": null,
+      "supersedes_claim_id": null,
+      "created_at": "2026-09-21T00:00:00Z",
+      "contexts": [
+        {
+          "type": "VALIDATION_ACTIVITY",
+          "id": "VA-C-regression",
+          "role": "PRIMARY"
+        }
+      ]
+    },
+    {
+      "id": "C-C-release",
+      "profile_id": "CP-C",
+      "claim_type": "VALIDATION",
+      "canonical_text": "Operated the release evaluation process.",
+      "predicate": "operated",
+      "object_text": "release evaluation process",
+      "importance": "NORMAL",
+      "created_in_version": 12,
+      "retired_in_version": null,
+      "supersedes_claim_id": null,
+      "created_at": "2026-09-21T00:00:00Z",
+      "contexts": [
+        {
+          "type": "VALIDATION_ACTIVITY",
+          "id": "VA-C-release",
+          "role": "PRIMARY"
+        }
+      ]
+    },
+    {
+      "id": "C-C-perception-owner",
+      "profile_id": "CP-C",
+      "claim_type": "OWNERSHIP",
+      "canonical_text": "Owned perception implementation.",
+      "predicate": "owned",
+      "object_text": "perception implementation",
+      "importance": "HIGH",
+      "created_in_version": 12,
+      "retired_in_version": null,
+      "supersedes_claim_id": null,
+      "created_at": "2026-09-21T00:00:00Z",
+      "contexts": [
+        {
+          "type": "PROJECT",
+          "id": "P-C",
+          "role": "BOUNDARY_TEST"
+        }
+      ]
+    },
+    {
+      "id": "C-C-planning-owner",
+      "profile_id": "CP-C",
+      "claim_type": "OWNERSHIP",
+      "canonical_text": "Owned planning implementation.",
+      "predicate": "owned",
+      "object_text": "planning implementation",
+      "importance": "HIGH",
+      "created_in_version": 12,
+      "retired_in_version": null,
+      "supersedes_claim_id": null,
+      "created_at": "2026-09-21T00:00:00Z",
+      "contexts": [
+        {
+          "type": "PROJECT",
+          "id": "P-C",
+          "role": "BOUNDARY_TEST"
+        }
+      ]
+    },
+    {
+      "id": "C-C-control-owner",
+      "profile_id": "CP-C",
+      "claim_type": "OWNERSHIP",
+      "canonical_text": "Owned control implementation.",
+      "predicate": "owned",
+      "object_text": "control implementation",
+      "importance": "HIGH",
+      "created_in_version": 12,
+      "retired_in_version": null,
+      "supersedes_claim_id": null,
+      "created_at": "2026-09-21T00:00:00Z",
+      "contexts": [
+        {
+          "type": "PROJECT",
+          "id": "P-C",
+          "role": "BOUNDARY_TEST"
+        }
+      ]
+    }
+  ],
+  "claim_assessments": [
+    {
+      "id": "CA-C-team",
+      "profile_id": "CP-C",
+      "claim_id": "C-C-team-leadership",
+      "knowledge_status": "USER_CONFIRMED",
+      "consistency_status": "CONSISTENT",
+      "usage_policy": "ALLOWED",
+      "confidence": null,
+      "rationale": "Synthetic USER_CONFIRMED state from a simulated fixture review; not a real review or external verification.",
+      "assessed_by_type": "SIMULATED_USER_REVIEW",
+      "assessed_by_id": null,
+      "profile_version": 12,
+      "assessed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CA-C-sprint",
+      "profile_id": "CP-C",
+      "claim_id": "C-C-sprint",
+      "knowledge_status": "USER_CONFIRMED",
+      "consistency_status": "CONSISTENT",
+      "usage_policy": "ALLOWED",
+      "confidence": null,
+      "rationale": "Synthetic simulated review.",
+      "assessed_by_type": "SIMULATED_USER_REVIEW",
+      "assessed_by_id": null,
+      "profile_version": 12,
+      "assessed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CA-C-schedule",
+      "profile_id": "CP-C",
+      "claim_id": "C-C-schedule",
+      "knowledge_status": "USER_CONFIRMED",
+      "consistency_status": "CONSISTENT",
+      "usage_policy": "ALLOWED",
+      "confidence": null,
+      "rationale": "Synthetic simulated review.",
+      "assessed_by_type": "SIMULATED_USER_REVIEW",
+      "assessed_by_id": null,
+      "profile_version": 12,
+      "assessed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CA-C-review",
+      "profile_id": "CP-C",
+      "claim_id": "C-C-review",
+      "knowledge_status": "USER_CONFIRMED",
+      "consistency_status": "CONSISTENT",
+      "usage_policy": "ALLOWED",
+      "confidence": null,
+      "rationale": "Synthetic simulated review.",
+      "assessed_by_type": "SIMULATED_USER_REVIEW",
+      "assessed_by_id": null,
+      "profile_version": 12,
+      "assessed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CA-C-coordination",
+      "profile_id": "CP-C",
+      "claim_id": "C-C-coordination",
+      "knowledge_status": "USER_CONFIRMED",
+      "consistency_status": "CONSISTENT",
+      "usage_policy": "ALLOWED",
+      "confidence": null,
+      "rationale": "Synthetic simulated review.",
+      "assessed_by_type": "SIMULATED_USER_REVIEW",
+      "assessed_by_id": null,
+      "profile_version": 12,
+      "assessed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CA-C-traceability",
+      "profile_id": "CP-C",
+      "claim_id": "C-C-traceability",
+      "knowledge_status": "USER_CONFIRMED",
+      "consistency_status": "CONSISTENT",
+      "usage_policy": "ALLOWED",
+      "confidence": null,
+      "rationale": "Synthetic technical contribution distinct from team/process ownership.",
+      "assessed_by_type": "SIMULATED_USER_REVIEW",
+      "assessed_by_id": null,
+      "profile_version": 12,
+      "assessed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CA-C-simulation",
+      "profile_id": "CP-C",
+      "claim_id": "C-C-simulation",
+      "knowledge_status": "USER_CONFIRMED",
+      "consistency_status": "CONSISTENT",
+      "usage_policy": "ALLOWED",
+      "confidence": null,
+      "rationale": "Synthetic simulated review of process operation, not product implementation.",
+      "assessed_by_type": "SIMULATED_USER_REVIEW",
+      "assessed_by_id": null,
+      "profile_version": 12,
+      "assessed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CA-C-field",
+      "profile_id": "CP-C",
+      "claim_id": "C-C-field",
+      "knowledge_status": "USER_CONFIRMED",
+      "consistency_status": "CONSISTENT",
+      "usage_policy": "ALLOWED",
+      "confidence": null,
+      "rationale": "Synthetic simulated review of process operation, not product implementation.",
+      "assessed_by_type": "SIMULATED_USER_REVIEW",
+      "assessed_by_id": null,
+      "profile_version": 12,
+      "assessed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CA-C-regression",
+      "profile_id": "CP-C",
+      "claim_id": "C-C-regression",
+      "knowledge_status": "USER_CONFIRMED",
+      "consistency_status": "CONSISTENT",
+      "usage_policy": "ALLOWED",
+      "confidence": null,
+      "rationale": "Synthetic simulated review of process operation, not product implementation.",
+      "assessed_by_type": "SIMULATED_USER_REVIEW",
+      "assessed_by_id": null,
+      "profile_version": 12,
+      "assessed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CA-C-release",
+      "profile_id": "CP-C",
+      "claim_id": "C-C-release",
+      "knowledge_status": "USER_CONFIRMED",
+      "consistency_status": "CONSISTENT",
+      "usage_policy": "ALLOWED",
+      "confidence": null,
+      "rationale": "Synthetic simulated review of process operation, not product implementation.",
+      "assessed_by_type": "SIMULATED_USER_REVIEW",
+      "assessed_by_id": null,
+      "profile_version": 12,
+      "assessed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CA-C-perception",
+      "profile_id": "CP-C",
+      "claim_id": "C-C-perception-owner",
+      "knowledge_status": "UNKNOWN",
+      "consistency_status": "CONTRADICTED",
+      "usage_policy": "DO_NOT_CLAIM",
+      "confidence": null,
+      "rationale": "Blocked positive ownership overclaim contradicted by the synthetic implementation-boundary source.",
+      "assessed_by_type": "SYSTEM_CONSISTENCY_CHECK",
+      "assessed_by_id": null,
+      "profile_version": 12,
+      "assessed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CA-C-planning",
+      "profile_id": "CP-C",
+      "claim_id": "C-C-planning-owner",
+      "knowledge_status": "UNKNOWN",
+      "consistency_status": "CONTRADICTED",
+      "usage_policy": "DO_NOT_CLAIM",
+      "confidence": null,
+      "rationale": "Blocked positive ownership overclaim contradicted by the synthetic implementation-boundary source.",
+      "assessed_by_type": "SYSTEM_CONSISTENCY_CHECK",
+      "assessed_by_id": null,
+      "profile_version": 12,
+      "assessed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CA-C-control",
+      "profile_id": "CP-C",
+      "claim_id": "C-C-control-owner",
+      "knowledge_status": "UNKNOWN",
+      "consistency_status": "CONTRADICTED",
+      "usage_policy": "DO_NOT_CLAIM",
+      "confidence": null,
+      "rationale": "Blocked positive ownership overclaim contradicted by the synthetic implementation-boundary source.",
+      "assessed_by_type": "SYSTEM_CONSISTENCY_CHECK",
+      "assessed_by_id": null,
+      "profile_version": 12,
+      "assessed_at": "2026-09-21T00:00:00Z"
+    }
+  ],
+  "claim_constraints": [
+    {
+      "id": "K-C-no-perception",
+      "profile_id": "CP-C",
+      "constraint_type": "MAX_OWNERSHIP_SCOPE",
+      "text": "Do not expand V&V team/process leadership into perception implementation ownership.",
+      "severity": "BLOCKING",
+      "created_in_version": 12,
+      "retired_in_version": null,
+      "created_at": "2026-09-21T00:00:00Z",
+      "targets": [
+        {
+          "type": "CLAIM",
+          "id": "C-C-perception-owner"
+        },
+        {
+          "type": "OWNERSHIP",
+          "id": "O-C-team"
+        }
+      ]
+    },
+    {
+      "id": "K-C-no-planning",
+      "profile_id": "CP-C",
+      "constraint_type": "MAX_OWNERSHIP_SCOPE",
+      "text": "Do not expand V&V team/process leadership into planning implementation ownership.",
+      "severity": "BLOCKING",
+      "created_in_version": 12,
+      "retired_in_version": null,
+      "created_at": "2026-09-21T00:00:00Z",
+      "targets": [
+        {
+          "type": "CLAIM",
+          "id": "C-C-planning-owner"
+        },
+        {
+          "type": "OWNERSHIP",
+          "id": "O-C-process"
+        }
+      ]
+    },
+    {
+      "id": "K-C-no-control",
+      "profile_id": "CP-C",
+      "constraint_type": "MAX_OWNERSHIP_SCOPE",
+      "text": "Do not expand V&V team/process leadership into control implementation ownership.",
+      "severity": "BLOCKING",
+      "created_in_version": 12,
+      "retired_in_version": null,
+      "created_at": "2026-09-21T00:00:00Z",
+      "targets": [
+        {
+          "type": "CLAIM",
+          "id": "C-C-control-owner"
+        },
+        {
+          "type": "OWNERSHIP",
+          "id": "O-C-process"
+        }
+      ]
+    }
+  ],
+  "evidence": {
+    "sources": [
+      {
+        "id": "ES-C",
+        "profile_id": "CP-C",
+        "source_type": "PROFILE_CONVERSATION",
+        "title": "Synthetic simulated profiling conversation — request §5 Fixture C",
+        "source_uri": null,
+        "object_ref": null,
+        "content_hash": null,
+        "source_owner": "SYNTHETIC_FIXTURE",
+        "captured_at": null,
+        "created_at": "2026-09-21T00:00:00Z"
+      }
+    ],
+    "items": [
+      {
+        "id": "E-C-team",
+        "profile_id": "CP-C",
+        "source_id": "ES-C",
+        "evidence_type": "SIMULATED_PROFILE_TURN",
+        "content_text": "Synthetic answer: I led formation and operation of the small V&V team.",
+        "locator": {
+          "request_ref": "§5 Fixture C — Team / Process Leadership",
+          "simulated_turn": 1
+        },
+        "speaker": "SYNTHETIC_USER",
+        "start_ms": null,
+        "end_ms": null,
+        "content_hash": null,
+        "created_in_version": 12,
+        "retired_in_version": null,
+        "created_at": "2026-09-21T00:00:00Z"
+      },
+      {
+        "id": "E-C-operation",
+        "profile_id": "CP-C",
+        "source_id": "ES-C",
+        "evidence_type": "SIMULATED_PROFILE_TURN",
+        "content_text": "Synthetic answer: I coordinated sprint planning, schedule, technical reviews, and V&V work.",
+        "locator": {
+          "request_ref": "§5 Fixture C — Team / Process Leadership",
+          "simulated_turn": 2
+        },
+        "speaker": "SYNTHETIC_USER",
+        "start_ms": null,
+        "end_ms": null,
+        "content_hash": null,
+        "created_in_version": 12,
+        "retired_in_version": null,
+        "created_at": "2026-09-21T00:00:00Z"
+      },
+      {
+        "id": "E-C-traceability",
+        "profile_id": "CP-C",
+        "source_id": "ES-C",
+        "evidence_type": "SIMULATED_PROFILE_TURN",
+        "content_text": "Synthetic answer: I maintained feature-to-test-case traceability.",
+        "locator": {
+          "request_ref": "§5 Fixture C — Team / Process Leadership",
+          "simulated_turn": 3
+        },
+        "speaker": "SYNTHETIC_USER",
+        "start_ms": null,
+        "end_ms": null,
+        "content_hash": null,
+        "created_in_version": 12,
+        "retired_in_version": null,
+        "created_at": "2026-09-21T00:00:00Z"
+      },
+      {
+        "id": "E-C-process",
+        "profile_id": "CP-C",
+        "source_id": "ES-C",
+        "evidence_type": "SIMULATED_PROFILE_TURN",
+        "content_text": "Synthetic answer: I operated simulation, field validation, regression, and release evaluation processes; I did not own perception, planning, or control implementation.",
+        "locator": {
+          "request_ref": "§5 Fixture C — Team / Process Leadership",
+          "simulated_turn": 4
+        },
+        "speaker": "SYNTHETIC_USER",
+        "start_ms": null,
+        "end_ms": null,
+        "content_hash": null,
+        "created_in_version": 12,
+        "retired_in_version": null,
+        "created_at": "2026-09-21T00:00:00Z"
+      }
+    ],
+    "claim_links": [
+      {
+        "id": "ECL-C-team",
+        "profile_id": "CP-C",
+        "evidence_id": "E-C-team",
+        "claim_id": "C-C-team-leadership",
+        "relation_type": "SUPPORTS",
+        "support_strength": null,
+        "notes": "Synthetic simulated evidence only.",
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "ECL-C-sprint",
+        "profile_id": "CP-C",
+        "evidence_id": "E-C-operation",
+        "claim_id": "C-C-sprint",
+        "relation_type": "SUPPORTS",
+        "support_strength": null,
+        "notes": "Atomic claim split from compound answer.",
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "ECL-C-schedule",
+        "profile_id": "CP-C",
+        "evidence_id": "E-C-operation",
+        "claim_id": "C-C-schedule",
+        "relation_type": "SUPPORTS",
+        "support_strength": null,
+        "notes": "Atomic claim split from compound answer.",
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "ECL-C-review",
+        "profile_id": "CP-C",
+        "evidence_id": "E-C-operation",
+        "claim_id": "C-C-review",
+        "relation_type": "SUPPORTS",
+        "support_strength": null,
+        "notes": "Atomic claim split from compound answer.",
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "ECL-C-coordination",
+        "profile_id": "CP-C",
+        "evidence_id": "E-C-operation",
+        "claim_id": "C-C-coordination",
+        "relation_type": "SUPPORTS",
+        "support_strength": null,
+        "notes": "Atomic claim split from compound answer.",
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "ECL-C-traceability",
+        "profile_id": "CP-C",
+        "evidence_id": "E-C-traceability",
+        "claim_id": "C-C-traceability",
+        "relation_type": "SUPPORTS",
+        "support_strength": null,
+        "notes": "Technical traceability contribution distinct from leadership ownership.",
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "ECL-C-simulation",
+        "profile_id": "CP-C",
+        "evidence_id": "E-C-process",
+        "claim_id": "C-C-simulation",
+        "relation_type": "SUPPORTS",
+        "support_strength": null,
+        "notes": "Atomic process claim.",
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "ECL-C-field",
+        "profile_id": "CP-C",
+        "evidence_id": "E-C-process",
+        "claim_id": "C-C-field",
+        "relation_type": "SUPPORTS",
+        "support_strength": null,
+        "notes": "Atomic process claim.",
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "ECL-C-regression",
+        "profile_id": "CP-C",
+        "evidence_id": "E-C-process",
+        "claim_id": "C-C-regression",
+        "relation_type": "SUPPORTS",
+        "support_strength": null,
+        "notes": "Atomic process claim.",
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "ECL-C-release",
+        "profile_id": "CP-C",
+        "evidence_id": "E-C-process",
+        "claim_id": "C-C-release",
+        "relation_type": "SUPPORTS",
+        "support_strength": null,
+        "notes": "Atomic process claim.",
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "ECL-C-no-perception",
+        "profile_id": "CP-C",
+        "evidence_id": "E-C-process",
+        "claim_id": "C-C-perception-owner",
+        "relation_type": "CONTRADICTS",
+        "support_strength": null,
+        "notes": "Preserves explicit product-implementation boundary.",
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "ECL-C-no-planning",
+        "profile_id": "CP-C",
+        "evidence_id": "E-C-process",
+        "claim_id": "C-C-planning-owner",
+        "relation_type": "CONTRADICTS",
+        "support_strength": null,
+        "notes": "Preserves explicit product-implementation boundary.",
+        "created_in_version": 12,
+        "retired_in_version": null
+      },
+      {
+        "id": "ECL-C-no-control",
+        "profile_id": "CP-C",
+        "evidence_id": "E-C-process",
+        "claim_id": "C-C-control-owner",
+        "relation_type": "CONTRADICTS",
+        "support_strength": null,
+        "notes": "Preserves explicit product-implementation boundary.",
+        "created_in_version": 12,
+        "retired_in_version": null
+      }
+    ]
+  },
+  "artifacts": {
+    "items": [
+      {
+        "id": "A-C-resume",
+        "profile_id": "CP-C",
+        "artifact_type": "RESUME",
+        "artifact_version": 1,
+        "profile_version": 12,
+        "title": "Synthetic Fixture C draft resume",
+        "status": "DRAFT",
+        "storage_ref": null,
+        "content_hash": null,
+        "created_at": "2026-09-21T00:00:00Z"
+      }
+    ],
+    "units": [
+      {
+        "id": "AU-C-resume",
+        "artifact_id": "A-C-resume",
+        "unit_type": "RESUME_BULLET",
+        "ordinal": 1,
+        "text": "Led operation of a small V&V team. Maintained feature-to-test-case traceability. Operated the simulation evaluation process. Operated the field validation process. Operated the regression evaluation process. Operated the release evaluation process.",
+        "metadata": {
+          "synthetic": true,
+          "composition": "exact canonical_text concatenation in link order"
+        }
+      }
+    ],
+    "claim_links": [
+      {
+        "id": "ACL-C-team",
+        "artifact_unit_id": "AU-C-resume",
+        "claim_id": "C-C-team-leadership",
+        "link_role": "PRIMARY"
+      },
+      {
+        "id": "ACL-C-traceability",
+        "artifact_unit_id": "AU-C-resume",
+        "claim_id": "C-C-traceability",
+        "link_role": "SUPPORTING"
+      },
+      {
+        "id": "ACL-C-simulation",
+        "artifact_unit_id": "AU-C-resume",
+        "claim_id": "C-C-simulation",
+        "link_role": "SUPPORTING"
+      },
+      {
+        "id": "ACL-C-field",
+        "artifact_unit_id": "AU-C-resume",
+        "claim_id": "C-C-field",
+        "link_role": "SUPPORTING"
+      },
+      {
+        "id": "ACL-C-regression",
+        "artifact_unit_id": "AU-C-resume",
+        "claim_id": "C-C-regression",
+        "link_role": "SUPPORTING"
+      },
+      {
+        "id": "ACL-C-release",
+        "artifact_unit_id": "AU-C-resume",
+        "claim_id": "C-C-release",
+        "link_role": "SUPPORTING"
+      }
+    ],
+    "constraint_links": [
+      {
+        "id": "ACK-C-perception",
+        "artifact_unit_id": "AU-C-resume",
+        "constraint_id": "K-C-no-perception",
+        "effect": "WORDING_BOUNDARY"
+      },
+      {
+        "id": "ACK-C-planning",
+        "artifact_unit_id": "AU-C-resume",
+        "constraint_id": "K-C-no-planning",
+        "effect": "WORDING_BOUNDARY"
+      },
+      {
+        "id": "ACK-C-control",
+        "artifact_unit_id": "AU-C-resume",
+        "constraint_id": "K-C-no-control",
+        "effect": "WORDING_BOUNDARY"
+      }
+    ]
+  },
+  "jd": {
+    "items": [
+      {
+        "id": "JD-C",
+        "profile_id": "CP-C",
+        "company_name": null,
+        "job_title": "Synthetic JD placeholder — V&V lead",
+        "source_url": null,
+        "source_document_ref": "request §7 Test C synthetic input",
+        "raw_text": "Synthetic requirement only; no real employer or vacancy.",
+        "content_hash": null,
+        "captured_at": null,
+        "created_at": "2026-09-21T00:00:00Z"
+      }
+    ],
+    "requirements": [
+      {
+        "id": "JDR-C-leadership",
+        "jd_id": "JD-C",
+        "requirement_type": "EXPERIENCE",
+        "text": "Synthetic requirement: V&V team leadership.",
+        "normalized_concept": "V&V team leadership",
+        "priority_source": "SYNTHETIC_FIXTURE",
+        "ordinal": 1,
+        "metadata": {
+          "synthetic": true
+        }
+      },
+      {
+        "id": "JDR-C-traceability",
+        "jd_id": "JD-C",
+        "requirement_type": "EXPERIENCE",
+        "text": "Synthetic requirement: feature-to-test traceability.",
+        "normalized_concept": "feature-to-test traceability",
+        "priority_source": "SYNTHETIC_FIXTURE",
+        "ordinal": 2,
+        "metadata": {
+          "synthetic": true
+        }
+      }
+    ],
+    "claim_maps": [
+      {
+        "id": "RCM-C-leadership",
+        "requirement_id": "JDR-C-leadership",
+        "claim_id": "C-C-team-leadership",
+        "mapping_type": "DIRECT",
+        "coverage_level": "PARTIAL",
+        "rationale": "Synthetic relevance mapping; excludes product implementation ownership.",
+        "created_by_type": "SYSTEM_FIXTURE",
+        "created_at": "2026-09-21T00:00:00Z"
+      },
+      {
+        "id": "RCM-C-traceability",
+        "requirement_id": "JDR-C-traceability",
+        "claim_id": "C-C-traceability",
+        "mapping_type": "DIRECT",
+        "coverage_level": "PARTIAL",
+        "rationale": "Synthetic relevance mapping; does not change Claim truth status.",
+        "created_by_type": "SYSTEM_FIXTURE",
+        "created_at": "2026-09-21T00:00:00Z"
+      }
+    ]
+  },
+  "interviews": {
+    "sessions": [
+      {
+        "id": "IS-C",
+        "profile_id": "CP-C",
+        "profile_version": 12,
+        "jd_id": "JD-C",
+        "interview_package_id": null,
+        "mode": "SYNTHETIC_FIXTURE",
+        "started_at": "2026-09-21T00:00:00Z",
+        "ended_at": null
+      }
+    ],
+    "turns": [
+      {
+        "id": "IT-C-1",
+        "session_id": "IS-C",
+        "speaker": "SYNTHETIC_USER",
+        "sequence": 1,
+        "transcript": "Synthetic pending statement: I also authored regression automation scripts.",
+        "start_ms": null,
+        "end_ms": null,
+        "created_at": "2026-09-21T00:00:00Z"
+      },
+      {
+        "id": "IT-C-2",
+        "session_id": "IS-C",
+        "speaker": "SYNTHETIC_USER",
+        "sequence": 2,
+        "transcript": "Synthetic pending statement: I may have reviewed a planning test strategy.",
+        "start_ms": null,
+        "end_ms": null,
+        "created_at": "2026-09-21T00:00:00Z"
+      }
+    ],
+    "evidence_candidates": [
+      {
+        "id": "EC-C-regression-script",
+        "profile_id": "CP-C",
+        "session_id": "IS-C",
+        "turn_id": "IT-C-1",
+        "candidate_text": "Authored regression automation scripts.",
+        "proposed_claim_type": "CONTRIBUTION",
+        "proposed_context": {
+          "type": "PROJECT",
+          "id": "P-C",
+          "role": "PRIMARY"
+        },
+        "status": "PENDING",
+        "reviewer_notes": "Synthetic pending candidate; must not create a canonical Claim or EvidenceItem before acceptance.",
+        "promoted_evidence_id": null,
+        "promoted_claim_id": null,
+        "created_at": "2026-09-21T00:00:00Z",
+        "reviewed_at": null
+      },
+      {
+        "id": "EC-C-planning-review",
+        "profile_id": "CP-C",
+        "session_id": "IS-C",
+        "turn_id": "IT-C-2",
+        "candidate_text": "Reviewed a planning test strategy.",
+        "proposed_claim_type": "CONTRIBUTION",
+        "proposed_context": {
+          "type": "PROJECT",
+          "id": "P-C",
+          "role": "PRIMARY"
+        },
+        "status": "PENDING",
+        "reviewer_notes": "Synthetic pending candidate; review participation would not imply planning implementation ownership.",
+        "promoted_evidence_id": null,
+        "promoted_claim_id": null,
+        "created_at": "2026-09-21T00:00:00Z",
+        "reviewed_at": null
+      }
+    ]
+  },
+  "audit": {
+    "change_sets": []
+  },
+  "claim_reviews": [
+    {
+      "id": "CR-C-C-team-leadership",
+      "profile_id": "CP-C",
+      "claim_id": "C-C-team-leadership",
+      "review_action": "USER_ACCEPTED",
+      "reviewer_type": "USER",
+      "reviewer_id": "USER-SYNTHETIC-C",
+      "notes": "SYNTHETIC review only; confirmed exact proposition/scope: Led operation of a small V&V team.",
+      "profile_version": 12,
+      "reviewed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CR-C-C-sprint",
+      "profile_id": "CP-C",
+      "claim_id": "C-C-sprint",
+      "review_action": "USER_ACCEPTED",
+      "reviewer_type": "USER",
+      "reviewer_id": "USER-SYNTHETIC-C",
+      "notes": "SYNTHETIC review only; confirmed exact proposition/scope: Coordinated sprint planning for the V&V team.",
+      "profile_version": 12,
+      "reviewed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CR-C-C-schedule",
+      "profile_id": "CP-C",
+      "claim_id": "C-C-schedule",
+      "review_action": "USER_ACCEPTED",
+      "reviewer_type": "USER",
+      "reviewer_id": "USER-SYNTHETIC-C",
+      "notes": "SYNTHETIC review only; confirmed exact proposition/scope: Coordinated the V&V team schedule.",
+      "profile_version": 12,
+      "reviewed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CR-C-C-review",
+      "profile_id": "CP-C",
+      "claim_id": "C-C-review",
+      "review_action": "USER_ACCEPTED",
+      "reviewer_type": "USER",
+      "reviewer_id": "USER-SYNTHETIC-C",
+      "notes": "SYNTHETIC review only; confirmed exact proposition/scope: Facilitated technical reviews for V&V work.",
+      "profile_version": 12,
+      "reviewed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CR-C-C-coordination",
+      "profile_id": "CP-C",
+      "claim_id": "C-C-coordination",
+      "review_action": "USER_ACCEPTED",
+      "reviewer_type": "USER",
+      "reviewer_id": "USER-SYNTHETIC-C",
+      "notes": "SYNTHETIC review only; confirmed exact proposition/scope: Coordinated V&V work across the team.",
+      "profile_version": 12,
+      "reviewed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CR-C-C-traceability",
+      "profile_id": "CP-C",
+      "claim_id": "C-C-traceability",
+      "review_action": "USER_ACCEPTED",
+      "reviewer_type": "USER",
+      "reviewer_id": "USER-SYNTHETIC-C",
+      "notes": "SYNTHETIC review only; confirmed exact proposition/scope: Maintained feature-to-test-case traceability.",
+      "profile_version": 12,
+      "reviewed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CR-C-C-simulation",
+      "profile_id": "CP-C",
+      "claim_id": "C-C-simulation",
+      "review_action": "USER_ACCEPTED",
+      "reviewer_type": "USER",
+      "reviewer_id": "USER-SYNTHETIC-C",
+      "notes": "SYNTHETIC review only; confirmed exact proposition/scope: Operated the simulation evaluation process.",
+      "profile_version": 12,
+      "reviewed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CR-C-C-field",
+      "profile_id": "CP-C",
+      "claim_id": "C-C-field",
+      "review_action": "USER_ACCEPTED",
+      "reviewer_type": "USER",
+      "reviewer_id": "USER-SYNTHETIC-C",
+      "notes": "SYNTHETIC review only; confirmed exact proposition/scope: Operated the field validation process.",
+      "profile_version": 12,
+      "reviewed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CR-C-C-regression",
+      "profile_id": "CP-C",
+      "claim_id": "C-C-regression",
+      "review_action": "USER_ACCEPTED",
+      "reviewer_type": "USER",
+      "reviewer_id": "USER-SYNTHETIC-C",
+      "notes": "SYNTHETIC review only; confirmed exact proposition/scope: Operated the regression evaluation process.",
+      "profile_version": 12,
+      "reviewed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CR-C-C-release",
+      "profile_id": "CP-C",
+      "claim_id": "C-C-release",
+      "review_action": "USER_ACCEPTED",
+      "reviewer_type": "USER",
+      "reviewer_id": "USER-SYNTHETIC-C",
+      "notes": "SYNTHETIC review only; confirmed exact proposition/scope: Operated the release evaluation process.",
+      "profile_version": 12,
+      "reviewed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CR-C-C-perception-owner",
+      "profile_id": "CP-C",
+      "claim_id": "C-C-perception-owner",
+      "review_action": "SYSTEM_FLAGGED",
+      "reviewer_type": "SYSTEM",
+      "reviewer_id": null,
+      "notes": "SYNTHETIC conflict review; retain opposing evidence and publication restriction.",
+      "profile_version": 12,
+      "reviewed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CR-C-C-planning-owner",
+      "profile_id": "CP-C",
+      "claim_id": "C-C-planning-owner",
+      "review_action": "SYSTEM_FLAGGED",
+      "reviewer_type": "SYSTEM",
+      "reviewer_id": null,
+      "notes": "SYNTHETIC conflict review; retain opposing evidence and publication restriction.",
+      "profile_version": 12,
+      "reviewed_at": "2026-09-21T00:00:00Z"
+    },
+    {
+      "id": "CR-C-C-control-owner",
+      "profile_id": "CP-C",
+      "claim_id": "C-C-control-owner",
+      "review_action": "SYSTEM_FLAGGED",
+      "reviewer_type": "SYSTEM",
+      "reviewer_id": null,
+      "notes": "SYNTHETIC conflict review; retain opposing evidence and publication restriction.",
+      "profile_version": 12,
+      "reviewed_at": "2026-09-21T00:00:00Z"
+    }
+  ]
+}

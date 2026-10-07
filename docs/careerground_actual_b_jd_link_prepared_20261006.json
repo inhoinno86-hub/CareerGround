@@ -1,0 +1,23 @@
+{
+  "schema": "careerground-actual-b-jd-link-prepared-v1",
+  "observed_at_utc": "2026-10-06T06:05:23.739484+00:00",
+  "profile_version": 2,
+  "operation_status_from_store": "WAITING",
+  "operation_expires_at_utc": "2026-10-06T06:09:11.715010Z",
+  "web_status": 200,
+  "web_heading": "JD 요구와 경력 연결 직접 확인",
+  "requirement_text": "점검 체크리스트를 작성한 경험",
+  "claim_text": "가상 물류 프로젝트에서 점검 체크리스트 초안을 작성하고 동료 두 명의 의견을 정리했습니다.",
+  "evidence_exact_match": true,
+  "potential_only_notice": true,
+  "final_checkboxes_checked": [
+    false,
+    false
+  ],
+  "human_final_approval": "PENDING",
+  "limits": [
+    "Only proposed selection preparation submitted",
+    "No coverage certification",
+    "No B mapping saved or R1 generated asserted"
+  ]
+}

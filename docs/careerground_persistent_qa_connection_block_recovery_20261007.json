@@ -1,0 +1,107 @@
+{
+  "scope": "user_submitted_exact_A_shared_client_local_block_and_authorized_offline_recovery",
+  "observed_at": "2026-10-07T02:22:06.737106+00:00",
+  "user_reported_A_block_submitted": true,
+  "stages": {
+    "blocked": {
+      "observed_at": "2026-10-07T02:20:15.004356+00:00",
+      "registry_signature_valid": true,
+      "denial_count": 1,
+      "blocked": {
+        "A": true,
+        "B": false
+      },
+      "non_quota_tables_unchanged": true,
+      "non_quota_table_count": 37,
+      "mismatched_tables": []
+    },
+    "blocked-restart": {
+      "observed_at": "2026-10-07T02:20:28.092207+00:00",
+      "registry_signature_valid": true,
+      "denial_count": 1,
+      "blocked": {
+        "A": true,
+        "B": false
+      },
+      "non_quota_tables_unchanged": true,
+      "non_quota_table_count": 37,
+      "mismatched_tables": []
+    },
+    "recovered-offline": {
+      "observed_at": "2026-10-07T02:21:07.171846+00:00",
+      "registry_signature_valid": true,
+      "denial_count": 0,
+      "blocked": {
+        "A": false,
+        "B": false
+      },
+      "non_quota_tables_unchanged": true,
+      "non_quota_table_count": 37,
+      "mismatched_tables": []
+    },
+    "recovered-restart": {
+      "observed_at": "2026-10-07T02:21:15.518772+00:00",
+      "registry_signature_valid": true,
+      "denial_count": 0,
+      "blocked": {
+        "A": false,
+        "B": false
+      },
+      "non_quota_tables_unchanged": true,
+      "non_quota_table_count": 37,
+      "mismatched_tables": []
+    }
+  },
+  "A_MCP_while_blocked": {
+    "error_code": "UNAUTHORIZED",
+    "action": "TRIGGER_REAUTHENTICATION",
+    "reason": "www_authenticate_reauth",
+    "app_layer_reauthentication_caching_not_independently_disambiguated": true
+  },
+  "B_actual_ChatGPT_MCP_while_A_blocked": {
+    "status": "ok",
+    "found": true,
+    "profile_matches_verified_B": true,
+    "version": 0
+  },
+  "Web_while_blocked": {
+    "A_own_profile_http_status": 200,
+    "B_own_profile_http_status": 200
+  },
+  "blocked_normal_restart": {
+    "special_enable_flag_used": false,
+    "signed_registry_bytes_unchanged": true,
+    "A_Web_blocked_notice": true,
+    "A_Web_block_form_count": 0,
+    "B_Web_own_profile_link_matches": true
+  },
+  "offline_recovery": {
+    "helper_final_exit_code": 0,
+    "result": "UNBLOCKED",
+    "provider_changed": false,
+    "early_observation_before_process_completion_not_used_as_recovery_result": true,
+    "premature_runtime_launch_stopped_then_completion_verified_before_final_restart": true
+  },
+  "A_native_MCP_after_recovery_and_restart": {
+    "status": "ok",
+    "found": true,
+    "profile_matches_verified_A": true,
+    "version": 1,
+    "manual_reconnect_needed_for_successful_call": false
+  },
+  "A_Web_block_review_available_after_recovery": true,
+  "limitations": [
+    "Fresh OAuth while blocked and provider grant revocation not performed.",
+    "Registry signature cannot detect restoration of an entire older signed directory without an independent anchor.",
+    "Existing UI reconnect labels alone do not establish token expiry or identity."
+  ],
+  "provider_grants_or_settings_changed": false,
+  "paid_resources_added": false,
+  "phase_A_complete": false,
+  "targeted_local_verification": {
+    "command": "python -m unittest tests.test_development_connection_recovery -q",
+    "tests": 3,
+    "result": "PASS",
+    "subtests_not_counted_as_independent_tests": true
+  }
+}

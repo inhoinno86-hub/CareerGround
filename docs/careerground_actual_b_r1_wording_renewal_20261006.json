@@ -1,0 +1,24 @@
+{
+  "schema": "careerground-actual-b-r1-wording-renewal-v1",
+  "observed_at_utc": "2026-10-06T06:26:23.774487+00:00",
+  "previous_request_expired": true,
+  "wording_reviews_before_renewal": 0,
+  "artifact_status_before_renewal": "REVIEW_REQUIRED",
+  "artifact_version": 1,
+  "profile_version": 2,
+  "new_request_status_from_store": "WAITING",
+  "new_request_expires_at_utc": "2026-10-06T06:29:27.643242Z",
+  "first_web_401_discarded": true,
+  "b_identity_verified_after_existing_sso": true,
+  "web_status_after_renewal": 200,
+  "final_checkboxes_checked": [
+    false,
+    false
+  ],
+  "human_final_approval": "PENDING",
+  "limits": [
+    "No wording approval submitted by agent",
+    "No expiry extension",
+    "No export approval or execution"
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "schema": "careerground-actual-mcp-negative-deletion-preview-v1",
+  "actor": "B",
+  "tool": "preview_data_deletion",
+  "scope_argument": "PROFILE",
+  "prompt_submissions": 2,
+  "existing_other": {
+    "status": "error",
+    "error_code": "NOT_FOUND"
+  },
+  "absent": {
+    "initial_projection_inconclusive": true,
+    "single_call_followup": true,
+    "status": "error",
+    "error_code": "NOT_FOUND"
+  },
+  "same_rejection": true,
+  "counts_after": {
+    "career_profiles": 2,
+    "profiling_sessions": 1,
+    "profiling_inputs": 1,
+    "claims": 0,
+    "browser_operations": 0,
+    "deletion_requests": 0,
+    "erasure_ledger": 0
+  },
+  "deletion_executed": false,
+  "scope": "B to A/absent profile deletion preview rejection; not deletion execution or passkey approval"
+}

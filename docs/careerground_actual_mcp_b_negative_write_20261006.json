@@ -1,0 +1,29 @@
+{
+  "schema": "careerground-actual-mcp-negative-write-v1",
+  "actor": "B",
+  "tool": "start_profiling",
+  "parameters_from_current_source_contract": true,
+  "existing_other": {
+    "error_code": "NOT_FOUND"
+  },
+  "absent": {
+    "initial_projection_inconclusive": true,
+    "followup_same_idempotency_key": true,
+    "status": "error",
+    "error_code": "NOT_FOUND"
+  },
+  "prompt_submissions": 2,
+  "server_guard": {
+    "lane": "write",
+    "requests_in_last_observed_window": 1
+  },
+  "counts_after": {
+    "career_profiles": 2,
+    "profiling_sessions": 0,
+    "profiling_inputs": 0,
+    "browser_operations": 0,
+    "deletion_requests": 0,
+    "erasure_ledger": 0
+  },
+  "scope": "B to A profile session creation rejection only; not full source/artifact/write/approval isolation"
+}
