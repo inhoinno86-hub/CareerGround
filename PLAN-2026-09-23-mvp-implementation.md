@@ -60,6 +60,8 @@ The order within an Epic follows Story dependencies. E01 and E02 can advance ind
 
 ### Release acceptance, not just a task count
 
+2026-10-08 accepted scope: the user closes Phase A as a personal, private, synthetic-data text MVP using ChatGPT conversation plus CareerGround management. The actual flow and CI evidence are recorded in [the final acceptance](docs/CareerGround_Phase_A_Private_MVP_Acceptance_2026-10-08.md). Additional real credential cross-use and new authorization while blocked remain follow-ups. Paid server AI, OTP MFA and refresh remain deferred. Public operation and real-content ingestion still require their separate gates; deletion coverage remains FOUNDATION_ONLY.
+
 | Gate | Must be demonstrable before release | Blocking dependencies |
 | --- | --- | --- |
 | A — text MVP | One account can explicitly submit one experience, review ≤5 atomic Claims, promote safely, map a JD, produce evidence-traceable resume text, inspect/delete data and use the authenticated MCP/web flows; a second account cannot access it; retention/restore tests pass | E00–E05 and E08-A |

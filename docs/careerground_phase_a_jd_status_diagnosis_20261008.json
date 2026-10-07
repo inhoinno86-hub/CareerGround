@@ -1,0 +1,52 @@
+{
+  "scope": "local_synthetic_JD_status_diagnosis_only",
+  "baseline_commit": "1ad24f94df91e57417d4aa526fa3c8cd0e73819d",
+  "runtime_or_binding_policy_changed": false,
+  "proposal_ttl_seconds": 180,
+  "browser_operation_ttl_seconds": 300,
+  "original_real_JD_proposal_failure_cause_confirmed": false,
+  "original_real_JD_LINK_failure_cause_confirmed": false,
+  "original_JD_LINK_expired_at_later_inspection": true,
+  "new_real_OAuth_issuance_or_cross_account_receipt_trial_performed": false,
+  "local_cases": [
+    {
+      "case": "JD_DONE_before_expiry_original_credential",
+      "result": "DONE",
+      "result_id_matches_saved_JD": true
+    },
+    {
+      "case": "JD_DONE_changed_credential",
+      "result": "VALIDATION_FAILED",
+      "saved_JD_and_excerpt_counts_unchanged": true,
+      "original_credential_still_reads_same_result": true
+    },
+    {
+      "case": "JD_DONE_after_proposal_expiry",
+      "result": "VALIDATION_FAILED",
+      "expired_memory_proposal_removed": true,
+      "saved_JD_and_exact_excerpt_preserved": true,
+      "stale_browser_resubmission_rejected": true
+    },
+    {
+      "case": "JD_LINK_DONE_after_operation_expiry",
+      "result": "REVIEW_REQUIRED",
+      "expired_receipt_consumption_rejected": true,
+      "saved_mapping_count": 1,
+      "completed_operation_status_retained": "DONE"
+    }
+  ],
+  "verification": {
+    "chatgpt_proposal_review_unittest": {
+      "tests": 11,
+      "passed": true
+    },
+    "SQLite_completed_JD_LINK_expiry_unittest": {
+      "tests": 1,
+      "passed": true
+    },
+    "new_test_methods": 3,
+    "new_PostgreSQL_inherited_case_not_executed_locally": true
+  },
+  "interpretation": "Code-proven refusal conditions, not exclusive attribution of the historical real failures. Canonical browser writes are separate from short-lived MCP outcome retrieval.",
+  "followup": "Improve saved-result recovery and generic failure guidance without automatically replaying canonical writes, extending expiry or relaxing credential binding."
+}

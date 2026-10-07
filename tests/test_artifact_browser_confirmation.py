@@ -383,6 +383,48 @@ class ArtifactBrowserTests(unittest.TestCase):
         with self.sessions() as session:
             self.assertEqual(session.scalar(select(func.count()).select_from(JobDescription)), 0)
 
+    def test_completed_jd_link_expiry_preserves_the_mapping_without_repeating_it(self):
+        f = self.fixture
+        with (
+            TestClient(f.web) as browser,
+            TestClient(f.mcp, base_url=RESOURCE.removesuffix("/mcp")) as client,
+        ):
+            claim = self.eligible(browser, client)
+            jd = self.paste(browser, client, 2)
+            with self.sessions() as session:
+                requirement = session.scalar(
+                    select(JDRequirement.id)
+                    .where(JDRequirement.jd_id == jd)
+                    .order_by(JDRequirement.ordinal)
+                )
+            request = f.request(client, "JD_LINK", jd, 2, key="synthetic_jd_link_expiry_0001")
+            form, _ = self.prepare(
+                browser, request, {"requirement_id": requirement, "claim_id": claim}
+            )
+            receipt = f.confirm(browser, request["confirmation_path"], form)
+            completed = f.call(
+                client, "get_confirmation_status", {"request_id": request["request_id"]}
+            )
+            self.assertEqual(completed["data"]["status"], "DONE")
+            with self.sessions() as session:
+                row = session.get(BrowserOperation, request["request_id"])
+                row.created_at = datetime.now(UTC) - timedelta(minutes=10)
+                row.expires_at = datetime.now(UTC) - timedelta(seconds=1)
+                session.commit()
+            expired = f.call(
+                client, "get_confirmation_status", {"request_id": request["request_id"]}
+            )
+            self.assertEqual(expired["error"]["code"], "REVIEW_REQUIRED")
+            rejected = f.call(
+                client, "link_jd_requirement", {"jd_id": jd, "approval_receipt": receipt}
+            )
+            self.assertEqual(rejected["error"]["code"], "REVIEW_REQUIRED")
+        with self.sessions() as session:
+            self.assertEqual(
+                session.scalar(select(func.count()).select_from(RequirementClaimMap)), 1
+            )
+            self.assertEqual(session.get(BrowserOperation, request["request_id"]).status, "DONE")
+
     def test_concurrent_identical_selected_jd_creates_one_record(self):
         f = self.fixture
         with (

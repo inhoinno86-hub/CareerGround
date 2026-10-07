@@ -161,6 +161,73 @@ class ChatGPTProposalReviewTests(unittest.TestCase):
                 "error",
             )
 
+    def test_completed_jd_status_token_change_does_not_undo_or_repeat_the_write(self):
+        data = self.jd()["data"]
+        token = self.fixture.form_token(self.browser.get(data["confirmation_path"]))
+        response = self.browser.post(
+            data["confirmation_path"],
+            data={"token": token, "confirm": "reviewed", "selected_2": "yes"},
+            headers={"origin": auth.ORIGIN},
+        )
+        self.assertEqual(response.status_code, 200)
+        completed = self.fixture.rpc(
+            self.browser, "get_chatgpt_proposal_status", {"proposal_id": data["proposal_id"]}
+        )["data"]
+        self.assertEqual(completed["review_status"], "DONE")
+        before = (self.count(JobDescription), self.count(JDRequirement))
+        changed = self.fixture.rpc(
+            self.browser,
+            "get_chatgpt_proposal_status",
+            {"proposal_id": data["proposal_id"]},
+            jti="synthetic-reauthenticated-token",
+        )
+        self.assertEqual(changed["status"], "error")
+        self.assertEqual(changed["error"]["code"], "VALIDATION_FAILED")
+        self.assertEqual((self.count(JobDescription), self.count(JDRequirement)), before)
+        original = self.fixture.rpc(
+            self.browser, "get_chatgpt_proposal_status", {"proposal_id": data["proposal_id"]}
+        )["data"]
+        self.assertEqual(original["result_id"], completed["result_id"])
+        self.assertEqual(original["review_status"], "DONE")
+
+    def test_completed_jd_status_expiry_preserves_the_exact_saved_excerpt(self):
+        data = self.jd()["data"]
+        token = self.fixture.form_token(self.browser.get(data["confirmation_path"]))
+        response = self.browser.post(
+            data["confirmation_path"],
+            data={"token": token, "confirm": "reviewed", "selected_2": "yes"},
+            headers={"origin": auth.ORIGIN},
+        )
+        self.assertEqual(response.status_code, 200)
+        completed = self.fixture.rpc(
+            self.browser, "get_chatgpt_proposal_status", {"proposal_id": data["proposal_id"]}
+        )["data"]
+        before = (self.count(JobDescription), self.count(JDRequirement))
+        self.fixture.now += 181
+        expired = self.fixture.rpc(
+            self.browser, "get_chatgpt_proposal_status", {"proposal_id": data["proposal_id"]}
+        )
+        self.assertEqual(expired["status"], "error")
+        self.assertEqual(expired["error"]["code"], "VALIDATION_FAILED")
+        self.assertNotIn(data["proposal_id"], self.app.proposals.rows)
+        self.assertEqual((self.count(JobDescription), self.count(JDRequirement)), before)
+        with self.sessions() as session:
+            saved = session.get(JobDescription, completed["result_id"])
+            self.assertEqual(saved.account_id, "acct-a")
+            excerpts = session.scalars(
+                select(JDRequirement).where(JDRequirement.jd_id == saved.id)
+            ).all()
+            self.assertEqual([r.exact_text for r in excerpts], ["SQL 문서 작성"])
+        self.assertEqual(
+            self.browser.post(
+                data["confirmation_path"],
+                data={"token": token, "confirm": "reviewed", "selected_2": "yes"},
+                headers={"origin": auth.ORIGIN},
+            ).status_code,
+            409,
+        )
+        self.assertEqual((self.count(JobDescription), self.count(JDRequirement)), before)
+
     def test_foreign_browser_token_connection_and_changed_retry_are_denied(self):
         data = self.jd()["data"]
         token = self.fixture.form_token(self.browser.get(data["confirmation_path"]))
