@@ -1,0 +1,23 @@
+{
+  "scope": "latest_installed_plugin_A_JD_preparation_interrupted_by_expired_connection",
+  "observed_at": "2026-10-07T05:36:26.281839+00:00",
+  "preceding_human_use_review_completed_evidence": "careerground_persistent_qa_a_use_review_completed_20261007.json",
+  "synthetic_jd_text": "장애 로그 분류 및 팀 확인 절차 공유 경험",
+  "intended_idempotency_key": "persistent-release-20261007-a-jd-latest-plugin-1",
+  "intended_claim_or_evidence_mapping": false,
+  "actual_ChatGPT_gate": {
+    "connection_alias": "프로필A",
+    "expired_connection_notice_observed": true,
+    "reconnect_required": true,
+    "current_profile_version_MCP_reconfirmed": false,
+    "proposal_id_or_confirmation_link_returned": false
+  },
+  "no_saved_JD_or_artifacts": {
+    "job_descriptions": 0,
+    "artifacts": 0
+  },
+  "human_step_pending": null,
+  "new_link_or_provider_settings_changed": false,
+  "phase_A_complete": false,
+  "subsequent_resolution": "careerground_persistent_qa_a_jd_review_prepared_20261007.json"
+}

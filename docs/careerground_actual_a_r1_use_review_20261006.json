@@ -1,0 +1,19 @@
+{
+  "schema": "careerground-actual-a-r1-use-review-v1",
+  "observed_at_utc": "2026-10-06T05:12:26.712845+00:00",
+  "scope": "One existing synthetic incident Claim; direct human separate consistency/use approval",
+  "use_reviews": 1,
+  "profile_version_after": 2,
+  "knowledge_status": "USER_CONFIRMED",
+  "consistency_status": "CONSISTENT",
+  "usage_policy": "ALLOWED",
+  "other_A_claim_use_reviewed": false,
+  "job_descriptions": 0,
+  "artifacts": 0,
+  "deletion_requests": 0,
+  "limits": [
+    "No R1 artifact or wording/export approval yet",
+    "Only selected exact Claim is allowed",
+    "No external verification claim"
+  ]
+}

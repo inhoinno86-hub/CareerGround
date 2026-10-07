@@ -1,0 +1,23 @@
+{
+  "schema": "careerground-actual-mcp-synthetic-input-v1",
+  "actor": "A",
+  "actual_tools": [
+    "start_profiling",
+    "add_profiling_input"
+  ],
+  "prompt_submissions": 1,
+  "browser_submit_return_lost": true,
+  "submission_confirmed_from_chat_before_any_retry": true,
+  "retry_submitted": false,
+  "own_session_created": true,
+  "own_input_created": true,
+  "body_matches_explicit_synthetic_prompt": true,
+  "source_characters": 98,
+  "source_sha256": "c0cbbcebb453eb6e70d0e43f673df98fe59c4565ce2f7a36392c1a2fb6163426",
+  "source_kind": "USER_STATEMENT",
+  "profile_version": 0,
+  "session_status": "ACTIVE",
+  "canonical_claims": 0,
+  "browser_operations": 0,
+  "scope": "unapproved synthetic source only; no human fact/use approval"
+}

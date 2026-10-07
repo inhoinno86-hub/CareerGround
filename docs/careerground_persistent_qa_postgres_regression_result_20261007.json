@@ -1,0 +1,16 @@
+{
+  "scope": "disposable_loopback_postgresql_only",
+  "migration": "PASS",
+  "tests": 12,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "passed": true,
+  "product_tables": 38,
+  "nonempty_product_tables": [],
+  "new_expired_review_renewal_case_included": true,
+  "raw_credentials_or_auth_tokens_reported": false,
+  "test_container_shutdown_pending_user": false,
+  "user_reported_stop_success": true,
+  "loopback_test_port_closed": true
+}

@@ -1,0 +1,19 @@
+{
+  "scope": "human_A_R1_wording_approved",
+  "observed_at": "2026-10-07T06:01:56.100556+00:00",
+  "user_reported_complete": true,
+  "operation_status_at_observation": "DONE",
+  "artifact_status": "WORDING_REVIEWED",
+  "unit_review_status": "WORDING_REVIEWED",
+  "exact_original_synthetic_claim_text_preserved": true,
+  "profile_version": 2,
+  "artifact_count": 1,
+  "export_approval_implied": false,
+  "same_connection_receipt_processing_requested": true,
+  "phase_A_complete": false,
+  "same_connection_receipt_processing_actual": {
+    "actual_ChatGPT_status": "ok",
+    "operation_status": "CONSUMED",
+    "receipt_not_printed_or_shared": true
+  }
+}

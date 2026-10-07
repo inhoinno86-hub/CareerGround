@@ -1,0 +1,21 @@
+{
+  "schema": "careerground-actual-a-r1-wording-prepared-v1",
+  "observed_at_utc": "2026-10-06T05:42:02.031029+00:00",
+  "profile_version": 2,
+  "operation_status": "WAITING",
+  "operation_expires_at_utc": "2026-10-06T05:46:19.761933Z",
+  "web_status": 200,
+  "web_heading": "R1 이력서 문구 직접 검토",
+  "unit_count": 1,
+  "exact_claim_text": "가상 서비스의 오류 제보를 모아 재현 절차 문서 초안을 작성했습니다.",
+  "evidence_exact_match": true,
+  "final_checkboxes_checked": [
+    false,
+    false
+  ],
+  "human_final_approval": "PENDING",
+  "limits": [
+    "No wording approval submitted by agent",
+    "No export approval or execution"
+  ]
+}

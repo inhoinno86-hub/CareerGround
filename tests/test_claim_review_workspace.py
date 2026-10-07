@@ -167,6 +167,99 @@ class ClaimReviewWorkspaceTests(unittest.TestCase):
                     now=self.now + timedelta(minutes=1),
                 )
 
+    def test_expired_scope_can_be_reviewed_again_without_reviving_old_approval(self) -> None:
+        with Session(self.engine) as session:
+            draft = self.draft(session, "I implemented target-speed logic")
+            session.flush()
+            request = {
+                "account_id": "acct-a",
+                "profiling_session_id": "session-a",
+                "scope_key": "feature-a",
+                "base_profile_version": 2,
+                "idempotency_key": "synthetic_prepare_expiry_0001",
+            }
+            first = self.service.prepare_for_scope(session, **request, now=self.now)
+            session.commit()
+            original_digest, original_expiry = first.review_digest, first.expires_at
+            later = self.now + timedelta(minutes=10)
+            with self.assertRaises(ReviewUnavailable):
+                self.service.prepare_for_scope(session, **request, now=later)
+            second = self.service.prepare_for_scope(
+                session,
+                **{**request, "idempotency_key": "synthetic_prepare_expiry_0002"},
+                now=later,
+            )
+            session.commit()
+            self.assertNotEqual(first.id, second.id)
+            self.assertEqual(first.status, "EXPIRED")
+            self.assertEqual(
+                (first.review_digest, first.expires_at), (original_digest, original_expiry)
+            )
+            with self.assertRaises(ReviewUnavailable):
+                self.service.get(session, account_id="acct-a", batch_id=first.id, now=later)
+            _, items = self.service.get(session, account_id="acct-a", batch_id=second.id, now=later)
+            self.assertEqual([item.draft_id for item in items], [draft.id])
+            self.assertEqual([item.decision for item in items], [None])
+            self.assertEqual(session.scalar(select(func.count()).select_from(ProfilingDraft)), 1)
+            self.assertEqual(session.get(CareerProfile, "profile-a").version, 2)
+
+    def test_renewal_does_not_release_live_or_foreign_reviews(self) -> None:
+        with Session(self.engine) as session:
+            draft = self.draft(session, "I implemented target-speed logic")
+            session.flush()
+            request = {
+                "account_id": "acct-a",
+                "profiling_session_id": "session-a",
+                "scope_key": "feature-a",
+                "base_profile_version": 2,
+                "idempotency_key": "synthetic_prepare_live_0001",
+            }
+            batch = self.service.prepare_for_scope(session, **request, now=self.now)
+            session.commit()
+            with self.assertRaises(ReviewUnavailable):
+                self.service.prepare_for_scope(
+                    session,
+                    **{**request, "idempotency_key": "synthetic_prepare_live_0002"},
+                    now=self.now + timedelta(minutes=9),
+                )
+            with self.assertRaises(ReviewUnavailable):
+                self.service.prepare_for_scope(
+                    session,
+                    **{**request, "account_id": "acct-b"},
+                    now=self.now + timedelta(minutes=10),
+                )
+            self.assertEqual(batch.status, "PREPARED")
+            self.assertEqual(draft.status, "IN_REVIEW")
+
+    def test_expired_review_renewal_revalidates_source_and_rolls_back(self) -> None:
+        with Session(self.engine) as session:
+            draft = self.draft(session, "I implemented target-speed logic")
+            session.flush()
+            request = {
+                "account_id": "acct-a",
+                "profiling_session_id": "session-a",
+                "scope_key": "feature-a",
+                "base_profile_version": 2,
+                "idempotency_key": "synthetic_prepare_source_0001",
+            }
+            batch = self.service.prepare_for_scope(session, **request, now=self.now)
+            session.commit()
+            draft_id, batch_id = draft.id, batch.id
+            session.get(ProfilingInput, "input-a").body = "Changed source"
+            session.commit()
+            with self.assertRaises(ReviewStale):
+                self.service.prepare_for_scope(
+                    session,
+                    **{**request, "idempotency_key": "synthetic_prepare_source_0002"},
+                    now=self.now + timedelta(minutes=10),
+                )
+            session.rollback()
+            self.assertEqual(session.get(ProfilingReviewBatch, batch_id).status, "PREPARED")
+            self.assertEqual(session.get(ProfilingDraft, draft_id).status, "IN_REVIEW")
+            self.assertEqual(
+                session.scalar(select(func.count()).select_from(ProfilingReviewBatch)), 1
+            )
+
     def test_mixed_scope_six_items_and_unsupported_inference_fail(self) -> None:
         with Session(self.engine) as session:
             first = self.draft(session, "I implemented target-speed logic")

@@ -24,6 +24,7 @@ from careerground.domain.claim_review_submission import (
 )
 from careerground.domain.claim_review_workspace import (
     ClaimReviewPreparation,
+    ReviewUnavailable,
     propose_verbatim_draft,
 )
 from careerground.domain.jd_analysis import JDExcerpt, record_pasted_jd_analysis
@@ -37,8 +38,10 @@ from careerground.storage.models import (
     AuthIdentity,
     CareerProfile,
     OutboxEvent,
+    ProfilingDraft,
     ProfilingInput,
     ProfilingProtocolStep,
+    ProfilingReviewBatch,
     ProfilingReviewItem,
     ProfilingSession,
 )
@@ -50,6 +53,117 @@ from careerground.workers.profiling_retention import (
 
 
 class PostgreSQLFoundationTests(unittest.TestCase):
+    def test_expired_claim_review_renews_without_reviving_old_snapshot(self) -> None:
+        raw_url = os.environ.get("CAREERGROUND_TEST_DATABASE_URL")
+        if not raw_url:
+            if os.environ.get("CAREERGROUND_REQUIRE_POSTGRES_TEST") == "1":
+                self.fail("CI requires an explicit local PostgreSQL test URL")
+            self.skipTest("local test PostgreSQL URL is not configured")
+        url = make_url(raw_url)
+        if (
+            url.drivername != "postgresql+psycopg"
+            or url.host not in {"127.0.0.1", "localhost"}
+            or not (url.database or "").endswith("_test")
+        ):
+            self.fail("refusing a non-local or non-test database")
+        engine = create_engine(url, hide_parameters=True)
+        self.addCleanup(engine.dispose)
+        suffix = uuid4().hex
+        account, profile, work, source = (f"{prefix}-{suffix}" for prefix in "apwi")
+        now = datetime(2026, 10, 7, 12, tzinfo=UTC)
+        service = ClaimReviewPreparation(b"synthetic-pg-expired-review-key-at-least-32-bytes")
+        with engine.connect() as connection:
+            transaction = connection.begin()
+            try:
+                with Session(bind=connection, join_transaction_mode="create_savepoint") as session:
+                    session.add(Account(id=account))
+                    session.flush()
+                    session.add(CareerProfile(id=profile, account_id=account, version=0))
+                    session.flush()
+                    session.add(
+                        ProfilingSession(
+                            id=work,
+                            account_id=account,
+                            profile_id=profile,
+                            status="ACTIVE",
+                            base_profile_version=0,
+                            created_at=now,
+                            last_activity_at=now,
+                            retention_expires_at=now + timedelta(days=1),
+                        )
+                    )
+                    session.flush()
+                    body = "I recorded a synthetic test result."
+                    session.add(
+                        ProfilingInput(
+                            id=source,
+                            account_id=account,
+                            session_id=work,
+                            idempotency_key=f"pg_input_{suffix}",
+                            content_kind="USER_STATEMENT",
+                            body=body,
+                            created_at=now,
+                        )
+                    )
+                    session.flush()
+                    draft = propose_verbatim_draft(
+                        session,
+                        account_id=account,
+                        profiling_session_id=work,
+                        source_input_id=source,
+                        scope_key="synthetic-pg-expiry",
+                        claim_type="CONTRIBUTION",
+                        exact_text=body,
+                        now=now,
+                    )
+                    request = {
+                        "account_id": account,
+                        "profiling_session_id": work,
+                        "scope_key": "synthetic-pg-expiry",
+                        "base_profile_version": 0,
+                        "idempotency_key": f"pg_prepare_first_{suffix}",
+                    }
+                    first = service.prepare_for_scope(session, **request, now=now)
+                    session.commit()
+                    original = (first.review_digest, first.expires_at)
+                    later = first.expires_at + timedelta(seconds=1)
+                    with self.assertRaises(ReviewUnavailable):
+                        service.prepare_for_scope(session, **request, now=later)
+                    second = service.prepare_for_scope(
+                        session,
+                        **{**request, "idempotency_key": f"pg_prepare_second_{suffix}"},
+                        now=later,
+                    )
+                    session.commit()
+                    self.assertNotEqual(first.id, second.id)
+                    expired = session.get(ProfilingReviewBatch, first.id)
+                    self.assertEqual(expired.status, "EXPIRED")
+                    self.assertEqual((expired.review_digest, expired.expires_at), original)
+                    with self.assertRaises(ReviewUnavailable):
+                        service.get(session, account_id=account, batch_id=first.id, now=later)
+                    _, items = service.get(
+                        session, account_id=account, batch_id=second.id, now=later
+                    )
+                    self.assertEqual([item.draft_id for item in items], [draft.id])
+                    self.assertEqual([item.decision for item in items], [None])
+                    self.assertEqual(session.get(CareerProfile, profile).version, 0)
+                    self.assertEqual(
+                        list(session.scalars(select(Claim.id).where(Claim.account_id == account))),
+                        [],
+                    )
+                    self.assertEqual(
+                        list(
+                            session.scalars(
+                                select(ProfilingDraft.id).where(
+                                    ProfilingDraft.account_id == account
+                                )
+                            )
+                        ),
+                        [draft.id],
+                    )
+            finally:
+                transaction.rollback()
+
     def test_question_delivery_serializes_on_owned_workspace(self) -> None:
         raw_url = os.environ.get("CAREERGROUND_TEST_DATABASE_URL")
         if not raw_url:

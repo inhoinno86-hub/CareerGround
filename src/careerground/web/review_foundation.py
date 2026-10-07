@@ -1652,6 +1652,11 @@ def _render_review(view: ReviewPresentation) -> str:
         "<title>CareerGround 사실 검토</title><main>",
         "<h1>경력 사실 검토</h1>",
         "<p>아래 문구를 하나씩 확인해 주세요. 선택하지 않은 항목은 승인되지 않습니다.</p>",
+        (
+            "<p>이 화면은 연 뒤 최대 3분 동안 제출할 수 있습니다. "
+            "시간이 지나면 새 검토 화면을 열어 주세요. 연결 앱의 요청도 만료됐다면 "
+            "ChatGPT에서 새 검토를 요청해 주세요. 원문과 초안은 그대로 보존됩니다.</p>"
+        ),
         f"<p>경험 범위: {escape(view.scope_key)} · 기준 프로필 버전: {view.base_profile_version}</p>",
         f"<form method='post' action='/review/{escape(view.batch_id, quote=True)}'>",
         f"<input type='hidden' name='approval_token' value='{escape(view.approval_token, quote=True)}'>",

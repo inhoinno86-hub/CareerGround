@@ -1,0 +1,24 @@
+{
+  "schema": "careerground-actual-b-jd-exact-review-prepared-v1",
+  "observed_at_utc": "2026-10-06T06:01:19.779826+00:00",
+  "profile_version": 2,
+  "request_status_from_store": "WAITING",
+  "model_status_projection": "ok",
+  "web_status": 200,
+  "heading": "JD 선택 발췌 직접 확인",
+  "synthetic_requirements": [
+    "점검 체크리스트를 작성한 경험"
+  ],
+  "nonfinal_preparation_submitted": true,
+  "final_checkboxes_checked": [
+    false,
+    false
+  ],
+  "human_final_approval": "PENDING",
+  "operation_expires_at_utc": "2026-10-06T06:05:06.832279Z",
+  "limits": [
+    "No external job ad retrieved",
+    "No final approval submitted by agent",
+    "No B JD storage or R1 success asserted"
+  ]
+}

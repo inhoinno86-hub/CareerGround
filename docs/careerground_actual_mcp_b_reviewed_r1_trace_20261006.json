@@ -1,0 +1,19 @@
+{
+  "schema": "careerground-actual-b-reviewed-r1-trace-v1",
+  "observed_at_utc": "2026-10-06T06:30:49.644023+00:00",
+  "status": "ok",
+  "found": true,
+  "profile_version": 2,
+  "units": [
+    {
+      "exact_text": "가상 물류 프로젝트에서 점검 체크리스트 초안을 작성하고 동료 두 명의 의견을 정리했습니다.",
+      "wording_level": "R1",
+      "review_status": "WORDING_REVIEWED"
+    }
+  ],
+  "non_quota_tables_unchanged": 37,
+  "limits": [
+    "Owned B trace only; A MCP attempt requires reauthentication",
+    "No export approval or execution"
+  ]
+}

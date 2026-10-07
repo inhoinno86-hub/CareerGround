@@ -1,0 +1,21 @@
+{
+  "scope": "authorized_private_synthetic_acceptance_followup_closeout",
+  "observed_at": "2026-10-07T14:35:01.559079+00:00",
+  "PostgreSQL_tests_PASS": 12,
+  "PostgreSQL_nonempty_product_tables": 0,
+  "user_reported_test_container_stop": true,
+  "owned_QA_and_tunnel_stopped": true,
+  "ports_closed": [
+    5000,
+    8001,
+    18081,
+    55432
+  ],
+  "temporary_PostgreSQL_password_file_removed": true,
+  "persistent_QA_and_passkey_registry_preserved": true,
+  "B_account_tables_count_and_hashes_unchanged": 34,
+  "ignored_prompt_and_intent_files_preserved": 20,
+  "commit_push_or_merge_performed": false,
+  "qualified_summary": "CareerGround_Phase_A_Private_MVP_Closeout_2026-10-07.md",
+  "full_operational_or_unqualified_Phase_A_acceptance_declared": false
+}

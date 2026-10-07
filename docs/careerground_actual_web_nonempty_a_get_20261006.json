@@ -1,0 +1,71 @@
+{
+  "schema": "careerground-authenticated-nonempty-web-get-v1",
+  "method": "BrowserOS top-level navigation using refreshed own QA Web sessions",
+  "observations": [
+    {
+      "actor": "A",
+      "target": "own",
+      "route": "session",
+      "status": 200,
+      "forms": 1,
+      "contains_requested_session_id": true,
+      "contains_synthetic_draft": false,
+      "denial_body": null
+    },
+    {
+      "actor": "B",
+      "target": "foreign",
+      "route": "session",
+      "status": 404,
+      "forms": 0,
+      "contains_requested_session_id": false,
+      "contains_synthetic_draft": false,
+      "denial_body": "본문으로 바로가기\n요청한 내용을 찾을 수 없습니다\n\n이 요청은 저장되지 않았습니다.\n\n경력 정리 시작 화면에서 다시 확인하기"
+    },
+    {
+      "actor": "B",
+      "target": "absent",
+      "route": "session",
+      "status": 404,
+      "forms": 0,
+      "contains_requested_session_id": false,
+      "contains_synthetic_draft": false,
+      "denial_body": "본문으로 바로가기\n요청한 내용을 찾을 수 없습니다\n\n이 요청은 저장되지 않았습니다.\n\n경력 정리 시작 화면에서 다시 확인하기"
+    },
+    {
+      "actor": "A",
+      "target": "own",
+      "route": "drafts",
+      "status": 200,
+      "forms": 0,
+      "contains_requested_session_id": true,
+      "contains_synthetic_draft": true,
+      "denial_body": null
+    },
+    {
+      "actor": "B",
+      "target": "foreign",
+      "route": "drafts",
+      "status": 404,
+      "forms": 0,
+      "contains_requested_session_id": false,
+      "contains_synthetic_draft": false,
+      "denial_body": "본문으로 바로가기\n요청한 내용을 찾을 수 없습니다\n\n이 요청은 저장되지 않았습니다.\n\n경력 정리 시작 화면에서 다시 확인하기"
+    },
+    {
+      "actor": "B",
+      "target": "absent",
+      "route": "drafts",
+      "status": 404,
+      "forms": 0,
+      "contains_requested_session_id": false,
+      "contains_synthetic_draft": false,
+      "denial_body": "본문으로 바로가기\n요청한 내용을 찾을 수 없습니다\n\n이 요청은 저장되지 않았습니다.\n\n경력 정리 시작 화면에서 다시 확인하기"
+    }
+  ],
+  "foreign_and_absent_denial_bodies_equal": {
+    "session": true,
+    "drafts": true
+  },
+  "scope": "B to A session metadata/nonempty drafts GET rejection with A own positive control; not full raw source, POST or artifact"
+}

@@ -1,0 +1,21 @@
+{
+  "schema": "careerground-actual-mcp-b-confirmed-evidence-v1",
+  "actor": "B",
+  "method": "One get_claim_evidence call for B's newly confirmed synthetic Claim at version 1",
+  "tool_status": "ok",
+  "found": true,
+  "profile_version": 1,
+  "model_projection": {
+    "claim_id": null,
+    "knowledge_status": null,
+    "consistency_status": null,
+    "usage_policy": null,
+    "evidence_count": null,
+    "source_availability": null
+  },
+  "limitations": [
+    "Null projected fields do not verify nested Claim/evidence details",
+    "Positive read metadata only; no additional fact/use approval",
+    "A comparison requires reconnect"
+  ]
+}

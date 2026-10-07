@@ -151,6 +151,30 @@ class DevelopmentConnectionRevocations:
         with self._lock:
             return self._digest(access.subject, access.client_id) in self._read()
 
+    def unblock(self, identity: VerifiedIdentity, client_id: str, *, acknowledged: bool) -> bool:
+        """Explicit trusted operator recovery only; no Web/model-facing route.
+
+        The offline operator command owns the store and registry locks. Token
+        issuance, provider reconnect and ordinary startup never invoke this.
+        """
+        if (
+            type(acknowledged) is not bool
+            or not acknowledged
+            or type(identity) is not VerifiedIdentity
+            or identity.issuer != self.issuer
+        ):
+            raise DevelopmentStoreRejected
+        with self._lock:
+            entries = self._read()
+            digest = self._digest(identity.subject, client_id)
+            if digest not in entries:
+                return False
+            _replace_private(
+                self.path / "denials.json",
+                self._encode([item for item in entries if item != digest]),
+            )
+            return True
+
     def close(self):
         """Release the exclusive local registry lock."""
         if self._fd is not None:

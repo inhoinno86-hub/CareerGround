@@ -1,0 +1,28 @@
+{
+  "schema": "careerground-actual-mcp-negative-export-request-v1",
+  "actor": "B",
+  "tool": "request_user_confirmation",
+  "action": "PROFILE_EXPORT",
+  "prompt_submissions": 1,
+  "existing_other": {
+    "status": "error",
+    "error_code": "REVIEW_REQUIRED"
+  },
+  "absent": {
+    "status": "error",
+    "error_code": "REVIEW_REQUIRED"
+  },
+  "same_rejection": true,
+  "counts_after": {
+    "career_profiles": 2,
+    "profiling_sessions": 1,
+    "profiling_inputs": 1,
+    "claims": 0,
+    "browser_operations": 0,
+    "deletion_requests": 0,
+    "erasure_ledger": 0
+  },
+  "no_approval_operation_created": true,
+  "export_executed": false,
+  "scope": "B to A/absent profile export preparation denial; not export execution or valid receipt cross-use"
+}

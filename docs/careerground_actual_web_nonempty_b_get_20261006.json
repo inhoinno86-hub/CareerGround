@@ -1,0 +1,79 @@
+{
+  "schema": "careerground-authenticated-nonempty-web-get-v1",
+  "method": "BrowserOS top-level navigation after existing provider SSO login; no credential extraction",
+  "web_profile_identity_confirmed": {
+    "A_matches_A": true,
+    "B_matches_B": true
+  },
+  "observations": [
+    {
+      "actor": "B",
+      "target": "own",
+      "route": "session",
+      "status": 200,
+      "forms": 1,
+      "contains_requested_session_id": true,
+      "contains_synthetic_draft": false
+    },
+    {
+      "actor": "A",
+      "target": "foreign_B",
+      "route": "session",
+      "status": 404,
+      "forms": 0,
+      "contains_requested_session_id": false,
+      "contains_synthetic_draft": false
+    },
+    {
+      "actor": "A",
+      "target": "absent",
+      "route": "session",
+      "status": 404,
+      "forms": 0,
+      "contains_requested_session_id": false,
+      "contains_synthetic_draft": false
+    },
+    {
+      "actor": "B",
+      "target": "own",
+      "route": "drafts",
+      "status": 200,
+      "forms": 0,
+      "contains_requested_session_id": true,
+      "contains_synthetic_draft": true
+    },
+    {
+      "actor": "A",
+      "target": "foreign_B",
+      "route": "drafts",
+      "status": 404,
+      "forms": 0,
+      "contains_requested_session_id": false,
+      "contains_synthetic_draft": false
+    },
+    {
+      "actor": "A",
+      "target": "absent",
+      "route": "drafts",
+      "status": 404,
+      "forms": 0,
+      "contains_requested_session_id": false,
+      "contains_synthetic_draft": false
+    }
+  ],
+  "foreign_and_absent_denial_bodies_equal": {
+    "session": true,
+    "drafts": true
+  },
+  "counts_after": {
+    "career_profiles": 2,
+    "profiling_sessions": 1,
+    "profiling_inputs": 1,
+    "profiling_drafts": 1,
+    "claims": 0,
+    "browser_operations": 0,
+    "deletion_requests": 0,
+    "erasure_ledger": 0
+  },
+  "scope": "A to B session metadata/nonempty draft GET denial with B own positive control; not reverse direction, POST, complete raw source or artifacts"
+}

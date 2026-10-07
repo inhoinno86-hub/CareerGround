@@ -1,0 +1,55 @@
+{
+  "scope": "fresh_persistent_B_connection_and_unconfirmed_A_source_mixing_boundary",
+  "observed_at": "2026-10-07T02:09:51.804631+00:00",
+  "B_connection": {
+    "existing_private_plugin_visible": true,
+    "initial_A_only_list_was_incomplete": true,
+    "other_account_connection_added_in_B_isolated_context": true,
+    "provider_login_and_consent_completed_automatically": true,
+    "alias": "지속 QA B",
+    "old_aliases_not_removed": true,
+    "expected_ID_not_supplied_to_discovery_prompt": true,
+    "ChatGPT_get_my_profile_return_matches_B": true,
+    "return_differs_from_A": true,
+    "version": 0,
+    "B_read_request_count_at_discovery": 1,
+    "new_CareerGround_profile_created_by_connection": false
+  },
+  "B_synthetic_preparation": {
+    "sessions": 1,
+    "sources": 1,
+    "drafts": 1,
+    "effective_source_characters": 37,
+    "source_sha256": "07ed098b57e14b1a8702b0297c7258f69ff5ae5477b84246e8d2a2979de7f7eb",
+    "DB_owner_source_draft_hash_text_match": true,
+    "draft_status": "DRAFT",
+    "initial_multiline_type_split_into_three_messages": true,
+    "source_contains_explicit_final_synthetic_sentence_only": true,
+    "composer_unsent_suffix_replaced_by_next_single_line_fill": true,
+    "canonical_approval_performed_by_agent": false
+  },
+  "A_source_mixing": {
+    "method": "native actual MCP propose_profiling_drafts",
+    "foreign_B_source": "NOT_FOUND",
+    "absent_source": "NOT_FOUND",
+    "errors_same": true,
+    "non_quota_tables_count_and_hashes_unchanged": 37,
+    "reverse_direction_not_tested": true
+  },
+  "A_fact_review_prepared": {
+    "browser_page_verified": true,
+    "status_at_observation": "WAITING",
+    "observed_actual_client_metadata_preserved_privately": true,
+    "connection_controls_not_enabled_yet": true
+  },
+  "database_counts_at_observation": {
+    "accounts": 2,
+    "career_profiles": 2,
+    "claims": 0,
+    "profiling_sessions": 2,
+    "profiling_inputs": 2,
+    "profiling_drafts": 2,
+    "browser_operations": 1
+  },
+  "full_Phase_A_acceptance_complete": false
+}

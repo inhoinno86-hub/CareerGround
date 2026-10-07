@@ -1,0 +1,24 @@
+{
+  "schema": "careerground-actual-b-fact-review-completed-v1",
+  "observed_at_utc": "2026-10-06T01:31:25.360698+00:00",
+  "scope": "B existing synthetic source and exact draft; human fact approval only",
+  "web": {
+    "batch_status": "SUBMITTED",
+    "claims": 1,
+    "profile_version_after": 1
+  },
+  "same_originating_mcp_connection": {
+    "confirmation_status": "DONE",
+    "submit_status": "ok",
+    "version_after": 1,
+    "operation_after": "CONSUMED"
+  },
+  "claim_use_reviews": 0,
+  "deletion_requests": 0,
+  "receipt_extracted_or_copied_by_agent": false,
+  "limits": [
+    "R1 use approval remains separate",
+    "No valid receipt used across accounts",
+    "No export or deletion performed"
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "schema": "careerground-actual-web-confirmation-get-isolation-v1",
+  "operation_actor": "A",
+  "action": "FACT_REVIEW",
+  "operation_status_at_preparation": "WAITING",
+  "observations": [
+    {
+      "actor": "A",
+      "target": "own",
+      "status": 200,
+      "heading": "경력 사실 검토",
+      "quotes": [
+        "동료 한 명과 점검 순서를 검토했습니다.",
+        "가상 서비스의 오류 제보를 모아 재현 절차 문서 초안을 작성했습니다."
+      ],
+      "decision_fields": 2,
+      "checkbox_labels": [
+        "위 문구와 각 결정을 직접 확인했습니다.",
+        "표시된 연결 앱이 이 작업의 결과를 받도록 허용합니다."
+      ]
+    },
+    {
+      "actor": "B",
+      "target": "foreign_A",
+      "status": 404,
+      "body": "본문으로 바로가기\n요청한 내용을 찾을 수 없습니다\n\n이 요청은 저장되지 않았습니다.\n\n경력 정리 시작 화면에서 다시 확인하기",
+      "forms": 0
+    },
+    {
+      "actor": "B",
+      "target": "absent",
+      "status": 404,
+      "body": "본문으로 바로가기\n요청한 내용을 찾을 수 없습니다\n\n이 요청은 저장되지 않았습니다.\n\n경력 정리 시작 화면에서 다시 확인하기",
+      "forms": 0
+    }
+  ],
+  "foreign_and_absent_denial_bodies_equal": true,
+  "final_approval_performed_by_agent": false,
+  "approval_receipt_extracted": false,
+  "scope": "B cannot open A fact confirmation; A own positive form; not final approval or valid receipt cross-use"
+}

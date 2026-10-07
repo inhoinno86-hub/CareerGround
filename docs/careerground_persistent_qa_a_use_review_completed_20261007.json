@@ -1,0 +1,29 @@
+{
+  "scope": "human_exact_synthetic_A_claim_use_review_saved",
+  "observed_at": "2026-10-07T05:35:15.387476+00:00",
+  "user_reported_complete": true,
+  "A": {
+    "profile_version": 2,
+    "claims": 1,
+    "use_reviews": 1,
+    "review_base_version": 1,
+    "review_saved_version": 2,
+    "consistency_attested": true,
+    "use_authorized": true,
+    "Web_display": {
+      "knowledge": "USER_CONFIRMED",
+      "consistency": "CONSISTENT",
+      "usage": "ALLOWED"
+    },
+    "exact_text": "개발 시험에서 장애 로그를 분류하고 팀에 확인 절차를 공유했습니다."
+  },
+  "B": {
+    "version": 0,
+    "claims": 0,
+    "use_reviews": 0
+  },
+  "deletion_requests": 0,
+  "erasure_ledger": 0,
+  "R1_or_export_approval_implied": false,
+  "phase_A_complete": false
+}

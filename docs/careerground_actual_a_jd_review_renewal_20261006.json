@@ -1,0 +1,24 @@
+{
+  "schema": "careerground-actual-a-jd-review-renewal-v1",
+  "observed_at_utc": "2026-10-06T05:19:33.128665+00:00",
+  "previous_request_expired": true,
+  "previous_request_consumed": false,
+  "job_descriptions_before_renewal": 0,
+  "profile_version": 2,
+  "new_request_owner_version_status_verified": true,
+  "new_request_status": "WAITING",
+  "new_request_expires_at_utc": "2026-10-06T05:23:51.699687Z",
+  "web_heading": "JD 선택 발췌 직접 확인",
+  "web_status": 200,
+  "exact_requirements_match": true,
+  "final_checkboxes_checked": [
+    false,
+    false
+  ],
+  "human_final_approval": "PENDING",
+  "limits": [
+    "Only nonfinal preparation submitted",
+    "No expiry extension",
+    "No JD storage success asserted"
+  ]
+}

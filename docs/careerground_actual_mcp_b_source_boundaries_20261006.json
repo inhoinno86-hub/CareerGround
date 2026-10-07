@@ -1,0 +1,42 @@
+{
+  "schema": "careerground-actual-mcp-b-source-boundaries-v1",
+  "observations": [
+    {
+      "case_id": "B_SOURCE_READ_foreign_A",
+      "actor": "B",
+      "tool": "get_profiling_session",
+      "target": "foreign_A",
+      "status": "error",
+      "error_code": "NOT_FOUND",
+      "submissions": 1
+    },
+    {
+      "case_id": "B_SOURCE_READ_absent",
+      "actor": "B",
+      "tool": "get_profiling_session",
+      "target": "absent",
+      "status": "error",
+      "error_code": "NOT_FOUND",
+      "submissions": 1
+    },
+    {
+      "case_id": "B_SOURCE_INPUT_foreign_A",
+      "actor": "B",
+      "tool": "add_profiling_input",
+      "target": "foreign_A",
+      "status": "error",
+      "error_code": "NOT_FOUND",
+      "submissions": 1
+    },
+    {
+      "case_id": "B_SOURCE_INPUT_absent",
+      "actor": "B",
+      "tool": "add_profiling_input",
+      "target": "absent",
+      "status": "error",
+      "error_code": "NOT_FOUND",
+      "submissions": 1
+    }
+  ],
+  "scope": "B to A/absent session metadata read and explicit input append rejection; not claim/artifact or source-ID mixing"
+}

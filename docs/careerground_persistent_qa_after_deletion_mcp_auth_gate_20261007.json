@@ -1,0 +1,13 @@
+{
+  "scope": "B_actual_MCP_after_A_erasure_waiting_for_existing_connection_reauthentication",
+  "observed_at": "2026-10-07T13:54:33.692258+00:00",
+  "user_existing_ChatGPT_platform_login_completed": true,
+  "same_existing_B_conversation_restored": true,
+  "intended_alias": "지속 QA B",
+  "actual_get_my_profile_gate": "ChatGPT connection expired notice",
+  "server_B_identity_or_actual_negative_MCP_calls_not_yet_confirmed": true,
+  "read_only_comparison_request_submitted_once": true,
+  "new_profile_connection_or_canonical_write_performed": false,
+  "phase_A_complete": false,
+  "resolved_by_actual_B_reauth_evidence": "careerground_persistent_qa_after_deletion_mcp_boundaries_20261007.json"
+}

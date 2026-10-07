@@ -1,0 +1,105 @@
+{
+  "schema": "careerground-actual-jd-web-get-isolation-v1",
+  "own": [
+    {
+      "label": "A_own",
+      "route": "",
+      "status": 200,
+      "heading": "선택한 JD 발췌",
+      "forms": 0,
+      "body_hash": "82c820cb84ebd78109ad433c8ee338665215169c2a4045c5bb93b61afbe413bc",
+      "target_id_present": false,
+      "requirement_present": true
+    },
+    {
+      "label": "A_own",
+      "route": "/mapping/2",
+      "status": 200,
+      "heading": "JD와 경력 사실 연결 기록",
+      "forms": 0,
+      "body_hash": "035b8d15ce913dff50fe79a7b27c724dcc6b180f78fffacd93db341392c130ab",
+      "target_id_present": false,
+      "requirement_present": true
+    },
+    {
+      "label": "A_own",
+      "route": "/draft/2",
+      "status": 200,
+      "heading": "R1 이력서 초안 선택",
+      "forms": 0,
+      "body_hash": "a2ac6bf2e9ae191edffb35ed84c8bd0f70550b87de082fa2d7cfc56b9128c480",
+      "target_id_present": false,
+      "requirement_present": false
+    }
+  ],
+  "negative": [
+    {
+      "label": "B_foreign",
+      "route": "",
+      "status": 404,
+      "heading": "요청한 내용을 찾을 수 없습니다",
+      "forms": 0,
+      "body_hash": "399065de64fd312c0ee462aaf485a49e1fe65c3a4284f42b5927ac65df130a2e",
+      "target_id_present": false,
+      "requirement_present": false
+    },
+    {
+      "label": "B_nonexistent",
+      "route": "",
+      "status": 404,
+      "heading": "요청한 내용을 찾을 수 없습니다",
+      "forms": 0,
+      "body_hash": "399065de64fd312c0ee462aaf485a49e1fe65c3a4284f42b5927ac65df130a2e",
+      "target_id_present": false,
+      "requirement_present": false
+    },
+    {
+      "label": "B_foreign",
+      "route": "/mapping/2",
+      "status": 404,
+      "heading": "요청한 내용을 찾을 수 없습니다",
+      "forms": 0,
+      "body_hash": "399065de64fd312c0ee462aaf485a49e1fe65c3a4284f42b5927ac65df130a2e",
+      "target_id_present": false,
+      "requirement_present": false
+    },
+    {
+      "label": "B_nonexistent",
+      "route": "/mapping/2",
+      "status": 404,
+      "heading": "요청한 내용을 찾을 수 없습니다",
+      "forms": 0,
+      "body_hash": "399065de64fd312c0ee462aaf485a49e1fe65c3a4284f42b5927ac65df130a2e",
+      "target_id_present": false,
+      "requirement_present": false
+    },
+    {
+      "label": "B_foreign",
+      "route": "/draft/2",
+      "status": 404,
+      "heading": "요청한 내용을 찾을 수 없습니다",
+      "forms": 0,
+      "body_hash": "399065de64fd312c0ee462aaf485a49e1fe65c3a4284f42b5927ac65df130a2e",
+      "target_id_present": false,
+      "requirement_present": false
+    },
+    {
+      "label": "B_nonexistent",
+      "route": "/draft/2",
+      "status": 404,
+      "heading": "요청한 내용을 찾을 수 없습니다",
+      "forms": 0,
+      "body_hash": "399065de64fd312c0ee462aaf485a49e1fe65c3a4284f42b5927ac65df130a2e",
+      "target_id_present": false,
+      "requirement_present": false
+    }
+  ],
+  "unauthenticated_attempts_discarded": 6,
+  "non_quota_tables_unchanged": 37,
+  "b_web_identity_verified": true,
+  "b_mcp_attempt": "INCONCLUSIVE_REAUTH_REQUIRED",
+  "limits": [
+    "A JD only; reverse B JD absent",
+    "GET only; no artifact or valid receipt cross-submit"
+  ]
+}

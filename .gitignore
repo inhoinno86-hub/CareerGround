@@ -12,6 +12,7 @@ src/*.egg-info/
 /intent-docs/
 /.careerground-development/
 /.careerground-authenticated-development/
+/.careerground-release-qa/
 /..careerground-development-pre-*.sqlite
 /..careerground-development-upgrade-*.sqlite
 

@@ -1,0 +1,44 @@
+{
+  "schema": "careerground-persistent-qa-preparation-v1",
+  "date": "2026-10-07",
+  "previous_qa_scan": {
+    "source": "user_original_pc",
+    "scope": "selected_careerground_directories_only",
+    "scan_complete": true,
+    "directories_visited": 4,
+    "stores_found": 0
+  },
+  "new_qa": {
+    "relative_base": ".careerground-release-qa/release-20261007",
+    "git_ignored": true,
+    "base_mode": "0700",
+    "marker_mode": "0600",
+    "prepared": true,
+    "runtime_initialized": false,
+    "db_created": false,
+    "profile_created": false,
+    "passkey_created": false
+  },
+  "startup": {
+    "attempted": true,
+    "started": false,
+    "blocker": "execution_environment_loopback_bind_PermissionError_errno_1",
+    "product_error_or_oauth_denial": false
+  },
+  "existing_tunnel": {
+    "resource_tunnel_id_binding_validated": true,
+    "configuration_changed": false,
+    "credential_changed": false,
+    "started": false,
+    "new_resource_created": false
+  },
+  "verification": {
+    "launcher_and_tunnel_tests_passed": 13
+  },
+  "next_manual_step": "Start existing BrowserOS via careerground-browseros on original PC; then confirm MCP availability before browser work",
+  "limits": [
+    "Selected paths search only; no claim all PC backups absent",
+    "Previous approvals/passkey binding are not restored into the new environment",
+    "No actual new provider login, product operation, connection block/unblock, export or deletion yet"
+  ]
+}

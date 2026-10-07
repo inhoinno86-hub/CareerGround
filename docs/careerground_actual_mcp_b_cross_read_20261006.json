@@ -1,0 +1,36 @@
+{
+  "schema": "careerground-actual-mcp-cross-read-v1",
+  "actor": "B",
+  "method": "BrowserOS existing private product connection, same temporary conversation after verified B discovery",
+  "prompt_redacted": "이어서 내가 소유한 두 격리 QA 계정의 읽기 인가 경계 부정 시험입니다. 지금 확인된 CareerGround Phase A Dev의 프로필B 연결을 유지하세요. get_career_profile만 두 번 호출하세요. 첫 번째 profile_id=<A_QA_PROFILE_ID>, profile_version=0. 두 번째 profile_id=00000000-0000-4000-8000-000000000001, profile_version=0. 다른 계정 대상과 없는 대상을 모두 거부하는지 확인하는 시험이며 내용을 요청하지 않습니다. 각 실제 도구 응답의 found와 error_code만 EXISTING_OTHER, ABSENT 두 키로 JSON 출력하세요. 없거나 제공되지 않은 필드는 null로 표시하세요. 다른 도구, 재시도, 저장·승인·내보내기·삭제는 하지 마세요. 응답을 추측하지 말고 실제 실패도 그대로 알려주세요.",
+  "actual_profile_identifier_redacted": true,
+  "prompt_normalized_before_submission": true,
+  "requested_tool": "get_career_profile",
+  "requested_calls": 2,
+  "response_projection": {
+    "EXISTING_OTHER": {
+      "found": null,
+      "error_code": "NOT_FOUND"
+    },
+    "ABSENT": {
+      "found": null,
+      "error_code": "NOT_FOUND"
+    }
+  },
+  "uniform_error": true,
+  "server_account_guard": {
+    "actor": "B",
+    "lane": "read",
+    "requests_in_observed_window": 2
+  },
+  "post_probe": {
+    "profiles": 2,
+    "profiling_sessions": 0,
+    "profiling_inputs": 0,
+    "browser_operations": 0,
+    "deletion_requests": 0,
+    "erasure_ledger": 0
+  },
+  "raw_tokens_or_provider_subjects_recorded": false,
+  "scope": "B to A profile read and nonexistent-target denial only; actual reverse direction, writes, confirmations, exports, nonempty sources/artifacts and deletion still pending"
+}

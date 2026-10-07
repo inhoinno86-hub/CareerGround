@@ -1,0 +1,111 @@
+{
+  "scope": "new_persistent_synthetic_qa_runtime_activation_only",
+  "observed_at": "2026-10-07T01:45:33.798506+00:00",
+  "head": "1850b55d21437769db1010060d86bb46fbdf9b01",
+  "permission_change": "user_selected_full_access",
+  "browseros_native_tabs_snapshot_and_navigation": "succeeded",
+  "runtime_initialized": true,
+  "prior_temporary_store_restored": false,
+  "state_store_exists": true,
+  "passkey_directory_exists": true,
+  "counts_before_human_profile_creation": {
+    "accounts": 1,
+    "career_profiles": 1,
+    "claims": 0
+  },
+  "health_http_status": {
+    "runtime_live": 200,
+    "tunnel_health": 200,
+    "tunnel_ready": 200
+  },
+  "existing_tunnel_config_and_credentials_changed": false,
+  "tunnel_raw_http_logging": false,
+  "tunnel_stdout_path_correction": {
+    "literal_filename_replaced_with_empty_path": true,
+    "previous_log_preserved_privately": true,
+    "repository_stdout_absent": true,
+    "regression_tests_passed": 4
+  },
+  "draft_preservation": {
+    "files": 20,
+    "hashes_unchanged": true
+  },
+  "human_step_pending": null,
+  "product_acceptance_complete": false,
+  "commit_or_push_performed": false,
+  "human_A_profile_creation": {
+    "user_reported_complete": true,
+    "management_page_observed": true,
+    "database_counts": {
+      "accounts": 1,
+      "auth_identities": 1,
+      "career_profiles": 1,
+      "claims": 0
+    },
+    "profile_version": 0
+  },
+  "B_login_preparation": {
+    "separate_browser_context_created": true,
+    "new_window_created": true,
+    "provider_login_page_observed": true,
+    "credentials_or_cookies_copied": false
+  },
+  "B_login_renewal": {
+    "observed_at": "2026-10-07T01:51:13.295807+00:00",
+    "previous_page_heading": "로그인을 완료할 수 없습니다",
+    "cause_confirmed": false,
+    "new_login_started_in_same_isolated_context": true,
+    "onboarding_page_observed": true,
+    "A_profile_preserved": true,
+    "accounts_and_profiles_before_B_submission": 1,
+    "human_B_creation_pending": false
+  },
+  "human_B_profile_creation": {
+    "user_reported_complete": true,
+    "management_page_observed": true,
+    "database_counts": {
+      "accounts": 2,
+      "auth_identities": 2,
+      "career_profiles": 2,
+      "claims": 0
+    },
+    "profile_versions": [
+      0,
+      0
+    ],
+    "verified_identity_pairs_distinct": true,
+    "web_profile_links_match_private_actor_mapping": true
+  },
+  "actual_mcp_discovery_attempts": {
+    "A": "app_connection_requires_reauthentication",
+    "B": "app_connection_requires_reauthentication",
+    "server_identity_or_denial_evidence": false
+  },
+  "fresh_web_session_evidence": "careerground_persistent_qa_web_sessions_20261007.json",
+  "A_reconnection_ui_preparation": {
+    "observed_at": "2026-10-07T01:57:16.432969+00:00",
+    "actual_ui_path": [
+      "사이드바",
+      "플러그인",
+      "CareerGround Phase A Dev",
+      "연결된 계정",
+      "프로필A 다시 연결"
+    ],
+    "existing_plugin_binding_preserved": true,
+    "selected_existing_alias": "프로필A",
+    "connection_dialog_heading": "CareerGround Phase A Dev 연결",
+    "human_continue_and_OAuth_pending": false,
+    "new_connection_created": false,
+    "other_links_modified": false
+  },
+  "actual_mcp_discovery_after_A_reauthentication": {
+    "status": "ok",
+    "profile_matches_A": true,
+    "profile_differs_from_B": true,
+    "version": 0
+  },
+  "A_synthetic_source_preparation_evidence": "careerground_persistent_qa_a_mcp_preparation_20261007.json",
+  "B_actual_connection_evidence": "careerground_persistent_qa_b_connection_boundaries_20261007.json",
+  "A_fact_and_connection_controls_evidence": "careerground_persistent_qa_a_fact_connection_controls_20261007.json",
+  "connection_block_recovery_evidence": "careerground_persistent_qa_connection_block_recovery_20261007.json"
+}

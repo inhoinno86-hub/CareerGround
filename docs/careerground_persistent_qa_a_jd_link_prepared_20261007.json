@@ -1,0 +1,35 @@
+{
+  "scope": "actual_A_JD_read_and_separate_potential_link_review_preparation",
+  "observed_at": "2026-10-07T05:45:21.193150+00:00",
+  "saved_JD_evidence": "careerground_persistent_qa_a_jd_completed_20261007.json",
+  "proposal_status_actual_MCP_once": {
+    "error_code": "VALIDATION_FAILED",
+    "completion_or_result_id_not_confirmed": true,
+    "retry_submitted": false,
+    "specific_cause_confirmed": false
+  },
+  "actual_get_jd_analysis": {
+    "profile_version": 2,
+    "requirement_text": "장애 로그 분류 및 팀 확인 절차 공유 경험",
+    "requirement_id_matches_saved_row": true,
+    "linked_claim_ids": [],
+    "gap_status": "NO_ELIGIBLE_LINK_RECORDED"
+  },
+  "JD_LINK_confirmation": {
+    "actual_ChatGPT_confirmation_url_observed": true,
+    "signed_store_owner_target_action_and_version_match": true,
+    "status_at_observation": "DONE",
+    "expires_at": "2026-10-07 05:47:03.815447"
+  },
+  "Web_preparation": {
+    "candidate_count": 1,
+    "server_choices_match_owned_JD_requirement_and_allowed_claim": true,
+    "agent_selected_synthetic_pair_for_review": true,
+    "preparatory_exact_review_post_completed": true,
+    "heading": "JD 요구와 경력 연결 직접 확인",
+    "new_fact_or_full_coverage_created": false
+  },
+  "human_final_confirmation_pending": true,
+  "maps_at_observation": 1,
+  "phase_A_complete": false
+}

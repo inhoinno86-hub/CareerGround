@@ -1,0 +1,22 @@
+{
+  "schema": "careerground-actual-mcp-synthetic-input-v1",
+  "actor": "B",
+  "method": "existing private ChatGPT product connection",
+  "actual_tools": [
+    "start_profiling",
+    "add_profiling_input"
+  ],
+  "prompt_submissions": 1,
+  "own_session_created": true,
+  "own_input_created": true,
+  "body_matches_explicit_synthetic_prompt": true,
+  "source_characters": 83,
+  "source_sha256": "b77d98f2b3b5dcbede4c528b7046e006611a90bc67df9a3202c4f02c98d98d16",
+  "source_kind": "USER_STATEMENT",
+  "profile_version": 0,
+  "session_status": "ACTIVE",
+  "canonical_claims": 0,
+  "browser_operations": 0,
+  "deletion_requests": 0,
+  "scope": "unapproved synthetic source only; no human fact/use approval"
+}

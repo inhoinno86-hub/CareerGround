@@ -1,0 +1,110 @@
+{
+  "schema": "careerground-actual-mcp-b-jd-r1-boundaries-v1",
+  "b_discovery": {
+    "actual_profile_matches_b": true,
+    "profile_version": 1,
+    "found": true,
+    "status": "ok",
+    "model_qa_case_omitted_but_exact_prompt_segment_verified": true
+  },
+  "cases": [
+    {
+      "case": "release-b-foreign-jd-read-after-auth",
+      "tool": "get_jd_analysis",
+      "result": {
+        "qa_case": "release-b-foreign-jd-read-after-auth",
+        "status": "error",
+        "code": "NOT_FOUND",
+        "found": null
+      },
+      "expected_code": "NOT_FOUND",
+      "passed": true,
+      "verdict": "PASS"
+    },
+    {
+      "case": "release-b-nonexistent-jd-read-after-auth",
+      "tool": "get_jd_analysis",
+      "result": {
+        "qa_case": "release-b-nonexistent-jd-read-after-auth",
+        "status": "error",
+        "code": "NOT_FOUND",
+        "found": null
+      },
+      "expected_code": "NOT_FOUND",
+      "passed": true,
+      "verdict": "PASS"
+    },
+    {
+      "case": "release-b-foreign-r1-trace",
+      "tool": "get_resume_trace",
+      "result": {
+        "qa_case": "release-b-foreign-r1-trace",
+        "status": "error",
+        "code": "NOT_FOUND",
+        "found": null
+      },
+      "expected_code": "NOT_FOUND",
+      "passed": true,
+      "verdict": "PASS"
+    },
+    {
+      "case": "release-b-nonexistent-r1-trace",
+      "tool": "get_resume_trace",
+      "result": {
+        "qa_case": "release-b-nonexistent-r1-trace",
+        "status": "error",
+        "code": "NOT_FOUND",
+        "found": null
+      },
+      "expected_code": "NOT_FOUND",
+      "passed": true,
+      "verdict": "PASS"
+    },
+    {
+      "case": "release-b-foreign-r1-export-request",
+      "tool": "request_user_confirmation",
+      "result": {
+        "qa_case": "release-b-foreign-r1-export-request",
+        "status": "error",
+        "code": "REVIEW_REQUIRED",
+        "found": null
+      },
+      "expected_code": "REVIEW_REQUIRED",
+      "passed": true,
+      "verdict": "PASS"
+    },
+    {
+      "case": "release-b-nonexistent-r1-export-request",
+      "tool": "request_user_confirmation",
+      "result": {
+        "qa_case": "release-b-nonexistent-r1-export-request",
+        "status": "error",
+        "code": "REVIEW_REQUIRED",
+        "found": null
+      },
+      "expected_code": "REVIEW_REQUIRED",
+      "passed": true,
+      "verdict": "PASS"
+    },
+    {
+      "case": "release-b-foreign-r1-export-empty-proof",
+      "tool": "export_resume",
+      "result": {
+        "qa_case": "release-b-foreign-r1-export-empty-proof",
+        "status": null,
+        "code": null,
+        "found": null
+      },
+      "expected_code": "REVIEW_REQUIRED",
+      "passed": false,
+      "verdict": "INCONCLUSIVE"
+    }
+  ],
+  "non_quota_tables_unchanged": 37,
+  "operation_count_unchanged": 9,
+  "limits": [
+    "B to A JD/R1 only; reverse B artifact absent",
+    "Empty receipt executor model status/code null is inconclusive; remaining empty receipt case not attempted",
+    "No valid receipt cross-submit or actual export/deletion execution tested"
+  ]
+}

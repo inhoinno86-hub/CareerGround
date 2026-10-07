@@ -1,0 +1,16 @@
+{
+  "scope": "A_unsubmitted_R1_review_expired_new_request_preparation",
+  "observed_at": "2026-10-07T05:57:04.149337+00:00",
+  "old_request_expired_at": "2026-10-07 05:54:13.962567",
+  "old_status": "WAITING",
+  "artifact_count": 0,
+  "old_deadline_or_receipt_modified": false,
+  "new_idempotency_key": "persistent-release-20261007-a-r1-draft-2",
+  "human_final_submission_pending": true,
+  "new_request_owner_action_target_version_verified": true,
+  "new_request_status": "WAITING",
+  "new_request_expires_at": "2026-10-07 06:02:10.739134",
+  "new_exact_review_heading": "정확한 R1 초안 선택 직접 확인",
+  "agent_non_final_choices_only": true,
+  "new_exact_review_opened_at": "2026-10-07T05:58:01.559076+00:00"
+}

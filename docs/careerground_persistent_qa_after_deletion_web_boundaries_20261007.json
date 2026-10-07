@@ -1,0 +1,29 @@
+{
+  "scope": "actual_authenticated_B_Web_after_A_PROFILE_erasure_and_restart",
+  "observed_at": "2026-10-07T13:51:52.506070+00:00",
+  "B_own_profile_HTTP": 200,
+  "B_own_profile_version": 0,
+  "B_own_session_HTTP": 200,
+  "B_own_drafts_HTTP": 200,
+  "B_exact_synthetic_draft_text_visible": true,
+  "B_session_page_source_text_visibility_claimed": false,
+  "deleted_A_vs_absent": {
+    "profile_version_2": {
+      "both_HTTP": 404,
+      "same_body": true,
+      "forms": 0
+    },
+    "JD": {
+      "both_HTTP": 404,
+      "same_body": true,
+      "forms": 0
+    },
+    "R2_export_Markdown": {
+      "both_HTTP": 404,
+      "same_body": true,
+      "forms": 0
+    }
+  },
+  "A_old_resource_identifiers_or_text_disclosed_in_errors": false,
+  "phase_A_complete": false
+}

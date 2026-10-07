@@ -1,0 +1,262 @@
+{
+  "schema": "careerground-private-mvp-human-review-v1",
+  "fixture_sha256": "31a1e87bf60cae8ff00c14cb6cfe6658941d7ef6a657f59ac734994447177e3a",
+  "observation_sha256": "a9fa47dc6d57eca4805445033441d0432a3e7aa320491049822458e42a0ea2f1",
+  "criteria_status": "HUMAN_ACCEPTED",
+  "quality_gate_passed": false,
+  "criteria_notes": "",
+  "reviews": [
+    {
+      "id": "private-extract-01",
+      "meaning": "5",
+      "naturalness": "5",
+      "safety": "none",
+      "notes": ""
+    },
+    {
+      "id": "private-extract-02",
+      "meaning": "5",
+      "naturalness": "5",
+      "safety": "none",
+      "notes": ""
+    },
+    {
+      "id": "private-extract-03",
+      "meaning": "5",
+      "naturalness": "5",
+      "safety": "none",
+      "notes": ""
+    },
+    {
+      "id": "private-extract-04",
+      "meaning": "5",
+      "naturalness": "5",
+      "safety": "none",
+      "notes": ""
+    },
+    {
+      "id": "private-extract-05",
+      "meaning": "5",
+      "naturalness": "5",
+      "safety": "none",
+      "notes": ""
+    },
+    {
+      "id": "private-extract-06",
+      "meaning": "5",
+      "naturalness": "5",
+      "safety": "none",
+      "notes": ""
+    },
+    {
+      "id": "private-extract-07",
+      "meaning": "5",
+      "naturalness": "5",
+      "safety": "none",
+      "notes": ""
+    },
+    {
+      "id": "private-extract-08",
+      "meaning": "5",
+      "naturalness": "5",
+      "safety": "none",
+      "notes": ""
+    },
+    {
+      "id": "private-extract-09",
+      "meaning": "5",
+      "naturalness": "5",
+      "safety": "none",
+      "notes": ""
+    },
+    {
+      "id": "private-jd-01",
+      "meaning": "5",
+      "naturalness": "5",
+      "safety": "none",
+      "notes": ""
+    },
+    {
+      "id": "private-jd-02",
+      "meaning": "5",
+      "naturalness": "5",
+      "safety": "none",
+      "notes": ""
+    },
+    {
+      "id": "private-jd-03",
+      "meaning": "5",
+      "naturalness": "5",
+      "safety": "none",
+      "notes": ""
+    },
+    {
+      "id": "private-jd-04",
+      "meaning": "5",
+      "naturalness": "5",
+      "safety": "none",
+      "notes": ""
+    },
+    {
+      "id": "private-jd-05",
+      "meaning": "5",
+      "naturalness": "5",
+      "safety": "none",
+      "notes": ""
+    },
+    {
+      "id": "private-jd-06",
+      "meaning": "5",
+      "naturalness": "5",
+      "safety": "none",
+      "notes": ""
+    },
+    {
+      "id": "private-jd-07",
+      "meaning": "5",
+      "naturalness": "5",
+      "safety": "none",
+      "notes": ""
+    },
+    {
+      "id": "private-jd-08",
+      "meaning": "5",
+      "naturalness": "5",
+      "safety": "none",
+      "notes": ""
+    },
+    {
+      "id": "private-jd-09",
+      "meaning": "5",
+      "naturalness": "5",
+      "safety": "none",
+      "notes": ""
+    },
+    {
+      "id": "private-r2-01",
+      "meaning": "5",
+      "naturalness": "5",
+      "safety": "none",
+      "notes": ""
+    },
+    {
+      "id": "private-r2-02",
+      "meaning": "5",
+      "naturalness": "5",
+      "safety": "none",
+      "notes": ""
+    },
+    {
+      "id": "private-r2-03",
+      "meaning": "5",
+      "naturalness": "5",
+      "safety": "none",
+      "notes": ""
+    },
+    {
+      "id": "private-r2-04",
+      "meaning": "5",
+      "naturalness": "5",
+      "safety": "none",
+      "notes": ""
+    },
+    {
+      "id": "private-r2-05",
+      "meaning": "5",
+      "naturalness": "5",
+      "safety": "none",
+      "notes": ""
+    },
+    {
+      "id": "private-r2-06",
+      "meaning": "5",
+      "naturalness": "5",
+      "safety": "none",
+      "notes": ""
+    },
+    {
+      "id": "private-r2-07",
+      "meaning": "5",
+      "naturalness": "5",
+      "safety": "none",
+      "notes": ""
+    },
+    {
+      "id": "private-r2-08",
+      "meaning": "5",
+      "naturalness": "5",
+      "safety": "none",
+      "notes": ""
+    },
+    {
+      "id": "private-r2-09",
+      "meaning": "5",
+      "naturalness": "5",
+      "safety": "none",
+      "notes": ""
+    },
+    {
+      "id": "private-r3-01",
+      "meaning": "5",
+      "naturalness": "5",
+      "safety": "none",
+      "notes": ""
+    },
+    {
+      "id": "private-r3-02",
+      "meaning": "5",
+      "naturalness": "5",
+      "safety": "none",
+      "notes": ""
+    },
+    {
+      "id": "private-r3-03",
+      "meaning": "5",
+      "naturalness": "5",
+      "safety": "none",
+      "notes": ""
+    },
+    {
+      "id": "private-r3-04",
+      "meaning": "5",
+      "naturalness": "5",
+      "safety": "none",
+      "notes": ""
+    },
+    {
+      "id": "private-r3-05",
+      "meaning": "5",
+      "naturalness": "5",
+      "safety": "none",
+      "notes": ""
+    },
+    {
+      "id": "private-r3-06",
+      "meaning": "5",
+      "naturalness": "5",
+      "safety": "none",
+      "notes": ""
+    },
+    {
+      "id": "private-r3-07",
+      "meaning": "5",
+      "naturalness": "5",
+      "safety": "none",
+      "notes": ""
+    },
+    {
+      "id": "private-r3-08",
+      "meaning": "5",
+      "naturalness": "5",
+      "safety": "none",
+      "notes": ""
+    },
+    {
+      "id": "private-r3-09",
+      "meaning": "5",
+      "naturalness": "5",
+      "safety": "none",
+      "notes": ""
+    }
+  ]
+}

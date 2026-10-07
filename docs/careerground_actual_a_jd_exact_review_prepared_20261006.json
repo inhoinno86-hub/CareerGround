@@ -1,0 +1,23 @@
+{
+  "schema": "careerground-actual-a-jd-exact-review-prepared-v1",
+  "observed_at_utc": "2026-10-06T05:16:54.950920+00:00",
+  "profile_version": 2,
+  "web_response_status": 200,
+  "heading": "JD 선택 발췌 직접 확인",
+  "synthetic_requirements": [
+    "오류 제보를 정리하고 재현 절차를 문서화한 경험",
+    "점검 체크리스트를 작성한 경험"
+  ],
+  "nonfinal_preparation_submitted": true,
+  "final_checkboxes_checked": [
+    false,
+    false
+  ],
+  "human_final_approval": "PENDING",
+  "operation_expires_at_utc": "2026-10-06T05:17:58.928269+00:00",
+  "limits": [
+    "No external job ad retrieved",
+    "No final approval submitted by agent",
+    "No JD storage or R1 success asserted"
+  ]
+}

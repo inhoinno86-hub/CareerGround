@@ -1,0 +1,33 @@
+{
+  "scope": "human_approved_R2_export_received_on_originating_ChatGPT_connection",
+  "observed_at": "2026-10-07T06:15:27.629148+00:00",
+  "user_reported_approved": true,
+  "Web_operation_status": "CONSUMED",
+  "actual_ChatGPT_content_delivery": "INLINE",
+  "format": "MARKDOWN",
+  "profile_version": 2,
+  "content_bytes": 91,
+  "content_hash": "6a2ab412552dcd4d3fcb6bac7d6d63ef507667e6d1a5d7208ece0b2cbaea6287",
+  "rendered_body_without_terminal_LF": {
+    "content_bytes": 90,
+    "sha256": "f7f17f789b324e43641b11321f0022911693b85af495c2d9ed79edd0f2d32928"
+  },
+  "body_verification": {
+    "rendered_exact_text_and_Markdown_escape_received": true,
+    "renderer_omitted_terminal_LF": true,
+    "terminal_LF_restored_per_export_serializer": true,
+    "UTF8_bytes_and_SHA256_match_declared_export": true,
+    "raw_MCP_transport_bytes_independently_captured": false
+  },
+  "receipt_or_private_resource_URI_printed_or_shared": false,
+  "passkey_registry": {
+    "signature_valid": true,
+    "credentials_before_new_enrollment": 0
+  },
+  "B_before_A_deletion": {
+    "account_scoped_non_quota_tables": 34,
+    "hash_baseline_saved_privately": true
+  },
+  "human_step_pending": "A_passkey_enrollment_on_current_persistent_QA",
+  "phase_A_complete": false
+}

@@ -1,0 +1,23 @@
+{
+  "schema": "careerground-actual-a-r1-draft-prepared-v1",
+  "observed_at_utc": "2026-10-06T05:38:56.747529+00:00",
+  "profile_version": 2,
+  "operation_status": "WAITING",
+  "operation_expires_at_utc": "2026-10-06T05:43:07.397143Z",
+  "web_status": 200,
+  "web_heading": "정확한 R1 초안 선택 직접 확인",
+  "exact_claim_text": "가상 서비스의 오류 제보를 모아 재현 절차 문서 초안을 작성했습니다.",
+  "selected_claim_count": 1,
+  "evidence_exact_match": true,
+  "wording_review_required_before_export": true,
+  "final_checkboxes_checked": [
+    false,
+    false
+  ],
+  "human_final_approval": "PENDING",
+  "limits": [
+    "Only proposed candidate selection preparation submitted",
+    "No R1 creation success asserted",
+    "No wording/export approval"
+  ]
+}

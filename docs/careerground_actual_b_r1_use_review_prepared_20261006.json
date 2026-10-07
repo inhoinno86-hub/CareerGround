@@ -1,0 +1,19 @@
+{
+  "schema": "careerground-actual-b-r1-use-review-prepared-v1",
+  "observed_at_utc": "2026-10-06T05:52:15.238193+00:00",
+  "profile_version": 1,
+  "web_status": 200,
+  "heading": "별도 R1 사용 검토",
+  "exact_claim_text": "가상 물류 프로젝트에서 점검 체크리스트 초안을 작성하고 동료 두 명의 의견을 정리했습니다.",
+  "evidence_exact_match": true,
+  "final_checkboxes_checked": [
+    false,
+    false
+  ],
+  "human_final_approval": "PENDING",
+  "limits": [
+    "No use approval submitted by agent",
+    "Only existing B synthetic Claim; A preserved",
+    "No B JD or R1 artifact yet"
+  ]
+}

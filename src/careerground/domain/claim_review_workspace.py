@@ -264,6 +264,7 @@ class ClaimReviewPreparation:
                 raise ReviewIdempotencyConflict
             self.get(session, account_id=account_id, batch_id=batch_id, now=now)
             return existing
+        self._release_expired_reviews(session, work=work, scope_key=scope_key, now=now)
         draft_ids = tuple(
             session.scalars(
                 select(ProfilingDraft.id)
@@ -289,6 +290,69 @@ class ClaimReviewPreparation:
             now=now,
             batch_id=batch_id,
         )
+
+    @staticmethod
+    def _release_expired_reviews(session, *, work, scope_key, now):
+        """Release unsubmitted drafts without reviving any old review or token."""
+
+        expired = list(
+            session.scalars(
+                select(ProfilingReviewBatch)
+                .where(
+                    ProfilingReviewBatch.account_id == work.account_id,
+                    ProfilingReviewBatch.session_id == work.id,
+                    ProfilingReviewBatch.scope_key == scope_key,
+                    ProfilingReviewBatch.status == "PREPARED",
+                    ProfilingReviewBatch.expires_at <= now,
+                    ProfilingReviewBatch.submitted_at.is_(None),
+                )
+                .with_for_update()
+                .execution_options(populate_existing=True)
+            )
+        )
+        if not expired:
+            return
+        draft_ids = tuple(
+            session.scalars(
+                select(ProfilingReviewItem.draft_id).where(
+                    ProfilingReviewItem.account_id == work.account_id,
+                    ProfilingReviewItem.session_id == work.id,
+                    ProfilingReviewItem.batch_id.in_([batch.id for batch in expired]),
+                    ProfilingReviewItem.decision.is_(None),
+                )
+            )
+        )
+        for batch in expired:
+            batch.status = "EXPIRED"
+        session.flush()
+        live_draft_ids = set(
+            session.scalars(
+                select(ProfilingReviewItem.draft_id)
+                .join(ProfilingReviewBatch, ProfilingReviewBatch.id == ProfilingReviewItem.batch_id)
+                .where(
+                    ProfilingReviewItem.account_id == work.account_id,
+                    ProfilingReviewItem.draft_id.in_(draft_ids),
+                    ProfilingReviewBatch.account_id == work.account_id,
+                    ProfilingReviewBatch.status == "PREPARED",
+                    ProfilingReviewBatch.expires_at > now,
+                )
+            )
+        )
+        for draft in session.scalars(
+            select(ProfilingDraft)
+            .where(
+                ProfilingDraft.account_id == work.account_id,
+                ProfilingDraft.session_id == work.id,
+                ProfilingDraft.scope_key == scope_key,
+                ProfilingDraft.id.in_(draft_ids),
+                ProfilingDraft.status == "IN_REVIEW",
+            )
+            .with_for_update()
+            .execution_options(populate_existing=True)
+        ):
+            if draft.id not in live_draft_ids:
+                draft.status = "DRAFT"
+        session.flush()
 
     def get(
         self, session: Session, *, account_id: str, batch_id: str, now: datetime

@@ -1,0 +1,28 @@
+{
+  "schema": "careerground-actual-a-jd-completed-v1",
+  "observed_at_utc": "2026-10-06T05:21:31.468690+00:00",
+  "profile_version": 2,
+  "jd_version": 1,
+  "requirements": [
+    {
+      "ordinal": 1,
+      "exact_text": "오류 제보를 정리하고 재현 절차를 문서화한 경험",
+      "source_start": 2,
+      "source_end": 28
+    },
+    {
+      "ordinal": 2,
+      "exact_text": "점검 체크리스트를 작성한 경험",
+      "source_start": 32,
+      "source_end": 48
+    }
+  ],
+  "human_web_approval_saved": true,
+  "same_originating_connection_confirmation_status": "DONE",
+  "record_selected_jd_status": "ok",
+  "operation_status_after": "CONSUMED",
+  "limits": [
+    "Selected synthetic excerpts only; no semantic AI analysis",
+    "No requirement Claim mapping or R1 artifact yet"
+  ]
+}

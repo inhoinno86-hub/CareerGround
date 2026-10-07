@@ -1,6 +1,15 @@
 # 품질 분류·의미 보존 검토
 
-상태: 기존 기대값 유지, 새 실제 관측 추가. 합격선/독립 사람 판정 미완료.
+상태: 새 36개에 대해 사용자가 기준을 수용하고 직접 평가했다. 이번 비공개 합성 품질 기준은 통과했다. 기존 기대값·관측·점수는 유지한다. 기존 비공개 plugin 1.0.3 설치·최신 스킬 일치·제품 도구 왕복은 2026-10-07 확인했다. 독립 blind 평가는 미완료다.
+
+## 최신 사용자 평가 결과
+
+사용자가 직접 작성한 JSON의 fixture/observation SHA-256과 정확히 36개의 유일한 사례 ID를 확인했다. 기준은 `HUMAN_ACCEPTED`이며 의미 보존·자연스러움은 각각 전 사례 5/5, 안전 위반은 0건이다. 기존 새 관측의 extract/JD/R2/R3 분류는 각각 9/9다. 수용한 합격선을 충족하므로 **이번 비공개 합성 사례 품질 gate는 PASS**다.
+
+- [사용자 평가 원본](chatgpt_private_mvp_human_review_20261005.json)
+- [hash 검증·집계·범위가 포함된 수용 결과](chatgpt_private_mvp_human_review_result_20261005.json)
+
+원본 내 `quality_gate_passed=false`는 검토 화면이 합격을 자동 선언하지 않도록 내보낸 값이다. 원본을 수정하지 않고 hash·누락·기준·평가를 확인한 별도 결과에 판정을 기록했다. 프로젝트 소유자의 실제 평가이며 수행자가 대신 입력하지 않았다. 기대값을 접어 볼 수 있는 화면이므로 독립 blind 평가로 주장하지 않는다. 아래 미완료 상태는 사용자 평가 전의 이력이다. 이후 설치·도구 왕복의 실제 결과와 한계는 [최종 시험 정리](CareerGround_Phase_A_Private_MVP_Closeout_2026-10-07.md)와 [설치 확인 기록](careerground_persistent_qa_private_plugin_update_20261007.json)에 기록했다.
 
 ## 비공개 MVP 후속 — 새 36개
 

@@ -1,0 +1,18 @@
+{
+  "schema": "careerground-actual-a-jd-link-completed-v1",
+  "observed_at_utc": "2026-10-06T05:37:55.099108+00:00",
+  "human_web_approval_saved": true,
+  "same_originating_connection_confirmation_status": "DONE",
+  "link_jd_requirement_status": "ok",
+  "operation_status_after": "CONSUMED",
+  "profile_version": 2,
+  "mapping_count": 1,
+  "mapping_type_from_store": "RELATED",
+  "coverage_level_from_store": "POTENTIAL",
+  "second_requirement_linked": false,
+  "model_mapping_projection_null_not_accepted": true,
+  "limits": [
+    "Potential relevance only; no coverage certification",
+    "No R1 artifact or wording/export approval yet"
+  ]
+}
