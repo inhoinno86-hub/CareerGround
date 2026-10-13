@@ -1,0 +1,52 @@
+{
+  "status": "PASS_STEP02",
+  "model": "SM-F966N",
+  "android_version": "16",
+  "version": [
+    "versionCode=2 minSdk=33 targetSdk=36",
+    "versionName=0.1.1-step02-oidc"
+  ],
+  "app_sha256": "dea6692fe7dc561cc39a6007e4340b9572068d94ffb3321a521ec6981df25a00",
+  "previous_apk_preserved_sha256": "9c0e8ac0e399bd27a289308712ca40aacb381d7a0476f93d54b5f3f3226ecfe2",
+  "instrumentation": {
+    "status": "PASS",
+    "count": 5
+  },
+  "native_browser_cancel_retry": "PASS",
+  "actual_native_login": "PASS",
+  "actual_oidc_file_roundtrip": "PASS_AFTER_AUTH_MODE_FIX",
+  "runtime": "STOPPED",
+  "reverse": "selected device 8765 REMOVED",
+  "serial_recorded": false,
+  "credentials_recorded": false,
+  "actual_native_cancel_retry": "PASS",
+  "actual_native_logout_token_replay": "PASS_401",
+  "force_stop_ram_login_and_session_loss": "PASS",
+  "old_synthetic_owner_restore_rejection": "PASS_OWNER_CONFLICT_403",
+  "first_oidc_file_wrong_auth_mode": "FAIL_PRESERVED",
+  "wrong_auth_mode_restore_rejection": "PASS_AUTH_MODE_CONFLICT_403",
+  "fixed_file": {
+    "file_path": "/sdcard/Download/CareerGround-step02-20261011-130033/careerground-session-oidc-20261011-verify-r2.json",
+    "bytes": 9483,
+    "sha256": "7a5c8f751c16a36655d4af6ab1d26f7de020d216b8a82d849891b25adbbc8786",
+    "owner_is_oidc": true,
+    "state": "PAUSED",
+    "raw_sha256": "11bb6517369b8063b1afca03452e654b96440b1ade99023c9a657c36d8cb63a8",
+    "canonical_digest": "a1ca01fb34e8c6c8a5cf5a3bb2e54b32227d05d9076aa77d1de642b70fd1edd1",
+    "original_preserved": true,
+    "auth_mode": "oidc",
+    "token_fields_absent": true
+  },
+  "python_authmode_regression": {
+    "status": "PASS",
+    "count": 30
+  },
+  "actual_second_account_login": "NOT_RUN",
+  "actual_wait_until_token_expiry": "NOT_RUN",
+  "synthetic_signed_other_owner_and_expiry": "PASS",
+  "step02": "PASS",
+  "step03": "NOT_RUN",
+  "step04": "NOT_RUN",
+  "runtime_port_closed": true,
+  "selected_reverse_8765_absent": true
+}

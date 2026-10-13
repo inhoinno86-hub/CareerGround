@@ -46,6 +46,10 @@ jobs:
           uv run --locked ruff check plugins/careerground-portable/references tests/test_portable*.py
           uv run --locked ruff format --check plugins/careerground-portable/references tests/test_portable*.py
           uv run --locked python scripts/check_portable_plugin.py
+      - name: Mock interview runtime and offline boundaries
+        run: |
+          uv run --locked ruff check apps/mock-interview/runtime tests/test_mock_interview*.py
+          uv run --locked ruff format --check apps/mock-interview/runtime tests/test_mock_interview*.py
       - name: Persistent QA and tunnel launcher regression
         run: uv run --locked python -m pytest -q tests/test_phase_a_release_qa_launcher.py tests/test_phase_a_release_tunnel_launcher.py
       - run: uv run --locked playwright install --with-deps chromium firefox

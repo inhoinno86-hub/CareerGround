@@ -1,0 +1,481 @@
+{
+  "date": "2026-10-12",
+  "overall": "APPROVED_DEVELOPMENT_ROUNDTRIP_ACCEPTED_WITH_RECORDED_ENVIRONMENT_LIMITATIONS",
+  "scope": "private synthetic Fold7 code4 + actual Codex + manual SAF files + actual existing ChatGPT plugin review and separate version creation; actual offline voice",
+  "steps": {
+    "01": "APPROVED",
+    "02": "ACCEPTED",
+    "03": "ACTUAL_PHONE_INTERVIEW_VOICE_RESULT_PASS",
+    "04": "ACTUAL_HOST_ROUNDTRIP_AND_SEPARATE_VERSION_PATH_PASS_SYNTHETIC_EMULATOR_SUPPLEMENT_COMPLETED"
+  },
+  "device": "SM-F966N Android16",
+  "app_version": "0.2.1-step03-voice",
+  "version_code": 4,
+  "voice_long_speech": {
+    "scope": "actual physical Korean speech on installed code4; user confirmed no early cutoff; native draft inspected",
+    "status": "PASS_LAST_SENTENCE_PRESENT",
+    "original_unconfirmed_draft_preserved": true,
+    "multiple_runs_appended_to_existing_draft": true,
+    "word_level_recognition_errors_present": true,
+    "offline": "PASS_ACTUAL_NETWORK_DISABLED_KOREAN_SPEECH_20261012",
+    "final_answer_edit": "deduplicate and normalize to previously chosen synthetic English wording; not a verbatim Korean transcript",
+    "user_report": "음성 시험 수행했고, 이상 없음 확인했어.",
+    "timestamp": 1791727621
+  },
+  "files": {
+    "scope": "actual native SAF export, local schema/reference/importer validation; ChatGPT host separate",
+    "files": {
+      "careerground-result-step03-fold7-r1.json": {
+        "bytes": 2373,
+        "sha256": "2d9f38c8f4526e56ff5adbb3efc148897a12b877314df1eec533db62c941864e"
+      },
+      "careerground-session-step03-fold7-r1.json": {
+        "bytes": 22568,
+        "sha256": "bd306c323f5703f7ee3a18aca86b783649245cfecd4af59e214ebc298f906a92"
+      }
+    },
+    "handoff_ref": {
+      "id": "handoff-synthetic",
+      "sha256": "a1ca01fb34e8c6c8a5cf5a3bb2e54b32227d05d9076aa77d1de642b70fd1edd1"
+    },
+    "validation_errors": [],
+    "import_result_equal": true,
+    "answers": 1,
+    "feedback": 1,
+    "pending_candidates": 1,
+    "trace_counts": {
+      "questions": 8,
+      "answers": 3,
+      "feedback": 3,
+      "candidates": 3,
+      "events": 4
+    },
+    "stale_counts": {
+      "answers": 2,
+      "feedback": 2,
+      "candidates": 2
+    },
+    "question_status_counts": {
+      "pending": 5,
+      "answered": 1,
+      "skipped": 0,
+      "stale": 2
+    },
+    "current_answer_revisions": [
+      3
+    ],
+    "current_input_kinds": [
+      "on_device_confirmed"
+    ],
+    "negative_checks": {
+      "handoff_hash": {
+        "status": "PASS_REJECT",
+        "errors": [
+          "HANDOFF_CONFLICT"
+        ]
+      },
+      "handoff_id": {
+        "status": "PASS_REJECT",
+        "errors": [
+          "HANDOFF_CONFLICT"
+        ]
+      },
+      "answer_reference": {
+        "status": "PASS_REJECT",
+        "errors": [
+          "MISSING_REFERENCE"
+        ]
+      },
+      "candidate_approved": {
+        "status": "PASS_REJECT",
+        "errors": [
+          "SCHEMA"
+        ]
+      }
+    },
+    "fixed_original_preserved": true,
+    "raw_voice_draft_is_verbatim_result": false,
+    "answer_edit": "deduplicated/corrected synthetic English normalization after physical Korean speech; original unconfirmed raw draft preserved separately",
+    "test_harness_first_check": "FAIL_KEYERROR_CANONICAL_DIGEST: harness expected a non-schema session key; corrected to handoff_ref.sha256 and re-ran PASS",
+    "actual_final_session_saf_reimport": {
+      "status": "PASS",
+      "state": "COMPLETED",
+      "terminal_state_preserved": true,
+      "runtime_evidence": {
+        "utc_epoch": 1791728115,
+        "kind": "http",
+        "method": "POST",
+        "route": "/v1/restore",
+        "status": 200,
+        "state": "COMPLETED",
+        "auth_mode": "oidc",
+        "ai_status": "AVAILABLE_ACTUAL",
+        "raw_sha256": "11bb6517369b8063b1afca03452e654b96440b1ade99023c9a657c36d8cb63a8",
+        "canonical_digest": "a1ca01fb34e8c6c8a5cf5a3bb2e54b32227d05d9076aa77d1de642b70fd1edd1",
+        "record_counts": {
+          "questions": 8,
+          "answers": 3,
+          "feedback": 3,
+          "candidates": 3,
+          "events": 4
+        }
+      }
+    }
+  },
+  "host": {
+    "scope": "actual BrowserOS ChatGPT Work existing Portable0.2.0 interview-review; synthetic files only",
+    "conversation_url": "https://chatgpt.com/c/6acb999c-2fac-83ec-b5e5-2aecaf3156b4",
+    "plugin_url": "https://chatgpt.com/plugins/Plugin_47a97bf406048191a8a671f47778376a",
+    "plugin_version": "0.2.0",
+    "skills": 8,
+    "host_model_display": "GPT-6.1 Sol / Light",
+    "request_count": 3,
+    "request_file": "chatgpt-step04-request-r3.txt",
+    "files": [
+      "handoff-v1.json",
+      "careerground-result-step03-fold7-r1.json"
+    ],
+    "skill_invocation": "OBSERVED_INTERVIEW_REVIEW",
+    "status": "PASS_ACTUAL_REVIEW_FORMAL_VALIDATOR_AND_SEPARATE_FACT_USE_VERSION_PATH",
+    "automatic_retries": 0,
+    "new_plugin_install": false,
+    "new_account_or_connection": false,
+    "private_user_career_history_read": false,
+    "actual_files_read": true,
+    "hash_and_reference_check": "PASS_HOST_OBSERVED",
+    "classifications_separated": true,
+    "pending_not_promoted": true,
+    "fixed_versions_preserved": true,
+    "formal_schema_reference_validator": "PASS_3_NORMAL_AND_5_NEGATIVE_CASES_IN_VALIDATOR_AND_IMPORTER_13_CHECKS",
+    "formal_validator_reason": "approved exact pip command installed temporary host-only deps; old unavailable receipt preserved",
+    "host_profile_new_version": "PASS_ACTUAL_USER_FACT_AND_USE_CHOICES_PROFILE_V4_WITH_V3_PRESERVED",
+    "receipt_download": "PASS_ACTUAL_BROWSER_DOWNLOAD_HASH_AND_CONTENT_VERIFIED",
+    "host_response_complete": true,
+    "response_file": "chatgpt-response-r3-progress.txt",
+    "pending_not_promoted_before_confirmation": true,
+    "original_result_pending_preserved_after_confirmation": true,
+    "installation": {
+      "approved": true,
+      "exact_command_once": true,
+      "exit_code": 0,
+      "temporary_path": "/tmp/careerground-step04-20261012/deps",
+      "actual_versions": {
+        "jsonschema": "4.26.0",
+        "attrs": "26.1.0",
+        "referencing": "0.37.0",
+        "rpds-py": "2026.6.3",
+        "jsonschema-specifications": "2025.9.1",
+        "typing-extensions": "4.16.0"
+      },
+      "additional_dependency_disclosed": true,
+      "pc_global_environment_changed": false
+    },
+    "formal_validation_checks": 13,
+    "career_review_checks": 18,
+    "reference_source_files_match_local_originals": 5,
+    "separate_reviews": {
+      "fact_question_answer": "이 합성 문구·범위 확인",
+      "use_question_answer": "기본·맞춤 이력서·면접에 허용",
+      "synthetic_only": true,
+      "confirmation": "user_confirmed",
+      "scope": [
+        "base_resume",
+        "tailored_resume",
+        "interview"
+      ],
+      "old_profile_version": 3,
+      "new_profile_version": 4,
+      "new_workspace_scope": "profile-only partial workspace with old v3, new v4, three review history operations; original JD/resume/handoff preserved in original files",
+      "source_exact_original_answer": true,
+      "history_actions": [
+        "result_review",
+        "fact_review",
+        "use_review"
+      ],
+      "externally_verified": false,
+      "original_result_candidate_status": "pending",
+      "original_resume_ref_profile_version": 3,
+      "automatic_handoff_promotion": false
+    }
+  },
+  "verification": {
+    "portable_tests_this_turn": {
+      "status": "PASS",
+      "count": 35,
+      "subtests": 30
+    },
+    "python_tests_previous_code_unchanged": {
+      "status": "PASS",
+      "count": 44
+    },
+    "jvm_previous_build": {
+      "status": "PASS",
+      "count": 10
+    },
+    "android_instrumentation_previous_installed_build": {
+      "status": "PASS",
+      "count": 9
+    },
+    "lint_previous_build": {
+      "errors": 0,
+      "warnings": 8
+    },
+    "downloaded_files_pc_independent_checks": {
+      "status": "PASS",
+      "count": 21
+    },
+    "prior_test_results_are_not_rerun_today": true,
+    "emulator_instrumentation_before_pause": {
+      "status": "PASS",
+      "count": 9,
+      "rerun_after_pause": false
+    }
+  },
+  "actual_codex_calls": 11,
+  "approved_codex_limit": 12,
+  "chatgpt_host_requests_this_turn": 2,
+  "paid_api_calls": 0,
+  "cleanup": {
+    "app_ram_and_token_cleared": true,
+    "selected_device_reverse_removed": true,
+    "loopback_runtime_stopped": true,
+    "port_8765_closed": true,
+    "network_original_restored": true,
+    "codex_attempts": 11,
+    "codex_limit": 12,
+    "paid_api_calls": 0,
+    "phone_manual_files_preserved": true,
+    "network_and_screen_settings": {
+      "wifi_on": "1",
+      "mobile_data": "1",
+      "stay_on_while_plugged_in": "0"
+    }
+  },
+  "not_run": [
+    "automatic headless emulator cover-display switch (sensor and explicit size override tested separately)",
+    "actual emulator Korean microphone/TTS and personal OIDC (physical tests separately passed)",
+    "additional ChatGPT review of emulator mock result (no new host call)",
+    "real personal handoff usability (not provided)",
+    "deployment/OpenAI API/paid execution"
+  ],
+  "preserved": [
+    "fixed handoff bytes and version refs",
+    "old profile/resume/result/session files",
+    "prior failure evidence",
+    "existing dirty tracked/untracked/ignored tree"
+  ],
+  "previous_checkpoint": "docs/mock_interview_app_acceptance_20261011_r2.json",
+  "offline_voice": {
+    "status": "PASS",
+    "device": "SM-F966N Android16",
+    "wifi_on": "0",
+    "mobile_data": "0",
+    "active_default_network": "none",
+    "user_report": "전사 완료·마지막 문장도 남음",
+    "first_sentence_present": true,
+    "last_sentence_present": true,
+    "early_cutoff_observed": false,
+    "recognition_errors_present": true,
+    "example": "체크리스트 → 체커 리스트",
+    "draft_unconfirmed_not_submitted": true,
+    "new_ai_calls": 0,
+    "raw_audio_file_created": false,
+    "original_network_restored": true,
+    "runtime_evidence": "no actual_ai or questions/evaluation route in this resume run"
+  },
+  "downloaded_host_files": {
+    "interview-review-receipt-step04.json": {
+      "bytes": 6552,
+      "sha256": "6fb4dc66dad1bdc54fd5ed755b19d85af0943569d4be3b8da518b4438516a5d5"
+    },
+    "interview-review-receipt-step04-20261012-r2.json": {
+      "bytes": 18420,
+      "sha256": "fa9b39160e274780db95c9e9e06a9cdf507d091d1e4c045562e9dd4e1d1ffd0a"
+    },
+    "step04-r2-reproducibility.zip": {
+      "bytes": 27102,
+      "sha256": "51db01312ad1c205f53cbbd052b3724377cd2936dd41b80f18666f9971355ac5"
+    },
+    "profile-review-step04-20261012-v4.json": {
+      "bytes": 9892,
+      "sha256": "c8019ce278bb6c8a4df2d5a925bcfbc4b995c715ece05e829558c0af6d838b15"
+    },
+    "career-review-receipt-step04-20261012-r3.json": {
+      "bytes": 9935,
+      "sha256": "90ce27c6140a1f2d5560e00c459fe61aa797fd70db29919dc13dd6e24313ac83"
+    }
+  },
+  "chatgpt_host_requests_total": 3,
+  "new_codex_calls_this_turn": 0,
+  "emulator": {
+    "date": "2026-10-12",
+    "status": "PASS_SYNTHETIC_UI_FILES_WITH_RECORDED_ENVIRONMENT_LIMITATIONS",
+    "app": "0.2.1-step03-voice code4 unchanged",
+    "emulator": "37.2.12 stable",
+    "image": "Android36 Google APIs x86_64 revision7",
+    "avd": "careerground-step04-foldable-api36 / 7.6in Foldable",
+    "scope": "actual AVD execution with synthetic owner and MockProvider; not actual AI or physical voice",
+    "checks": {
+      "instrumentation_on_installed_code4_before_pause": "PASS_9_TESTS_NOT_RERUN_AFTER_PAUSE",
+      "synthetic_runtime_auth_and_mock_ai_banner": "PASS_ACTUAL_AVD_UI_MOCK_PROVIDER",
+      "handoff_saf_import_review_pin_questions": "PASS",
+      "handoff_picker_cancel_existing_state": "PASS",
+      "cover_single_column_and_unfold_wide": "PASS_EXPLICIT_WM_SIZE_OVERRIDE_884x2208_AND_RESET_1768x2208",
+      "hinge_state": "PASS_SENSOR_CLOSED_15_DEG_OPENED_180_DEG",
+      "automatic_headless_cover_display_switch": "UNVERIFIED_HEADLESS_SENSOR_CHANGE_DID_NOT_RESIZE_DISPLAY",
+      "keyboard_visible_resize_preserves_unconfirmed_draft": "PASS_MINPUTSHOWN_TRUE_BEFORE_AND_AFTER",
+      "landscape_rotation_preserves_question_answer_fixed_hash": "PASS_2208x1768",
+      "actual_split_screen_preserves_answer": "PASS_MULTI_WINDOW_1768x1091_WITH_INSTALLED_TEST_EMPTY_ACTIVITY",
+      "answer_revision_invalidates_previous_feedback_candidates": "PASS_REVISION2_WITH_OLD_ANSWER_FEEDBACK_CANDIDATE_STALE",
+      "pause_continue": "PASS_PAUSED_TO_IN_PROGRESS",
+      "background_return": "PASS",
+      "force_stop_clears_ram_connection": "PASS_PID_ABSENT_AND_RELOGIN_SCREEN",
+      "manual_session_saf_export_and_cancel": "PASS",
+      "manual_active_session_restore_after_app_and_runtime_replacement": "PASS_FRESH_REVIEW_REQUIRED_THEN_READY_START_REVISION2",
+      "imported_ai_records_untrusted": "PASS_ALL_FEEDBACK_CANDIDATES_STALE_EVENTS_IMPORTED_UNVERIFIED",
+      "abort_preserves_current_answers": "PASS",
+      "terminal_aborted_session_saf_reimport": "PASS_ABORTED_NOT_RESURRECTED",
+      "aborted_result_saf_schema_reference_importer": "PASS_LATEST_ANSWER1_FEEDBACK0_CANDIDATES0",
+      "actual_emulator_korean_microphone_or_tts": "NOT_RUN_KOREAN_DEVICE_SERVICES_NOT_READY_NO_MODEL_DOWNLOAD",
+      "emulator_personal_oidc_login": "NOT_RUN_SYNTHETIC_AUTH_ONLY_PHYSICAL_OIDC_PREVIOUSLY_PASS",
+      "emulator_mock_result_chatgpt_host_review": "NOT_RUN_EXISTING_ACTUAL_PHONE_RESULT_HOST_ROUNDTRIP_ALREADY_PASS",
+      "cleanup": "PASS"
+    },
+    "files": {
+      "careerground-session-emulator-active-r1.json": {
+        "bytes": 13667,
+        "sha256": "943f19a19acaadb8cb3894375606b4e1e4b501f095ef7421b959e09e3bf50182"
+      },
+      "careerground-session-emulator-active-r2.json": {
+        "bytes": 16145,
+        "sha256": "0ce8343ccb42ffa9ae114f0082710d2e64ca0dc4edbe9e652a3533590d13156f"
+      },
+      "careerground-session-emulator-aborted-r1.json": {
+        "bytes": 16250,
+        "sha256": "3a51ad5cbe45dcf5cd10e9190a0b938d6818f1fa134cb32e1a9b3a840f3ba9d4"
+      },
+      "careerground-result-emulator-aborted-r2.json": {
+        "bytes": 516,
+        "sha256": "75dd25d5e772cb380bb8d1de784e5bd4f73dae43f760d931c0befdfb95e83a20"
+      },
+      "misnamed-export-preserved.json": {
+        "bytes": 516,
+        "sha256": "dff5a0b248887b28ddc8a727dbf5a4f893e6095f0d912c6d7322854a25dad48f"
+      }
+    },
+    "receipts": {
+      "active1": {
+        "name": "careerground-session-emulator-active-r1.json",
+        "bytes": 13667,
+        "sha256": "943f19a19acaadb8cb3894375606b4e1e4b501f095ef7421b959e09e3bf50182",
+        "state": "IN_PROGRESS",
+        "questions": 6,
+        "answers": 1,
+        "feedback": 1,
+        "candidates": 1,
+        "schema": "PASS",
+        "ai_evidence": "events; question provenance is not a session0.1 field",
+        "validator_first_attempt": "schema passed; harness then failed KeyError provenance; corrected to actual session fields",
+        "actual_ai_calls": 0,
+        "provider": "Mock",
+        "events_actual_all_false": true
+      },
+      "active2": {
+        "name": "careerground-session-emulator-active-r2.json",
+        "bytes": 16145,
+        "sha256": "0ce8343ccb42ffa9ae114f0082710d2e64ca0dc4edbe9e652a3533590d13156f",
+        "state": "IN_PROGRESS",
+        "questions": 7,
+        "answers": 2,
+        "feedback": 2,
+        "candidates": 2,
+        "stale_counts": {
+          "answers": 1,
+          "feedback": 1,
+          "candidates": 1
+        },
+        "schema": "PASS",
+        "revision_invalidation": "PASS",
+        "actual_ai_calls": 0
+      },
+      "aborted": {
+        "file": "careerground-session-emulator-aborted-r1.json",
+        "bytes": 16250,
+        "sha256": "3a51ad5cbe45dcf5cd10e9190a0b938d6818f1fa134cb32e1a9b3a840f3ba9d4",
+        "state": "ABORTED",
+        "schema": "PASS",
+        "questions_answers_preserved": "PASS",
+        "feedback_candidates_all_stale": "PASS",
+        "imported_events_unverified": "PASS",
+        "original_handoff_bytes_preserved": "PASS"
+      },
+      "result": {
+        "file": "careerground-result-emulator-aborted-r2.json",
+        "bytes": 516,
+        "sha256": "75dd25d5e772cb380bb8d1de784e5bd4f73dae43f760d931c0befdfb95e83a20",
+        "schema_reference_and_importer": "PASS",
+        "answers": 1,
+        "feedback": 0,
+        "candidates": 0,
+        "latest_revision_only": "PASS",
+        "imported_old_feedback_excluded": "PASS",
+        "original_handoff_ref": {
+          "id": "handoff-synthetic",
+          "sha256": "a1ca01fb34e8c6c8a5cf5a3bb2e54b32227d05d9076aa77d1de642b70fd1edd1"
+        },
+        "chatgpt_host_review_for_this_mock_result": "NOT_RUN_PRIOR_ACTUAL_PHONE_RESULT_HOST_ROUNDTRIP_PRESERVED"
+      },
+      "cleanup": {
+        "app_ram_disconnected": true,
+        "targeted_reverse_8765_removed_before_emulator_shutdown": true,
+        "runtime_stopped": true,
+        "port_8765_closed": true,
+        "emulator_graceful_shutdown": "PASS",
+        "window_override_reset": true,
+        "user_rotation_free_restored": true,
+        "hinge_unfold_restored": true,
+        "sdk_avd_files_preserved": true,
+        "physical_phone_settings_changed_this_resume": false,
+        "tracked_baseline_unchanged": {
+          ".github/workflows/ci.yml": true,
+          "README.md": true,
+          "scripts/build_chatgpt_plugin.py": true
+        },
+        "codex_ledger": {
+          "attempts": 11,
+          "limit": 12,
+          "auth_mode": "chatgpt",
+          "paid_api_calls": 0
+        }
+      }
+    },
+    "failed_attempts_and_remediation": [
+      "Initial picker file not listed: media scan of selected synthetic file resolved it; no app source change.",
+      "First Back moved picker to parent directory; second Back cancelled. Harness first cancellation assertion failed then observed correct cancellation.",
+      "Resize moved editor off screen: initial visibility assertion failed; scroll revealed preserved draft.",
+      "Extra Back after keyboard had closed finished activity and lost unsaved RAM. Guard now checks mInputShown; new synthetic session created.",
+      "Interrupted PTY runtime disappeared leaving selected AVD reverse; closed port verified, old test reverse removed, fresh dedicated driver restored saved session.",
+      "One-way scroll missed Start above current position; bidirectional search corrected. Transient empty UI hierarchy parsing failed; bounded retry added.",
+      "SAF filename typing before keyboard transition settled left previous session filename; actual result saved with suffix (1). Original retained, keyboard delay and exact field assertion produced correctly named r2 result.",
+      "PC harness referenced nonexistent question provenance and result model_feedback keys; schema checks passed, harness corrected to session events and result feedback. Initial KeyErrors preserved; not app contract failures."
+    ],
+    "new_actual_codex_calls": 0,
+    "actual_codex_calls_total": 11,
+    "approved_codex_limit": 12,
+    "new_chatgpt_host_calls_after_pause": 0,
+    "chatgpt_host_calls_total": 3,
+    "paid_api_calls": 0,
+    "source_or_apk_changes": false,
+    "physical_phone_changed_this_resume": false,
+    "evidence_root": "/home/inno/.local/share/careerground-android/artifacts/emulator-step04-20261012"
+  },
+  "failed_attempts_preserved": [
+    "previous early voice cutoff followed by code4 correction and physical retest",
+    "previous host VALIDATOR_UNAVAILABLE followed by approved temporary installation and actual formal retest",
+    "browser wrong file control/no local download followed by exact named file card/link download",
+    "wrong regression test filename: pytest exit4/no tests; corrected selected four files:35 passed/30 subtests"
+  ],
+  "workflow_state": "DEVELOPMENT_ACCEPTANCE_COMPLETE",
+  "pause_checkpoint": "docs/mock_interview_pause_20261012.md",
+  "emulator_report": "docs/mock_interview_emulator_validation_20261012.md"
+}

@@ -1,0 +1,88 @@
+{
+  "status": "PARTIAL",
+  "app_version": "0.1.1-step02-oidc",
+  "version_code": 2,
+  "package": "dev.careerground.interview.dev",
+  "artifacts": {
+    "app-debug.apk": {
+      "sha256": "dea6692fe7dc561cc39a6007e4340b9572068d94ffb3321a521ec6981df25a00",
+      "bytes": 29641981
+    },
+    "app-debug-androidTest.apk": {
+      "sha256": "7311992d441670b510e8d34056de83fc2d2d273143590d57213c19e65382d07f",
+      "bytes": 2389312
+    }
+  },
+  "signing_certificate_sha256": "d258e5a2420327f238eb40ec765800dbf05bc563fc634a71475a6830e3f3d46a",
+  "signature_verification": "PASS",
+  "permissions": [
+    "android.permission.INTERNET",
+    "dev.careerground.interview.dev.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+  ],
+  "python_tests": {
+    "status": "PASS",
+    "count": 30,
+    "kind": "synthetic signed tokens / real ASGI handlers"
+  },
+  "exchange_regression": {
+    "status": "PASS",
+    "count": 7
+  },
+  "jvm_tests": {
+    "status": "PASS",
+    "count": 2,
+    "executed_builds": [
+      "r1",
+      "r3"
+    ],
+    "r2": "UP-TO-DATE"
+  },
+  "lint": {
+    "status": "PASS",
+    "errors": 0,
+    "warnings": 8
+  },
+  "public_provider_metadata": {
+    "status": "PASS",
+    "public_RSA_keys": 2,
+    "oauth_token_requested": false
+  },
+  "new_apk_device_install": "NOT_RUN",
+  "device_instrumentation": {
+    "status": "NOT_RUN",
+    "compiled_tests": 5
+  },
+  "actual_native_login": "NOT_RUN",
+  "actual_native_cancel_logout": "NOT_RUN",
+  "actual_oidc_file_roundtrip": "NOT_RUN",
+  "step02": "PARTIAL",
+  "step03": "NOT_RUN",
+  "step04": "NOT_RUN",
+  "blocker": "No ADB device connected; user USB/debugging action requested",
+  "baseline_files_changed": [
+    "apps/mock-interview/README.md",
+    "apps/mock-interview/android/app/build.gradle.kts",
+    "apps/mock-interview/android/app/src/main/AndroidManifest.xml",
+    "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/MainActivity.kt",
+    "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/InterviewModel.kt",
+    "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/RuntimeClient.kt",
+    "apps/mock-interview/android/app/src/androidTest/java/dev/careerground/interview/ImportUiTest.kt",
+    "apps/mock-interview/runtime/cg_mock/api.py",
+    "apps/mock-interview/runtime/cg_mock/oidc.py",
+    "apps/mock-interview/runtime/cg_mock/__main__.py",
+    "tests/test_mock_interview_oidc.py",
+    "docs/mock_interview_oidc_setup_20261011.md",
+    "PLAN-2026-10-10-mock-interview-app.md"
+  ],
+  "original_handoff_sha256": "11bb6517369b8063b1afca03452e654b96440b1ade99023c9a657c36d8cb63a8",
+  "automatic_token_or_session_persistence": false,
+  "paid_api_calls": false,
+  "deploy": false,
+  "new_source_files": [
+    "apps/mock-interview/runtime/cg_mock/provider.py",
+    "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/NativeOidc.kt",
+    "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/OidcChecks.kt",
+    "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/OidcRedirectActivity.kt",
+    "apps/mock-interview/android/app/src/androidTest/java/dev/careerground/interview/OidcBoundaryTest.kt"
+  ]
+}

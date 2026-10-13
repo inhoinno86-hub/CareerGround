@@ -1,0 +1,77 @@
+{
+  "date": "2026-10-11",
+  "timezone": "Asia/Seoul",
+  "registration_verdict": "PASS",
+  "browser": "BrowserOS existing profile via loopback MCP",
+  "user_completed_admin_login": true,
+  "tenant": "dev-gi4s7rn7d3eym5dp",
+  "tenant_environment": "DEVELOPMENT",
+  "new_tenant_created": false,
+  "public_config": {
+    "issuer": "https://dev-gi4s7rn7d3eym5dp.us.auth0.com/",
+    "domain": "dev-gi4s7rn7d3eym5dp.us.auth0.com",
+    "client_id": "DhgwGDNfZJoMXWuJMWwDDI5sCcOXCgl9",
+    "audience": "https://careerground.example/mock-interview/dev",
+    "redirect_uri": "dev.careerground.interview.dev:/oauth2redirect",
+    "scopes": [
+      "openid",
+      "use:interview"
+    ]
+  },
+  "application_name": "CareerGround Interview Dev",
+  "application_type": "native",
+  "callback_persisted_after_reload": true,
+  "default_database_connection_enabled": true,
+  "default_google_connection_enabled": true,
+  "existing_connection_configuration_changed": false,
+  "api": {
+    "path": "/dashboard/us/dev-gi4s7rn7d3eym5dp/apis/6acb16e2b88110d12d424d9b/settings",
+    "fields": {
+      "name": "CareerGround Interview Dev Runtime",
+      "identifier": "https://careerground.example/mock-interview/dev",
+      "token_profile": "access_token",
+      "signing_alg": "RS256",
+      "subject_type_authorization.user.policy": "require_client_grant",
+      "subject_type_authorization.client.policy": "deny_all",
+      "subject_type_authorization.anonymous_user.policy": "require_client_grant"
+    }
+  },
+  "permission": {
+    "name": "use:interview",
+    "description": "개인 모의 면접 세션 사용",
+    "saved": true
+  },
+  "user_delegated_grant": {
+    "native_client": "DhgwGDNfZJoMXWuJMWwDDI5sCcOXCgl9",
+    "permission": "use:interview",
+    "persisted_after_reload": true,
+    "other_apps_with_1_of_1_permissions": 0,
+    "always_grant_all_permissions": false,
+    "anonymous_grant_added": false
+  },
+  "provider_auto_created_test_application": {
+    "name": "CareerGround Interview Dev Runtime (Test Application)",
+    "client_id": "MKU294B1Q6eLUSBKP2OwiZeNP68Ogdya",
+    "client_access_denied_by_api_policy": true,
+    "token_requested": false,
+    "preserved": true
+  },
+  "public_connection": {
+    "discovery_http": "PASS",
+    "pkce_s256_supported": true,
+    "jwks_http": "PASS",
+    "actual_public_keys_accepted_by_prepared_policy": true,
+    "actual_oauth_token_requested": false
+  },
+  "existing_registrations_changed": false,
+  "secrets_revealed_or_stored": false,
+  "paid_execution": false,
+  "deployment": false,
+  "app_oidc_login": "NOT_IMPLEMENTED_NOT_RUN",
+  "step02": "PARTIAL",
+  "step03": "NOT_RUN",
+  "step04": "NOT_RUN",
+  "browser_left_open": true,
+  "manual_input_pending": null,
+  "appauth_install": "NOT_EXECUTED"
+}

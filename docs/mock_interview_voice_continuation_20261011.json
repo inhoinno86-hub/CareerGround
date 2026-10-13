@@ -1,0 +1,116 @@
+{
+  "date": "2026-10-11",
+  "scope": "synthetic Fold7 voice cutoff remediation; actual long-speech acceptance pending",
+  "device": "SM-F966N Android 16",
+  "version": "0.2.1-step03-voice",
+  "version_code": 4,
+  "original_voice_test": {
+    "on_device_transcript": "PASS_RETURNED_PARTIAL",
+    "local_korean_tts": "PASS_USER_HEARD",
+    "long_answer": "FAIL_EARLY_ENDPOINT",
+    "offline": "NOT_VERIFIED",
+    "unconfirmed_draft_preserved": true,
+    "submitted": false
+  },
+  "fix": {
+    "segmented_session_requested": true,
+    "segmented_silence_ms": 4000,
+    "same_on_device_terminal_restart_ms": 200,
+    "manual_stop": true,
+    "max_capture_seconds": 120,
+    "max_attempts": 32,
+    "max_consecutive_empty_errors": 3,
+    "stop_result_wait_seconds": 5,
+    "cloud_stt_fallback": false,
+    "audio_files": false
+  },
+  "checks": {
+    "jvm": {
+      "status": "PASS",
+      "count": 10
+    },
+    "android_instrumentation": {
+      "status": "PASS",
+      "count": 9
+    },
+    "python_mock_auth_contract": {
+      "status": "PASS",
+      "count": 44
+    },
+    "lint": {
+      "errors": 0,
+      "warnings": 8
+    },
+    "ruff": "PASS",
+    "build_offline": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "apk_files": {
+    "app-r4-voice.apk": {
+      "bytes": 29837685,
+      "sha256": "fb8018604ccbdccf00b36a0639aa85b69a7886d7feb5c1698aa720176c3753e4"
+    },
+    "test-r4-voice.apk": {
+      "bytes": 2398936,
+      "sha256": "89fc546cc5fe268f35338048ba7a152e80d91606cbb148dbef879a4fd4c6318e"
+    }
+  },
+  "expired_session_recovery": {
+    "scope": "explicit local reconstruction from expired native RAM report, NOT normal SAF export",
+    "validation": "PASS",
+    "restore_gate": "REVIEW_REQUIRED",
+    "past_evaluations": "stale",
+    "provider_provenance": "imported_unverified",
+    "unconfirmed_draft_included": false,
+    "original_preserved": true,
+    "file": "careerground-session-step03-expired-recovery.json",
+    "sha256": "3495679020bf4ffcd7c485b8e46e750c14786849b42e2667d3b9da26cf5dfd31",
+    "bytes": 19169,
+    "actual_same_account_restore": "PASS_REVIEW_REQUIRED"
+  },
+  "current_manual_blocker": null,
+  "post_fix_actual_long_speech": "PASS_USER_CONFIRMED_LAST_SENTENCE_OBSERVED",
+  "post_fix_offline_voice": "NOT_VERIFIED",
+  "actual_phone_result_saf": "PASS",
+  "chatgpt_host_roundtrip": "PASS_REVIEW_FORMAL_VALIDATOR_UNAVAILABLE",
+  "actual_codex_calls": 11,
+  "approved_codex_limit": 12,
+  "paid_api_calls": 0,
+  "new_external_dependencies": 0,
+  "deployment": "NOT_RUN",
+  "debug_forward_removed": true,
+  "loopback_runtime": "STOPPED",
+  "usb_reverse_8765": "REMOVED_AFTER_SAVED_CHECKPOINT",
+  "screen_setting_restored": true,
+  "phone_network_restored": true,
+  "login_retry": {
+    "status": "PASS",
+    "observed_error": "invalid_request_transaction_session_missing",
+    "underlying_trigger": "UNDETERMINED",
+    "fresh_authorization_runtime_status": 200,
+    "registration_changes": false
+  },
+  "manual_ram_snapshot_saf": {
+    "status": "PASS",
+    "scope": "actual Android RAM snapshot explicit SAF save, actual same-account SAF re-import and fresh review/start; local contract/reference validation",
+    "file": "careerground-session-step03-voice-ready-r1.json",
+    "bytes": 18884,
+    "sha256": "b672ca71e9dfe347bbb68edac2d0b770600203d826f387cde39c6eccf590b670",
+    "state": "IN_PROGRESS",
+    "auth_mode": "oidc",
+    "counts": {
+      "questions": 7,
+      "answers": 2,
+      "feedback": 2,
+      "candidates": 2,
+      "events": 3
+    },
+    "past_ai_stale": true,
+    "imported_events_unverified": true,
+    "fixed_handoff_preserved": true,
+    "unsubmitted_draft_included": false,
+    "fresh_same_account_reimport": "PASS_REVIEW_REQUIRED",
+    "fresh_review_and_start": "PASS"
+  },
+  "actual_final_file_report": "mock_interview_app_acceptance_20261011_r2.json"
+}

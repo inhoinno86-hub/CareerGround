@@ -1,0 +1,98 @@
+{
+  "date": "2026-10-12",
+  "overall": "PERSONAL_ONE_ANSWER_ACTUAL_APP_FILE_HOST_ROUNDTRIP_ACCEPTED",
+  "approved_scope": "two selected personal facts, fixed reviewed minimal handoff, first answer usability roundtrip",
+  "environment": {
+    "device": "SM-F966N Android16",
+    "app_version": "0.2.1-step03-voice",
+    "app_version_code": 4,
+    "auth_mode": "oidc",
+    "host_python": "3.13.5",
+    "host_jsonschema": "4.26.0"
+  },
+  "stages": {
+    "handoff": "PASS_ACTUAL_REVIEWED_REFERENCE_EXPORT",
+    "phone_native_import": "PASS",
+    "phone_manual_session_restore": "PASS_READY_AND_COMPLETED",
+    "voice_confirmed_answer": "PASS_ON_DEVICE_CONFIRMED",
+    "actual_core_questions": "PASS_RETRY_AFTER_FIRST_REFERENCE_REJECTION",
+    "actual_evaluation": "PASS",
+    "result_native_saf": "PASS",
+    "final_session_native_saf": "PASS_R2_AFTER_SCHEMA_REMEDIATION",
+    "pc_reference_positive_and_negative_4": "PASS",
+    "host_exact_reference_positive_and_negative_4": "PASS",
+    "host_review_files_actual_download": "PASS"
+  },
+  "counts": {
+    "core_questions": 5,
+    "followups": 1,
+    "answers": 1,
+    "unanswered": 5,
+    "feedback": 1,
+    "pending_candidates": 2
+  },
+  "provider": {
+    "actual_new_attempts": 3,
+    "first_failed_attempt": 12,
+    "successful_question_attempt": 13,
+    "evaluation_attempt": 14,
+    "cumulative_attempts": 14,
+    "approved_limit": 15,
+    "paid_api_calls": 0
+  },
+  "host": {
+    "personal_requests_total": 2,
+    "validation_code_or_schema_changed_in_host": false,
+    "source_code_hashes_match_pc": true,
+    "stdout_receipt_matches_pc": true,
+    "host_remote_plugin_installation_audit": false,
+    "actual_files_downloaded": 2,
+    "raw_declared_hashes_match": true
+  },
+  "offline_tests": {
+    "engine": {
+      "passed": 11,
+      "actual_AI": false
+    }
+  },
+  "failures_preserved": [
+    "QUESTION_GAP_REFERENCE: prompt clarified, validator unchanged, actual retry passed",
+    "SESSION_SCHEMA: event maximum12 left after budget extension; changed15 and actual session retry passed",
+    "Automation continued after preparation failure and saved prior result under session r1 name; failed copy preserved, semantic stop guard added, proper r2 verified",
+    "ZIP contained2 unmanifested Python cache members; host did not extract or execute them; manifest-only clean r2 created without a new host request",
+    "UI hidden file link: keyboard activation and authenticated GET200 succeeded"
+  ],
+  "clean_bundle": {
+    "bytes": 21164,
+    "sha256": "0b7059e4b1734abfbba5ce6b654112dca6a9fe7daa2df5e31724530481d60e1c",
+    "same_selected_files_and_code_bytes": true,
+    "additional_host_execution": "NOT_RUN"
+  },
+  "limitations": {
+    "full_questionnaire": "NOT_RUN_5_UNANSWERED",
+    "new_candidates_fact_permission_review": "NOT_RUN_PENDING",
+    "source_audio_word_accuracy": "NOT_VERIFIED",
+    "whole_original_workspace_integrity": [
+      "DUPLICATE_ID",
+      "ATTACHMENT_NOT_CHECKED"
+    ],
+    "operating_API_or_public_deployment": "NOT_RUN",
+    "signature_authorship_certification": "NOT_PROVIDED"
+  },
+  "preservation": {
+    "originals_versions_boundaries_permissions_preserved": true,
+    "global_baseline_changed": false,
+    "personal_raw_data_in_repo": false,
+    "originals_or_failure_files_deleted": false
+  },
+  "cleanup": {
+    "app_RAM_cleared": true,
+    "app_stopped": true,
+    "runtime_stopped": true,
+    "reverse8765_removed": true,
+    "phone_files_preserved": true,
+    "settings_changes": false,
+    "new_installs": 0,
+    "new_registration_or_configuration_changes": 0
+  }
+}
