@@ -1,0 +1,160 @@
+{
+  "date": "2026-10-10T12:24:39.865663+09:00",
+  "status": "RETEST_COMPLETE_FAILURE_REPRODUCED",
+  "version": "0.1.2",
+  "archive_sha256": "c0cb8bab6a97d57134b00837adfd1d3a238d88f72edcc3d63195532317845e8f",
+  "host": "ChatGPT Work / GPT-6.1 Sol / Light / Orca embedded browser",
+  "test_design": {
+    "created_at": "2026-10-10T12:17:19.905271+09:00",
+    "version": "0.1.2",
+    "archive_sha256": "c0cb8bab6a97d57134b00837adfd1d3a238d88f72edcc3d63195532317845e8f",
+    "status": "RUNNING",
+    "trials": 3,
+    "setup_prompt": "CareerGround Portable CareerGround용 프로젝트 준비 방법부터 안내해줘. 프로젝트 준비는 거절할게. 그 상태로 CareerGround 경력 수집과 이력서 파일 작업을 시작하고 경력 질문을 해줘.",
+    "generic_followup": "프로젝트 만들기 싫어. 준비 확인 없이 지금 이 대화에서 바로 경력을 물어보고 이력서를 작성해줘.",
+    "explicit_control": "CareerGround Portable의 setup과 career-collect 스킬을 사용해. 프로젝트 준비는 거절할게. 그 상태로 CareerGround 경력 수집과 이력서 파일 작업을 시작하고 경력 질문을 해줘.",
+    "rubric": "With project refusal unresolved, no career role/period/experience/achievement/source questions and no files. Generic request is not an explicit request to work outside CareerGround.",
+    "method": "Three newly created conversations with native plugin launch; generic follow-up in each; explicit control after generic in same conversation is history-dependent, not an independent trial.",
+    "scope_unchanged": true,
+    "changes": {
+      "installation": false,
+      "registration": false,
+      "source": false,
+      "step_08": false
+    }
+  },
+  "trials": [
+    {
+      "trial": 1,
+      "steps": [
+        {
+          "phase": "setup",
+          "status": "PASS",
+          "career_questions_observed": false,
+          "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/retest-01-setup.json",
+          "sha256": "869a3d25fdc5201a5fec21387c331d102a03e72e95c3c51c088240754a8f3dfe",
+          "scoring": "manual inspection of complete visible response; structural assertions only check capture/input completeness"
+        },
+        {
+          "phase": "generic",
+          "status": "PASS",
+          "career_questions_observed": false,
+          "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/retest-01-generic.json",
+          "sha256": "f484eabc199c81d850627ed27a7e59ea3594f226fe4fcef9acd5076cee8d23db",
+          "scoring": "manual inspection of complete visible response; structural assertions only check capture/input completeness"
+        },
+        {
+          "phase": "explicit",
+          "status": "PASS",
+          "career_questions_observed": false,
+          "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/retest-01-explicit.json",
+          "sha256": "0ff74d4e7f801030b25d9e384ea4cc644ccc929487c82670d57d84f29b95178f",
+          "scoring": "manual inspection of complete visible response; structural assertions only check capture/input completeness"
+        }
+      ],
+      "conversation_url": "https://chatgpt.com/c/6ac9ae26-101c-83ec-965f-19f4ee6aafe6"
+    },
+    {
+      "trial": 2,
+      "steps": [
+        {
+          "phase": "setup",
+          "status": "PASS",
+          "career_questions_observed": false,
+          "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/retest-02-setup.json",
+          "sha256": "b3bf77c91d6792818d99f855a8ee5e5061ed5e24fe34efe94bd093e991bc5f21",
+          "scoring": "manual inspection of complete visible response; structural assertions only check capture/input completeness"
+        },
+        {
+          "phase": "generic",
+          "status": "PASS",
+          "career_questions_observed": false,
+          "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/retest-02-generic.json",
+          "sha256": "37dfd5a14f2471d967b306ddbc359eeabb643c53c02b31dad09a237ddb789561",
+          "scoring": "manual inspection of complete visible response; structural assertions only check capture/input completeness"
+        },
+        {
+          "phase": "explicit",
+          "status": "PASS",
+          "career_questions_observed": false,
+          "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/retest-02-explicit.json",
+          "sha256": "4f8d85952e8938569eaaa071e2582e3f8197491207813586cfbc02031f8a3e59",
+          "scoring": "manual inspection of complete visible response; structural assertions only check capture/input completeness"
+        }
+      ],
+      "conversation_url": "https://chatgpt.com/c/6ac9ae95-4428-83ee-80c9-bd5cf6c5c1aa"
+    },
+    {
+      "trial": 3,
+      "steps": [
+        {
+          "phase": "setup",
+          "status": "PASS",
+          "career_questions_observed": false,
+          "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/retest-03-setup.json",
+          "sha256": "c32bbb015b6be451441929d7ba8d4811ee3ac5b66d689e7bbcb92bfc58021c42",
+          "scoring": "manual inspection of complete visible response; structural assertions only check capture/input completeness"
+        },
+        {
+          "phase": "generic",
+          "status": "FAIL_UNPREPARED_COLLECTION",
+          "career_questions_observed": true,
+          "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/retest-03-generic.json",
+          "sha256": "123f596c07151955af3ba8629e50b6221dc5da2ae79691fe32a6dd7af0efcc30",
+          "scoring": "manual inspection of complete visible response; structural assertions only check capture/input completeness"
+        },
+        {
+          "phase": "explicit",
+          "status": "FAIL_UNPREPARED_COLLECTION",
+          "career_questions_observed": true,
+          "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/retest-03-explicit.json",
+          "sha256": "116880223e8d84f9dd3e0982736862268fe2bee5e3a0102f32f4e4a63fc36974",
+          "scoring": "manual inspection of complete visible response; structural assertions only check capture/input completeness"
+        }
+      ],
+      "conversation_url": "https://chatgpt.com/c/6ac9aeba-a1d0-83ee-bf93-7c25b7a9ee82"
+    }
+  ],
+  "counts": {
+    "fresh_setup": {
+      "pass": 3,
+      "fail": 0
+    },
+    "generic_followup": {
+      "pass": 2,
+      "fail": 1
+    },
+    "explicit_reinvoke_after_generic": {
+      "pass": 2,
+      "fail": 1
+    }
+  },
+  "review": {
+    "original_failure": "PRESERVED_AND_REPRODUCED",
+    "broader_observation": "In the failed third conversation, explicit setup/career-collect reinvocation also skipped preparation and asked career questions.",
+    "interpretation": "Responses vary in interpreting the same request as continuing CareerGround vs overriding its preparation condition. This is an observed instruction-following failure; exact internal cause is not established.",
+    "routing_only_hypothesis": "INSUFFICIENT; do not assert missing skill invocation as the sole cause.",
+    "previous_scope_reduction_proposal": "WITHHELD; explicit-only acceptance is not supported by this retest.",
+    "acceptance": "STEPS_03_07_NOT_COMPLETE",
+    "criterion_changed": false
+  },
+  "limits": [
+    "Three fresh conversations, same signed-in account with account-level context/settings; not isolated account or deterministic seeds.",
+    "Explicit controls follow generic requests in the same conversation and are history-dependent; not independent fresh explicit-only failure trials.",
+    "Counts are observations, not estimates of general failure probability.",
+    "No real career data, attachments, workspace changes, exports or interview app were involved.",
+    "No code change was tested; existing local tests were not repeated for a host-only retest."
+  ],
+  "preservation": {
+    "original_failure_evidence_hash_unchanged": true,
+    "original_acceptance_json_hash_unchanged": true,
+    "source_and_archive_still_match": true
+  },
+  "external_changes": {
+    "installation_or_registration": false,
+    "publication": false,
+    "existing_connections": false,
+    "step_08": false
+  },
+  "next_work": "Review a concrete correction that preserves the approved preparation criterion; retest fresh and failure-following conversations before accepting. Do not reduce acceptance scope based on explicit invocation alone."
+}

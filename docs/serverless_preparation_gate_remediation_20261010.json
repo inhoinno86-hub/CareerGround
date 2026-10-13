@@ -1,0 +1,752 @@
+{
+  "date": "2026-10-10",
+  "status": "UNRESOLVED_HOST_OUTPUT_BYPASS_ARCHITECTURE_DECISION_PENDING",
+  "criterion_changed": false,
+  "step_03_07_acceptance": "NOT_COMPLETE",
+  "step_08": "NOT_STARTED",
+  "iterations": [
+    {
+      "status": "FAILED_CANDIDATE",
+      "version": "0.1.3",
+      "date": "2026-10-10T13:41:52.335184+09:00",
+      "planned_fresh_conversations": 6,
+      "completed_fresh_setup_cases": 3,
+      "fresh_setup_results": [
+        {
+          "case": 1,
+          "status": "PASS",
+          "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/correction-013-01-setup.json",
+          "sha256": "07f977fc8cc6bf00061cc93dbf95c28738e34f9646f0b9f36aaff542e5c3b5fe"
+        },
+        {
+          "case": 2,
+          "status": "FAIL_UNPREPARED_COLLECTION",
+          "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/correction-013-02-setup.json",
+          "sha256": "4659a28b0139f1ec2765832d1304312b23434c94db76513797b5a1a92b0712d0"
+        },
+        {
+          "case": 3,
+          "status": "PASS",
+          "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/correction-013-03-setup.json",
+          "sha256": "58312749bbaba4a051ac55af7e4cff0a8e58e9ea9fbbe53ebb23ac2192d55bc2"
+        }
+      ],
+      "diagnostic": {
+        "installed_settings_version": "0.1.3",
+        "read_skill_version_reported": "0.1.3 for setup and career-collect",
+        "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/correction-013-source-diagnostic.json",
+        "old_question_retracted": true,
+        "preparation_still_declined": true,
+        "native_read_report_is_not_an_independent_byte_hash_check": true
+      },
+      "not_run": "Remaining fresh conversations/follow-ups stopped after candidate failure, before further correction. Not scored as passed.",
+      "conclusion": "Updated skill text was available and recovery could hold, but initial conflicting request still produced questions. No acceptance.",
+      "next_correction": "Use compact self-contained branch selection and a deterministic setup-only reply for an unprepared state. Remove proactive general-work alternative from the held response; preserve explicit general-work exit."
+    },
+    {
+      "status": "FAILED_CANDIDATE",
+      "version": "0.1.4",
+      "evaluated_fresh_responses": 24,
+      "pass": 23,
+      "fail": 1,
+      "cases": [
+        {
+          "case": 1,
+          "phase": "setup",
+          "status": "PASS",
+          "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/correction-014-01-setup.json",
+          "sha256": "e7a878e05295ba9ac74b5bfb217d4388fcef82350ae766fd38c789744a70261f"
+        },
+        {
+          "case": 1,
+          "phase": "generic",
+          "status": "PASS",
+          "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/correction-014-01-generic.json",
+          "sha256": "61dd68d5dd46261dc24c368b4e751fa72bc70074325cc77104ef31ea74a5ea4f"
+        },
+        {
+          "case": 1,
+          "phase": "explicit",
+          "status": "PASS",
+          "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/correction-014-01-explicit.json",
+          "sha256": "d286b768e0b7269823f5956628ccc40f06a36f1f569a44595a07b7b31d9af90e"
+        },
+        {
+          "case": 1,
+          "phase": "repeat",
+          "status": "PASS",
+          "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/correction-014-01-repeat.json",
+          "sha256": "944a760bb5495b3290142d520bf212bb6e7924036a95479969892cda7b3dba98"
+        },
+        {
+          "case": 2,
+          "phase": "setup",
+          "status": "PASS",
+          "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/correction-014-02-setup.json",
+          "sha256": "d9726193d985484d467b8a6a76f5afbf06819ddb22387a8b46b7d74c8fe2ea9b"
+        },
+        {
+          "case": 2,
+          "phase": "generic",
+          "status": "PASS",
+          "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/correction-014-02-generic.json",
+          "sha256": "8925685331af52570a93986ce8dd601ec258bdfc325c453c73b946c72961845c"
+        },
+        {
+          "case": 2,
+          "phase": "explicit",
+          "status": "PASS",
+          "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/correction-014-02-explicit.json",
+          "sha256": "01bf0a9f631831dbfe2638d1105c9a2245af71a22afc0a1b871f964c159eeeb8"
+        },
+        {
+          "case": 2,
+          "phase": "repeat",
+          "status": "PASS",
+          "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/correction-014-02-repeat.json",
+          "sha256": "f14da08341ddbe6bd7dcc1fa7d48d56b49be6efeb4ad331fc8f6723e8561f6e5"
+        },
+        {
+          "case": 3,
+          "phase": "setup",
+          "status": "PASS",
+          "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/correction-014-03-setup.json",
+          "sha256": "f11ed5580c01f85baef1bfd78064c7f526e119b342a64083aabb310f4ba462d7"
+        },
+        {
+          "case": 3,
+          "phase": "generic",
+          "status": "PASS",
+          "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/correction-014-03-generic.json",
+          "sha256": "5406cc73b263d77c744d848d497f0858bccd73bb7474e58cf34a5326da51b9c7"
+        },
+        {
+          "case": 3,
+          "phase": "explicit",
+          "status": "PASS",
+          "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/correction-014-03-explicit.json",
+          "sha256": "3ab64fb3dc90ad8abf51d2b7ae1b0dd19855b03de8dd292a3ea180d73b40eae1"
+        },
+        {
+          "case": 3,
+          "phase": "repeat",
+          "status": "PASS",
+          "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/correction-014-03-repeat.json",
+          "sha256": "5d6b7c6ea0f8ce75272575274ce5588dc01b012350a164c2f3bfa2e353d73607"
+        },
+        {
+          "case": 4,
+          "phase": "setup",
+          "status": "PASS",
+          "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/correction-014-04-setup.json",
+          "sha256": "0490533188bc86d7327507809556ec30da8a14e1e81ce5e376da17832896add7"
+        },
+        {
+          "case": 4,
+          "phase": "generic",
+          "status": "PASS",
+          "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/correction-014-04-generic.json",
+          "sha256": "3fe2d5799de92c314cd9fe1245f59bf1433626c75ef4d2a5da416535a4056c55"
+        },
+        {
+          "case": 4,
+          "phase": "explicit",
+          "status": "PASS",
+          "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/correction-014-04-explicit.json",
+          "sha256": "dc1f422e3989bc13b3ece5da4bd25d7b368ff8a83beb2685b4fe2575f111dd49"
+        },
+        {
+          "case": 4,
+          "phase": "repeat",
+          "status": "PASS",
+          "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/correction-014-04-repeat.json",
+          "sha256": "50c4d0f7efbebbc56a0242e2f3116f2dd0fa149b2309eb58519e46a329d2bdb5"
+        },
+        {
+          "case": 5,
+          "phase": "setup",
+          "status": "PASS",
+          "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/correction-014-05-setup.json",
+          "sha256": "ac63462a378b95bfcb32d87a17031b07736cdbdb98936fbaf413962766e02fec"
+        },
+        {
+          "case": 5,
+          "phase": "generic",
+          "status": "PASS",
+          "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/correction-014-05-generic.json",
+          "sha256": "72a58634e51c33ccc4775e1e98c5746e8cf4a38aa8c7dcfbd58653fdd9c43121"
+        },
+        {
+          "case": 5,
+          "phase": "explicit",
+          "status": "PASS",
+          "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/correction-014-05-explicit.json",
+          "sha256": "9cfacb7ad592ae20035098ab056a7dd7472268fc9600aaecfeab044202b9870d"
+        },
+        {
+          "case": 5,
+          "phase": "repeat",
+          "status": "PASS",
+          "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/correction-014-05-repeat.json",
+          "sha256": "0ee573ce9fc2ded2652843b9b5fd55cf246ae2aeea6e75015786689f0e38572e"
+        },
+        {
+          "case": 6,
+          "phase": "setup",
+          "status": "PASS",
+          "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/correction-014-06-setup.json",
+          "sha256": "e5d1f2f2357ffea6bcab97a82814719980f99c26a41cf09b14b78ad667f86638"
+        },
+        {
+          "case": 6,
+          "phase": "generic",
+          "status": "PASS",
+          "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/correction-014-06-generic.json",
+          "sha256": "e7070d64bc372834d0e3fb7f8853c563a02a6489dedf7efe47bef55bd129a79f"
+        },
+        {
+          "case": 6,
+          "phase": "explicit",
+          "status": "PASS",
+          "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/correction-014-06-explicit.json",
+          "sha256": "b6c526c103bcfd1f948cea5cb9d241efa6e2a3d43b975ffbcb52d3f65f7609a8"
+        },
+        {
+          "case": 6,
+          "phase": "repeat",
+          "status": "FAIL_UNPREPARED_COLLECTION",
+          "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/correction-014-06-repeat.json",
+          "sha256": "3105c4f445368b8a37e65f2ac55bfc78a915ec1ab82c84a340565fd563b04fac"
+        }
+      ],
+      "cause_observation": "Last repeated request was interpreted as an explicit override of preparation despite previously read 0.1.4 branches; no execution of a final output guard was required.",
+      "next_correction": "0.1.5 invokes deterministic final_reply/--reply-only before held outputs; still must verify actual host follows it.",
+      "acceptance": false
+    },
+    {
+      "status": "FAILED_CANDIDATE",
+      "version": "0.1.5",
+      "planned_fresh_conversations": 6,
+      "completed_fresh_setup_cases": 3,
+      "pass": 2,
+      "fail": 1,
+      "cases": [
+        {
+          "case": 1,
+          "phase": "setup",
+          "status": "FAIL_UNPREPARED_COLLECTION",
+          "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/correction-015-01-setup.json",
+          "sha256": "467625c2ae37a905a21e1e012e9376c436e1ca7f6017ccb261a1054694a69699"
+        },
+        {
+          "case": 2,
+          "phase": "setup",
+          "status": "PASS",
+          "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/correction-015-02-setup.json",
+          "sha256": "3c8f0ce20b67ccf094f7065a001fec78b385df11781beec654bd110bafe9c4d1"
+        },
+        {
+          "case": 3,
+          "phase": "setup",
+          "status": "PASS",
+          "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/correction-015-03-setup.json",
+          "sha256": "527090079c4d248f607b89dd35d34b33da836c32c67456ab76fd1c10b2179f08"
+        }
+      ],
+      "diagnostic": {
+        "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/correction-015-source-diagnostic.json",
+        "reported_read_skill_version": "0.1.5",
+        "reported_guard_execution": "declined --reply-only --previous-questions-started; exit 0; hold stdout",
+        "reported_previous_skipped_guard": true,
+        "source_report_not_an_authenticated_receipt": true
+      },
+      "remaining_cases": "NOT_RUN_AFTER_CANDIDATE_FAILURE",
+      "acceptance": false,
+      "conclusion": "The optional host-followed skill procedure is not a mandatory output interceptor. Current cloud plugin hooks are unsupported. A controlled output path is needed before claiming enforcement."
+    }
+  ],
+  "installed_private_trial": {
+    "version": "0.1.5",
+    "published": false,
+    "id": "Plugin_47a97bf406048191a8a671f47778376a"
+  },
+  "current_local_candidate": {
+    "version": "0.1.6",
+    "installed": false,
+    "host_evaluation": "NOT_RUN",
+    "archive": "reports/serverless-plugin-transition-20261009/correction-0.1.6/careerground-portable-0.1.6-local-reviewed.zip",
+    "sha256": "74ad04831f75bc8646065393306eea0e91053c1a597f67ddaa619bbc909f85f0",
+    "member_count": 73,
+    "source_matches_reviewed_local_archive": true,
+    "note": "Temporal wording correction; not accepted as host failure resolution."
+  },
+  "local_tests": {
+    "passed": 41,
+    "failed": 0,
+    "skipped": 0,
+    "ruff": "11 files pass",
+    "quick_validate": "8 skills pass"
+  },
+  "local_inventory": [
+    {
+      "path": "README.md",
+      "bytes": 4359,
+      "sha256": "db5df4ac0c545df778a990fdad76a410edc1797a6741c709144fef7d01810e86"
+    },
+    {
+      "path": "plugin.json",
+      "bytes": 953,
+      "sha256": "0367c1d96432b5e8902c04bd12c086f446f010288b7ee411ceac871fecd1da77"
+    },
+    {
+      "path": "references/exchange-contract.md",
+      "bytes": 2356,
+      "sha256": "2ab3f9879a1736e4ec394ac255330e5e7235a68b2d62e87e23bbbc89a08a41b8"
+    },
+    {
+      "path": "references/exchange.py",
+      "bytes": 9558,
+      "sha256": "27573eec4d5feecbcb13a08144c918a8d0f88e9030e42bd3a9ea08debfcbfee3"
+    },
+    {
+      "path": "references/portable.py",
+      "bytes": 14778,
+      "sha256": "32cc873c3f034a908fe5ffd25c9dc89e2b9a02a6e2101bded5dd9b1a208eb058"
+    },
+    {
+      "path": "references/schemas/handoff-1.0.schema.json",
+      "bytes": 20782,
+      "sha256": "5754c26aa9412acd127059b71ce52f77870b94fe50a714fdd94a03adf607e6a6"
+    },
+    {
+      "path": "references/schemas/result-1.0.schema.json",
+      "bytes": 3161,
+      "sha256": "e43793f4ba0c5a1187938f55f9d4053f4676cc1067c93041c9ca235c7d7e7e35"
+    },
+    {
+      "path": "references/schemas/workspace-1.0.schema.json",
+      "bytes": 17226,
+      "sha256": "4a0a133688a8b2d599e54b9b46f472ff72483a259987bf5f32e61a72b46fc5f0"
+    },
+    {
+      "path": "references/workflow.md",
+      "bytes": 8778,
+      "sha256": "05059dd1df72c6837d71128f87b9f4f7fd6b91bade1d6a6312940bbcfccd5c66"
+    },
+    {
+      "path": "references/workflow.py",
+      "bytes": 6788,
+      "sha256": "81b7a0b27f1218ab61af7cb719b85011f6d421bd2234083ef689dd1b5f35e5c1"
+    },
+    {
+      "path": "skills/base-resume/SKILL.md",
+      "bytes": 4775,
+      "sha256": "0c113d7a059e456070c17a895bd3e528c8a2d5c816f0b89e7f6f9e98bf4d3b99"
+    },
+    {
+      "path": "skills/base-resume/references/portable.py",
+      "bytes": 14778,
+      "sha256": "32cc873c3f034a908fe5ffd25c9dc89e2b9a02a6e2101bded5dd9b1a208eb058"
+    },
+    {
+      "path": "skills/base-resume/references/schemas/workspace-1.0.schema.json",
+      "bytes": 17226,
+      "sha256": "4a0a133688a8b2d599e54b9b46f472ff72483a259987bf5f32e61a72b46fc5f0"
+    },
+    {
+      "path": "skills/base-resume/references/workflow.md",
+      "bytes": 8778,
+      "sha256": "05059dd1df72c6837d71128f87b9f4f7fd6b91bade1d6a6312940bbcfccd5c66"
+    },
+    {
+      "path": "skills/base-resume/references/workflow.py",
+      "bytes": 6788,
+      "sha256": "81b7a0b27f1218ab61af7cb719b85011f6d421bd2234083ef689dd1b5f35e5c1"
+    },
+    {
+      "path": "skills/base-resume/templates/resume.md",
+      "bytes": 643,
+      "sha256": "98461c7b4df3f44b5dfc61c54eea4e0e92a753a06f4ccdaf1684c08c9cc025bc"
+    },
+    {
+      "path": "skills/base-resume/templates/workspace-review.md",
+      "bytes": 876,
+      "sha256": "f7cea3bd86f5e08d0efedf2903c2a622b10376e8fdc37af15f075ead81965466"
+    },
+    {
+      "path": "skills/career-collect/SKILL.md",
+      "bytes": 4497,
+      "sha256": "3f5ca714bd695ca1e94a5df9535d332b6937b088f160b4a53b20643af920977b"
+    },
+    {
+      "path": "skills/career-collect/references/portable.py",
+      "bytes": 14778,
+      "sha256": "32cc873c3f034a908fe5ffd25c9dc89e2b9a02a6e2101bded5dd9b1a208eb058"
+    },
+    {
+      "path": "skills/career-collect/references/schemas/workspace-1.0.schema.json",
+      "bytes": 17226,
+      "sha256": "4a0a133688a8b2d599e54b9b46f472ff72483a259987bf5f32e61a72b46fc5f0"
+    },
+    {
+      "path": "skills/career-collect/references/workflow.md",
+      "bytes": 8778,
+      "sha256": "05059dd1df72c6837d71128f87b9f4f7fd6b91bade1d6a6312940bbcfccd5c66"
+    },
+    {
+      "path": "skills/career-collect/references/workflow.py",
+      "bytes": 6788,
+      "sha256": "81b7a0b27f1218ab61af7cb719b85011f6d421bd2234083ef689dd1b5f35e5c1"
+    },
+    {
+      "path": "skills/career-collect/templates/workspace-review.md",
+      "bytes": 876,
+      "sha256": "f7cea3bd86f5e08d0efedf2903c2a622b10376e8fdc37af15f075ead81965466"
+    },
+    {
+      "path": "skills/career-review/SKILL.md",
+      "bytes": 4807,
+      "sha256": "5044f3baa354a73c6590d286f7ebb59b7b066dc5bc82d2be1c62f412daf57996"
+    },
+    {
+      "path": "skills/career-review/references/portable.py",
+      "bytes": 14778,
+      "sha256": "32cc873c3f034a908fe5ffd25c9dc89e2b9a02a6e2101bded5dd9b1a208eb058"
+    },
+    {
+      "path": "skills/career-review/references/schemas/workspace-1.0.schema.json",
+      "bytes": 17226,
+      "sha256": "4a0a133688a8b2d599e54b9b46f472ff72483a259987bf5f32e61a72b46fc5f0"
+    },
+    {
+      "path": "skills/career-review/references/workflow.md",
+      "bytes": 8778,
+      "sha256": "05059dd1df72c6837d71128f87b9f4f7fd6b91bade1d6a6312940bbcfccd5c66"
+    },
+    {
+      "path": "skills/career-review/references/workflow.py",
+      "bytes": 6788,
+      "sha256": "81b7a0b27f1218ab61af7cb719b85011f6d421bd2234083ef689dd1b5f35e5c1"
+    },
+    {
+      "path": "skills/career-review/templates/workspace-review.md",
+      "bytes": 876,
+      "sha256": "f7cea3bd86f5e08d0efedf2903c2a622b10376e8fdc37af15f075ead81965466"
+    },
+    {
+      "path": "skills/interview-export/SKILL.md",
+      "bytes": 5202,
+      "sha256": "0a65f6438f3072b6dfa31ff11d43ae47230815d7f9433a6c5472c204a126396b"
+    },
+    {
+      "path": "skills/interview-export/references/exchange-contract.md",
+      "bytes": 2356,
+      "sha256": "2ab3f9879a1736e4ec394ac255330e5e7235a68b2d62e87e23bbbc89a08a41b8"
+    },
+    {
+      "path": "skills/interview-export/references/exchange.py",
+      "bytes": 9558,
+      "sha256": "27573eec4d5feecbcb13a08144c918a8d0f88e9030e42bd3a9ea08debfcbfee3"
+    },
+    {
+      "path": "skills/interview-export/references/portable.py",
+      "bytes": 14778,
+      "sha256": "32cc873c3f034a908fe5ffd25c9dc89e2b9a02a6e2101bded5dd9b1a208eb058"
+    },
+    {
+      "path": "skills/interview-export/references/schemas/handoff-1.0.schema.json",
+      "bytes": 20782,
+      "sha256": "5754c26aa9412acd127059b71ce52f77870b94fe50a714fdd94a03adf607e6a6"
+    },
+    {
+      "path": "skills/interview-export/references/schemas/result-1.0.schema.json",
+      "bytes": 3161,
+      "sha256": "e43793f4ba0c5a1187938f55f9d4053f4676cc1067c93041c9ca235c7d7e7e35"
+    },
+    {
+      "path": "skills/interview-export/references/schemas/workspace-1.0.schema.json",
+      "bytes": 17226,
+      "sha256": "4a0a133688a8b2d599e54b9b46f472ff72483a259987bf5f32e61a72b46fc5f0"
+    },
+    {
+      "path": "skills/interview-export/references/workflow.md",
+      "bytes": 8778,
+      "sha256": "05059dd1df72c6837d71128f87b9f4f7fd6b91bade1d6a6312940bbcfccd5c66"
+    },
+    {
+      "path": "skills/interview-export/references/workflow.py",
+      "bytes": 6788,
+      "sha256": "81b7a0b27f1218ab61af7cb719b85011f6d421bd2234083ef689dd1b5f35e5c1"
+    },
+    {
+      "path": "skills/interview-export/templates/workspace-review.md",
+      "bytes": 876,
+      "sha256": "f7cea3bd86f5e08d0efedf2903c2a622b10376e8fdc37af15f075ead81965466"
+    },
+    {
+      "path": "skills/interview-review/SKILL.md",
+      "bytes": 4571,
+      "sha256": "c7d59f200ecdafb564a021e16752f103c533ebbcf549dc24e75705cc15f9be1a"
+    },
+    {
+      "path": "skills/interview-review/references/exchange-contract.md",
+      "bytes": 2356,
+      "sha256": "2ab3f9879a1736e4ec394ac255330e5e7235a68b2d62e87e23bbbc89a08a41b8"
+    },
+    {
+      "path": "skills/interview-review/references/exchange.py",
+      "bytes": 9558,
+      "sha256": "27573eec4d5feecbcb13a08144c918a8d0f88e9030e42bd3a9ea08debfcbfee3"
+    },
+    {
+      "path": "skills/interview-review/references/portable.py",
+      "bytes": 14778,
+      "sha256": "32cc873c3f034a908fe5ffd25c9dc89e2b9a02a6e2101bded5dd9b1a208eb058"
+    },
+    {
+      "path": "skills/interview-review/references/schemas/handoff-1.0.schema.json",
+      "bytes": 20782,
+      "sha256": "5754c26aa9412acd127059b71ce52f77870b94fe50a714fdd94a03adf607e6a6"
+    },
+    {
+      "path": "skills/interview-review/references/schemas/result-1.0.schema.json",
+      "bytes": 3161,
+      "sha256": "e43793f4ba0c5a1187938f55f9d4053f4676cc1067c93041c9ca235c7d7e7e35"
+    },
+    {
+      "path": "skills/interview-review/references/schemas/workspace-1.0.schema.json",
+      "bytes": 17226,
+      "sha256": "4a0a133688a8b2d599e54b9b46f472ff72483a259987bf5f32e61a72b46fc5f0"
+    },
+    {
+      "path": "skills/interview-review/references/workflow.md",
+      "bytes": 8778,
+      "sha256": "05059dd1df72c6837d71128f87b9f4f7fd6b91bade1d6a6312940bbcfccd5c66"
+    },
+    {
+      "path": "skills/interview-review/references/workflow.py",
+      "bytes": 6788,
+      "sha256": "81b7a0b27f1218ab61af7cb719b85011f6d421bd2234083ef689dd1b5f35e5c1"
+    },
+    {
+      "path": "skills/interview-review/templates/workspace-review.md",
+      "bytes": 876,
+      "sha256": "f7cea3bd86f5e08d0efedf2903c2a622b10376e8fdc37af15f075ead81965466"
+    },
+    {
+      "path": "skills/jd-discover/SKILL.md",
+      "bytes": 5098,
+      "sha256": "03b88727f8d9d05da0312478e0edb84d56afaa3069c3cace8b98031479dbaf32"
+    },
+    {
+      "path": "skills/jd-discover/references/portable.py",
+      "bytes": 14778,
+      "sha256": "32cc873c3f034a908fe5ffd25c9dc89e2b9a02a6e2101bded5dd9b1a208eb058"
+    },
+    {
+      "path": "skills/jd-discover/references/schemas/workspace-1.0.schema.json",
+      "bytes": 17226,
+      "sha256": "4a0a133688a8b2d599e54b9b46f472ff72483a259987bf5f32e61a72b46fc5f0"
+    },
+    {
+      "path": "skills/jd-discover/references/workflow.md",
+      "bytes": 8778,
+      "sha256": "05059dd1df72c6837d71128f87b9f4f7fd6b91bade1d6a6312940bbcfccd5c66"
+    },
+    {
+      "path": "skills/jd-discover/references/workflow.py",
+      "bytes": 6788,
+      "sha256": "81b7a0b27f1218ab61af7cb719b85011f6d421bd2234083ef689dd1b5f35e5c1"
+    },
+    {
+      "path": "skills/jd-discover/templates/workspace-review.md",
+      "bytes": 876,
+      "sha256": "f7cea3bd86f5e08d0efedf2903c2a622b10376e8fdc37af15f075ead81965466"
+    },
+    {
+      "path": "skills/resume-tailor/SKILL.md",
+      "bytes": 4651,
+      "sha256": "d8e070c9db7a7efdd2f0727fed7af2a7bb03770a2edce4548e765ee38a7dab43"
+    },
+    {
+      "path": "skills/resume-tailor/references/portable.py",
+      "bytes": 14778,
+      "sha256": "32cc873c3f034a908fe5ffd25c9dc89e2b9a02a6e2101bded5dd9b1a208eb058"
+    },
+    {
+      "path": "skills/resume-tailor/references/schemas/workspace-1.0.schema.json",
+      "bytes": 17226,
+      "sha256": "4a0a133688a8b2d599e54b9b46f472ff72483a259987bf5f32e61a72b46fc5f0"
+    },
+    {
+      "path": "skills/resume-tailor/references/workflow.md",
+      "bytes": 8778,
+      "sha256": "05059dd1df72c6837d71128f87b9f4f7fd6b91bade1d6a6312940bbcfccd5c66"
+    },
+    {
+      "path": "skills/resume-tailor/references/workflow.py",
+      "bytes": 6788,
+      "sha256": "81b7a0b27f1218ab61af7cb719b85011f6d421bd2234083ef689dd1b5f35e5c1"
+    },
+    {
+      "path": "skills/resume-tailor/templates/jd-mapping.md",
+      "bytes": 588,
+      "sha256": "ed728f11f42085cd4abdc1e8981cd4e4806ed2dd67426f4e5f90bff596ff1d7c"
+    },
+    {
+      "path": "skills/resume-tailor/templates/workspace-review.md",
+      "bytes": 876,
+      "sha256": "f7cea3bd86f5e08d0efedf2903c2a622b10376e8fdc37af15f075ead81965466"
+    },
+    {
+      "path": "skills/setup/SKILL.md",
+      "bytes": 5312,
+      "sha256": "42776d0f828355e68c084355361f4e2c224925963efcf6201604fa8bf10f27e1"
+    },
+    {
+      "path": "skills/setup/references/portable.py",
+      "bytes": 14778,
+      "sha256": "32cc873c3f034a908fe5ffd25c9dc89e2b9a02a6e2101bded5dd9b1a208eb058"
+    },
+    {
+      "path": "skills/setup/references/schemas/workspace-1.0.schema.json",
+      "bytes": 17226,
+      "sha256": "4a0a133688a8b2d599e54b9b46f472ff72483a259987bf5f32e61a72b46fc5f0"
+    },
+    {
+      "path": "skills/setup/references/workflow.md",
+      "bytes": 8778,
+      "sha256": "05059dd1df72c6837d71128f87b9f4f7fd6b91bade1d6a6312940bbcfccd5c66"
+    },
+    {
+      "path": "skills/setup/references/workflow.py",
+      "bytes": 6788,
+      "sha256": "81b7a0b27f1218ab61af7cb719b85011f6d421bd2234083ef689dd1b5f35e5c1"
+    },
+    {
+      "path": "skills/setup/templates/project-instructions.md",
+      "bytes": 1331,
+      "sha256": "77b97c9e996af9491e7baac2c285ae8946ff21ccae0541875469f0dba85bda3f"
+    },
+    {
+      "path": "skills/setup/templates/workspace-review.md",
+      "bytes": 876,
+      "sha256": "f7cea3bd86f5e08d0efedf2903c2a622b10376e8fdc37af15f075ead81965466"
+    },
+    {
+      "path": "templates/jd-mapping.md",
+      "bytes": 588,
+      "sha256": "ed728f11f42085cd4abdc1e8981cd4e4806ed2dd67426f4e5f90bff596ff1d7c"
+    },
+    {
+      "path": "templates/project-instructions.md",
+      "bytes": 1331,
+      "sha256": "77b97c9e996af9491e7baac2c285ae8946ff21ccae0541875469f0dba85bda3f"
+    },
+    {
+      "path": "templates/resume.md",
+      "bytes": 643,
+      "sha256": "98461c7b4df3f44b5dfc61c54eea4e0e92a753a06f4ccdaf1684c08c9cc025bc"
+    },
+    {
+      "path": "templates/workspace-review.md",
+      "bytes": 876,
+      "sha256": "f7cea3bd86f5e08d0efedf2903c2a622b10376e8fdc37af15f075ead81965466"
+    }
+  ],
+  "scope_of_offline_checker": "Its NOT_RUN host fields do not assert actual global installation state; this outer report records live state separately.",
+  "additional_0_1_4_observations": [
+    {
+      "name": "correction-014-old-failure-recovery",
+      "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/correction-014-old-failure-recovery.json"
+    },
+    {
+      "name": "correction-014-old-013-recovery",
+      "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/correction-014-old-013-recovery.json"
+    },
+    {
+      "name": "correction-014-old-recovery-followup",
+      "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/correction-014-old-recovery-followup.json"
+    },
+    {
+      "name": "correction-014-old-recovery-explicit",
+      "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/correction-014-old-recovery-explicit.json"
+    },
+    {
+      "name": "correction-014-existing-project-baseline",
+      "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/correction-014-existing-project-baseline.json"
+    }
+  ],
+  "controlled_entry_proof": {
+    "status": "PASS_LOCAL_UI_PROOF",
+    "page_url": "file:///home/inno/repo/CareerGround/reports/serverless-plugin-transition-20261009/controlled-entry-proof/index.html",
+    "states": [
+      {
+        "prepared": false,
+        "questionVisible": "false",
+        "selected": false,
+        "text": "CareerGround 경력 작업을 보류합니다. 프로젝트를 준비한 뒤 준비 완료와 기준 파일 또는 초기 작성 선택을 알려주세요."
+      },
+      {
+        "prepared": false,
+        "questionVisible": "false",
+        "selected": true,
+        "text": "CareerGround 경력 작업을 보류합니다. 프로젝트를 준비한 뒤 준비 완료와 기준 파일 또는 초기 작성 선택을 알려주세요."
+      },
+      {
+        "prepared": true,
+        "questionVisible": "true",
+        "selected": true,
+        "text": "합성 경력 질문: 회사·프로젝트명과 수행 기간, 직접 수행한 업무를 알려주세요."
+      },
+      {
+        "prepared": true,
+        "questionVisible": "false",
+        "selected": false,
+        "text": "준비 확인은 받았습니다. 사용할 기준 파일 또는 초기 작성 여부를 선택해 주세요."
+      },
+      {
+        "prepared": false,
+        "questionVisible": "false",
+        "selected": false,
+        "text": "CareerGround 경력 작업을 보류합니다. 프로젝트를 준비한 뒤 준비 완료와 기준 파일 또는 초기 작성 선택을 알려주세요."
+      }
+    ],
+    "model_used": false,
+    "connected_to_chatgpt_output": false,
+    "actual_product_implemented": false,
+    "step_08": false
+  },
+  "official_sources": [
+    {
+      "url": "https://developers.openai.com/plugins/build/skills",
+      "supports": "Explicit user instructions over skill guidelines; workflow and unsupported-action boundaries."
+    },
+    {
+      "url": "https://learn.chatgpt.com/docs/plugins",
+      "supports": "Plugin hooks unsupported in cloud-orchestrated Work."
+    },
+    {
+      "url": "https://learn.chatgpt.com/docs/enterprise/managed-configuration",
+      "supports": "Personal accounts do not use enterprise remote hooks; supported tool denial is not a free-response interceptor."
+    }
+  ],
+  "diagnosis": {
+    "known": "Guard returns held output when invoked; model can skip the skill procedure and emit questions; direct host response rendering is not owned by the plugin.",
+    "unknown": "Complete internal inference/routing cause and independent authentication of reported command execution.",
+    "not_assumed": "No claim that adding undocumented manifest fields, hooks, or stricter text enforces the current cloud host."
+  },
+  "pending_decision": "Controlled local official question-entry path vs retaining skills-only with preparation changed to a recommendation. Neither applied without user decision.",
+  "preservation": {
+    "previous_archives_and_responses": true,
+    "workspace_versions_resumes_handoff_result_changed": false,
+    "existing_career_server_plugins_present": [
+      "CareerGround Phase A Dev",
+      "CareerGround Dev OAuth PoC"
+    ],
+    "existing_registration_connection_changed": false,
+    "commit_push_merge": false,
+    "private_trial_updates_only": true,
+    "real_personal_data_used": false
+  }
+}

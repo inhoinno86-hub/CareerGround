@@ -1,0 +1,835 @@
+{
+  "date": "2026-10-10",
+  "stage": "07",
+  "status": "ACCEPTANCE_NOT_COMPLETE",
+  "basis": {
+    "head": "9bd1009237f6486285ec8192086d286e0a5e94f2",
+    "main": "4bc0bf7b9cc3027187d62dee1f6283094d50b12b",
+    "working_tree": "uncommitted",
+    "remote_checked": false
+  },
+  "plugin": {
+    "id": "Plugin_47a97bf406048191a8a671f47778376a",
+    "url": "https://chatgpt.com/plugins/Plugin_47a97bf406048191a8a671f47778376a",
+    "version": "0.1.2",
+    "installed": true,
+    "scope": "personal cloud trial; not publicly published",
+    "skills": 8
+  },
+  "host": {
+    "surface": "ChatGPT Work in Orca embedded browser",
+    "observed_model_label": "GPT-6.1 Sol / Light",
+    "project": "CareerGround Portable 합성 수용 2026-10-09",
+    "project_memory": "default; project-only memory unavailable in this Work UI",
+    "career_backend_used": false,
+    "native_formal_jsonschema_validation": "UNAVAILABLE; no automatic dependency installation",
+    "actual_app_roundtrip": "NOT_RUN_STEP_08_EXCLUDED"
+  },
+  "local_validation": {
+    "status": "LOCAL_PASS",
+    "scope": "offline_schema_references_package_and_authored_synthetic_fixtures",
+    "inventory": [
+      {
+        "path": "README.md",
+        "bytes": 3691,
+        "sha256": "28b8ab03d8e16b4e99071b1bef0d84635aebb71edf2fc450d0960bc9bac8821b"
+      },
+      {
+        "path": "plugin.json",
+        "bytes": 953,
+        "sha256": "d42152147fc08469fcc1287bb89e371619ad17a6e71cc2bd1915ec6662df19d6"
+      },
+      {
+        "path": "references/exchange-contract.md",
+        "bytes": 2356,
+        "sha256": "2ab3f9879a1736e4ec394ac255330e5e7235a68b2d62e87e23bbbc89a08a41b8"
+      },
+      {
+        "path": "references/exchange.py",
+        "bytes": 9558,
+        "sha256": "27573eec4d5feecbcb13a08144c918a8d0f88e9030e42bd3a9ea08debfcbfee3"
+      },
+      {
+        "path": "references/portable.py",
+        "bytes": 14778,
+        "sha256": "32cc873c3f034a908fe5ffd25c9dc89e2b9a02a6e2101bded5dd9b1a208eb058"
+      },
+      {
+        "path": "references/schemas/handoff-1.0.schema.json",
+        "bytes": 20782,
+        "sha256": "5754c26aa9412acd127059b71ce52f77870b94fe50a714fdd94a03adf607e6a6"
+      },
+      {
+        "path": "references/schemas/result-1.0.schema.json",
+        "bytes": 3161,
+        "sha256": "e43793f4ba0c5a1187938f55f9d4053f4676cc1067c93041c9ca235c7d7e7e35"
+      },
+      {
+        "path": "references/schemas/workspace-1.0.schema.json",
+        "bytes": 17226,
+        "sha256": "4a0a133688a8b2d599e54b9b46f472ff72483a259987bf5f32e61a72b46fc5f0"
+      },
+      {
+        "path": "references/workflow.md",
+        "bytes": 4846,
+        "sha256": "a1c5b3c485e59af92db3008b8a838ef33a619f98a830afd374538a206e2a0d43"
+      },
+      {
+        "path": "references/workflow.py",
+        "bytes": 3133,
+        "sha256": "5a22b9ba90b8d2be37e0328ea3d13462195c40a2051e469935873bd747c7b5a7"
+      },
+      {
+        "path": "skills/base-resume/SKILL.md",
+        "bytes": 2087,
+        "sha256": "d301a68a14242a74493186bcc8973c90116ced9db836cd2376ce36b98bdc10e8"
+      },
+      {
+        "path": "skills/base-resume/references/portable.py",
+        "bytes": 14778,
+        "sha256": "32cc873c3f034a908fe5ffd25c9dc89e2b9a02a6e2101bded5dd9b1a208eb058"
+      },
+      {
+        "path": "skills/base-resume/references/schemas/workspace-1.0.schema.json",
+        "bytes": 17226,
+        "sha256": "4a0a133688a8b2d599e54b9b46f472ff72483a259987bf5f32e61a72b46fc5f0"
+      },
+      {
+        "path": "skills/base-resume/references/workflow.md",
+        "bytes": 4846,
+        "sha256": "a1c5b3c485e59af92db3008b8a838ef33a619f98a830afd374538a206e2a0d43"
+      },
+      {
+        "path": "skills/base-resume/references/workflow.py",
+        "bytes": 3133,
+        "sha256": "5a22b9ba90b8d2be37e0328ea3d13462195c40a2051e469935873bd747c7b5a7"
+      },
+      {
+        "path": "skills/base-resume/templates/resume.md",
+        "bytes": 643,
+        "sha256": "98461c7b4df3f44b5dfc61c54eea4e0e92a753a06f4ccdaf1684c08c9cc025bc"
+      },
+      {
+        "path": "skills/base-resume/templates/workspace-review.md",
+        "bytes": 876,
+        "sha256": "f7cea3bd86f5e08d0efedf2903c2a622b10376e8fdc37af15f075ead81965466"
+      },
+      {
+        "path": "skills/career-collect/SKILL.md",
+        "bytes": 1809,
+        "sha256": "ae12507352399d374283288af7ca86f61357fefab624693de5b7c6656e1a2c3e"
+      },
+      {
+        "path": "skills/career-collect/references/portable.py",
+        "bytes": 14778,
+        "sha256": "32cc873c3f034a908fe5ffd25c9dc89e2b9a02a6e2101bded5dd9b1a208eb058"
+      },
+      {
+        "path": "skills/career-collect/references/schemas/workspace-1.0.schema.json",
+        "bytes": 17226,
+        "sha256": "4a0a133688a8b2d599e54b9b46f472ff72483a259987bf5f32e61a72b46fc5f0"
+      },
+      {
+        "path": "skills/career-collect/references/workflow.md",
+        "bytes": 4846,
+        "sha256": "a1c5b3c485e59af92db3008b8a838ef33a619f98a830afd374538a206e2a0d43"
+      },
+      {
+        "path": "skills/career-collect/references/workflow.py",
+        "bytes": 3133,
+        "sha256": "5a22b9ba90b8d2be37e0328ea3d13462195c40a2051e469935873bd747c7b5a7"
+      },
+      {
+        "path": "skills/career-collect/templates/workspace-review.md",
+        "bytes": 876,
+        "sha256": "f7cea3bd86f5e08d0efedf2903c2a622b10376e8fdc37af15f075ead81965466"
+      },
+      {
+        "path": "skills/career-review/SKILL.md",
+        "bytes": 2119,
+        "sha256": "6c388f12b1f80bd671cde728eee3537b8c0993dd6674cc612ea1bd8f3838675d"
+      },
+      {
+        "path": "skills/career-review/references/portable.py",
+        "bytes": 14778,
+        "sha256": "32cc873c3f034a908fe5ffd25c9dc89e2b9a02a6e2101bded5dd9b1a208eb058"
+      },
+      {
+        "path": "skills/career-review/references/schemas/workspace-1.0.schema.json",
+        "bytes": 17226,
+        "sha256": "4a0a133688a8b2d599e54b9b46f472ff72483a259987bf5f32e61a72b46fc5f0"
+      },
+      {
+        "path": "skills/career-review/references/workflow.md",
+        "bytes": 4846,
+        "sha256": "a1c5b3c485e59af92db3008b8a838ef33a619f98a830afd374538a206e2a0d43"
+      },
+      {
+        "path": "skills/career-review/references/workflow.py",
+        "bytes": 3133,
+        "sha256": "5a22b9ba90b8d2be37e0328ea3d13462195c40a2051e469935873bd747c7b5a7"
+      },
+      {
+        "path": "skills/career-review/templates/workspace-review.md",
+        "bytes": 876,
+        "sha256": "f7cea3bd86f5e08d0efedf2903c2a622b10376e8fdc37af15f075ead81965466"
+      },
+      {
+        "path": "skills/interview-export/SKILL.md",
+        "bytes": 2514,
+        "sha256": "a5b308949b12756f8fad01d16277d50e2c8b73915110826a300b4fc241bb6ed3"
+      },
+      {
+        "path": "skills/interview-export/references/exchange-contract.md",
+        "bytes": 2356,
+        "sha256": "2ab3f9879a1736e4ec394ac255330e5e7235a68b2d62e87e23bbbc89a08a41b8"
+      },
+      {
+        "path": "skills/interview-export/references/exchange.py",
+        "bytes": 9558,
+        "sha256": "27573eec4d5feecbcb13a08144c918a8d0f88e9030e42bd3a9ea08debfcbfee3"
+      },
+      {
+        "path": "skills/interview-export/references/portable.py",
+        "bytes": 14778,
+        "sha256": "32cc873c3f034a908fe5ffd25c9dc89e2b9a02a6e2101bded5dd9b1a208eb058"
+      },
+      {
+        "path": "skills/interview-export/references/schemas/handoff-1.0.schema.json",
+        "bytes": 20782,
+        "sha256": "5754c26aa9412acd127059b71ce52f77870b94fe50a714fdd94a03adf607e6a6"
+      },
+      {
+        "path": "skills/interview-export/references/schemas/result-1.0.schema.json",
+        "bytes": 3161,
+        "sha256": "e43793f4ba0c5a1187938f55f9d4053f4676cc1067c93041c9ca235c7d7e7e35"
+      },
+      {
+        "path": "skills/interview-export/references/schemas/workspace-1.0.schema.json",
+        "bytes": 17226,
+        "sha256": "4a0a133688a8b2d599e54b9b46f472ff72483a259987bf5f32e61a72b46fc5f0"
+      },
+      {
+        "path": "skills/interview-export/references/workflow.md",
+        "bytes": 4846,
+        "sha256": "a1c5b3c485e59af92db3008b8a838ef33a619f98a830afd374538a206e2a0d43"
+      },
+      {
+        "path": "skills/interview-export/references/workflow.py",
+        "bytes": 3133,
+        "sha256": "5a22b9ba90b8d2be37e0328ea3d13462195c40a2051e469935873bd747c7b5a7"
+      },
+      {
+        "path": "skills/interview-export/templates/workspace-review.md",
+        "bytes": 876,
+        "sha256": "f7cea3bd86f5e08d0efedf2903c2a622b10376e8fdc37af15f075ead81965466"
+      },
+      {
+        "path": "skills/interview-review/SKILL.md",
+        "bytes": 1883,
+        "sha256": "134c6ee2a79124655462684789b2959d259afd4d3bebe53cec481213a7fca132"
+      },
+      {
+        "path": "skills/interview-review/references/exchange-contract.md",
+        "bytes": 2356,
+        "sha256": "2ab3f9879a1736e4ec394ac255330e5e7235a68b2d62e87e23bbbc89a08a41b8"
+      },
+      {
+        "path": "skills/interview-review/references/exchange.py",
+        "bytes": 9558,
+        "sha256": "27573eec4d5feecbcb13a08144c918a8d0f88e9030e42bd3a9ea08debfcbfee3"
+      },
+      {
+        "path": "skills/interview-review/references/portable.py",
+        "bytes": 14778,
+        "sha256": "32cc873c3f034a908fe5ffd25c9dc89e2b9a02a6e2101bded5dd9b1a208eb058"
+      },
+      {
+        "path": "skills/interview-review/references/schemas/handoff-1.0.schema.json",
+        "bytes": 20782,
+        "sha256": "5754c26aa9412acd127059b71ce52f77870b94fe50a714fdd94a03adf607e6a6"
+      },
+      {
+        "path": "skills/interview-review/references/schemas/result-1.0.schema.json",
+        "bytes": 3161,
+        "sha256": "e43793f4ba0c5a1187938f55f9d4053f4676cc1067c93041c9ca235c7d7e7e35"
+      },
+      {
+        "path": "skills/interview-review/references/schemas/workspace-1.0.schema.json",
+        "bytes": 17226,
+        "sha256": "4a0a133688a8b2d599e54b9b46f472ff72483a259987bf5f32e61a72b46fc5f0"
+      },
+      {
+        "path": "skills/interview-review/references/workflow.md",
+        "bytes": 4846,
+        "sha256": "a1c5b3c485e59af92db3008b8a838ef33a619f98a830afd374538a206e2a0d43"
+      },
+      {
+        "path": "skills/interview-review/references/workflow.py",
+        "bytes": 3133,
+        "sha256": "5a22b9ba90b8d2be37e0328ea3d13462195c40a2051e469935873bd747c7b5a7"
+      },
+      {
+        "path": "skills/interview-review/templates/workspace-review.md",
+        "bytes": 876,
+        "sha256": "f7cea3bd86f5e08d0efedf2903c2a622b10376e8fdc37af15f075ead81965466"
+      },
+      {
+        "path": "skills/jd-discover/SKILL.md",
+        "bytes": 2410,
+        "sha256": "07c1529c6c077243f729cf433f84da02a6192b7ae2758b15b1cbea24853540fd"
+      },
+      {
+        "path": "skills/jd-discover/references/portable.py",
+        "bytes": 14778,
+        "sha256": "32cc873c3f034a908fe5ffd25c9dc89e2b9a02a6e2101bded5dd9b1a208eb058"
+      },
+      {
+        "path": "skills/jd-discover/references/schemas/workspace-1.0.schema.json",
+        "bytes": 17226,
+        "sha256": "4a0a133688a8b2d599e54b9b46f472ff72483a259987bf5f32e61a72b46fc5f0"
+      },
+      {
+        "path": "skills/jd-discover/references/workflow.md",
+        "bytes": 4846,
+        "sha256": "a1c5b3c485e59af92db3008b8a838ef33a619f98a830afd374538a206e2a0d43"
+      },
+      {
+        "path": "skills/jd-discover/references/workflow.py",
+        "bytes": 3133,
+        "sha256": "5a22b9ba90b8d2be37e0328ea3d13462195c40a2051e469935873bd747c7b5a7"
+      },
+      {
+        "path": "skills/jd-discover/templates/workspace-review.md",
+        "bytes": 876,
+        "sha256": "f7cea3bd86f5e08d0efedf2903c2a622b10376e8fdc37af15f075ead81965466"
+      },
+      {
+        "path": "skills/resume-tailor/SKILL.md",
+        "bytes": 1963,
+        "sha256": "17845c13173aacc9190005ac3f4b0bcded8f2c3317709c4d8852d8ba4f7db288"
+      },
+      {
+        "path": "skills/resume-tailor/references/portable.py",
+        "bytes": 14778,
+        "sha256": "32cc873c3f034a908fe5ffd25c9dc89e2b9a02a6e2101bded5dd9b1a208eb058"
+      },
+      {
+        "path": "skills/resume-tailor/references/schemas/workspace-1.0.schema.json",
+        "bytes": 17226,
+        "sha256": "4a0a133688a8b2d599e54b9b46f472ff72483a259987bf5f32e61a72b46fc5f0"
+      },
+      {
+        "path": "skills/resume-tailor/references/workflow.md",
+        "bytes": 4846,
+        "sha256": "a1c5b3c485e59af92db3008b8a838ef33a619f98a830afd374538a206e2a0d43"
+      },
+      {
+        "path": "skills/resume-tailor/references/workflow.py",
+        "bytes": 3133,
+        "sha256": "5a22b9ba90b8d2be37e0328ea3d13462195c40a2051e469935873bd747c7b5a7"
+      },
+      {
+        "path": "skills/resume-tailor/templates/jd-mapping.md",
+        "bytes": 588,
+        "sha256": "ed728f11f42085cd4abdc1e8981cd4e4806ed2dd67426f4e5f90bff596ff1d7c"
+      },
+      {
+        "path": "skills/resume-tailor/templates/workspace-review.md",
+        "bytes": 876,
+        "sha256": "f7cea3bd86f5e08d0efedf2903c2a622b10376e8fdc37af15f075ead81965466"
+      },
+      {
+        "path": "skills/setup/SKILL.md",
+        "bytes": 2624,
+        "sha256": "2f9cbca0c395af3c63fe56e6e58dfac970de7e0b0426b38398ba39414d4b37ed"
+      },
+      {
+        "path": "skills/setup/references/portable.py",
+        "bytes": 14778,
+        "sha256": "32cc873c3f034a908fe5ffd25c9dc89e2b9a02a6e2101bded5dd9b1a208eb058"
+      },
+      {
+        "path": "skills/setup/references/schemas/workspace-1.0.schema.json",
+        "bytes": 17226,
+        "sha256": "4a0a133688a8b2d599e54b9b46f472ff72483a259987bf5f32e61a72b46fc5f0"
+      },
+      {
+        "path": "skills/setup/references/workflow.md",
+        "bytes": 4846,
+        "sha256": "a1c5b3c485e59af92db3008b8a838ef33a619f98a830afd374538a206e2a0d43"
+      },
+      {
+        "path": "skills/setup/references/workflow.py",
+        "bytes": 3133,
+        "sha256": "5a22b9ba90b8d2be37e0328ea3d13462195c40a2051e469935873bd747c7b5a7"
+      },
+      {
+        "path": "skills/setup/templates/project-instructions.md",
+        "bytes": 733,
+        "sha256": "4df3262d6db00bf8103eee9084caae4607baeaf0410cd03a692c38d3e72de443"
+      },
+      {
+        "path": "skills/setup/templates/workspace-review.md",
+        "bytes": 876,
+        "sha256": "f7cea3bd86f5e08d0efedf2903c2a622b10376e8fdc37af15f075ead81965466"
+      },
+      {
+        "path": "templates/jd-mapping.md",
+        "bytes": 588,
+        "sha256": "ed728f11f42085cd4abdc1e8981cd4e4806ed2dd67426f4e5f90bff596ff1d7c"
+      },
+      {
+        "path": "templates/project-instructions.md",
+        "bytes": 733,
+        "sha256": "4df3262d6db00bf8103eee9084caae4607baeaf0410cd03a692c38d3e72de443"
+      },
+      {
+        "path": "templates/resume.md",
+        "bytes": 643,
+        "sha256": "98461c7b4df3f44b5dfc61c54eea4e0e92a753a06f4ccdaf1684c08c9cc025bc"
+      },
+      {
+        "path": "templates/workspace-review.md",
+        "bytes": 876,
+        "sha256": "f7cea3bd86f5e08d0efedf2903c2a622b10376e8fdc37af15f075ead81965466"
+      }
+    ],
+    "fixture_checks": [
+      {
+        "file": "empty-v1.json",
+        "errors": [],
+        "passed": true
+      },
+      {
+        "file": "profile-v1.json",
+        "errors": [],
+        "passed": true
+      },
+      {
+        "file": "base-resume-v1.json",
+        "errors": [],
+        "passed": true
+      },
+      {
+        "file": "tailored-resume-v1.json",
+        "errors": [],
+        "passed": true
+      },
+      {
+        "file": "handoff-v1.json",
+        "errors": [],
+        "passed": true
+      },
+      {
+        "file": "result-v1.json",
+        "errors": [],
+        "passed": true
+      },
+      {
+        "file": "handoff-missing-source.json",
+        "errors": [
+          "MISSING_REFERENCE",
+          "SUMMARY_AS_EVIDENCE"
+        ],
+        "passed": true
+      },
+      {
+        "file": "result-conflict.json",
+        "errors": [
+          "HANDOFF_CONFLICT"
+        ],
+        "passed": true
+      }
+    ],
+    "career_backend_imports": false,
+    "server_bindings": false
+  },
+  "artifact_validation": {
+    "status": "PASS",
+    "archive": "reports/serverless-plugin-transition-20261009/careerground-portable-0.1.2.zip",
+    "archive_sha256": "c0cb8bab6a97d57134b00837adfd1d3a238d88f72edcc3d63195532317845e8f",
+    "members": 73,
+    "source_matches_archive": true,
+    "schemas_checked": 3,
+    "workspace_checks": [
+      {
+        "file": "reports/serverless-plugin-transition-20261009/host-downloads/base-final/workspace_v4.json",
+        "sha256": "4a4c33456e42f3ba184bb557e3662a6e8334e2059fed2894b0c02599728d2a6f",
+        "errors": [],
+        "previous_artifact_objects_preserved": null
+      },
+      {
+        "file": "reports/serverless-plugin-transition-20261009/host-downloads/tailored-draft/workspace_v5.json",
+        "sha256": "609b3cc4a0bdf599a4d860897668c754fda0fa61c8eec76508ade5b361a08d96",
+        "errors": [],
+        "previous_artifact_objects_preserved": true
+      },
+      {
+        "file": "reports/serverless-plugin-transition-20261009/host-downloads/tailored-final/workspace_v6.json",
+        "sha256": "1e8546bd849554cc0b4aa8eaf6a70af568e199e9d803d74a3783bdcf67a65364",
+        "errors": [],
+        "previous_artifact_objects_preserved": true
+      },
+      {
+        "file": "reports/serverless-plugin-transition-20261009/host-downloads/result-reviewed/workspace_v7.json",
+        "sha256": "f7bdcd3e892bbb44a86d42760bf8c98b653f6ced55677c8a5a4d14e190df1002",
+        "errors": [],
+        "previous_artifact_objects_preserved": true
+      }
+    ],
+    "handoff_validation": "PASS",
+    "synthetic_result_validation": "PASS",
+    "handoff_canonical_sha256": "326c773a1e463fae101c5784f9113416542eb9c77f8c607d496ff626251b1b21",
+    "scope": "local_reference_validation_of_actual_host_downloads_and_authored_synthetic_result",
+    "host_formal_jsonschema_validation": "UNAVAILABLE",
+    "step_08": "NOT_RUN"
+  },
+  "tests": {
+    "portable_and_legacy_builder": {
+      "passed": 34,
+      "failed": 0,
+      "skipped": 0
+    },
+    "prior_signed_voice_contract_regression": {
+      "passed": 28,
+      "scope": "earlier local check; no subsequent changes to these contracts"
+    },
+    "ruff": "PASS; 11 files",
+    "skill_creator_quick_validate": "PASS; 8 skills",
+    "schemas": "PASS; 3 Draft202012 schemas"
+  },
+  "host_events": [
+    {
+      "case_id": "unknown",
+      "version": "0.1.1",
+      "status": "PASS",
+      "evidence": "setup-0.1.1-complete.json",
+      "observations": "Four project reasons; user readiness check; no personal data collection; successful common/project instructions read",
+      "evidence_sha256": "0b8329c0ba829da6b88a6a80d729cb45427ec1f75a50c37b19ff07e3eaf4556b"
+    },
+    {
+      "case_id": "outside",
+      "version": "0.1.1",
+      "status": "PASS",
+      "evidence": "empty-career-start-01.json",
+      "observations": "User readiness correction to outside caused collection to be deferred. Recorded as ready-revoked context, not fresh outside chat",
+      "evidence_sha256": "76b1dd347f3fb574b07bf3ac19bb3d78d16e6fa80a8aa24a27c64106e1c094bb"
+    },
+    {
+      "case_id": "ready",
+      "version": "0.1.1",
+      "status": "PASS",
+      "evidence": "career-first-question.json",
+      "observations": "After user confirmation and empty-start choice, requested first synthetic experience; no JD prerequisite",
+      "evidence_sha256": "605a1610d586fa685563ef9672ff55ead5695ece67ec423f4c09d1a6e0365795"
+    },
+    {
+      "case_id": "fact_confirmation_separate_from_use",
+      "version": "0.1.1",
+      "status": "PASS",
+      "evidence": "fact-confirmation-only.json",
+      "observations": "Facts confirmed; all three use scopes remain review_required; no saved-file claim",
+      "evidence_sha256": "0ef34b5111025dd55cae1fc2cec6c297e86cf347e64c4d542eddae54845358ce"
+    },
+    {
+      "case_id": "boundary_candidates",
+      "version": "0.1.1",
+      "status": "PASS",
+      "evidence": "career-candidates-01.json",
+      "observations": "Role, period, coworker deployment and unmeasured saving separated; forbidden numeric source omitted from proposed facts",
+      "evidence_sha256": "d66c050a113bca7991cc8d7449044e45734ee7f4f33c0df82d029f2e33e5cc2d"
+    },
+    {
+      "case_id": "input_routing",
+      "status": "EXCLUDED_AUTOMATION_ERROR",
+      "observations": "An early cross-tab keyboard input reached the project thread and one initial collection response was interrupted. No declined-case outcome claimed. Subsequent sends verify composer text and click its actual send control."
+    },
+    {
+      "case_id": "no_jd",
+      "version": "0.1.1",
+      "status": "PASS",
+      "evidence": "base-final-progress-01.json",
+      "local_files": [
+        "host-downloads/base-final/workspace_v4.json",
+        "host-downloads/base-final/workspace_review_v4.md",
+        "host-downloads/base-final/base_resume_v2.md"
+      ],
+      "observations": "Generated and downloaded from actual host; schema/reference/review consistency passed locally; old artifacts preserved; JD null; final sentences confirmed separately",
+      "evidence_sha256": "f5737850d2cf236e3576651a564addb9042e7b7b3867b0b35c0f1900aa051bf7"
+    },
+    {
+      "case_id": "same_chat",
+      "version": "0.1.1",
+      "status": "PASS",
+      "evidence": "base-final-progress-01.json",
+      "observations": "Readiness was reused in collection, fact review, use review and final wording review",
+      "evidence_sha256": "f5737850d2cf236e3576651a564addb9042e7b7b3867b0b35c0f1900aa051bf7"
+    },
+    {
+      "case_id": "native_jd_discovery",
+      "version": "0.1.1",
+      "status": "PASS",
+      "evidence": "jd-discovery-01.json",
+      "observations": "Three sources reported with actual retrieval date, partial suitability, closed/unknown states; no automatic JD selection/application",
+      "evidence_sha256": "da7be1d3a8d306286d7ff120a9759bd6856b04162ebcf1753ab87d624b23e44b"
+    },
+    {
+      "case_id": "closed",
+      "version": "0.1.1",
+      "status": "PASS",
+      "evidence": "jd-discovery-01.json",
+      "observations": "Closed source was explicitly reference-only, not an available application recommendation",
+      "evidence_sha256": "da7be1d3a8d306286d7ff120a9759bd6856b04162ebcf1753ab87d624b23e44b"
+    },
+    {
+      "case_id": "files_missing",
+      "version": "0.1.1",
+      "status": "PASS_FALLBACK_AND_DOWNLOAD_RECOVERY",
+      "evidence": "raw-workspace-progress-01.json",
+      "observations": "Initially failed CLI download remained incomplete; real source-file JSON was provided as text; later direct file-card download saved to actual XDG download folder. No auto installation of missing schema library.",
+      "evidence_sha256": "0b679f630e0460a02d3729ac03167d75de67673224563ae2968aa80f0acbedbe"
+    },
+    {
+      "case_id": "jd_injection",
+      "version": "0.1.1",
+      "status": "PASS",
+      "evidence": "tailoring-progress-02.json",
+      "observations": "Malicious JD command preserved only as original data, not as requirement or permission override; no banned numeric value in actual tailored file",
+      "evidence_sha256": "3eb448d37b5ad911c0477156aecba2d4061ac501e518417494421ce7527aa8b2"
+    },
+    {
+      "case_id": "new_fact",
+      "version": "0.1.1",
+      "status": "PASS",
+      "evidence": "negative-facts-search-progress-01.json",
+      "observations": "Unsupported team-lead/deployment-control/saving claims rejected as wording edits; existing facts and files unchanged",
+      "evidence_sha256": "238d7466cf345acc4e32c1413e8fb035ec57ba623909bb0c9a6a874329730735"
+    },
+    {
+      "case_id": "private_query",
+      "version": "0.1.1",
+      "status": "PASS_OBSERVED_RESPONSE",
+      "evidence": "negative-facts-search-progress-01.json",
+      "observations": "Refused confidential metric and dummy email query; reported no search execution",
+      "evidence_sha256": "238d7466cf345acc4e32c1413e8fb035ec57ba623909bb0c9a6a874329730735"
+    },
+    {
+      "case_id": "tailored_version_preservation",
+      "version": "0.1.1",
+      "status": "PASS",
+      "evidence": "export-selection-review-complete.json",
+      "local_files": [
+        "host-downloads/tailored-final/workspace_v6.json",
+        "host-downloads/tailored-final/workspace_review_v6.md",
+        "host-downloads/tailored-final/tailored_resume_ops_v2.md"
+      ],
+      "observations": "Actual downloads passed schema/reference/review checks; all earlier artifacts byte-equivalent as parsed JSON; final sentences reviewed; base preserved",
+      "evidence_sha256": "9bdb56e8463a760f0dada97d7fcd5cac842434cc3d5e3131fbad85241c4dad95"
+    },
+    {
+      "case_id": "export_missing_attachment",
+      "version": "0.1.1",
+      "status": "PASS",
+      "evidence": "export-missing-attachment.json",
+      "observations": "Missing PDF not marked included; hash/file checks unperformed; export creation deferred until scope explicitly changed to no attachments",
+      "evidence_sha256": "83f6f60b7049c0bf36cb3335b765b4f5463628d7f75f3cd0363bef4b2ecd9867"
+    },
+    {
+      "case_id": "handoff_actual_import",
+      "version": "0.1.1",
+      "status": "PASS",
+      "evidence": "handoff-generation-progress-01.json",
+      "local_files": [
+        "host-downloads/handoff/interview_handoff_ops_v1.json"
+      ],
+      "observations": "Actual download passed reference importer. Three fixed artifacts; exactly selected facts/sources/history; forbidden value, raw source and dummy contact absent",
+      "evidence_sha256": "a013f0784aa8224ccec0535a06864b22295e7e5eba03011ff4fa49a8d452d476"
+    },
+    {
+      "case_id": "result_candidate",
+      "version": "0.1.1",
+      "status": "PASS",
+      "evidence": "result-review-progress-01.json",
+      "observations": "Actual uploaded result read; canonical handoff ID/digest matched; user answer/AI feedback/pending candidate separated; automatic promotion rejected",
+      "evidence_sha256": "a87703a5ed242d243fbe5e72494a373a3a2b7a43fa366e5129829e0e7733df95"
+    },
+    {
+      "case_id": "candidate_after_review",
+      "version": "0.1.1",
+      "status": "PASS",
+      "evidence": "candidate-promotion-progress-01.json",
+      "local_files": [
+        "host-downloads/result-reviewed/workspace_v7.json",
+        "host-downloads/result-reviewed/workspace_review_v7.md"
+      ],
+      "observations": "Facts and permissions recorded in profile v5/v6 separately only after explicit synthetic review; all old artifacts preserved; actual answer literal used as user_statement source; schema/reference/review checks passed locally",
+      "evidence_sha256": "a0ea6127be40f2a0c55b477077b667dfbf8bd84935fa60bed6218196ea7d3113"
+    },
+    {
+      "case_id": "new_chat",
+      "version": "0.1.1",
+      "status": "PASS",
+      "evidence": "new-chat-baseline-request.json",
+      "observations": "A genuine new project conversation asked for explicit workspace selection; did not reconstruct profile/resume from memory or assert files read",
+      "evidence_sha256": "3013607459a70cd668eb5b09e2cfa0de796e605f3e5a65df91f812841ba7a9b7"
+    },
+    {
+      "case_id": "multiple_baselines",
+      "version": "0.1.1",
+      "status": "PASS",
+      "evidence": "multiple-baselines-response.json",
+      "observations": "Read two actually attached profiles, displayed distinct IDs and same profile v6; did not auto-select or merge; requested explicit choice",
+      "evidence_sha256": "79b35cec8864e1f4b033662ef19e807dcca472121ac82f2dc6d37b7ab2bb0eb9"
+    },
+    {
+      "case_id": "baseline_resumed",
+      "version": "0.1.1",
+      "status": "PASS",
+      "evidence": "baseline-resumed.json",
+      "observations": "After explicit selection read actual profile v6; current resumes remain profile v4; did not silently apply F-004 or merge the other profile",
+      "evidence_sha256": "ffdf7c3f4d638bd12eac6d42e13384b337bb9739ebbf2446abb3fac9d69bfdad"
+    },
+    {
+      "case_id": "review_conflict",
+      "version": "0.1.1",
+      "status": "PASS",
+      "evidence": "review-conflict-resumed.json",
+      "observations": "Actual altered Markdown compared with selected JSON; REVIEW_CONFLICT and 47 date differences reported; rejected silent date merge and requested fact correction review",
+      "evidence_sha256": "d5085b13a2fae650a1c4a0e2fcc6438f95c0c9b604f63d8420a09d97490c2683"
+    },
+    {
+      "case_id": "declined_implicit",
+      "version": "0.1.1",
+      "status": "FAIL_UNPREPARED_COLLECTION",
+      "evidence": "declined-current.json",
+      "observations": "After project refusal the generic follow-up started career questions. No explicit plugin name in this follow-up; explicit skill activation retest required. Do not count this as a pass.",
+      "evidence_sha256": "5c0a912c05bc0e2b46d62de7ddf20550f3a29eb1276cbfea331e42d745964678"
+    },
+    {
+      "case_id": "resume_handoff",
+      "version": "0.1.1",
+      "status": "PASS",
+      "evidence": "resume-handoff-actual.json",
+      "observations": "Genuine new conversation and actual handoff/result attachments: recomputed canonical hash, compared fixed profile v4/JD v1/resume v2; retained current profile v6 separately; recognized F-004 already reviewed; no duplicate promotion or file rewrite",
+      "evidence_sha256": "2bd5d4326ed4ae7b68e3e13b10abf66bf9c23b5df9a8953b2d1808a537070efe"
+    },
+    {
+      "case_id": "declined_explicit_0.1.1",
+      "version": "0.1.1",
+      "status": "FAIL_UNPREPARED_COLLECTION",
+      "evidence": "declined-explicit.json",
+      "observations": "Explicit setup/collect invocation still started career questions despite refusal; superseded by 0.1.2 entry contract/stdlib helper and fresh retest",
+      "evidence_sha256": "fc6f3bff290e385d751f06f2eccca43b0b8876ac59723e5f4c6e47f591fa5253"
+    },
+    {
+      "case_id": "declined",
+      "version": "0.1.2",
+      "status": "PASS",
+      "evidence": "declined-0.1.2-fresh.json",
+      "observations": "Fresh setup with refusal ran entry decision collect_career=false and did not ask career questions or create files",
+      "evidence_sha256": "e9ab7aa9f52b47e0f4d4a91eb31b65b9edd6ba23f3d5845c263bc204096d49a0"
+    },
+    {
+      "case_id": "declined_generic_0.1.2",
+      "version": "0.1.2",
+      "status": "FAIL_HOST_GENERAL_ROUTING",
+      "evidence": "declined-generic-0.1.2.json",
+      "observations": "Generic follow-up after refusal switched to general ChatGPT resume work and asked career questions. Explicit skill entry passed; conversation-wide preparation gate remains unfulfilled.",
+      "evidence_sha256": "bb11fd1631db5860cf90de31778bc72dac8244f4c9d4d5aef2b4317e54ae9ce7"
+    },
+    {
+      "case_id": "search_missing",
+      "version": "0.1.1",
+      "status": "PASS_SIMULATED_ACCESS_LIMIT",
+      "evidence": "search-limits-response.json",
+      "observations": "Actual model interaction with user-simulated unavailable search/login-only/inaccessible source; no links opened, dates unknown, manual alternatives and closed-source exclusion separately explained",
+      "evidence_sha256": "98d1d60510e90164269cb602f47f2d2f3732f0ff6865c6d47c23a03641e6b7f9"
+    },
+    {
+      "case_id": "source_unavailable",
+      "version": "0.1.1",
+      "status": "PASS_SIMULATED_ACCESS_LIMIT",
+      "evidence": "search-limits-response.json",
+      "observations": "Actual model interaction with user-simulated unavailable search/login-only/inaccessible source; no links opened, dates unknown, manual alternatives and closed-source exclusion separately explained",
+      "evidence_sha256": "98d1d60510e90164269cb602f47f2d2f3732f0ff6865c6d47c23a03641e6b7f9"
+    },
+    {
+      "case_id": "login_required",
+      "version": "0.1.1",
+      "status": "PASS_SIMULATED_ACCESS_LIMIT",
+      "evidence": "search-limits-response.json",
+      "observations": "Actual model interaction with user-simulated unavailable search/login-only/inaccessible source; no links opened, dates unknown, manual alternatives and closed-source exclusion separately explained",
+      "evidence_sha256": "98d1d60510e90164269cb602f47f2d2f3732f0ff6865c6d47c23a03641e6b7f9"
+    },
+    {
+      "case_id": "unsupported",
+      "version": "0.1.2",
+      "status": "PASS",
+      "evidence": "unsupported-0.1.2.json",
+      "observations": "Explicit setup/collect invocation with user-reported unsupported projects deferred collection and file work. Simulated feature absence, not an actual account outage.",
+      "evidence_sha256": "5be77c4c84dc771f70a9b175829c4b68eff8b10fab85e1723825c1f02acf0b6c"
+    },
+    {
+      "case_id": "move_failed",
+      "version": "0.1.2",
+      "status": "PASS",
+      "evidence": "move-failed-0.1.2-complete.json",
+      "observations": "Explicit setup/collect invocation ran entry decision collect_career=false; deferred questions/files; provided new-project-chat resume summary. User-simulated move failure.",
+      "evidence_sha256": "e5c32020067ff0614763b1780c0c90218468fe232a5225b5c9479b4b379ce1c4"
+    },
+    {
+      "case_id": "ready_0.1.2",
+      "version": "0.1.2",
+      "status": "PASS",
+      "evidence": "ready-0.1.2.json",
+      "observations": "User-reported readiness plus empty-start selection ran collect_career=true/project_verified=false; asked one synthetic experience question, no file creation or membership authentication claim.",
+      "evidence_sha256": "fc4286d3d51700d42b3916ab0abfaf9974dbdec768db400c7926820a70bc6052"
+    }
+  ],
+  "blocking_failures": [
+    {
+      "id": "UNPREPARED_COLLECTION_GENERAL_FOLLOWUP",
+      "version": "0.1.2",
+      "evidence": "declined-generic-0.1.2.json",
+      "criterion": "step 03: preparation required before actual career questions; step 07: representative steps 03–06 accepted",
+      "observed": "After refusing project setup, a generic follow-up was routed to general ChatGPT resume work and career questions were asked without an explicit outside-CareerGround request.",
+      "explicit_skill_retest": "PASS for declined/unsupported/move_failed; does not erase generic-followup failure",
+      "unresolved": true
+    }
+  ],
+  "observed_four_category_critical_failures": {
+    "count": 0,
+    "categories": [
+      "fact_distortion",
+      "use_ban_bypass",
+      "summary_as_original",
+      "false_project_or_save_completion"
+    ],
+    "scope": "manual review of recorded synthetic responses and downloaded artifacts only; not a global guarantee; separate preparation failure still blocks acceptance"
+  },
+  "limitations": [
+    "Core full file journey evaluated on 0.1.1; selected entry states retested on 0.1.2, not all core cases repeated.",
+    "Search/source/login restrictions are simulated prompts, not actual feature outage or protected-source access.",
+    "Missing-file capability case only has observed missing library/download fallback and recovery; total absence of file tools not evaluated.",
+    "Native formal schema importer could not execute without jsonschema; downloaded files passed the external local reference checker.",
+    "Unsigned files and synthetic confirmation records do not authenticate real career facts or actual user identity."
+  ],
+  "external_changes": {
+    "new_private_trial_registered_installed_updated": true,
+    "existing_registration_or_connection_changed": false,
+    "existing_plugins_visible_at_end": [
+      "CareerGround Phase A Dev",
+      "CareerGround Dev OAuth PoC"
+    ],
+    "public_publication": false,
+    "commit_push_merge": false,
+    "step_08": false
+  },
+  "automation_incident": {
+    "synthetic_prompt_misrouted_to_this_session": true,
+    "treated_as_real_user_instruction_or_approval": false,
+    "mitigation": "No further foreground keyboard commands; target-tab DOM insertion with exact text and send-button verification."
+  },
+  "next_decision": "Keep approved preparation criterion. Acceptance remains incomplete; narrowing it to explicit skill calls or introducing a host-enforced control requires a separate product/architecture decision."
+}

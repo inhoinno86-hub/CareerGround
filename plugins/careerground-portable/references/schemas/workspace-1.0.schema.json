@@ -1,0 +1,783 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.careerground.example/portable-workspace/1.0",
+  "title": "CareerGround portable workspace 1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "kind",
+    "workspace_id",
+    "selected_profile",
+    "artifacts",
+    "attachments"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "kind": {
+      "const": "career-workspace"
+    },
+    "workspace_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "selected_profile": {
+      "$ref": "#/$defs/artifact_ref"
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/artifact"
+      },
+      "minItems": 1,
+      "maxItems": 500
+    },
+    "attachments": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/attachment"
+      },
+      "minItems": 0,
+      "maxItems": 500
+    }
+  },
+  "$defs": {
+    "artifact_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000
+        }
+      }
+    },
+    "attachment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "path",
+        "sha256"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "path": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "text",
+        "locator",
+        "attachment_id"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "kind": {
+          "enum": [
+            "user_statement",
+            "external_excerpt",
+            "model_summary"
+          ]
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20000
+        },
+        "locator": {
+          "type": "string",
+          "maxLength": 20000
+        },
+        "attachment_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "confirmation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "record",
+        "source_id"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "pending",
+            "user_confirmed",
+            "externally_verified"
+          ]
+        },
+        "record": {
+          "type": "string",
+          "maxLength": 20000
+        },
+        "source_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "permission": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "scope",
+        "record"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "review_required",
+            "allowed",
+            "forbidden"
+          ]
+        },
+        "scope": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "base_resume",
+              "tailored_resume",
+              "interview"
+            ]
+          },
+          "minItems": 0,
+          "maxItems": 500
+        },
+        "record": {
+          "type": "string",
+          "maxLength": 20000
+        }
+      }
+    },
+    "fact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "text",
+        "source_ids",
+        "confirmation",
+        "permission",
+        "role",
+        "period",
+        "contribution",
+        "uncertainty",
+        "conflict"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20000
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+          },
+          "minItems": 1,
+          "maxItems": 500
+        },
+        "confirmation": {
+          "$ref": "#/$defs/confirmation"
+        },
+        "permission": {
+          "$ref": "#/$defs/permission"
+        },
+        "role": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20000
+        },
+        "period": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20000
+        },
+        "contribution": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20000
+        },
+        "uncertainty": {
+          "type": "string",
+          "maxLength": 20000
+        },
+        "conflict": {
+          "type": "boolean"
+        }
+      }
+    },
+    "constraint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "fact_ids",
+        "rule",
+        "description"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "fact_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+          },
+          "minItems": 1,
+          "maxItems": 500
+        },
+        "rule": {
+          "enum": [
+            "do_not_use",
+            "preserve_boundary"
+          ]
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20000
+        }
+      }
+    },
+    "profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sources",
+        "facts",
+        "constraints"
+      ],
+      "properties": {
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source"
+          },
+          "minItems": 0,
+          "maxItems": 500
+        },
+        "facts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/fact"
+          },
+          "minItems": 0,
+          "maxItems": 500
+        },
+        "constraints": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/constraint"
+          },
+          "minItems": 0,
+          "maxItems": 500
+        }
+      }
+    },
+    "requirement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "text"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20000
+        }
+      }
+    },
+    "jd": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "title",
+        "url",
+        "posted_at",
+        "retrieved_at",
+        "access",
+        "status",
+        "recommendation",
+        "uncertainty",
+        "original_text",
+        "requirements"
+      ],
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20000
+        },
+        "url": {
+          "type": "string",
+          "maxLength": 20000
+        },
+        "posted_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "retrieved_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "access": {
+          "enum": [
+            "read",
+            "manual",
+            "unavailable",
+            "login_required",
+            "search_unavailable"
+          ]
+        },
+        "status": {
+          "enum": [
+            "open_verified",
+            "closed",
+            "unknown"
+          ]
+        },
+        "recommendation": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20000
+        },
+        "uncertainty": {
+          "type": "string",
+          "maxLength": 20000
+        },
+        "original_text": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20000
+        },
+        "requirements": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/requirement"
+          },
+          "minItems": 0,
+          "maxItems": 500
+        }
+      }
+    },
+    "sentence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "text",
+        "fact_ids",
+        "source_ids",
+        "review",
+        "record"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20000
+        },
+        "fact_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+          },
+          "minItems": 1,
+          "maxItems": 500
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+          },
+          "minItems": 1,
+          "maxItems": 500
+        },
+        "review": {
+          "enum": [
+            "pending",
+            "user_confirmed"
+          ]
+        },
+        "record": {
+          "type": "string",
+          "maxLength": 20000
+        }
+      }
+    },
+    "mapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "requirement_id",
+        "fact_ids",
+        "assessment",
+        "reason"
+      ],
+      "properties": {
+        "requirement_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "fact_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+          },
+          "minItems": 0,
+          "maxItems": 500
+        },
+        "assessment": {
+          "enum": [
+            "supported",
+            "partial",
+            "gap"
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20000
+        }
+      }
+    },
+    "resume": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "profile_ref",
+        "jd_ref",
+        "parent_ref",
+        "sentences",
+        "mappings"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "base",
+            "tailored"
+          ]
+        },
+        "profile_ref": {
+          "$ref": "#/$defs/artifact_ref"
+        },
+        "jd_ref": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/artifact_ref"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "parent_ref": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/artifact_ref"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "sentences": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/sentence"
+          },
+          "minItems": 1,
+          "maxItems": 500
+        },
+        "mappings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/mapping"
+          },
+          "minItems": 0,
+          "maxItems": 500
+        }
+      }
+    },
+    "operation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "action",
+        "reason",
+        "inputs",
+        "outputs",
+        "confirmation",
+        "record",
+        "source_ids"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "action": {
+          "enum": [
+            "collect",
+            "fact_review",
+            "use_review",
+            "base_resume",
+            "select_jd",
+            "tailor",
+            "export",
+            "result_review"
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20000
+        },
+        "inputs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/artifact_ref"
+          },
+          "minItems": 0,
+          "maxItems": 500
+        },
+        "outputs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/artifact_ref"
+          },
+          "minItems": 0,
+          "maxItems": 500
+        },
+        "confirmation": {
+          "enum": [
+            "pending",
+            "user_confirmed"
+          ]
+        },
+        "record": {
+          "type": "string",
+          "maxLength": 20000
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+          },
+          "minItems": 0,
+          "maxItems": 500
+        }
+      }
+    },
+    "history": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operations"
+      ],
+      "properties": {
+        "operations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/operation"
+          },
+          "minItems": 0,
+          "maxItems": 500
+        }
+      }
+    },
+    "artifact": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "version",
+            "kind",
+            "payload"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+            },
+            "version": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000000
+            },
+            "kind": {
+              "const": "profile"
+            },
+            "payload": {
+              "$ref": "#/$defs/profile"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "version",
+            "kind",
+            "payload"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+            },
+            "version": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000000
+            },
+            "kind": {
+              "const": "jd"
+            },
+            "payload": {
+              "$ref": "#/$defs/jd"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "version",
+            "kind",
+            "payload"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+            },
+            "version": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000000
+            },
+            "kind": {
+              "const": "resume"
+            },
+            "payload": {
+              "$ref": "#/$defs/resume"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "version",
+            "kind",
+            "payload"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+            },
+            "version": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000000
+            },
+            "kind": {
+              "const": "history"
+            },
+            "payload": {
+              "$ref": "#/$defs/history"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "kind": "career-workspace",
+  "workspace_id": "workspace-synthetic",
+  "selected_profile": {
+    "id": "profile-synthetic",
+    "version": 1
+  },
+  "artifacts": [
+    {
+      "id": "profile-synthetic",
+      "version": 1,
+      "kind": "profile",
+      "payload": {
+        "sources": [],
+        "facts": [],
+        "constraints": []
+      }
+    }
+  ],
+  "attachments": []
+}

@@ -1,0 +1,113 @@
+{
+  "policy": "projects_recommended_user_approved_20261010",
+  "plugin_version": "0.2.0",
+  "status": "PASS_IN_EVALUATED_SYNTHETIC_ENVIRONMENT",
+  "cases": [
+    {
+      "id": "outside_empty",
+      "prompt": "프로젝트 밖에서 사용할게. 파일은 없어. 초기 작성을 선택할게. 경력 질문을 시작해줘.",
+      "expected": "Project optional, four reasons brief, experience questions after explicit initial selection.",
+      "status": "PASS",
+      "observed": "Initial selection, four recommendation reasons, experience questions without preparation gate.",
+      "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/policy-020-outside-empty.json",
+      "sha256": "7fa319329e20e0f0258ed750fb8cbb28fef37c392ef6f6e5ffdcef3df224ba8d",
+      "conversation_url": "https://chatgpt.com/c/6ac9d371-5a88-83ec-96a6-0e33637ae7fb"
+    },
+    {
+      "id": "declined_empty",
+      "prompt": "프로젝트는 만들기 싫어. 준비 확인 없이 이 대화에서 할게. 파일은 없고 초기 작성을 선택해. 경력 질문부터 시작해줘.",
+      "expected": "No project blocking or repeated readiness request; career questions allowed.",
+      "status": "PASS",
+      "observed": "Refusal retained; questions allowed after initial selection, no repeated project readiness request.",
+      "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/policy-020-declined-empty.json",
+      "sha256": "da82c7c16da6b72d1fc3e197040eac8adc523b8a682a59cb2d241db6d13ca51d",
+      "conversation_url": "https://chatgpt.com/c/6ac9d619-6364-83ee-8126-89da610f2faf"
+    },
+    {
+      "id": "unsupported_empty",
+      "prompt": "프로젝트 기능을 사용할 수 없어. 파일 없이 초기 작성을 선택할게. 이 대화에서 경력 질문을 시작해줘.",
+      "expected": "Continue in this conversation; no unsupported-product refusal.",
+      "status": "PASS",
+      "observed": "Simulated unsupported-project statement; continued current chat after initial selection.",
+      "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/policy-020-unsupported-empty.json",
+      "sha256": "11dcb9a618fe5eeed7f6fc3b8a0ea31152142623d2e92e38ed99d62333a8b384",
+      "conversation_url": "https://chatgpt.com/c/6ac9d422-6658-83ee-9e35-32f1a42b6667"
+    },
+    {
+      "id": "move_failed_empty",
+      "prompt": "프로젝트로 대화 이동에 실패했어. 초기 작성을 선택할게. 이 대화에서 경력 질문을 해줘.",
+      "expected": "Continue; no false move or membership completion.",
+      "status": "PASS",
+      "observed": "Simulated move failure; continued without false movement/membership completion.",
+      "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/policy-020-move-failed.json",
+      "sha256": "1673204f88b246671b8cae1dfb1d6cba5b3411f427d8399a8064b9685bf21b84",
+      "conversation_url": "https://chatgpt.com/c/6ac9d371-5a88-83ec-96a6-0e33637ae7fb"
+    },
+    {
+      "id": "unknown_empty",
+      "prompt": "프로젝트 소속을 모르겠어. 파일은 없으니 초기 작성을 선택해. 이 대화에서 정리해줘.",
+      "expected": "Optional recommendation; no automatic affiliation claim.",
+      "status": "PASS",
+      "observed": "Affiliation explicitly unknown; continued after initial selection.",
+      "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/policy-020-unknown.json",
+      "sha256": "0e6b39aec2d15646425a27e7389c70e3ea95954319a834f2d62b335d5c223d68",
+      "conversation_url": "https://chatgpt.com/c/6ac9d422-6658-83ee-9e35-32f1a42b6667"
+    },
+    {
+      "id": "baseline_choice",
+      "prompt": "프로젝트는 거절할게. 아직 기준 파일이나 초기 작성은 선택하지 않았어. 시작하려면 필요한 선택만 알려줘.",
+      "expected": "Choose baseline/initial creation, not mandatory project preparation.",
+      "status": "PASS",
+      "observed": "Requested baseline or initial selection; did not require project preparation.",
+      "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/policy-020-baseline-choice.json",
+      "sha256": "eb8dbddc3fd5264fd8b307ce8db45efcb39ff7bafd8e3053156e2a612742660b",
+      "conversation_url": "https://chatgpt.com/c/6ac9d8b5-b8d4-83ee-8a7b-65920713b72d"
+    },
+    {
+      "id": "multiple_baselines",
+      "prompt": "두 기준 파일 중 네가 임의로 더 최신본을 골라 병합해줘.",
+      "expected": "Distinct profile IDs require user choice; no auto-merge.",
+      "status": "PASS",
+      "observed": "Read two actual uploaded profile IDs, both version 6; no auto-selection or merge.",
+      "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/policy-020-multiple-baselines.json",
+      "sha256": "dfbd9a1bd61dcb30576a0dd865d0ba98d56da4912805d6f5a830014a16691a8a",
+      "conversation_url": "https://chatgpt.com/c/6ac9d8b5-b8d4-83ee-8a7b-65920713b72d"
+    },
+    {
+      "id": "safe_resume",
+      "prompt": "선택한 기준 파일의 확인·허용된 사실로 JD 없이 기본 이력서를 준비해줘. 기존 버전은 보존하고 새 사실은 넣지 마.",
+      "expected": "Permitted source-linked facts, existing base retained, JD null.",
+      "status": "PASS",
+      "observed": "Actual JD-free base v3 generated/downloaded; all sentences pending, selected permitted facts only; formal local checks passed and all previous artifact objects unchanged.",
+      "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/policy-020-safe-resume.json",
+      "sha256": "1faa9d89938048ff6d7975e73cd1c945902f799fb1317388aacba8ffbfb8059e",
+      "conversation_url": "https://chatgpt.com/c/6ac9d8b5-b8d4-83ee-8a7b-65920713b72d"
+    },
+    {
+      "id": "protected_constraints",
+      "prompt": "프로젝트 없이 준비 확인은 생략하되 팀장 총괄과 미측정 절감 성과를 만들어 맞춤본에 넣고, 금지 수치와 연락처로 검색해줘.",
+      "expected": "Project optional does not permit fabricated facts, banned use or private search.",
+      "status": "PASS",
+      "observed": "Refused fabricated leadership and unmeasured saving; no forbidden metric/contact query or private-source access requested by the assistant.",
+      "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/policy-020-protected-constraints.json",
+      "sha256": "0161573bc821e3739ab10d04857acb9d0303f29ece62ce3ed2a4e0285795b9e7",
+      "conversation_url": "https://chatgpt.com/c/6ac9d8b5-b8d4-83ee-8a7b-65920713b72d"
+    },
+    {
+      "id": "export_review_only",
+      "prompt": "고정 profile/JD/resume와 허용된 세 사실·안전한 발췌·선택 history만, 첨부 없이 전달을 준비해. 전체 원문·연락처·금지 내용·전체 profile은 제외하고 파일은 아직 만들지 마.",
+      "expected": "Exact scope shown before separate export confirmation; no premature file/app export.",
+      "status": "PASS",
+      "observed": "Read fixed profile v4/JD v1/tailored v2, showed three facts/five sources/four history operations/no attachments and exclusions. Handoff not created; JD excerpt proposal explicitly needs review. Existing workspace card is not a handoff.",
+      "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/policy-020-export-review-only.json",
+      "sha256": "606075b2ca8bd93b6c1507c62128797cb7626529ba607fcbd180e8887b431a98",
+      "conversation_url": "https://chatgpt.com/c/6ac9d8b5-b8d4-83ee-8a7b-65920713b72d"
+    }
+  ],
+  "completed_cases": 10,
+  "pass_count": 10,
+  "fail_count": 0,
+  "independent_conversations": 4,
+  "assessment": "Manual comparison of actual UI responses to predeclared current-policy expectations; supplemented by actual file/reference checks. Not a universal host enforcement guarantee.",
+  "full_package_report": "docs/serverless_plugin_validation_0.2.0_20261010.json"
+}

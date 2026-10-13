@@ -41,6 +41,11 @@ jobs:
       - run: uv run --locked alembic upgrade head
       - run: uv run --locked alembic check
       - run: uv run --locked python -m unittest discover -s tests -v
+      - name: Portable skills-only contracts and package (offline)
+        run: |
+          uv run --locked ruff check plugins/careerground-portable/references tests/test_portable*.py
+          uv run --locked ruff format --check plugins/careerground-portable/references tests/test_portable*.py
+          uv run --locked python scripts/check_portable_plugin.py
       - name: Persistent QA and tunnel launcher regression
         run: uv run --locked python -m pytest -q tests/test_phase_a_release_qa_launcher.py tests/test_phase_a_release_tunnel_launcher.py
       - run: uv run --locked playwright install --with-deps chromium firefox
