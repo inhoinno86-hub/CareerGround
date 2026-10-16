@@ -11,8 +11,8 @@ android {
         applicationId = "dev.careerground.interview"
         minSdk = 33
         targetSdk = 36
-        versionCode = 4
-        versionName = "0.2.1-step03-voice"
+        versionCode = 5
+        versionName = "0.3.0-pace"
         manifestPlaceholders["appAuthRedirectScheme"] = "dev.careerground.interview"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -32,6 +32,7 @@ android {
 }
 kotlin { compilerOptions { jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17) } }
 dependencies {
+    implementation(project(":pace-ui"))
     implementation("net.openid:appauth:0.11.1")
     implementation(platform("androidx.compose:compose-bom:2025.12.00"))
     implementation("androidx.compose.material3:material3")

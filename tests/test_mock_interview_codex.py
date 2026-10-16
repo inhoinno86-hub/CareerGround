@@ -141,7 +141,7 @@ class CodexBoundaryTests(unittest.TestCase):
     def test_explicit_limit_rejects_wrong_types_and_unapproved_upper_bound(self):
         with tempfile.TemporaryDirectory() as directory:
             ledger = Path(directory) / "counts.json"
-            for limit in [True, 0, 16, "15", 15.0]:
+            for limit in [True, 0, 19, "18", 18.0]:
                 with (
                     self.subTest(limit=limit),
                     self.assertRaisesRegex(CodexRejected, "CODEX_BUDGET_LOCATION"),
@@ -154,6 +154,28 @@ class CodexBoundaryTests(unittest.TestCase):
                 CallBudget(ledger, limit=1).reserve(),
             ):
                 self.fail("boolean ledger limit accepted as integer")
+
+    def test_pace_extension_preserves_fourteen_calls_and_stops_at_eighteen(self):
+        with tempfile.TemporaryDirectory() as directory:
+            ledger = Path(directory) / "counts.json"
+            ledger.write_text(json.dumps({"attempts": 14, "limit": 15}))
+            ledger.chmod(0o600)
+            with (
+                self.assertRaisesRegex(CodexRejected, "CODEX_BUDGET_INVALID"),
+                CallBudget(ledger, limit=18).reserve(),
+            ):
+                self.fail("extension without ledger approval accepted")
+            self.assertEqual(json.loads(ledger.read_text()), {"attempts": 14, "limit": 15})
+            ledger.write_text(json.dumps({"attempts": 14, "limit": 18}))
+            for expected in range(15, 19):
+                with CallBudget(ledger, limit=18).reserve() as attempt:
+                    self.assertEqual(attempt, expected)
+            with (
+                self.assertRaisesRegex(CodexRejected, "CODEX_BUDGET_EXHAUSTED"),
+                CallBudget(ledger, limit=18).reserve(),
+            ):
+                self.fail("approved cumulative limit exceeded")
+            self.assertEqual(json.loads(ledger.read_text())["attempts"], 18)
 
     def test_budget_rejects_untrusted_location_symlink_and_corrupt_counts(self):
         with tempfile.TemporaryDirectory() as directory:

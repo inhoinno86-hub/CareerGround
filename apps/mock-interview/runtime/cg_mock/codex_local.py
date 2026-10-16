@@ -24,6 +24,8 @@ from pathlib import Path
 
 from jsonschema import Draft202012Validator
 
+MAX_APPROVED_CALLS = 18
+
 HOST_DISABLED = (
     "Code Mode is unavailable because code-mode host is disabled. "
     "Code mode will fail closed; enable `features.code_mode_host` "
@@ -47,7 +49,7 @@ class CallBudget:
         parent = self.ledger.parent.stat()
         if (
             type(limit) is not int
-            or not 1 <= limit <= 15
+            or not 1 <= limit <= MAX_APPROVED_CALLS
             or parent.st_uid != os.getuid()
             or parent.st_mode & 0o077
             or not stat.S_ISDIR(parent.st_mode)

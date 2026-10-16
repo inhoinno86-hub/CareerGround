@@ -1,0 +1,288 @@
+{
+  "recorded_at": "2026-10-13T14:17:23.002919+00:00",
+  "status": "INTEGRATED_AND_AUTOMATED_CHECKS_PASSED",
+  "baseline": "25bf5b012fdcce34e916ce544f27031338369c26",
+  "worktree": "/home/inno/orca/workspaces/CareerGround/careerground-pace-integration",
+  "branch": "inhoinno86-hub/careerground-pace-integration",
+  "commit_push_merge": "NOT_PERFORMED",
+  "app": {
+    "application_id": "dev.careerground.interview.dev",
+    "version_code": 5,
+    "version_name": "0.3.0-pace",
+    "min_sdk": 33
+  },
+  "apk": {
+    "path": "/home/inno/.local/share/careerground-android/artifacts/pace-integration-20261013/CareerGround-PACE-integrated.apk",
+    "bytes": 29979759,
+    "sha256": "285c85dafe910e9d8b0beaca0884a3ea6d06f54d9494c32927870f40d88a8710",
+    "certificate_sha256": "d258e5a2420327f238eb40ec765800dbf05bc563fc634a71475a6830e3f3d46a",
+    "same_certificate_as_functional_apk": true
+  },
+  "build": "PASS",
+  "jvm": {
+    "passed": 10,
+    "failed": 0
+  },
+  "backend": {
+    "pytest_passed": 41,
+    "subtests_passed": 96,
+    "actual_provider_calls": 0
+  },
+  "android": {
+    "baseline": "25bf5b012fdcce34e916ce544f27031338369c26",
+    "runs": [
+      {
+        "configuration": "phone-light",
+        "passed": 15
+      },
+      {
+        "configuration": "wide-dark",
+        "passed": 2
+      },
+      {
+        "configuration": "large-font",
+        "passed": 2
+      },
+      {
+        "configuration": "keyboard",
+        "passed": 2
+      }
+    ],
+    "state": "complete",
+    "owned_emulator_pid": 1332970,
+    "status": "PASS",
+    "passed": 21,
+    "actual_provider_calls": 0,
+    "keyboard_observed": true,
+    "limits": [
+      "Synthetic runtime credentials/provider and files only",
+      "File URI read/write; system SAF picker not automated",
+      "No personal OIDC, microphone speech, real AI or physical foldable regression",
+      "Screen captures temporarily clear FLAG_SECURE only in the synthetic instrumentation test"
+    ],
+    "apk_sha256": "285c85dafe910e9d8b0beaca0884a3ea6d06f54d9494c32927870f40d88a8710",
+    "owned_emulator_stopped": true
+  },
+  "lint": {
+    "app": {
+      "errors": 0,
+      "warnings": 2,
+      "ids": [
+        "UseKtx",
+        "UseKtx"
+      ]
+    },
+    "pace-ui": {
+      "errors": 0,
+      "warnings": 0,
+      "ids": []
+    }
+  },
+  "functional_sources_preserved": [
+    {
+      "path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/RuntimeClient.kt",
+      "sha256": "6292c5b1e22f2e3dcd5b634528b826177224c0aaafecf4a9a2473f80fc9777db"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/NativeOidc.kt",
+      "sha256": "0cbe4d56c2bdd06cc819004a69a436a311a2a43a6b894b21c2f6419a8bd91699"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/OidcChecks.kt",
+      "sha256": "c5ea30110b6906b3f5358d56aaa5ee83452d1c076d7f1592a320acb002ee4492"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/OidcRedirectActivity.kt",
+      "sha256": "3dbcce68b412266f72cdf1ceaee0bdd0dd2f875ec3dc34f8adacf6ca068dcbc8"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/DeviceVoice.kt",
+      "sha256": "efc6c74ab33949d8f952e87a429c450aa8165a6cbef812af71ccddc905c1d5a2"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/VoiceCapture.kt",
+      "sha256": "2eee47e47cc656dde41c5d0e3e47a1dbf264af7c31e85f38c8e1051ec59c9e1b"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/SelectedFiles.kt",
+      "sha256": "ab2c239cc24f7c94e87be266675504514e836e6955cbf1f3f19f13f635501335"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/ManualSessionSnapshot.kt",
+      "sha256": "cb567f3367653db4c1b8db4ef4fa5dbbd226dbca2b9fd094ebcbd01d47d6f706"
+    }
+  ],
+  "model_diff": "openOutputStream mode w -> wt only",
+  "activity_lifecycle_preserved": true,
+  "source_files": [
+    {
+      "path": "apps/mock-interview/android/app/build.gradle.kts",
+      "sha256": "c58f19e1cd672cdcb2f3f780107c12bf7977d08b5e77d91b79b047ca41c5df0a"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/androidTest/java/dev/careerground/interview/DeviceVoiceProbeTest.kt",
+      "sha256": "61bbe0408515ff46b1c2aedb420a85393257aed358b4af0c79831e3c6befa1b6"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/androidTest/java/dev/careerground/interview/ImportUiTest.kt",
+      "sha256": "d4c8a5329e5deb425bb0179099690fe006842a466d8f2f4366e471371246fd38"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/androidTest/java/dev/careerground/interview/ManualSessionSnapshotTest.kt",
+      "sha256": "c60877777cd0cd69454ee174db595af2df72b7732f6284d07b70557608346ce0"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/androidTest/java/dev/careerground/interview/OidcBoundaryTest.kt",
+      "sha256": "ead62be7aef1940228950979c4a2be0cf7be97e2db713a3b799461c8cb2b654a"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/androidTest/java/dev/careerground/interview/PaceAdapterTest.kt",
+      "sha256": "09505315b2854c8da2c00ec2adc971e1a7b13b94a1faabe7a2ebb6c485db7fa3"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/androidTest/java/dev/careerground/interview/PaceRuntimeUiTest.kt",
+      "sha256": "19162b7d35dbfc1c4d6caf3fc726b4de647f7efe62e1eb8a12da55ca80438cf8"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/debug/AndroidManifest.xml",
+      "sha256": "34b09b30632fc5779fbcb00a66d7a748c1bfeee4a76caf760de56be172ca90f1"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/debug/res/xml/dev_network_security.xml",
+      "sha256": "56020ab62f970f56e9bc7b363d00acce35750a99ce1960e029ba66193244aa59"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/AndroidManifest.xml",
+      "sha256": "8da0f7839bfc8f6c1d30b78c051f5cbfdc30572bd3dcad3f2a5a6c188ab6bbf5"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/DeviceVoice.kt",
+      "sha256": "efc6c74ab33949d8f952e87a429c450aa8165a6cbef812af71ccddc905c1d5a2"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/InterviewModel.kt",
+      "sha256": "aa3ddca5a2e82b210893eda1be13f13f8d35e8aeb39204eaa4a77ff28aafe0bc"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/MainActivity.kt",
+      "sha256": "022563e6efbad533c34fc24560bb13044cae0f94a4710ecf69f0c8884f0b8df1"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/ManualSessionSnapshot.kt",
+      "sha256": "cb567f3367653db4c1b8db4ef4fa5dbbd226dbca2b9fd094ebcbd01d47d6f706"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/NativeOidc.kt",
+      "sha256": "0cbe4d56c2bdd06cc819004a69a436a311a2a43a6b894b21c2f6419a8bd91699"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/OidcChecks.kt",
+      "sha256": "c5ea30110b6906b3f5358d56aaa5ee83452d1c076d7f1592a320acb002ee4492"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/OidcRedirectActivity.kt",
+      "sha256": "3dbcce68b412266f72cdf1ceaee0bdd0dd2f875ec3dc34f8adacf6ca068dcbc8"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/PaceAdapter.kt",
+      "sha256": "478ea6d224c5674f8bac40cccb43bb1be3fe893e166e2bbb8f63488b059b9aa6"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/RuntimeClient.kt",
+      "sha256": "6292c5b1e22f2e3dcd5b634528b826177224c0aaafecf4a9a2473f80fc9777db"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/SelectedFiles.kt",
+      "sha256": "ab2c239cc24f7c94e87be266675504514e836e6955cbf1f3f19f13f635501335"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/VoiceCapture.kt",
+      "sha256": "2eee47e47cc656dde41c5d0e3e47a1dbf264af7c31e85f38c8e1051ec59c9e1b"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/res/drawable/ic_launcher.xml",
+      "sha256": "2a80f7ee55309a38bc7245acd98c07b4b518f15566ee24611aaaee1a4370fe69"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/res/xml/data_extraction_rules.xml",
+      "sha256": "81c62699b03efc4299542dd7177f75df46b03e10a84c4914403e9aa665315780"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/test/java/dev/careerground/interview/SelectedFilesTest.kt",
+      "sha256": "5c23f85834eaf17a59769df8e30512a342a75bfec5fc86644d3b75a2782df17c"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/test/java/dev/careerground/interview/VoiceCaptureTest.kt",
+      "sha256": "63b30a8bafef896b85459317355faa4c6877aee7f53c513177793220ab5c24f6"
+    },
+    {
+      "path": "apps/mock-interview/android/build.gradle.kts",
+      "sha256": "aa33fdae8a44496d3a2c9a13d0cc0955e8bf132c26a070735e59b8bb372b6deb"
+    },
+    {
+      "path": "apps/mock-interview/android/pace-ui/build.gradle.kts",
+      "sha256": "35207c79e949fe4daefe7c157606c1299388dfcfb4788c50960bc7f1db618d50"
+    },
+    {
+      "path": "apps/mock-interview/android/pace-ui/src/main/AndroidManifest.xml",
+      "sha256": "571f2735faf5e857752ee057ac8ef63425576a721616c60b86ee5d4c0a2d682f"
+    },
+    {
+      "path": "apps/mock-interview/android/pace-ui/src/main/java/dev/careerground/pace/PaceState.kt",
+      "sha256": "1784e96c4167bc9a784808d0636f76e59e25bada66858c1af6eeba9b21912b03"
+    },
+    {
+      "path": "apps/mock-interview/android/pace-ui/src/main/java/dev/careerground/pace/PaceTheme.kt",
+      "sha256": "bd9fb925349a08d30e5a48e85826500db03c39c80d210c115ac0e19df3b701b1"
+    },
+    {
+      "path": "apps/mock-interview/android/pace-ui/src/main/java/dev/careerground/pace/PaceUi.kt",
+      "sha256": "93169300892757aafc74b0595829cd3add3782a2ce0ede5b51d2caf42a6a60a8"
+    },
+    {
+      "path": "apps/mock-interview/android/settings.gradle.kts",
+      "sha256": "67264042737653fa04f4b4681e90f3f2939c070c884d5f80414182bf0cb8580b"
+    }
+  ],
+  "synthetic_native_images": [
+    "/home/inno/.local/share/careerground-android/artifacts/pace-integration-20261013/phone-light-coaching-review.png",
+    "/home/inno/.local/share/careerground-android/artifacts/pace-integration-20261013/phone-light-coaching-home.png",
+    "/home/inno/.local/share/careerground-android/artifacts/pace-integration-20261013/phone-light-coaching-interview-draft.png",
+    "/home/inno/.local/share/careerground-android/artifacts/pace-integration-20261013/phone-light-coaching-result.png",
+    "/home/inno/.local/share/careerground-android/artifacts/pace-integration-20261013/phone-light-simulation-review.png",
+    "/home/inno/.local/share/careerground-android/artifacts/pace-integration-20261013/phone-light-simulation-home.png",
+    "/home/inno/.local/share/careerground-android/artifacts/pace-integration-20261013/phone-light-simulation-interview-draft.png",
+    "/home/inno/.local/share/careerground-android/artifacts/pace-integration-20261013/phone-light-simulation-result.png",
+    "/home/inno/.local/share/careerground-android/artifacts/pace-integration-20261013/wide-dark-coaching-review.png",
+    "/home/inno/.local/share/careerground-android/artifacts/pace-integration-20261013/wide-dark-coaching-home.png",
+    "/home/inno/.local/share/careerground-android/artifacts/pace-integration-20261013/wide-dark-coaching-interview-draft.png",
+    "/home/inno/.local/share/careerground-android/artifacts/pace-integration-20261013/wide-dark-coaching-result.png",
+    "/home/inno/.local/share/careerground-android/artifacts/pace-integration-20261013/wide-dark-simulation-review.png",
+    "/home/inno/.local/share/careerground-android/artifacts/pace-integration-20261013/wide-dark-simulation-home.png",
+    "/home/inno/.local/share/careerground-android/artifacts/pace-integration-20261013/wide-dark-simulation-interview-draft.png",
+    "/home/inno/.local/share/careerground-android/artifacts/pace-integration-20261013/wide-dark-simulation-result.png",
+    "/home/inno/.local/share/careerground-android/artifacts/pace-integration-20261013/large-font-coaching-review.png",
+    "/home/inno/.local/share/careerground-android/artifacts/pace-integration-20261013/large-font-coaching-home.png",
+    "/home/inno/.local/share/careerground-android/artifacts/pace-integration-20261013/large-font-coaching-interview-draft.png",
+    "/home/inno/.local/share/careerground-android/artifacts/pace-integration-20261013/large-font-coaching-result.png",
+    "/home/inno/.local/share/careerground-android/artifacts/pace-integration-20261013/large-font-simulation-review.png",
+    "/home/inno/.local/share/careerground-android/artifacts/pace-integration-20261013/large-font-simulation-home.png",
+    "/home/inno/.local/share/careerground-android/artifacts/pace-integration-20261013/large-font-simulation-interview-draft.png",
+    "/home/inno/.local/share/careerground-android/artifacts/pace-integration-20261013/large-font-simulation-result.png",
+    "/home/inno/.local/share/careerground-android/artifacts/pace-integration-20261013/keyboard-coaching-review.png",
+    "/home/inno/.local/share/careerground-android/artifacts/pace-integration-20261013/keyboard-coaching-home.png",
+    "/home/inno/.local/share/careerground-android/artifacts/pace-integration-20261013/keyboard-coaching-interview-keyboard.png",
+    "/home/inno/.local/share/careerground-android/artifacts/pace-integration-20261013/keyboard-coaching-result.png",
+    "/home/inno/.local/share/careerground-android/artifacts/pace-integration-20261013/keyboard-simulation-review.png",
+    "/home/inno/.local/share/careerground-android/artifacts/pace-integration-20261013/keyboard-simulation-home.png",
+    "/home/inno/.local/share/careerground-android/artifacts/pace-integration-20261013/keyboard-simulation-interview-keyboard.png",
+    "/home/inno/.local/share/careerground-android/artifacts/pace-integration-20261013/keyboard-simulation-result.png"
+  ],
+  "limits": [
+    "Synthetic runtime credentials/provider and files only",
+    "File URI read/write; system SAF picker not automated",
+    "No personal OIDC, microphone speech, real AI or physical foldable regression",
+    "Screen captures temporarily clear FLAG_SECURE only in the synthetic instrumentation test",
+    "Native keyboard screenshot has a black region at a selection popup; capture artifact suspected, physical display unverified."
+  ]
+}

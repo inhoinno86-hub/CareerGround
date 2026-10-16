@@ -1,0 +1,57 @@
+{
+  "status": "PASS",
+  "scope": "Selected phone files validated in RAM; offline restore only, not a new personal login",
+  "files": {
+    "pace-session-20261016.json": {
+      "bytes": 39711,
+      "sha256": "80aeae442b1f4ac51f92bd2f67650eab6d9616c2482d2e61d1faeae42f6d313f"
+    },
+    "pace-result-20261016.json": {
+      "bytes": 3331,
+      "sha256": "5ecdf613d9c716426bfff2ce94e9abceb6c0e56a356cea329031e612b5d7157c"
+    },
+    "pace-check-20261016.json": {
+      "bytes": 32182,
+      "sha256": "9997c4412bc3f3e5988e41cad5dd7518ce13c0025befdcb93487e349e78e3db2"
+    }
+  },
+  "session_state": "COMPLETED",
+  "questions": 6,
+  "answers": 1,
+  "feedback": 1,
+  "candidates": 2,
+  "event_attempts": [
+    15,
+    16
+  ],
+  "checks": [
+    "session_schema",
+    "same_owner_as_ready_file",
+    "same_original_handoff",
+    "result_schema_and_references",
+    "exact_answer_feedback_candidate_match",
+    "offline_completed_restore",
+    "restored_feedback_stale",
+    "restored_events_unverified",
+    "restored_session_reexport"
+  ],
+  "validation_ai_calls": 0,
+  "budget": {
+    "used": 16,
+    "limit": 18,
+    "remaining": 2,
+    "device_test_actual_calls": 2,
+    "file_validation_actual_calls": 0
+  },
+  "backend_regression": {
+    "tests_passed": 51,
+    "subtests_passed": 111
+  },
+  "cleanup": {
+    "app_force_stopped": true,
+    "owned_runtime_stopped": true,
+    "device_reverse_removed": true,
+    "installed_app_and_saved_files_preserved": true
+  },
+  "commit_push_merge": "NOT_PERFORMED"
+}

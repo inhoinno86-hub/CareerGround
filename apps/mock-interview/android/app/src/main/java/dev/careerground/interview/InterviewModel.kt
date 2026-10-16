@@ -337,7 +337,7 @@ class InterviewModel(application: Application) : AndroidViewModel(application) {
         if (bytes == null) { message = "프로세스 재시작으로 저장 내용이 없습니다. 파일을 다시 준비해 주세요."; return }
         work {
             withContext(Dispatchers.IO) {
-                requireNotNull(resolver.openOutputStream(uri, "w")).use { it.write(bytes); it.flush() }
+                requireNotNull(resolver.openOutputStream(uri, "wt")).use { it.write(bytes); it.flush() }
             }
             message = "파일 쓰기 완료 · 세션을 다시 가져와 검사할 수 있습니다."
         }

@@ -1,5 +1,15 @@
 # CareerGround Android 모의 면접 — 실제 개발 왕복 수용
 
+2026-10-13 별도 통합 worktree에서 **PACE Compose UI**를 실제 앱에 연결했다.
+버전은 `0.3.0-pace` / code5이며, 독립 합성 미리보기 APK와 다르다.
+이번 통합의 자동 검사 결과·APK는
+[PACE 통합 기록](../../docs/mock_interview_pace_integration_20261013.md)을 따른다.
+2026-10-16 실제 개인 로그인·자료 검토·저장/복구·접힘/펼침·음성·질문/평가·
+결과/전체 세션 저장 확인은 [PACE 기기 기록](../../docs/mock_interview_pace_device_20261016.md)을 따른다.
+세션 형식 상한 누락을 수정하고 파일 대조·offline 복구를 통과했다.
+기기 시험 종료 후 앱 프로세스·이번 PC runtime·USB reverse를 정리했으며 앱과 수동 파일은 보존했다.
+아래 기존 실기기·개인 자료 수용 기록은 이전 APK의 결과로 보존한다.
+
 기준 기기: 갤럭시 Z 폴드7 SM-F966N / 사용자 제공 Android16·One UI8.5.
 [승인 계획](../../PLAN-2026-10-10-mock-interview-app.md)을 따른다.
 **STEP02 실기기 수용 / STEP03 실제 Codex·음성·오프라인 전사·result SAF PASS /
@@ -16,11 +26,13 @@ ChatGPT Portable0.2.0 interview-review의 jsonschema부재는 승인한 임시 �
 [최신 수용·사용·USB 재연결 안내](../../docs/mock_interview_app_acceptance_20261012.md),
 [이전 재개 지점](../../docs/mock_interview_app_acceptance_20261011_r2.md),
 [음성 보완·이전 실패](../../docs/mock_interview_voice_continuation_20261011.md)를 따른다.
-현재 실제 휴대폰 RAM/token·USB reverse·loopback runtime은 정리했고 수동 파일은 보존했다.
-실제Codex14/15, 유료API0. 사용자 승인 개인 handoff의 실제 가져오기/저장/재개와 첫 음성 확인 답변1개,
+2026-10-12 당시 실제 휴대폰 RAM/token·USB reverse·loopback runtime은 정리했고 수동 파일은 보존했다.
+당시 실제Codex14/15, 유료API0. 사용자 승인 개인 handoff의 실제 가져오기/저장/재개와 첫 음성 확인 답변1개,
 실제 평가/result·ChatGPT 정식 검사/재검토·파일 다운로드 왕복을 마쳤다.
-미응답5문항·pending 후보2개 별도 검토와 전체 면접은 구분한다. 이번 USB reverse/runtime·앱 메모리는 정리했고 파일은 보존했다.
+미응답5문항·pending 후보2개 별도 검토와 전체 면접은 구분한다. 당시 USB reverse/runtime·앱 메모리는 정리했고 파일은 보존했다.
 [개인 실제 왕복 기록](../../docs/mock_interview_personal_roundtrip_20261012.md)을 따른다.
+2026-10-16 PACE 통합 APK의 실기기 후속 확인과 한도18회 승인·서버 연결/정리 상태는
+[PACE 기기 기록](../../docs/mock_interview_pace_device_20261016.md)을 따른다.
 운영API/배포는 미실행이다.
 
 ## 현재 제공 범위
@@ -70,16 +82,20 @@ AppAuth 0.11.1이 Authorization Code + PKCE S256/state/nonce를 처리한다. ca
 Auth0 관리 콘솔 로그인과 앱 사용자 로그인은 별개다. 기존 합성 owner의 세션 파일은 OIDC owner와
 다르므로 거부한다. 원래 handoff를 가져와 새 OIDC 세션을 만들고 별도 파일 이름으로 내보낸다.
 
-승인한 실제 AI 개발 시험은 **같은 누적 호출 원장**을 명시해 실행한다. 현재14회 사용했다.
+승인한 실제 AI 개발 시험은 **같은 누적 호출 원장**을 명시해 실행한다. 현재16회 사용했다.
 2026-10-12 사용자 승인을 받아 기존 한도를12→15로 변경했으며 사용11회는 보존했다.
-이후 개인 질문의 첫 실패·보완 재시도·평가3회로14/15가 되었고 잔여1회다. 기본 runtime 한도는12이므로
-같은 원장의15회 설정을 명시한다. 새 원장으로 한도를 초기화하지 않는다. 새 API key·유료 호출은 없다.
+이후 개인 질문의 첫 실패·보완 재시도·평가3회로14/15가 되었다.
+2026-10-16 PACE 실기기 후속 시험에서 사용자 명시 승인으로15→18로 변경했고 사용14회는
+보존했다. 당시 잔여4회 중 질문 생성1회·평가1회를 사용했고 현재 잔여2회다.
+세션 export의 이벤트 호출 상한 누락은18로 동기화했고 추가 AI 호출 없이 재저장·검증을 마쳤다.
+기본 runtime 한도는12이므로 같은 원장의18회 설정을 명시한다.
+새 원장으로 한도를 초기화하지 않으며 새 API key를 추가하지 않는다.
 
 ```bash
 CG_CODEX_BUDGET=/home/inno/.local/share/careerground-android/artifacts/codex-step03-20261011/calls.json
 PYTHONPATH=apps/mock-interview/runtime .venv/bin/python -m cg_mock \
   --oidc-config apps/mock-interview/config/auth0-dev.public.json \
-  --codex-budget-ledger "$CG_CODEX_BUDGET" --codex-call-limit 15 --codex-model gpt-6.1-sol
+  --codex-budget-ledger "$CG_CODEX_BUDGET" --codex-call-limit 18 --codex-model gpt-6.1-sol
 ```
 
 기존 static Codex CLI와 bubblewrap를 사용한다. 빈 filesystem namespace에 CLI·기존 읽기 전용

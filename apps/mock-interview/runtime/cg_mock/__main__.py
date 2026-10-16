@@ -8,6 +8,7 @@ from pathlib import Path
 import uvicorn
 
 from .api import create_app
+from .codex_local import MAX_APPROVED_CALLS
 from .provider import ProviderVerifier
 from .session import Rejected
 
@@ -23,7 +24,7 @@ parser.add_argument(
 parser.add_argument(
     "--codex-call-limit",
     type=int,
-    choices=range(1, 16),
+    choices=range(1, MAX_APPROVED_CALLS + 1),
     default=12,
     help="Explicit approved cumulative limit (default 12); must match the existing ledger",
 )

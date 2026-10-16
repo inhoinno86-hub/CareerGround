@@ -10,6 +10,7 @@ from fastapi.testclient import TestClient
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "apps/mock-interview/runtime"))
 from cg_mock.api import create_app
+from cg_mock.codex_local import MAX_APPROVED_CALLS
 from cg_mock.interview import CRITERIA, InterviewSessions, selected_context
 from cg_mock.session import Rejected, exchange
 
@@ -270,11 +271,43 @@ class InterviewEngineTests(unittest.TestCase):
         self.assertTrue(all(not e["actual"] for e in restored["interview"]["events"]))
         from cg_mock.session import validate_session
 
-        data["events"][0]["attempt"] = 15
-        validate_session(json.dumps(data).encode())
-        data["events"][0]["attempt"] = 16
+        for attempt in range(15, MAX_APPROVED_CALLS + 1):
+            data["events"][0]["attempt"] = attempt
+            validate_session(json.dumps(data).encode())
+        data["events"][0]["attempt"] = MAX_APPROVED_CALLS + 1
         with self.assertRaisesRegex(Rejected, "SESSION_SCHEMA"):
             validate_session(json.dumps(data).encode())
+
+    def test_completed_session_exports_and_restores_after_budget_extension(self):
+        from cg_mock.session import SCHEMA
+
+        schema = json.loads(SCHEMA.read_text())
+        self.assertEqual(
+            schema["properties"]["events"]["items"]["properties"]["attempt"]["maximum"],
+            MAX_APPROVED_CALLS,
+        )
+        self.provider.calls = 14
+        view = self.start()
+        answer = self.submit(view["interview"]["questions"][0]["id"])
+        self.store.evaluate(self.sid, self.owner, answer["id"])
+        self.store.finish(self.sid, self.owner)
+        raw = self.store.export(self.sid, self.owner)
+        data = json.loads(raw)
+        self.assertEqual([e["attempt"] for e in data["events"]], [15, 16])
+        for attempts in ([15, 16], [17, 18]):
+            with self.subTest(attempts=attempts):
+                for event, attempt in zip(data["events"], attempts, strict=True):
+                    event["attempt"] = attempt
+                restored = self.store.restore(self.owner, json.dumps(data).encode(), {})
+                self.assertEqual(restored["state"], "COMPLETED")
+                self.assertEqual(len(restored["interview"]["answers"]), 1)
+                self.assertTrue(all(f["stale"] for f in restored["interview"]["feedback"]))
+                self.assertTrue(
+                    all(
+                        e["provenance"] == "imported_unverified" and not e["actual"]
+                        for e in restored["interview"]["events"]
+                    )
+                )
 
     def test_concurrent_duplicate_evaluation_is_rejected_without_second_call(self):
         view = self.start()
