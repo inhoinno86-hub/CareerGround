@@ -1,0 +1,41 @@
+{
+  "scope": "PACE UI and preview/adapter authored files, final source",
+  "files": [
+    {
+      "path": "apps/mock-interview/android/pace-ui/src/main/AndroidManifest.xml",
+      "sha256": "571f2735faf5e857752ee057ac8ef63425576a721616c60b86ee5d4c0a2d682f"
+    },
+    {
+      "path": "apps/mock-interview/android/pace-ui/src/main/java/dev/careerground/pace/PaceState.kt",
+      "sha256": "1784e96c4167bc9a784808d0636f76e59e25bada66858c1af6eeba9b21912b03"
+    },
+    {
+      "path": "apps/mock-interview/android/pace-ui/src/main/java/dev/careerground/pace/PaceTheme.kt",
+      "sha256": "bd9fb925349a08d30e5a48e85826500db03c39c80d210c115ac0e19df3b701b1"
+    },
+    {
+      "path": "apps/mock-interview/android/pace-ui/src/main/java/dev/careerground/pace/PaceUi.kt",
+      "sha256": "f3b1b4eb927c2b03955fd2b18a14f4d1a44ef9aef5434850ca918390f85052ca"
+    },
+    {
+      "path": "apps/mock-interview/android/design-preview/src/main/AndroidManifest.xml",
+      "sha256": "cb012580714e1cda340908ff09602c0e8ef4e3144b588ad54d92efc07d45b052"
+    },
+    {
+      "path": "apps/mock-interview/android/design-preview/src/main/java/dev/careerground/interview/design/DesignPreviewActivity.kt",
+      "sha256": "d89f848357505251b57663a44ba42647681bb94018255da1bf3a6e24061a9b6d"
+    },
+    {
+      "path": "apps/mock-interview/android/design-preview/src/main/res/drawable/ic_pace.xml",
+      "sha256": "a71d18beda11939d8559fca988561a1a465706a66502054deca7df1a5e3b320d"
+    },
+    {
+      "path": "apps/mock-interview/android/design-preview/src/main/res/xml/data_extraction_rules.xml",
+      "sha256": "e3ce0fdaf2125dcc18769441bfbc573a3e08d89675966a1b691cbcceccc152e7"
+    },
+    {
+      "path": "apps/mock-interview/android/integration-check/src/main/java/dev/careerground/interview/PaceAdapter.kt",
+      "sha256": "0622775d0a6c0de1c199c20067abd5111af12d48351b37feda869c1124bcbe07"
+    }
+  ]
+}

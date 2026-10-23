@@ -1,0 +1,39 @@
+{
+  "scope": "Standalone HTML visual comparison only, not Android rendering or device verification",
+  "renderer": "Independent headless Chrome; no existing browser profile or Orca browser state used",
+  "checks": [
+    {
+      "screen": "home",
+      "dark": false,
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "screen": "interview",
+      "dark": false,
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "screen": "result",
+      "dark": true,
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "screen": "home",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "screen": "interview",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "screen": "result",
+      "width": 390,
+      "overflow": false
+    }
+  ]
+}

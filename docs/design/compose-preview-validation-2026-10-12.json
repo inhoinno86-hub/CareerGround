@@ -1,0 +1,30 @@
+{
+  "scope": "Independent Compose design preview only",
+  "build": "assembleDebug PASS offline",
+  "lint": [
+    {
+      "id": "DataExtractionRules",
+      "severity": "Warning"
+    },
+    {
+      "id": "DataExtractionRules",
+      "severity": "Warning"
+    },
+    {
+      "id": "MissingApplicationIcon",
+      "severity": "Warning"
+    }
+  ],
+  "package": "package: name='dev.careerground.interview.design' versionCode='1' versionName='0.1-design-preview' platformBuildVersionName='16' platformBuildVersionCode='36' compileSdkVersion='36' compileSdkVersionCodename='16'",
+  "requested_permissions": [
+    "uses-permission: name='dev.careerground.interview.design.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'"
+  ],
+  "permission_note": "AndroidX internal receiver permission only. No Internet, microphone, storage or other platform permissions.",
+  "apk_sha256": "710a1fc4c00719c37b6dabfc1c2df344e7b3bbfa57523ef1cbd43a6c6da5350f",
+  "baseline_changes": [
+    "apps/mock-interview/android/settings.gradle.kts"
+  ],
+  "device_execution": "NOT_RUN",
+  "integration": "NOT_RUN",
+  "visual_direction": "Awaiting user preference"
+}

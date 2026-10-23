@@ -1,0 +1,176 @@
+{
+  "captured_at_utc": "2026-10-12T02:20:58.746834+00:00",
+  "source_worktree": "/home/inno/repo/CareerGround",
+  "source_head": "9bd1009237f6486285ec8192086d286e0a5e94f2",
+  "design_worktree": "/home/inno/orca/workspaces/CareerGround/careerground-compose-design",
+  "design_base_head": "0d5673c52cc9f15e9b94250aaeddee29b88593dd",
+  "scope": "Android source/build configuration, public auth configuration, session schema, app README. No runtime, local configuration, caches, builds, credentials, device data or user files.",
+  "integration": "Entries are imported baseline, not design changes. Compare design files to these hashes and port only UI additions/changes onto latest functional source.",
+  "files": [
+    {
+      "path": "apps/mock-interview/README.md",
+      "bytes": 14372,
+      "sha256": "8b8ee3c5daaec9156e3fcbdf5ce1f3ffb77e1f147ce425672f508a1ef6662456"
+    },
+    {
+      "path": "apps/mock-interview/android/.gitignore",
+      "bytes": 62,
+      "sha256": "1d0d8aa62aed09180b2264846040bc1e029e2c35a7aba45a92ee078448f5cb53"
+    },
+    {
+      "path": "apps/mock-interview/android/app/build.gradle.kts",
+      "bytes": 2042,
+      "sha256": "517f74acf75e667a5db7b6b5ec481224f5e6f9146d36dcc943e271808820b19c"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/androidTest/java/dev/careerground/interview/DeviceVoiceProbeTest.kt",
+      "bytes": 1421,
+      "sha256": "61bbe0408515ff46b1c2aedb420a85393257aed358b4af0c79831e3c6befa1b6"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/androidTest/java/dev/careerground/interview/ImportUiTest.kt",
+      "bytes": 1735,
+      "sha256": "7bfb2fff2a8ed464f602a46e22e3b09c77fc1aec41002ba131eba962866d32b5"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/androidTest/java/dev/careerground/interview/ManualSessionSnapshotTest.kt",
+      "bytes": 2730,
+      "sha256": "c60877777cd0cd69454ee174db595af2df72b7732f6284d07b70557608346ce0"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/androidTest/java/dev/careerground/interview/OidcBoundaryTest.kt",
+      "bytes": 2402,
+      "sha256": "ead62be7aef1940228950979c4a2be0cf7be97e2db713a3b799461c8cb2b654a"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/debug/AndroidManifest.xml",
+      "bytes": 199,
+      "sha256": "34b09b30632fc5779fbcb00a66d7a748c1bfeee4a76caf760de56be172ca90f1"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/debug/res/xml/dev_network_security.xml",
+      "bytes": 425,
+      "sha256": "56020ab62f970f56e9bc7b363d00acce35750a99ce1960e029ba66193244aa59"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/AndroidManifest.xml",
+      "bytes": 1738,
+      "sha256": "8da0f7839bfc8f6c1d30b78c051f5cbfdc30572bd3dcad3f2a5a6c188ab6bbf5"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/DeviceVoice.kt",
+      "bytes": 11233,
+      "sha256": "efc6c74ab33949d8f952e87a429c450aa8165a6cbef812af71ccddc905c1d5a2"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/InterviewModel.kt",
+      "bytes": 18517,
+      "sha256": "a4344257778f2af135246c348388e300dc8b8b96ba3ac8e4cb074f9479ad4e1f"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/MainActivity.kt",
+      "bytes": 18370,
+      "sha256": "bc3d6c6bee76bd116842b97f73ac8035d018d52ff1a2400a0a3fb46796e170db"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/ManualSessionSnapshot.kt",
+      "bytes": 2224,
+      "sha256": "cb567f3367653db4c1b8db4ef4fa5dbbd226dbca2b9fd094ebcbd01d47d6f706"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/NativeOidc.kt",
+      "bytes": 5114,
+      "sha256": "0cbe4d56c2bdd06cc819004a69a436a311a2a43a6b894b21c2f6419a8bd91699"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/OidcChecks.kt",
+      "bytes": 635,
+      "sha256": "c5ea30110b6906b3f5358d56aaa5ee83452d1c076d7f1592a320acb002ee4492"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/OidcRedirectActivity.kt",
+      "bytes": 646,
+      "sha256": "3dbcce68b412266f72cdf1ceaee0bdd0dd2f875ec3dc34f8adacf6ca068dcbc8"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/RuntimeClient.kt",
+      "bytes": 2392,
+      "sha256": "6292c5b1e22f2e3dcd5b634528b826177224c0aaafecf4a9a2473f80fc9777db"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/SelectedFiles.kt",
+      "bytes": 3683,
+      "sha256": "ab2c239cc24f7c94e87be266675504514e836e6955cbf1f3f19f13f635501335"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/VoiceCapture.kt",
+      "bytes": 2625,
+      "sha256": "2eee47e47cc656dde41c5d0e3e47a1dbf264af7c31e85f38c8e1051ec59c9e1b"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/res/drawable/ic_launcher.xml",
+      "bytes": 469,
+      "sha256": "2a80f7ee55309a38bc7245acd98c07b4b518f15566ee24611aaaee1a4370fe69"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/res/xml/data_extraction_rules.xml",
+      "bytes": 1148,
+      "sha256": "81c62699b03efc4299542dd7177f75df46b03e10a84c4914403e9aa665315780"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/test/java/dev/careerground/interview/SelectedFilesTest.kt",
+      "bytes": 876,
+      "sha256": "5c23f85834eaf17a59769df8e30512a342a75bfec5fc86644d3b75a2782df17c"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/test/java/dev/careerground/interview/VoiceCaptureTest.kt",
+      "bytes": 3835,
+      "sha256": "63b30a8bafef896b85459317355faa4c6877aee7f53c513177793220ab5c24f6"
+    },
+    {
+      "path": "apps/mock-interview/android/build.gradle.kts",
+      "bytes": 218,
+      "sha256": "52f9b95bdc89db4b3641d7c0684e8d92f62cbfdd5c83168a9eead5ff041b4c95"
+    },
+    {
+      "path": "apps/mock-interview/android/gradle/wrapper/gradle-wrapper.jar",
+      "bytes": 43705,
+      "sha256": "81a82aaea5abcc8ff68b3dfcb58b3c3c429378efd98e7433460610fecd7ae45f"
+    },
+    {
+      "path": "apps/mock-interview/android/gradle/wrapper/gradle-wrapper.properties",
+      "bytes": 338,
+      "sha256": "c040b6ef2fb893ff5beea5a281614f2848f1c3996a7886f650b713f8240656a2"
+    },
+    {
+      "path": "apps/mock-interview/android/gradle.properties",
+      "bytes": 137,
+      "sha256": "ff06a9a9eba81db8f240b9887bcecba1c48d62b4886289b3f8b3c38432bf7e4d"
+    },
+    {
+      "path": "apps/mock-interview/android/gradlew",
+      "bytes": 8752,
+      "sha256": "734b3879d3501dce471cf0522d3bcbafe76873d9fc5129345b67fb43bd15e933"
+    },
+    {
+      "path": "apps/mock-interview/android/gradlew.bat",
+      "bytes": 2966,
+      "sha256": "57931b17dd228e5c24dac90e815d0bf82477e831a4618dfab4136f5446b42a9f"
+    },
+    {
+      "path": "apps/mock-interview/android/settings.gradle.kts",
+      "bytes": 290,
+      "sha256": "b04abeb808ee87ce827a2484248df712df1480edfed3d37a2abd143b8285cea7"
+    },
+    {
+      "path": "apps/mock-interview/config/auth0-dev.public.json",
+      "bytes": 347,
+      "sha256": "ea30c5c9632f43f9373bed5c37e395c4683ee9ac7ce8a7820bfa52dbfc753ea1"
+    },
+    {
+      "path": "apps/mock-interview/contracts/session-0.1.schema.json",
+      "bytes": 10991,
+      "sha256": "33971284924fda4e8dc94307806c7a1e55b6124ceae61d0775ec7469790e6823"
+    }
+  ]
+}

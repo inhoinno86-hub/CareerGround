@@ -1,0 +1,6 @@
+*.log
+gradle-thread-diagnostic.txt
+__pycache__/
+*.pid
+/*.apk
+/native-run-status.json

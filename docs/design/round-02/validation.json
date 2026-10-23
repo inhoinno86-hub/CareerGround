@@ -1,0 +1,487 @@
+{
+  "scope": "HTML visual prototypes, not Android rendering or device validation",
+  "renderer": "Independent headless Chrome, existing local fonts, no external resources",
+  "pageErrors": [],
+  "layoutChecks": [
+    {
+      "concept": "folio",
+      "theme": "default",
+      "width": 1380,
+      "pageOverflow": false,
+      "phones": [
+        {
+          "concept": "folio",
+          "width": 390,
+          "overflow": 0,
+          "scrollWidth": 0,
+          "controls": [
+            {
+              "bottom": 791,
+              "height": 54
+            }
+          ]
+        },
+        {
+          "concept": "folio",
+          "width": 390,
+          "overflow": 0,
+          "scrollWidth": 0,
+          "controls": [
+            {
+              "bottom": 791,
+              "height": 54
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "concept": "folio",
+      "theme": "alternate",
+      "width": 1380,
+      "pageOverflow": false,
+      "phones": [
+        {
+          "concept": "folio",
+          "width": 390,
+          "overflow": 0,
+          "scrollWidth": 0,
+          "controls": [
+            {
+              "bottom": 791,
+              "height": 54
+            }
+          ]
+        },
+        {
+          "concept": "folio",
+          "width": 390,
+          "overflow": 0,
+          "scrollWidth": 0,
+          "controls": [
+            {
+              "bottom": 791,
+              "height": 54
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "concept": "orbit",
+      "theme": "default",
+      "width": 1380,
+      "pageOverflow": false,
+      "phones": [
+        {
+          "concept": "orbit",
+          "width": 390,
+          "overflow": 0,
+          "scrollWidth": 0,
+          "controls": [
+            {
+              "bottom": 791,
+              "height": 54
+            }
+          ]
+        },
+        {
+          "concept": "orbit",
+          "width": 390,
+          "overflow": 0,
+          "scrollWidth": 0,
+          "controls": [
+            {
+              "bottom": 775,
+              "height": 54
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "concept": "orbit",
+      "theme": "alternate",
+      "width": 1380,
+      "pageOverflow": false,
+      "phones": [
+        {
+          "concept": "orbit",
+          "width": 390,
+          "overflow": 0,
+          "scrollWidth": 0,
+          "controls": [
+            {
+              "bottom": 791,
+              "height": 54
+            }
+          ]
+        },
+        {
+          "concept": "orbit",
+          "width": 390,
+          "overflow": 0,
+          "scrollWidth": 0,
+          "controls": [
+            {
+              "bottom": 775,
+              "height": 54
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "concept": "blocks",
+      "theme": "default",
+      "width": 1380,
+      "pageOverflow": false,
+      "phones": [
+        {
+          "concept": "blocks",
+          "width": 390,
+          "overflow": 0,
+          "scrollWidth": 0,
+          "controls": [
+            {
+              "bottom": 818,
+              "height": 64
+            }
+          ]
+        },
+        {
+          "concept": "blocks",
+          "width": 390,
+          "overflow": 0,
+          "scrollWidth": 0,
+          "controls": [
+            {
+              "bottom": 816,
+              "height": 54
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "concept": "blocks",
+      "theme": "alternate",
+      "width": 1380,
+      "pageOverflow": false,
+      "phones": [
+        {
+          "concept": "blocks",
+          "width": 390,
+          "overflow": 0,
+          "scrollWidth": 0,
+          "controls": [
+            {
+              "bottom": 818,
+              "height": 64
+            }
+          ]
+        },
+        {
+          "concept": "blocks",
+          "width": 390,
+          "overflow": 0,
+          "scrollWidth": 0,
+          "controls": [
+            {
+              "bottom": 816,
+              "height": 54
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "concept": "trail",
+      "theme": "default",
+      "width": 1380,
+      "pageOverflow": false,
+      "phones": [
+        {
+          "concept": "trail",
+          "width": 390,
+          "overflow": 0,
+          "scrollWidth": 0,
+          "controls": [
+            {
+              "bottom": 791,
+              "height": 54
+            }
+          ]
+        },
+        {
+          "concept": "trail",
+          "width": 390,
+          "overflow": 0,
+          "scrollWidth": 0,
+          "controls": [
+            {
+              "bottom": 791,
+              "height": 54
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "concept": "trail",
+      "theme": "alternate",
+      "width": 1380,
+      "pageOverflow": false,
+      "phones": [
+        {
+          "concept": "trail",
+          "width": 390,
+          "overflow": 0,
+          "scrollWidth": 0,
+          "controls": [
+            {
+              "bottom": 791,
+              "height": 54
+            }
+          ]
+        },
+        {
+          "concept": "trail",
+          "width": 390,
+          "overflow": 0,
+          "scrollWidth": 0,
+          "controls": [
+            {
+              "bottom": 791,
+              "height": 54
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "concept": "still",
+      "theme": "default",
+      "width": 1380,
+      "pageOverflow": false,
+      "phones": [
+        {
+          "concept": "still",
+          "width": 390,
+          "overflow": 0,
+          "scrollWidth": 0,
+          "controls": [
+            {
+              "bottom": 775,
+              "height": 62
+            }
+          ]
+        },
+        {
+          "concept": "still",
+          "width": 390,
+          "overflow": 0,
+          "scrollWidth": 0,
+          "controls": [
+            {
+              "bottom": 791,
+              "height": 46
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "concept": "still",
+      "theme": "alternate",
+      "width": 1380,
+      "pageOverflow": false,
+      "phones": [
+        {
+          "concept": "still",
+          "width": 390,
+          "overflow": 0,
+          "scrollWidth": 0,
+          "controls": [
+            {
+              "bottom": 775,
+              "height": 62
+            }
+          ]
+        },
+        {
+          "concept": "still",
+          "width": 390,
+          "overflow": 0,
+          "scrollWidth": 0,
+          "controls": [
+            {
+              "bottom": 791,
+              "height": 46
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "concept": "folio",
+      "theme": "mobile-default",
+      "width": 390,
+      "pageOverflow": false,
+      "phones": [
+        {
+          "concept": "folio",
+          "width": 362,
+          "overflow": 0,
+          "scrollWidth": 0,
+          "controls": [
+            {
+              "bottom": 791,
+              "height": 54
+            }
+          ]
+        },
+        {
+          "concept": "folio",
+          "width": 362,
+          "overflow": 0,
+          "scrollWidth": 0,
+          "controls": [
+            {
+              "bottom": 791,
+              "height": 54
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "concept": "orbit",
+      "theme": "mobile-default",
+      "width": 390,
+      "pageOverflow": false,
+      "phones": [
+        {
+          "concept": "orbit",
+          "width": 362,
+          "overflow": 0,
+          "scrollWidth": 0,
+          "controls": [
+            {
+              "bottom": 791,
+              "height": 54
+            }
+          ]
+        },
+        {
+          "concept": "orbit",
+          "width": 362,
+          "overflow": 0,
+          "scrollWidth": 0,
+          "controls": [
+            {
+              "bottom": 775,
+              "height": 54
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "concept": "blocks",
+      "theme": "mobile-default",
+      "width": 390,
+      "pageOverflow": false,
+      "phones": [
+        {
+          "concept": "blocks",
+          "width": 362,
+          "overflow": 0,
+          "scrollWidth": 0,
+          "controls": [
+            {
+              "bottom": 818,
+              "height": 64
+            }
+          ]
+        },
+        {
+          "concept": "blocks",
+          "width": 362,
+          "overflow": 0,
+          "scrollWidth": 0,
+          "controls": [
+            {
+              "bottom": 816,
+              "height": 54
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "concept": "trail",
+      "theme": "mobile-default",
+      "width": 390,
+      "pageOverflow": false,
+      "phones": [
+        {
+          "concept": "trail",
+          "width": 362,
+          "overflow": 0,
+          "scrollWidth": 0,
+          "controls": [
+            {
+              "bottom": 791,
+              "height": 54
+            }
+          ]
+        },
+        {
+          "concept": "trail",
+          "width": 362,
+          "overflow": 0,
+          "scrollWidth": 0,
+          "controls": [
+            {
+              "bottom": 791,
+              "height": 54
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "concept": "still",
+      "theme": "mobile-default",
+      "width": 390,
+      "pageOverflow": false,
+      "phones": [
+        {
+          "concept": "still",
+          "width": 362,
+          "overflow": 0,
+          "scrollWidth": 0,
+          "controls": [
+            {
+              "bottom": 775,
+              "height": 62
+            }
+          ]
+        },
+        {
+          "concept": "still",
+          "width": 362,
+          "overflow": 0,
+          "scrollWidth": 0,
+          "controls": [
+            {
+              "bottom": 791,
+              "height": 46
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

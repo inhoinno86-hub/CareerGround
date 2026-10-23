@@ -1,0 +1,405 @@
+{
+  "serial": "emulator-5580",
+  "scope": "Native Compose preview with synthetic states; no live audio, file or AI calls",
+  "checks": [
+    {
+      "name": "home-light",
+      "scenario": "home",
+      "theme": "light",
+      "width": 1080,
+      "height": 2340,
+      "fontScale": 1.0,
+      "keyboardRequested": false,
+      "submitControls": [],
+      "imeObserved": false,
+      "keyboardTop": null
+    },
+    {
+      "name": "interview-light",
+      "scenario": "interview",
+      "theme": "light",
+      "width": 1080,
+      "height": 2340,
+      "fontScale": 1.0,
+      "keyboardRequested": false,
+      "submitControls": [
+        {
+          "text": "확인한 답변 제출",
+          "bounds": [
+            116,
+            2124,
+            885,
+            2182
+          ],
+          "textNodeEnabled": "true"
+        }
+      ],
+      "imeObserved": false,
+      "keyboardTop": null
+    },
+    {
+      "name": "result-light",
+      "scenario": "result",
+      "theme": "light",
+      "width": 1080,
+      "height": 2340,
+      "fontScale": 1.0,
+      "keyboardRequested": false,
+      "submitControls": [],
+      "imeObserved": false,
+      "keyboardTop": null
+    },
+    {
+      "name": "import-light",
+      "scenario": "import",
+      "theme": "light",
+      "width": 1080,
+      "height": 2340,
+      "fontScale": 1.0,
+      "keyboardRequested": false,
+      "submitControls": [],
+      "imeObserved": false,
+      "keyboardTop": null
+    },
+    {
+      "name": "review-light",
+      "scenario": "review",
+      "theme": "light",
+      "width": 1080,
+      "height": 2340,
+      "fontScale": 1.0,
+      "keyboardRequested": false,
+      "submitControls": [],
+      "imeObserved": false,
+      "keyboardTop": null
+    },
+    {
+      "name": "empty-light",
+      "scenario": "empty",
+      "theme": "light",
+      "width": 1080,
+      "height": 2340,
+      "fontScale": 1.0,
+      "keyboardRequested": false,
+      "submitControls": [],
+      "imeObserved": false,
+      "keyboardTop": null
+    },
+    {
+      "name": "login-light",
+      "scenario": "login",
+      "theme": "light",
+      "width": 1080,
+      "height": 2340,
+      "fontScale": 1.0,
+      "keyboardRequested": false,
+      "submitControls": [],
+      "imeObserved": false,
+      "keyboardTop": null
+    },
+    {
+      "name": "voice-light",
+      "scenario": "voice",
+      "theme": "light",
+      "width": 1080,
+      "height": 2340,
+      "fontScale": 1.0,
+      "keyboardRequested": false,
+      "submitControls": [
+        {
+          "text": "확인한 답변 제출",
+          "bounds": [
+            116,
+            2124,
+            885,
+            2182
+          ],
+          "textNodeEnabled": "true"
+        }
+      ],
+      "imeObserved": false,
+      "keyboardTop": null
+    },
+    {
+      "name": "generating-light",
+      "scenario": "generating",
+      "theme": "light",
+      "width": 1080,
+      "height": 2340,
+      "fontScale": 1.0,
+      "keyboardRequested": false,
+      "submitControls": [],
+      "imeObserved": false,
+      "keyboardTop": null
+    },
+    {
+      "name": "error-light",
+      "scenario": "error",
+      "theme": "light",
+      "width": 1080,
+      "height": 2340,
+      "fontScale": 1.0,
+      "keyboardRequested": false,
+      "submitControls": [],
+      "imeObserved": false,
+      "keyboardTop": null
+    },
+    {
+      "name": "paused-light",
+      "scenario": "paused",
+      "theme": "light",
+      "width": 1080,
+      "height": 2340,
+      "fontScale": 1.0,
+      "keyboardRequested": false,
+      "submitControls": [],
+      "imeObserved": false,
+      "keyboardTop": null
+    },
+    {
+      "name": "expired-light",
+      "scenario": "expired",
+      "theme": "light",
+      "width": 1080,
+      "height": 2340,
+      "fontScale": 1.0,
+      "keyboardRequested": false,
+      "submitControls": [],
+      "imeObserved": false,
+      "keyboardTop": null
+    },
+    {
+      "name": "simulation-light",
+      "scenario": "simulation",
+      "theme": "light",
+      "width": 1080,
+      "height": 2340,
+      "fontScale": 1.0,
+      "keyboardRequested": false,
+      "submitControls": [
+        {
+          "text": "수정 답변 제출",
+          "bounds": [
+            116,
+            2124,
+            885,
+            2182
+          ],
+          "textNodeEnabled": "true"
+        }
+      ],
+      "imeObserved": false,
+      "keyboardTop": null
+    },
+    {
+      "name": "saved-ready-light",
+      "scenario": "saved-ready",
+      "theme": "light",
+      "width": 1080,
+      "height": 2340,
+      "fontScale": 1.0,
+      "keyboardRequested": false,
+      "submitControls": [],
+      "imeObserved": false,
+      "keyboardTop": null
+    },
+    {
+      "name": "home-dark",
+      "scenario": "home",
+      "theme": "dark",
+      "width": 1080,
+      "height": 2340,
+      "fontScale": 1.0,
+      "keyboardRequested": false,
+      "submitControls": [],
+      "imeObserved": false,
+      "keyboardTop": null
+    },
+    {
+      "name": "interview-dark",
+      "scenario": "interview",
+      "theme": "dark",
+      "width": 1080,
+      "height": 2340,
+      "fontScale": 1.0,
+      "keyboardRequested": false,
+      "submitControls": [
+        {
+          "text": "확인한 답변 제출",
+          "bounds": [
+            116,
+            2124,
+            885,
+            2182
+          ],
+          "textNodeEnabled": "true"
+        }
+      ],
+      "imeObserved": false,
+      "keyboardTop": null
+    },
+    {
+      "name": "result-dark",
+      "scenario": "result",
+      "theme": "dark",
+      "width": 1080,
+      "height": 2340,
+      "fontScale": 1.0,
+      "keyboardRequested": false,
+      "submitControls": [],
+      "imeObserved": false,
+      "keyboardTop": null
+    },
+    {
+      "name": "review-dark",
+      "scenario": "review",
+      "theme": "dark",
+      "width": 1080,
+      "height": 2340,
+      "fontScale": 1.0,
+      "keyboardRequested": false,
+      "submitControls": [],
+      "imeObserved": false,
+      "keyboardTop": null
+    },
+    {
+      "name": "import-dark",
+      "scenario": "import",
+      "theme": "dark",
+      "width": 1080,
+      "height": 2340,
+      "fontScale": 1.0,
+      "keyboardRequested": false,
+      "submitControls": [],
+      "imeObserved": false,
+      "keyboardTop": null
+    },
+    {
+      "name": "interview-narrow",
+      "scenario": "draft",
+      "theme": "light",
+      "width": 884,
+      "height": 2208,
+      "fontScale": 1.0,
+      "keyboardRequested": false,
+      "submitControls": [
+        {
+          "text": "확인한 답변 제출",
+          "bounds": [
+            116,
+            2013,
+            689,
+            2071
+          ],
+          "textNodeEnabled": "true"
+        }
+      ],
+      "imeObserved": false,
+      "keyboardTop": null
+    },
+    {
+      "name": "interview-wide",
+      "scenario": "draft",
+      "theme": "light",
+      "width": 1768,
+      "height": 2208,
+      "fontScale": 1.0,
+      "keyboardRequested": false,
+      "submitControls": [
+        {
+          "text": "확인한 답변 제출",
+          "bounds": [
+            116,
+            2013,
+            1573,
+            2071
+          ],
+          "textNodeEnabled": "true"
+        }
+      ],
+      "imeObserved": false,
+      "keyboardTop": null
+    },
+    {
+      "name": "interview-landscape",
+      "scenario": "draft",
+      "theme": "light",
+      "width": 2208,
+      "height": 1768,
+      "fontScale": 1.0,
+      "keyboardRequested": false,
+      "submitControls": [
+        {
+          "text": "확인한 답변 제출",
+          "bounds": [
+            116,
+            1552,
+            2013,
+            1610
+          ],
+          "textNodeEnabled": "true"
+        }
+      ],
+      "imeObserved": false,
+      "keyboardTop": null
+    },
+    {
+      "name": "interview-large-font",
+      "scenario": "draft",
+      "theme": "light",
+      "width": 1080,
+      "height": 2340,
+      "fontScale": 1.5,
+      "keyboardRequested": false,
+      "submitControls": [
+        {
+          "text": "확인한 답변 제출",
+          "bounds": [
+            116,
+            2117,
+            885,
+            2208
+          ],
+          "textNodeEnabled": "true"
+        }
+      ],
+      "imeObserved": false,
+      "keyboardTop": null
+    },
+    {
+      "name": "home-large-font",
+      "scenario": "home",
+      "theme": "light",
+      "width": 1080,
+      "height": 2340,
+      "fontScale": 1.5,
+      "keyboardRequested": false,
+      "submitControls": [],
+      "imeObserved": false,
+      "keyboardTop": null
+    },
+    {
+      "name": "interview-keyboard",
+      "scenario": "draft",
+      "theme": "light",
+      "width": 1080,
+      "height": 2340,
+      "fontScale": 1.0,
+      "keyboardRequested": true,
+      "submitControls": [
+        {
+          "text": "확인한 답변 제출",
+          "bounds": [
+            116,
+            1325,
+            885,
+            1383
+          ],
+          "textNodeEnabled": "true"
+        }
+      ],
+      "imeObserved": true,
+      "keyboardTop": null
+    }
+  ]
+}

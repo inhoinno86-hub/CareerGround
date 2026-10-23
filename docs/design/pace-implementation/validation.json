@@ -1,0 +1,61 @@
+{
+  "direction": "Round 03 / 03 PACE",
+  "scope": "Independent Compose preview and UI-only integration preparation",
+  "builds": {
+    "latestPreview": "PASS",
+    "paceUi": "PASS",
+    "latestFunctionalAdapterFixture": "PASS"
+  },
+  "instrumentation": {
+    "preview": 10,
+    "adapter": 4,
+    "failed": 0
+  },
+  "nativeConfigurations": 25,
+  "keyboardObserved": true,
+  "lint": {
+    "pace-ui": {
+      "errors": 0,
+      "warnings": 0
+    },
+    "design-preview": {
+      "errors": 0,
+      "warnings": 0
+    },
+    "integration-check": {
+      "errors": 0,
+      "warnings": 2
+    }
+  },
+  "integrationPatch": "PREPARED_AND_CHECKED_NOT_APPLIED",
+  "sourceFilesUnchanged": 13,
+  "previewApk": {
+    "applicationId": "dev.careerground.interview.design",
+    "versionCode": 2,
+    "bytes": 28128647,
+    "sha256": "42d89e18c28b00ab04b69cef2b51147a61a15ea568e7cae78c46bfa7ddd9ea8a"
+  },
+  "cleanup": {
+    "state": "complete",
+    "steps": [
+      "owned AVD booted",
+      "preview 10 tests PASS",
+      "adapter 4 tests PASS",
+      "native capture PASS"
+    ],
+    "ownedEmulatorPid": 76568,
+    "ownedEmulatorStopped": true
+  },
+  "limits": [
+    "Synthetic states and adapter mapping only",
+    "No new real OIDC/audio/AI/SAF end-to-end validation",
+    "Screen size overrides, not physical hinge/multi-window certification"
+  ],
+  "selfReview": [
+    "PACE structure retained",
+    "Dark preview settings/status area corrected",
+    "Large font scroll and keyboard submit dock visually inspected",
+    "Session export and screen snapshot scope distinguished",
+    "Long sources paginated and report conversion cached"
+  ]
+}

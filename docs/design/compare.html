@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ko">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CareerGround · 디자인 방향 비교</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#e9edf2;color:#192b47;font-family:"Noto Sans KR","Apple SD Gothic Neo",sans-serif;line-height:1.6}
+main{max-width:1200px;margin:auto;padding:44px 28px 60px}h1{font-size:30px;line-height:1.4;margin:8px 0 12px;letter-spacing:-1px}
+.eyebrow{font-size:12px;letter-spacing:1.4px;font-weight:700;color:#53647d}header p{max-width:760px;margin:0;color:#53647d;font-size:15px}
+.tools{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin:26px 0 32px}button{font:inherit;cursor:pointer;border:1px solid #b5becb;background:#fff;color:#192b47;padding:10px 18px;border-radius:12px;font-weight:600;font-size:14px;min-height:46px}
+button[aria-pressed=true]{background:#192b47;color:white;border-color:#192b47}button:focus-visible{outline:3px solid #315bd6;outline-offset:3px}.tools span{font-size:12px;color:#53647d}
+.candidates{display:grid;grid-template-columns:1fr 1fr;gap:28px}.caption{display:flex;align-items:baseline;gap:12px;margin-bottom:14px}.caption h2{font-size:20px;margin:0}.caption span{font-size:13px;color:#53647d}
+.phone{--bg:#f4f7fc;--surface:#fff;--ink:#192b47;--muted:#53647d;--primary:#315bd6;--accent:#ece8ff;--onprimary:#fff;--line:#53647d38;background:var(--bg);color:var(--ink);border:1px solid #192b471f;border-radius:30px;padding:28px 30px;min-height:860px;box-shadow:0 16px 35px #192b470b}
+.teal{--bg:#f2f7f6;--ink:#173a37;--muted:#4f6d67;--primary:#13766a;--accent:#e4f0c7;--line:#4f6d6738}
+.dark .phone{--bg:#101827;--surface:#19243a;--ink:#edf2ff;--muted:#afbdd5;--primary:#afc4ff;--accent:#34304f;--onprimary:#101827;--line:#afbdd538}
+.dark .teal{--bg:#101d1b;--surface:#192c28;--ink:#e5f3ee;--muted:#adc8be;--primary:#83d9c4;--accent:#35432b;--onprimary:#101d1b;--line:#adc8be38}
+.status{display:flex;justify-content:space-between;font-size:12px;font-weight:700;margin-bottom:28px}.brand{font-size:20px;font-weight:700;letter-spacing:-.5px;display:flex;align-items:center;gap:8px;margin-bottom:32px}
+.brand svg{width:24px;height:24px;color:var(--primary)}h3{font-size:30px;line-height:1.4;letter-spacing:-1.1px;margin:0 0 16px;font-weight:750}p{margin:0}.intro{font-size:16px;color:var(--muted);line-height:1.7;margin-bottom:26px}
+.card{padding:24px;background:var(--surface);border:1px solid var(--line);border-radius:24px;margin-bottom:16px}.label{font-size:12px;font-weight:700;color:var(--primary);margin-bottom:8px}.card h4{font-size:20px;line-height:1.5;margin:0 0 8px;letter-spacing:-.4px}.card p{font-size:14px;color:var(--muted)}
+.minor{font-size:12px!important;color:var(--muted);line-height:1.65;margin-top:10px}.section-title{font-size:20px;font-weight:700;margin:26px 0 16px;letter-spacing:-.4px}
+.cta{display:block;width:100%;background:var(--primary);color:var(--onprimary);border:0;border-radius:16px;padding:14px;margin-top:18px;text-align:center;min-height:52px}.secondary{border:1px solid var(--primary);background:transparent;color:var(--primary)}
+.quiet{color:var(--muted);font-size:12px;margin-top:24px}.back{border:0;background:none;color:var(--primary);padding:0;min-height:40px;margin-bottom:12px;font-size:13px}
+.progress{height:4px;background:var(--line);border-radius:4px;margin:10px 0 28px;overflow:hidden}.progress:before{content:"";display:block;height:100%;width:20%;background:var(--primary)}
+.question{font-size:24px;line-height:1.5;letter-spacing:-.7px}.context{background:var(--accent);padding:20px;border-radius:16px;margin:22px 0}.context .label{color:var(--ink)}.context p{font-size:15px}.context .minor{color:var(--ink);opacity:.8}
+.input{border:1px solid var(--muted);border-radius:10px;padding:16px;min-height:146px;line-height:1.8;margin:16px 0 8px;font-size:15px}.input small{display:block;color:var(--muted);font-size:12px;margin-bottom:8px}
+.check{display:flex;gap:12px;font-size:13px;align-items:flex-start;margin-top:20px}.check span:first-child{width:18px;height:18px;flex:none;border:1.5px solid var(--muted);border-radius:3px;margin-top:2px}
+.rule{border:0;border-top:1px solid var(--line);margin:20px 0}.swatches{display:flex;gap:7px;margin:16px 0 0}.swatches i{width:22px;height:22px;border-radius:50%;border:1px solid #192b4726;background:var(--color)}
+.notes{margin-top:30px;padding-top:24px;border-top:1px solid #192b4726;font-size:13px;color:#53647d}.notes strong{color:#192b47} .action-note{font-size:12px;color:var(--primary);margin-top:12px}
+@media(max-width:780px){main{padding:28px 18px}.candidates{grid-template-columns:1fr}.phone{min-height:0;padding:26px 24px}.caption{margin-top:12px}h1{font-size:26px}.caption span{font-size:12px}}
+@media(prefers-reduced-motion:no-preference){.phone{transition:background .15s,color .15s}}
+</style>
+<main>
+  <header>
+    <div class="eyebrow">CAREERGROUND / DESIGN EXPLORATION 01</div>
+    <h1>편안하게 시작하고, 내 답변에 집중하는 면접 연습</h1>
+    <p>신입·경력직 모두를 위한 성장 파트너. 담백한 존댓말, 명확한 다음 행동, 절제된 그림을 두 가지 색상 방향으로 비교합니다.</p>
+  </header>
+  <div class="tools" aria-label="비교 화면 선택">
+    <button data-screen="home" aria-pressed="true">시작 화면</button>
+    <button data-screen="interview" aria-pressed="false">질문·답변</button>
+    <button data-screen="result" aria-pressed="false">결과</button>
+    <button id="theme" aria-pressed="false">어두운 화면</button>
+    <span>시각 비교용 HTML · Android 렌더링과 차이가 있을 수 있습니다.</span>
+  </div>
+  <div class="candidates">
+    <section><div class="caption"><h2>A · 맑은 블루</h2><span>명료한 안내, 편안한 시작</span></div><div class="phone" id="blue"></div></section>
+    <section><div class="caption"><h2>B · 그라운드 틸</h2><span>차분한 성장, 답변에 집중</span></div><div class="phone teal" id="teal"></div></section>
+  </div>
+  <div class="notes"><strong>비교할 때는 세 가지만 봐주세요.</strong> 어느 쪽을 자주 열고 싶은지, 질문과 답변이 편하게 읽히는지, 주요 버튼이 바로 눈에 들어오는지.<br>
+  모두 합성 예시입니다. 실제 로그인·자료 가져오기·녹음·AI 평가·저장은 실행하지 않습니다. 짧은 연습과 대상별 안내의 실제 기능 연결은 추후 통합 범위에서 검토합니다.</div>
+</main>
+<script>
+const icon='<svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M5 18V6h4v12m3 0V10h4v8m3 0V4" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><path d="M3 21h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+const brand='<div class="status"><span>9:41</span><span>● ▰</span></div><div class="brand">'+icon+'CareerGround</div>';
+const home=`<h3>내 경험을,<br>나의 답변으로.</h3><p class="intro">지원할 직무에 맞춰 말하는 연습을<br>시작해 보세요.</p>
+<div class="card"><div class="label">연습 자료</div><h4>서비스 운영 직무</h4><p>프로젝트 경험 · 이력서 · 지원 공고</p><p class="minor">합성 자료로 보여주는 준비 완료 상태입니다.</p></div>
+<div class="section-title">어떻게 연습할까요?</div>
+<div class="card"><h4>한 질문 연습</h4><p>잠깐의 시간에도, 한 답변에 집중해요.</p><button class="cta" data-go="interview">한 질문 시작</button></div>
+<div class="card"><h4>한 회차 연습</h4><p>질문을 이어가며 답변의 흐름을 살펴봐요.</p><button class="cta secondary" data-go="interview">한 회차 시작</button></div>
+<p class="quiet">연습 내용은 자동 저장되지 않습니다.<br>마친 뒤 파일로 저장해 주세요.</p>`;
+const interview=`<button class="back" data-go="home">← 연습 선택으로</button><div class="label">질문 1 / 5</div><div class="progress"></div>
+<h3 class="question">문제를 해결했던 경험과<br>직접 맡은 역할을 알려주세요.</h3>
+<div class="context"><div class="label">이 질문과 연결된 경험</div><p>문제 해결 역량 → 팀 프로젝트</p><p class="minor">선택한 자료의 근거 예시입니다.</p></div>
+<p class="intro">상황, 직접 한 일, 결과 순서로<br>이야기해 보세요.</p>
+<div class="card"><h4>내 답변</h4><button class="cta secondary" data-notice="음성 버튼의 배치 예시입니다. 실제 녹음은 시작하지 않습니다.">말로 답변하기 · 화면 예시</button>
+<div class="input"><small>답변 초안</small>팀 프로젝트에서 맡은 역할과 문제를 해결한 과정을 정리했습니다.</div>
+<p class="minor">말하거나 입력한 뒤 내용을 수정할 수 있습니다.</p>
+<div class="check"><span></span><span>숫자·기간·역할·동료의 기여를 확인했습니다.</span></div>
+<button class="cta" data-go="result">제출 후 화면 보기</button></div>`;
+const result=`<h3>이번 답변을<br>돌아볼 시간입니다.</h3><p class="intro">예시 피드백 · 실제 AI 평가가 아닙니다.</p>
+<div class="card"><div class="label">답변에 담긴 내용</div><h4 style="font-size:17px;font-weight:500">팀 프로젝트와 본인의 역할을 언급했습니다.</h4>
+<hr class="rule"><div class="label">다음에 보완할 점</div><p style="font-size:16px;color:var(--ink)">직접 한 행동을 한 가지 더 구체적으로 설명해 보세요.</p></div>
+<div class="context"><div class="label">다음 연습</div><p>“내가 직접 한 일”을 중심으로<br>답변을 다듬어 보세요.</p></div>
+<button class="cta" data-notice="결과 저장 버튼의 예시입니다. 파일은 생성하지 않습니다.">결과 파일로 저장 · 화면 예시</button>
+<p class="quiet">AI 피드백과 사실 후보는 기존 경력에<br>자동 반영되지 않습니다.</p><button class="cta secondary" data-go="home">연습 선택으로</button>`;
+let selected='home';
+function render(){for(const id of ['blue','teal'])document.getElementById(id).innerHTML=brand+({home,interview,result}[selected]);document.querySelectorAll('[data-screen]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.screen===selected));}
+document.addEventListener('click',e=>{const button=e.target.closest('button');if(!button)return;if(button.dataset.screen||button.dataset.go){selected=button.dataset.screen||button.dataset.go;render();}if(button.dataset.notice){let note=button.parentElement.querySelector('.action-note');if(!note){note=document.createElement('p');note.className='action-note';note.setAttribute('role','status');button.after(note);}note.textContent=button.dataset.notice;}});
+function setDark(value){document.body.classList.toggle('dark',value);document.getElementById('theme').setAttribute('aria-pressed',String(value));}
+const preference=window.matchMedia('(prefers-color-scheme: dark)');setDark(preference.matches);preference.addEventListener('change',e=>setDark(e.matches));
+document.getElementById('theme').addEventListener('click',()=>setDark(!document.body.classList.contains('dark')));
+render();
+</script>
+</html>

@@ -1,0 +1,72 @@
+{
+  "source": "/home/inno/repo/CareerGround",
+  "source_head": "9bd1009237f6486285ec8192086d286e0a5e94f2",
+  "scope": "Public Android source/res only. Existing MainActivity entry retained, old Composable renamed in staging only.",
+  "files": [
+    {
+      "source_path": "apps/mock-interview/android/app/src/main/AndroidManifest.xml",
+      "sha256": "8da0f7839bfc8f6c1d30b78c051f5cbfdc30572bd3dcad3f2a5a6c188ab6bbf5",
+      "staged_sha256": "8da0f7839bfc8f6c1d30b78c051f5cbfdc30572bd3dcad3f2a5a6c188ab6bbf5"
+    },
+    {
+      "source_path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/DeviceVoice.kt",
+      "sha256": "efc6c74ab33949d8f952e87a429c450aa8165a6cbef812af71ccddc905c1d5a2",
+      "staged_sha256": "efc6c74ab33949d8f952e87a429c450aa8165a6cbef812af71ccddc905c1d5a2"
+    },
+    {
+      "source_path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/InterviewModel.kt",
+      "sha256": "a4344257778f2af135246c348388e300dc8b8b96ba3ac8e4cb074f9479ad4e1f",
+      "staged_sha256": "a4344257778f2af135246c348388e300dc8b8b96ba3ac8e4cb074f9479ad4e1f"
+    },
+    {
+      "source_path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/MainActivity.kt",
+      "sha256": "bc3d6c6bee76bd116842b97f73ac8035d018d52ff1a2400a0a3fb46796e170db",
+      "staged_sha256": "44d787c42c8a1488848b4102f8c9a2728ea583c0b6ec5441e7d22335d0509c3e"
+    },
+    {
+      "source_path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/ManualSessionSnapshot.kt",
+      "sha256": "cb567f3367653db4c1b8db4ef4fa5dbbd226dbca2b9fd094ebcbd01d47d6f706",
+      "staged_sha256": "cb567f3367653db4c1b8db4ef4fa5dbbd226dbca2b9fd094ebcbd01d47d6f706"
+    },
+    {
+      "source_path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/NativeOidc.kt",
+      "sha256": "0cbe4d56c2bdd06cc819004a69a436a311a2a43a6b894b21c2f6419a8bd91699",
+      "staged_sha256": "0cbe4d56c2bdd06cc819004a69a436a311a2a43a6b894b21c2f6419a8bd91699"
+    },
+    {
+      "source_path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/OidcChecks.kt",
+      "sha256": "c5ea30110b6906b3f5358d56aaa5ee83452d1c076d7f1592a320acb002ee4492",
+      "staged_sha256": "c5ea30110b6906b3f5358d56aaa5ee83452d1c076d7f1592a320acb002ee4492"
+    },
+    {
+      "source_path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/OidcRedirectActivity.kt",
+      "sha256": "3dbcce68b412266f72cdf1ceaee0bdd0dd2f875ec3dc34f8adacf6ca068dcbc8",
+      "staged_sha256": "3dbcce68b412266f72cdf1ceaee0bdd0dd2f875ec3dc34f8adacf6ca068dcbc8"
+    },
+    {
+      "source_path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/RuntimeClient.kt",
+      "sha256": "6292c5b1e22f2e3dcd5b634528b826177224c0aaafecf4a9a2473f80fc9777db",
+      "staged_sha256": "6292c5b1e22f2e3dcd5b634528b826177224c0aaafecf4a9a2473f80fc9777db"
+    },
+    {
+      "source_path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/SelectedFiles.kt",
+      "sha256": "ab2c239cc24f7c94e87be266675504514e836e6955cbf1f3f19f13f635501335",
+      "staged_sha256": "ab2c239cc24f7c94e87be266675504514e836e6955cbf1f3f19f13f635501335"
+    },
+    {
+      "source_path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/VoiceCapture.kt",
+      "sha256": "2eee47e47cc656dde41c5d0e3e47a1dbf264af7c31e85f38c8e1051ec59c9e1b",
+      "staged_sha256": "2eee47e47cc656dde41c5d0e3e47a1dbf264af7c31e85f38c8e1051ec59c9e1b"
+    },
+    {
+      "source_path": "apps/mock-interview/android/app/src/main/res/drawable/ic_launcher.xml",
+      "sha256": "2a80f7ee55309a38bc7245acd98c07b4b518f15566ee24611aaaee1a4370fe69",
+      "staged_sha256": "2a80f7ee55309a38bc7245acd98c07b4b518f15566ee24611aaaee1a4370fe69"
+    },
+    {
+      "source_path": "apps/mock-interview/android/app/src/main/res/xml/data_extraction_rules.xml",
+      "sha256": "81c62699b03efc4299542dd7177f75df46b03e10a84c4914403e9aa665315780",
+      "staged_sha256": "81c62699b03efc4299542dd7177f75df46b03e10a84c4914403e9aa665315780"
+    }
+  ]
+}

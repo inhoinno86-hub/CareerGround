@@ -12,3 +12,6 @@ rootProject.name = "CareerGroundInterview"
 include(":app")
 
 include(":pace-ui")
+
+// Synthetic design review app; independent from the functional app.
+include(":design-preview")
