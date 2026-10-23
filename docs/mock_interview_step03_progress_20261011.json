@@ -1,0 +1,61 @@
+{
+  "python": {
+    "status": "PASS",
+    "count": 44,
+    "kind": "offline_mock_and_auth_contract"
+  },
+  "portable_exchange": {
+    "status": "PASS",
+    "count": 7
+  },
+  "ruff": "PASS",
+  "git_diff_check": "PASS",
+  "android_instrumentation": {
+    "r2": "FAIL_1_OF_6_LOCKED",
+    "r3": "PASS_6_OF_6_SAME_APK"
+  },
+  "voice": {
+    "on_device_korean_ready": true,
+    "local_korean_tts_ready": true,
+    "actual_microphone": "PASS_PARTIAL_TRANSCRIPT_RETURNED",
+    "actual_tts_playback": "PASS_USER_HEARD",
+    "long_answer": "FAIL_EARLY_ENDPOINT_ORIGINAL_APK",
+    "fixed_long_answer": "PASS_USER_CONFIRMED_LAST_SENTENCE_OBSERVED"
+  },
+  "actual_codex_calls": 11,
+  "approved_limit": 12,
+  "paid_api_calls": 0,
+  "phone_ai": "PASS_ACTUAL_TEXT",
+  "phone_result_saf": "PASS_LOCAL_SCHEMA_REFERENCE_AND_ACTUAL_FINAL_SESSION_REIMPORT",
+  "chatgpt_host_review": "PASS_ACTUAL_REVIEW_FORMAL_VALIDATOR_UNAVAILABLE",
+  "screen_setting_restored": true,
+  "manual_blocker": null,
+  "loopback_runtime_waiting_for_callback": false,
+  "usb_reverse_8765_waiting_for_callback": false,
+  "artifact_root": "/home/inno/.local/share/careerground-android/artifacts/step03-20261011",
+  "phone_answer_revision": "PASS_V1_V2_V3_ON_DEVICE_CONFIRMED_WITH_MANUAL_EDIT",
+  "phone_feedback_required_gate": "PASS_409",
+  "microphone_denial_text_fallback": "PASS",
+  "temporary_voice_network_disabled": false,
+  "portable_regression": {
+    "status": "PASS",
+    "count": 35
+  },
+  "phone_network_restored": true,
+  "offline_voice": "NOT_VERIFIED",
+  "runtime_waiting_for_manual_voice": false,
+  "latest_report": "mock_interview_app_acceptance_20261011_r2.json",
+  "apk_version": "0.2.1-step03-voice",
+  "latest_login_recovery": {
+    "status": "PASS",
+    "observed_error": "invalid_request_transaction_session_missing",
+    "fresh_authorization": true,
+    "runtime_status": 200,
+    "registration_changes": false
+  },
+  "latest_manual_ram_snapshot_saf": {
+    "status": "PASS_SAVE_AND_SAME_ACCOUNT_REIMPORT",
+    "file": "careerground-session-step03-voice-ready-r1.json",
+    "reference": "mock_interview_voice_continuation_20261011.json"
+  }
+}

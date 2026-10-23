@@ -1,0 +1,98 @@
+{
+  "stage": "07",
+  "status": "INSTALLED_0.1.2_ACCEPTANCE_NOT_COMPLETE",
+  "authorization": {
+    "source": "user follow-up: 진행 부탁해",
+    "private_test_registration": true,
+    "test_plugin_installation": true,
+    "host_synthetic_evaluation": true,
+    "public_publication": false,
+    "modify_existing_registration_or_connection": false,
+    "step_08": false
+  },
+  "archive": "reports/serverless-plugin-transition-20261009/careerground-portable-0.1.2.zip",
+  "archive_sha256": "c0cb8bab6a97d57134b00837adfd1d3a238d88f72edcc3d63195532317845e8f",
+  "archive_matches_reviewed_record": true,
+  "browser_checks": [
+    {
+      "surface": "ChatGPT Browser connection",
+      "result": "NO_BROWSER_AVAILABLE",
+      "observed_browser_list": []
+    },
+    {
+      "surface": "Orca embedded browser",
+      "result": "RUNNING",
+      "plugin_directory_opened": true,
+      "authentication": "USER_SIGNED_IN",
+      "page_id": "6d4c4b37-c42b-4fbe-b6f4-26c030ab4745",
+      "origin": "https://chatgpt.com/auth/login?next=%2Fplugins",
+      "observed_controls": [
+        "로그인 또는 회원가입",
+        "Google 계정으로 계속하기",
+        "Apple 계정으로 계속하기",
+        "Email address",
+        "계속"
+      ]
+    }
+  ],
+  "external_changes": {
+    "archive_uploaded": true,
+    "private_test_registered": true,
+    "test_plugin_installed": true,
+    "published": false,
+    "existing_registration_changed": false,
+    "existing_connection_changed": false
+  },
+  "host_model_evaluation": {
+    "status": "EVALUATED_WITH_FAILURE_AND_LIMITS",
+    "cases_prepared": 24,
+    "observed_four_category_critical_failure_count": 0,
+    "blocking_preparation_failure_count": 1,
+    "downloaded_base_and_tailored_files_locally_validated": true,
+    "report": "docs/serverless_plugin_validation_20261010.json"
+  },
+  "next_required_input": "Material product decision only if changing the approved preparation criterion; no repeat installation permission needed.",
+  "plugin": {
+    "id": "Plugin_47a97bf406048191a8a671f47778376a",
+    "url": "https://chatgpt.com/plugins/Plugin_47a97bf406048191a8a671f47778376a",
+    "version": "0.1.2",
+    "skills_visible": 8,
+    "scope": "personal cloud plugin"
+  },
+  "observed_issues": [
+    {
+      "version": "0.1.0",
+      "issue": "setup initially failed to read shared support files through skills.read outside the skill directory; filesystem retry succeeded",
+      "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/setup-diagnostic-complete.json",
+      "correction": "0.1.1 generates scoped identical resources per skill and uses skill-relative paths",
+      "retest": "fresh setup read common rules and project instructions successfully"
+    },
+    {
+      "id": "UNPREPARED_COLLECTION_GENERAL_FOLLOWUP",
+      "version": "0.1.2",
+      "evidence": "declined-generic-0.1.2.json",
+      "criterion": "step 03: preparation required before actual career questions; step 07: representative steps 03–06 accepted",
+      "observed": "After refusing project setup, a generic follow-up was routed to general ChatGPT resume work and career questions were asked without an explicit outside-CareerGround request.",
+      "explicit_skill_retest": "PASS for declined/unsupported/move_failed; does not erase generic-followup failure",
+      "unresolved": true
+    }
+  ],
+  "project": {
+    "name": "CareerGround Portable 합성 수용 2026-10-09",
+    "created_through_ui": true,
+    "selected_in_work_composer": true,
+    "memory": "default",
+    "limitation": "Project-only memory option is disabled for cloud Work"
+  },
+  "automation_incidents": [
+    {
+      "kind": "foreground_keyboard_input_misrouting",
+      "user_reported": true,
+      "cause": "Orca keyboard insertion followed foreground focus instead of reliably staying within the designated browser composer",
+      "affected_text": "synthetic tailored-review/export-preparation prompt",
+      "treated_as_real_user_approval": false,
+      "resolution": "Stopped keyboard/inserttext commands; scoped DOM editor insertion through orca eval, exact composer-text verification and send-button click; confirmed target conversation URL and submitted message",
+      "status": "CORRECTED"
+    }
+  ]
+}

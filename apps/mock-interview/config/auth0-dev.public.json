@@ -1,0 +1,11 @@
+{
+  "issuer": "https://dev-gi4s7rn7d3eym5dp.us.auth0.com/",
+  "domain": "dev-gi4s7rn7d3eym5dp.us.auth0.com",
+  "client_id": "DhgwGDNfZJoMXWuJMWwDDI5sCcOXCgl9",
+  "audience": "https://careerground.example/mock-interview/dev",
+  "redirect_uri": "dev.careerground.interview.dev:/oauth2redirect",
+  "scopes": [
+    "openid",
+    "use:interview"
+  ]
+}

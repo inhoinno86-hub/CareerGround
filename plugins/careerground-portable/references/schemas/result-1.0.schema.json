@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.careerground.example/portable-interview-result/1.0",
+  "title": "CareerGround portable interview result candidates 1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "kind",
+    "result_id",
+    "created_at",
+    "handoff_ref",
+    "answers",
+    "feedback",
+    "candidates"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "kind": {
+      "const": "career-interview-result"
+    },
+    "result_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "handoff_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "sha256"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    },
+    "answers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "text",
+          "source_kind"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20000
+          },
+          "source_kind": {
+            "const": "user_answer"
+          }
+        }
+      },
+      "minItems": 0,
+      "maxItems": 500
+    },
+    "feedback": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "answer_id",
+          "text",
+          "source_kind"
+        ],
+        "properties": {
+          "answer_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20000
+          },
+          "source_kind": {
+            "const": "model_feedback"
+          }
+        }
+      },
+      "minItems": 0,
+      "maxItems": 500
+    },
+    "candidates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "text",
+          "answer_id",
+          "status"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20000
+          },
+          "answer_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+          },
+          "status": {
+            "const": "pending"
+          }
+        }
+      },
+      "minItems": 0,
+      "maxItems": 500
+    }
+  }
+}

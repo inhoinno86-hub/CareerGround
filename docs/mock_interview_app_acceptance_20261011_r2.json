@@ -1,0 +1,209 @@
+{
+  "date": "2026-10-11",
+  "overall": "PARTIAL_ACCEPTANCE_NOT_FULL",
+  "scope": "private synthetic Android Fold7 code4 + actual Codex + manual files + actual BrowserOS ChatGPT review",
+  "steps": {
+    "01": "APPROVED",
+    "02": "ACCEPTED",
+    "03": "CORE_ACTUAL_PHONE_RESULT_PASS_OFFLINE_VOICE_NOT_VERIFIED",
+    "04": "ACTUAL_HOST_REVIEW_PASS_FORMAL_HOST_VALIDATOR_UNAVAILABLE_AND_NEW_VERSION_PATH_NOT_RUN"
+  },
+  "device": "SM-F966N Android16",
+  "app_version": "0.2.1-step03-voice",
+  "version_code": 4,
+  "voice_long_speech": {
+    "scope": "actual physical Korean speech on installed code4; user confirmed no early cutoff; native draft inspected",
+    "status": "PASS_LAST_SENTENCE_PRESENT",
+    "original_unconfirmed_draft_preserved": true,
+    "multiple_runs_appended_to_existing_draft": true,
+    "word_level_recognition_errors_present": true,
+    "offline": "NOT_VERIFIED",
+    "final_answer_edit": "deduplicate and normalize to previously chosen synthetic English wording; not a verbatim Korean transcript",
+    "user_report": "음성 시험 수행했고, 이상 없음 확인했어.",
+    "timestamp": 1791727621
+  },
+  "files": {
+    "scope": "actual native SAF export, local schema/reference/importer validation; ChatGPT host separate",
+    "files": {
+      "careerground-result-step03-fold7-r1.json": {
+        "bytes": 2373,
+        "sha256": "2d9f38c8f4526e56ff5adbb3efc148897a12b877314df1eec533db62c941864e"
+      },
+      "careerground-session-step03-fold7-r1.json": {
+        "bytes": 22568,
+        "sha256": "bd306c323f5703f7ee3a18aca86b783649245cfecd4af59e214ebc298f906a92"
+      }
+    },
+    "handoff_ref": {
+      "id": "handoff-synthetic",
+      "sha256": "a1ca01fb34e8c6c8a5cf5a3bb2e54b32227d05d9076aa77d1de642b70fd1edd1"
+    },
+    "validation_errors": [],
+    "import_result_equal": true,
+    "answers": 1,
+    "feedback": 1,
+    "pending_candidates": 1,
+    "trace_counts": {
+      "questions": 8,
+      "answers": 3,
+      "feedback": 3,
+      "candidates": 3,
+      "events": 4
+    },
+    "stale_counts": {
+      "answers": 2,
+      "feedback": 2,
+      "candidates": 2
+    },
+    "question_status_counts": {
+      "pending": 5,
+      "answered": 1,
+      "skipped": 0,
+      "stale": 2
+    },
+    "current_answer_revisions": [
+      3
+    ],
+    "current_input_kinds": [
+      "on_device_confirmed"
+    ],
+    "negative_checks": {
+      "handoff_hash": {
+        "status": "PASS_REJECT",
+        "errors": [
+          "HANDOFF_CONFLICT"
+        ]
+      },
+      "handoff_id": {
+        "status": "PASS_REJECT",
+        "errors": [
+          "HANDOFF_CONFLICT"
+        ]
+      },
+      "answer_reference": {
+        "status": "PASS_REJECT",
+        "errors": [
+          "MISSING_REFERENCE"
+        ]
+      },
+      "candidate_approved": {
+        "status": "PASS_REJECT",
+        "errors": [
+          "SCHEMA"
+        ]
+      }
+    },
+    "fixed_original_preserved": true,
+    "raw_voice_draft_is_verbatim_result": false,
+    "answer_edit": "deduplicated/corrected synthetic English normalization after physical Korean speech; original unconfirmed raw draft preserved separately",
+    "test_harness_first_check": "FAIL_KEYERROR_CANONICAL_DIGEST: harness expected a non-schema session key; corrected to handoff_ref.sha256 and re-ran PASS",
+    "actual_final_session_saf_reimport": {
+      "status": "PASS",
+      "state": "COMPLETED",
+      "terminal_state_preserved": true,
+      "runtime_evidence": {
+        "utc_epoch": 1791728115,
+        "kind": "http",
+        "method": "POST",
+        "route": "/v1/restore",
+        "status": 200,
+        "state": "COMPLETED",
+        "auth_mode": "oidc",
+        "ai_status": "AVAILABLE_ACTUAL",
+        "raw_sha256": "11bb6517369b8063b1afca03452e654b96440b1ade99023c9a657c36d8cb63a8",
+        "canonical_digest": "a1ca01fb34e8c6c8a5cf5a3bb2e54b32227d05d9076aa77d1de642b70fd1edd1",
+        "record_counts": {
+          "questions": 8,
+          "answers": 3,
+          "feedback": 3,
+          "candidates": 3,
+          "events": 4
+        }
+      }
+    }
+  },
+  "host": {
+    "scope": "actual BrowserOS ChatGPT Work existing Portable0.2.0 interview-review; synthetic files only",
+    "conversation_url": "https://chatgpt.com/c/6acb999c-2fac-83ec-b5e5-2aecaf3156b4",
+    "plugin_url": "https://chatgpt.com/plugins/Plugin_47a97bf406048191a8a671f47778376a",
+    "plugin_version": "0.2.0",
+    "skills": 8,
+    "host_model_display": "GPT-6.1 Sol / Light",
+    "request_count": 1,
+    "request_file": "chatgpt-step04-request-r1.txt",
+    "files": [
+      "handoff-v1.json",
+      "careerground-result-step03-fold7-r1.json"
+    ],
+    "skill_invocation": "OBSERVED_INTERVIEW_REVIEW",
+    "status": "PASS_ACTUAL_REVIEW_WITH_FORMAL_VALIDATION_UNAVAILABLE",
+    "automatic_retries": 0,
+    "new_plugin_install": false,
+    "new_account_or_connection": false,
+    "private_user_career_history_read": false,
+    "actual_files_read": true,
+    "hash_and_reference_check": "PASS_HOST_OBSERVED",
+    "classifications_separated": true,
+    "pending_not_promoted": true,
+    "fixed_versions_preserved": true,
+    "formal_schema_reference_validator": "ATTEMPTED_VALIDATOR_UNAVAILABLE",
+    "formal_validator_reason": "jsonschema unavailable in both host Python environments; no installation performed",
+    "host_profile_new_version": "NOT_RUN_NO_FACT_OR_USE_APPROVAL",
+    "receipt_download": "HOST_FILE_GENERATED_BROWSEROS_DOWNLOAD_TOOL_FAILED_LOCAL_DOWNLOAD_NOT_VERIFIED",
+    "host_response_complete": true,
+    "response_file": "chatgpt-step04-response-r1.txt"
+  },
+  "verification": {
+    "portable_tests_this_turn": {
+      "status": "PASS",
+      "count": 35
+    },
+    "python_tests_previous_code_unchanged": {
+      "status": "PASS",
+      "count": 44
+    },
+    "jvm_previous_build": {
+      "status": "PASS",
+      "count": 10
+    },
+    "android_instrumentation_previous_installed_build": {
+      "status": "PASS",
+      "count": 9
+    },
+    "lint_previous_build": {
+      "errors": 0,
+      "warnings": 8
+    }
+  },
+  "actual_codex_calls": 11,
+  "approved_codex_limit": 12,
+  "chatgpt_host_requests_this_turn": 1,
+  "paid_api_calls": 0,
+  "cleanup": {
+    "scope": "safe USB disconnect after explicit final files saved and same-account restore tested",
+    "app_memory_and_token_cleared": true,
+    "phone_manual_files_preserved": true,
+    "network_and_screen_settings": {
+      "wifi_on": "1",
+      "mobile_data": "1",
+      "stay_on_while_plugged_in": "0"
+    },
+    "selected_device_reverse_8765_removed": true,
+    "timestamp": 1791728243,
+    "loopback_runtime": "STOPPED_PORT_CLOSED"
+  },
+  "not_run": [
+    "network-disabled physical Korean speech",
+    "formal schema/reference validator completion inside ChatGPT host",
+    "ChatGPT separate fact/use confirmation and new profile version creation",
+    "real personal handoff usability",
+    "emulator",
+    "deployment/OpenAI API/paid execution"
+  ],
+  "preserved": [
+    "fixed handoff bytes and version refs",
+    "old profile/resume/result/session files",
+    "prior failure evidence",
+    "existing dirty tracked/untracked/ignored tree"
+  ]
+}

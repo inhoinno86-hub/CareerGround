@@ -1,0 +1,342 @@
+{
+  "recorded_at": "2026-10-11T01:21:03.447463+00:00",
+  "step": "02",
+  "verdict": "PARTIAL_PASS",
+  "package_complete": false,
+  "authorization": {
+    "tools_and_dependencies_installation": "APPROVED_2026-10-11",
+    "sdk_license_acceptance": "APPROVED_2026-10-11",
+    "device_install_connection": "PENDING",
+    "oidc_registration": "PENDING",
+    "paid_api": "NOT_APPROVED",
+    "deployment": "NOT_APPROVED"
+  },
+  "repository": {
+    "branch": "codex/mvp-foundation-ci-20260923",
+    "head": "9bd1009237f6486285ec8192086d286e0a5e94f2",
+    "local_main": "4bc0bf7b9cc3027187d62dee1f6283094d50b12b",
+    "switched_or_merged": false
+  },
+  "tools": {
+    "root": "/home/inno/.local/share/careerground-android",
+    "archives": [
+      {
+        "name": "OpenJDK17U-jdk_x64_linux_hotspot_17.0.20.1_1.tar.gz",
+        "source": "https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.20.1%2B1/OpenJDK17U-jdk_x64_linux_hotspot_17.0.20.1_1.tar.gz",
+        "sha256": "3808d1d15e3ec6bd5b84057fb5d84c33d8a1536a258146bcea2e603fc726e08e",
+        "bytes": 193252603,
+        "verified": true
+      },
+      {
+        "name": "commandlinetools-linux-15859902_latest.zip",
+        "source": "https://dl.google.com/android/repository/commandlinetools-linux-15859902_latest.zip",
+        "sha256": "4e4c464f145a7512b57d088ac6c278c03c9eea610886b35a5e0804e74eedf583",
+        "bytes": 181833628,
+        "verified": true
+      },
+      {
+        "name": "gradle-8.13-bin.zip",
+        "source": "https://services.gradle.org/distributions/gradle-8.13-bin.zip",
+        "sha256": "20f1b1176237254a6fc204d8434196fa11a4cfb387567519c61556e8710aed78",
+        "bytes": 136983045,
+        "verified": true
+      }
+    ],
+    "sdk_packages": [
+      {
+        "path": "build-tools/35.0.0",
+        "description": null,
+        "revision": "35.0.0",
+        "api_level": null
+      },
+      {
+        "path": "cmdline-tools/15859902",
+        "description": "Android SDK Command-line Tools",
+        "revision": "22.0",
+        "api_level": null
+      },
+      {
+        "path": "platform-tools",
+        "description": null,
+        "revision": "37.0.1",
+        "api_level": null
+      },
+      {
+        "path": "platforms/android-36",
+        "description": "Android SDK Platform 16",
+        "revision": "2",
+        "api_level": "36"
+      }
+    ],
+    "sdk_license_accepted": true,
+    "automatic_platform_tools": {
+      "revision": "37.0.1",
+      "trigger": "AGP first build SDK dependency resolution",
+      "planned_explicitly": false,
+      "adb_executed": false,
+      "later_sdk_autodownload_disabled": true
+    },
+    "disk_allocated_bytes": 2823749632,
+    "gradle": "8.13",
+    "agp": "8.13.2",
+    "kotlin": "2.2.21",
+    "compose_bom": "2025.12.00",
+    "wrapper_jar_sha256": "81a82aaea5abcc8ff68b3dfcb58b3c3c429378efd98e7433460610fecd7ae45f",
+    "wrapper_distribution_sha256": "20f1b1176237254a6fc204d8434196fa11a4cfb387567519c61556e8710aed78",
+    "wrapper_version_run": "PASS",
+    "observed_module_hashes": {
+      "path": "/home/inno/.local/share/careerground-android/cache-artifacts-sha256.json",
+      "sha256": "f98157efd5dc9cb75df96e29083154534e8dcf364e2de7c72f91245766ddd3ba",
+      "files": 778,
+      "independent_upstream_verification": false
+    }
+  },
+  "android_application": {
+    "package": "dev.careerground.interview.dev",
+    "version_name": "0.1.0-step02",
+    "version_code": 1,
+    "min_sdk": 33,
+    "target_sdk": 36,
+    "compile_sdk": 36,
+    "signature_verify": "PASS",
+    "signer": "Android Debug",
+    "certificate_sha256": "d258e5a2420327f238eb40ec765800dbf05bc563fc634a71475a6830e3f3d46a",
+    "requested_permissions": [
+      "android.permission.INTERNET",
+      "dev.careerground.interview.dev.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+    ],
+    "microphone_permission": false,
+    "broad_storage_permission": false,
+    "private_debug_key_in_dedicated_tool_root": true
+  },
+  "build_attempts": [
+    {
+      "attempt": 1,
+      "verdict": "FAIL",
+      "assemble_debug": "PASS",
+      "assemble_android_test": "PASS",
+      "jvm_tests": "PASS",
+      "lint": {
+        "errors": 2,
+        "warnings": 9,
+        "hints": 1,
+        "first_issue": "NetworkSecurityConfig missing includeSubdomains"
+      },
+      "log": "/home/inno/.local/share/careerground-android/logs/build-attempt-1.log",
+      "preserved_lint": "/home/inno/.local/share/careerground-android/logs/lint-attempt-1.xml"
+    },
+    {
+      "attempt": 2,
+      "verdict": "PASS",
+      "tasks": [
+        ":app:assembleDebug",
+        ":app:testDebugUnitTest",
+        ":app:lintDebug",
+        ":app:assembleDebugAndroidTest",
+        ":app:dependencies --configuration debugRuntimeClasspath"
+      ],
+      "log": "/home/inno/.local/share/careerground-android/logs/build-attempt-2.log"
+    }
+  ],
+  "validation": {
+    "android_jvm": {
+      "verdict": "PASS",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "android_lint": {
+      "verdict": "PASS",
+      "errors": 0,
+      "warnings": 6,
+      "issues": [
+        {
+          "id": "AndroidGradlePluginVersion",
+          "severity": "Warning",
+          "message": "A newer version of Gradle than 8.13 is available: 8.14.6"
+        },
+        {
+          "id": "GradleDependency",
+          "severity": "Warning",
+          "message": "A newer version of androidx.compose:compose-bom than 2025.12.00 is available: 2026.09.00"
+        },
+        {
+          "id": "GradleDependency",
+          "severity": "Warning",
+          "message": "A newer version of androidx.activity:activity-compose than 1.12.4 is available: 1.13.0"
+        },
+        {
+          "id": "GradleDependency",
+          "severity": "Warning",
+          "message": "A newer version of androidx.lifecycle:lifecycle-viewmodel-compose than 2.10.0 is available: 2.11.0"
+        },
+        {
+          "id": "GradleDependency",
+          "severity": "Warning",
+          "message": "A newer version of androidx.lifecycle:lifecycle-viewmodel-ktx than 2.10.0 is available: 2.11.0"
+        },
+        {
+          "id": "GradleDependency",
+          "severity": "Warning",
+          "message": "A newer version of androidx.compose:compose-bom than 2025.12.00 is available: 2026.09.00"
+        }
+      ],
+      "baseline_or_suppressions_added": false
+    },
+    "android_instrumentation": {
+      "compilation": "PASS",
+      "device_run": "NOT_RUN",
+      "prepared_tests": 3
+    },
+    "python_import_api": {
+      "verdict": "PASS",
+      "tests": 16,
+      "auth": "synthetic_dev"
+    },
+    "offline_oidc_policy": {
+      "verdict": "PASS",
+      "tests": 8,
+      "keys": "synthetic_RSA_in_RAM",
+      "network_calls": 0,
+      "enabled_in_app_or_api": false,
+      "actual_login": "NOT_RUN"
+    },
+    "portable_exchange": {
+      "verdict": "PASS",
+      "tests": 7
+    },
+    "python_lint": "PASS",
+    "python_format": "PASS",
+    "loopback_http_manual_file": {
+      "verdict": "PASS",
+      "observations": 5,
+      "evidence": "docs/mock_interview_step02_http_20261011_r3.json",
+      "sha256": "b9585370694a1b33c9e844246e8537b0ae9d2fc04b7c84d4851ec5ef63923bec",
+      "auth": "synthetic_dev",
+      "android_build_field_scope": "That smoke command does not invoke Gradle; Android build evidence is this receipt."
+    }
+  },
+  "runtime_repairs": [
+    {
+      "before": "HTTP 500 on a 5000-digit JSON integer and escaped lone surrogate in review",
+      "after": "HTTP 400 before state mutation; nonfinite values also rejected",
+      "regression": "test_malformed_numbers_and_escaped_unicode_fail_before_state_changes"
+    },
+    {
+      "before": "Offline OIDC test asserted rejection of an empty typ array, but PyJWT encoder omitted that falsey header",
+      "after": "Test now signs a nonempty array header and verifies rejection",
+      "provider_attempt": false
+    }
+  ],
+  "artifacts": {
+    "app-debug-androidTest.apk": {
+      "path": "/home/inno/.local/share/careerground-android/artifacts/step02-20261011-r2/app-debug-androidTest.apk",
+      "bytes": 2378455,
+      "sha256": "8789fc02fbc9922c1e4948dbb0531d00749ed346b2c0c73b5c96b408608da5c7"
+    },
+    "app-debug.apk": {
+      "path": "/home/inno/.local/share/careerground-android/artifacts/step02-20261011-r2/app-debug.apk",
+      "bytes": 27965519,
+      "sha256": "a73b250a1dafc9d4d2419f628478dca3737f0fcd27e9459cbe02ef0eefd22443"
+    },
+    "jvm-tests.xml": {
+      "path": "/home/inno/.local/share/careerground-android/artifacts/step02-20261011-r2/jvm-tests.xml",
+      "bytes": 606,
+      "sha256": "beb4fa7bd4e966bf69d92459ef6f4b2215f53f7b689ae58c3fadf4436f8c4c4b"
+    },
+    "lint-results-debug.html": {
+      "path": "/home/inno/.local/share/careerground-android/artifacts/step02-20261011-r2/lint-results-debug.html",
+      "bytes": 110710,
+      "sha256": "eada0743608f002daac0fd822e06a3a65dd33f1cf14efe908ed31e081f2d3129"
+    },
+    "lint-results-debug.xml": {
+      "path": "/home/inno/.local/share/careerground-android/artifacts/step02-20261011-r2/lint-results-debug.xml",
+      "bytes": 6210,
+      "sha256": "cc0e1f321c3c6d32d3aa01df2542d99a50908b9030460e8f4ec4c838d2ac6385"
+    }
+  },
+  "source_sha256": {
+    "apps/mock-interview/README.md": "059599cbeae04834b579ac5ad90661948d882fc8c71d7a6aa69212f4dce7e43d",
+    "apps/mock-interview/android/.gitignore": "1d0d8aa62aed09180b2264846040bc1e029e2c35a7aba45a92ee078448f5cb53",
+    "apps/mock-interview/android/app/build.gradle.kts": "e29c255eb0fcda9321c25e298cfdd1fc7b8117b2d7710cead9dbc19685662fc6",
+    "apps/mock-interview/android/app/src/androidTest/java/dev/careerground/interview/ImportUiTest.kt": "33a07b7ac1fa25e1ef0bc2c7d244542f91b72427779026fbd0f04b437b85fa69",
+    "apps/mock-interview/android/app/src/debug/AndroidManifest.xml": "34b09b30632fc5779fbcb00a66d7a748c1bfeee4a76caf760de56be172ca90f1",
+    "apps/mock-interview/android/app/src/debug/res/xml/dev_network_security.xml": "56020ab62f970f56e9bc7b363d00acce35750a99ce1960e029ba66193244aa59",
+    "apps/mock-interview/android/app/src/main/AndroidManifest.xml": "566707d8e98535686212a61cf133d7bd02a2a1c141099e776f6bac384d698ac3",
+    "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/InterviewModel.kt": "bcded727f2ed2eefaa77de4da282cbeaf7b0a899638430456bae3d5a12866cd3",
+    "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/MainActivity.kt": "d409118c0a2f04a05fefc1ad74d7dcc53c7eaabf5bba21d13b0471df4de98e03",
+    "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/RuntimeClient.kt": "7168ec887ef76c13af2b5ab108a38f4b71fa9216432a3e8a69330402a8e6d4ce",
+    "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/SelectedFiles.kt": "ab2c239cc24f7c94e87be266675504514e836e6955cbf1f3f19f13f635501335",
+    "apps/mock-interview/android/app/src/main/res/drawable/ic_launcher.xml": "2a80f7ee55309a38bc7245acd98c07b4b518f15566ee24611aaaee1a4370fe69",
+    "apps/mock-interview/android/app/src/main/res/xml/data_extraction_rules.xml": "81c62699b03efc4299542dd7177f75df46b03e10a84c4914403e9aa665315780",
+    "apps/mock-interview/android/app/src/test/java/dev/careerground/interview/SelectedFilesTest.kt": "5c23f85834eaf17a59769df8e30512a342a75bfec5fc86644d3b75a2782df17c",
+    "apps/mock-interview/android/build.gradle.kts": "52f9b95bdc89db4b3641d7c0684e8d92f62cbfdd5c83168a9eead5ff041b4c95",
+    "apps/mock-interview/android/gradle.properties": "ff06a9a9eba81db8f240b9887bcecba1c48d62b4886289b3f8b3c38432bf7e4d",
+    "apps/mock-interview/android/gradle/wrapper/gradle-wrapper.jar": "81a82aaea5abcc8ff68b3dfcb58b3c3c429378efd98e7433460610fecd7ae45f",
+    "apps/mock-interview/android/gradle/wrapper/gradle-wrapper.properties": "c040b6ef2fb893ff5beea5a281614f2848f1c3996a7886f650b713f8240656a2",
+    "apps/mock-interview/android/gradlew": "734b3879d3501dce471cf0522d3bcbafe76873d9fc5129345b67fb43bd15e933",
+    "apps/mock-interview/android/gradlew.bat": "57931b17dd228e5c24dac90e815d0bf82477e831a4618dfab4136f5446b42a9f",
+    "apps/mock-interview/android/settings.gradle.kts": "b04abeb808ee87ce827a2484248df712df1480edfed3d37a2abd143b8285cea7",
+    "apps/mock-interview/contracts/session-0.1.schema.json": "4c06c72907bbe612a64497d338c432bf60083cb3e04881892f7dc83803963b64",
+    "apps/mock-interview/runtime/cg_mock/__init__.py": "c2700b9c999c503c0adaa93e1c6b0a71cf77428cefa7a4deaf42f43989087f6b",
+    "apps/mock-interview/runtime/cg_mock/__main__.py": "a12922ae12cb17d470d0ad662e2b74b50429b864e20a197e97c9614823c100c8",
+    "apps/mock-interview/runtime/cg_mock/api.py": "7848ea9c10580835f57cfee8ae6b8155f347df4282c0385a88edead435029fab",
+    "apps/mock-interview/runtime/cg_mock/oidc.py": "991b6c0990b2d17caa626b224743132bfd100ced78e5cc298c58903ed1a4dd9e",
+    "apps/mock-interview/runtime/cg_mock/session.py": "621c56b8b4d34a5e995f3ff066c07a182c9ae4d9428e755b0fa37508442a0edb",
+    "apps/mock-interview/runtime/requirements.txt": "dfb9e154fdeb74911a325a9a9d4157a6b8d8900c66548c0a2a1a16c2c8ad0041",
+    "apps/mock-interview/runtime/smoke_step02.py": "419e34aab68312defa9893216114ab1f16be9c039a2a824638b1178c69b0e19d"
+  },
+  "test_source_sha256": {
+    "tests/test_mock_interview_import.py": "5c6dbf3f7a8d0017abdd024c3c70f256878fcdb739fa56bbb6bbee466fd79f5a",
+    "tests/test_mock_interview_oidc.py": "3a1d1a8fa36aae02a353383f147fde6a191cd67cad7203560f4497c3213045ba"
+  },
+  "workspace_preservation": {
+    "before_step02": {
+      "snapshot_files": 508,
+      "unchanged_files": 507,
+      "changed_files": [
+        "PLAN-2026-10-10-mock-interview-app.md"
+      ],
+      "missing_files": []
+    },
+    "before_install": {
+      "snapshot_files": 536,
+      "unchanged_files": 524,
+      "changed_files": [
+        "PLAN-2026-10-10-mock-interview-app.md",
+        "apps/mock-interview/README.md",
+        "apps/mock-interview/android/app/build.gradle.kts",
+        "apps/mock-interview/android/app/src/debug/res/xml/dev_network_security.xml",
+        "apps/mock-interview/android/app/src/main/AndroidManifest.xml",
+        "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/InterviewModel.kt",
+        "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/MainActivity.kt",
+        "apps/mock-interview/android/gradle.properties",
+        "apps/mock-interview/runtime/cg_mock/session.py",
+        "apps/mock-interview/runtime/requirements.txt",
+        "docs/mock_interview_android_setup_20261011.md",
+        "tests/test_mock_interview_import.py"
+      ],
+      "missing_files": []
+    },
+    "legacy_material_or_version_mutations": false,
+    "previous_failure_or_acceptance_records_overwritten": false,
+    "commit_push_merge": false
+  },
+  "not_run": [
+    "android_device_execution",
+    "android_SAF_roundtrip",
+    "foldable_and_keyboard_behavior",
+    "actual_personal_oidc_login",
+    "korean_on_device_STT",
+    "local_korean_TTS",
+    "actual_Codex_interview",
+    "app_generated_result",
+    "ChatGPT_plugin_roundtrip",
+    "deployment_OpenAI_API",
+    "release_deployment"
+  ],
+  "next_gate_document": "docs/mock_interview_step02_device_auth_20261011.md",
+  "step03": "NOT_RUN",
+  "step04": "NOT_RUN"
+}

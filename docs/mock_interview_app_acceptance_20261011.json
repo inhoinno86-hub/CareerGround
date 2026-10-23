@@ -1,0 +1,183 @@
+{
+  "date": "2026-10-11",
+  "step": "02",
+  "status": "PARTIAL_EXTERNAL_INSTALL_APPROVAL_PENDING",
+  "plan_approved": true,
+  "branch": "codex/mvp-foundation-ci-20260923",
+  "head": "9bd1009237f6486285ec8192086d286e0a5e94f2",
+  "local_main": "4bc0bf7b9cc3027187d62dee1f6283094d50b12b",
+  "portable_version": "0.2.0",
+  "handoff_result_schema": "1.0",
+  "session_schema": "0.1-step02-draft",
+  "fixture": {
+    "path": "fixtures/portable/handoff-v1.json",
+    "raw_sha256": "11bb6517369b8063b1afca03452e654b96440b1ade99023c9a657c36d8cb63a8"
+  },
+  "checks": [
+    {
+      "name": "synthetic_runtime_api_unittest",
+      "verdict": "PASS",
+      "tests": 15,
+      "auth": "synthetic_dev",
+      "ai_calls": 0
+    },
+    {
+      "name": "portable_exchange_regression",
+      "verdict": "PASS",
+      "tests": 7
+    },
+    {
+      "name": "python_ruff",
+      "verdict": "PASS"
+    },
+    {
+      "name": "android_xml_and_contract_json_syntax",
+      "verdict": "PASS",
+      "does_not_compile_kotlin": true
+    },
+    {
+      "name": "actual_loopback_http_manual_file",
+      "verdict": "PASS",
+      "evidence": "docs/mock_interview_step02_http_20261011_r2.json",
+      "observations": 5
+    }
+  ],
+  "not_run": [
+    "android_apk_build",
+    "kotlin_jvm_tests",
+    "android_instrumentation_tests",
+    "android_saf_roundtrip",
+    "foldable_device_ui",
+    "actual_oidc_login",
+    "actual_on_device_korean_stt",
+    "actual_local_korean_tts",
+    "actual_codex_interview",
+    "result_export",
+    "chatgpt_plugin_review",
+    "openai_api",
+    "deployment"
+  ],
+  "preservation": {
+    "baseline_files": 508,
+    "unchanged_baseline_files": 507,
+    "changed_baseline_files": [
+      "PLAN-2026-10-10-mock-interview-app.md"
+    ],
+    "missing_files": []
+  },
+  "fixes": [
+    {
+      "observation": "Python lint import ordering/UTC alias failed initially",
+      "action": "Applied lint corrections to new files only",
+      "retest": "PASS"
+    },
+    {
+      "observation": "Inspection found non-string mode could raise TypeError and non-ASCII bearer comparison could fail",
+      "action": "Added type rejection and UTF-8 byte comparison",
+      "retest": "PASS with malformed-input regression"
+    },
+    {
+      "observation": "Native session preview initially shared regular 20000-character string cap with embedded handoff base64",
+      "action": "Bounded special envelope field separately and validated restore hash before replacing selection",
+      "retest": "Android test authored; NOT_RUN until SDK installation"
+    }
+  ],
+  "external_read_limit": {
+    "adoptium_metadata_request": "HTTP 403",
+    "fallback": "Official release web page verified version only",
+    "archive_download": "NOT_RUN"
+  },
+  "app_sources": [
+    {
+      "path": "apps/mock-interview/README.md",
+      "sha256": "9681214f915a5b33fccc848a081eaabc90a2e858988aa7dfc20258d3e1407d16"
+    },
+    {
+      "path": "apps/mock-interview/android/.gitignore",
+      "sha256": "1d0d8aa62aed09180b2264846040bc1e029e2c35a7aba45a92ee078448f5cb53"
+    },
+    {
+      "path": "apps/mock-interview/android/app/build.gradle.kts",
+      "sha256": "e88423a6a80c9e9bab11260838a8b50de6f5cba9fbe2c349e52fadba951fc3f4"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/androidTest/java/dev/careerground/interview/ImportUiTest.kt",
+      "sha256": "33a07b7ac1fa25e1ef0bc2c7d244542f91b72427779026fbd0f04b437b85fa69"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/debug/AndroidManifest.xml",
+      "sha256": "34b09b30632fc5779fbcb00a66d7a748c1bfeee4a76caf760de56be172ca90f1"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/debug/res/xml/dev_network_security.xml",
+      "sha256": "fde6094ba6495595cceca176596891dc2a6e0470c77d188e3e4748c3aac11de0"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/AndroidManifest.xml",
+      "sha256": "f3c958d6efe39574adbcd4f7bcf7d7d59c88a5ca5e789e87f594e77dbbe79389"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/InterviewModel.kt",
+      "sha256": "85f129da335a29d0ce79b550cba31a06eea42dc5099a8207ede50eb13aaedaaa"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/MainActivity.kt",
+      "sha256": "f63c81730fff06f72e58192f2068cb34d255a89ba9bdeae59b2d36be96d9d849"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/RuntimeClient.kt",
+      "sha256": "7168ec887ef76c13af2b5ab108a38f4b71fa9216432a3e8a69330402a8e6d4ce"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/SelectedFiles.kt",
+      "sha256": "ab2c239cc24f7c94e87be266675504514e836e6955cbf1f3f19f13f635501335"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/test/java/dev/careerground/interview/SelectedFilesTest.kt",
+      "sha256": "5c23f85834eaf17a59769df8e30512a342a75bfec5fc86644d3b75a2782df17c"
+    },
+    {
+      "path": "apps/mock-interview/android/build.gradle.kts",
+      "sha256": "52f9b95bdc89db4b3641d7c0684e8d92f62cbfdd5c83168a9eead5ff041b4c95"
+    },
+    {
+      "path": "apps/mock-interview/android/gradle.properties",
+      "sha256": "fa078c27c9e4bde28a029d673875b028884505efa436b68cf60e1ac0be5b679b"
+    },
+    {
+      "path": "apps/mock-interview/android/settings.gradle.kts",
+      "sha256": "b04abeb808ee87ce827a2484248df712df1480edfed3d37a2abd143b8285cea7"
+    },
+    {
+      "path": "apps/mock-interview/contracts/session-0.1.schema.json",
+      "sha256": "4c06c72907bbe612a64497d338c432bf60083cb3e04881892f7dc83803963b64"
+    },
+    {
+      "path": "apps/mock-interview/runtime/cg_mock/__init__.py",
+      "sha256": "c2700b9c999c503c0adaa93e1c6b0a71cf77428cefa7a4deaf42f43989087f6b"
+    },
+    {
+      "path": "apps/mock-interview/runtime/cg_mock/__main__.py",
+      "sha256": "a12922ae12cb17d470d0ad662e2b74b50429b864e20a197e97c9614823c100c8"
+    },
+    {
+      "path": "apps/mock-interview/runtime/cg_mock/api.py",
+      "sha256": "7848ea9c10580835f57cfee8ae6b8155f347df4282c0385a88edead435029fab"
+    },
+    {
+      "path": "apps/mock-interview/runtime/cg_mock/session.py",
+      "sha256": "2df94aadb9d10280c298c052e39ae467f29441ced6d3f21db0f45156dab98335"
+    },
+    {
+      "path": "apps/mock-interview/runtime/requirements.txt",
+      "sha256": "9d02d44f22b6358d6cfd78ef929ce6bfb1b00fafa9af789e1bc9aa9b1f70ad40"
+    },
+    {
+      "path": "apps/mock-interview/runtime/smoke_step02.py",
+      "sha256": "419e34aab68312defa9893216114ab1f16be9c039a2a824638b1178c69b0e19d"
+    }
+  ],
+  "step03": "NOT_STARTED_REQUIRES_STEP02_ACCEPTANCE",
+  "step04": "NOT_STARTED_REQUIRES_STEP03_ACCEPTANCE",
+  "package_complete": false
+}

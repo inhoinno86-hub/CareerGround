@@ -2,7 +2,58 @@
 
 Evidence-backed Career AI System
 
-## Current status
+## Serverless plugin transition — approved implementation
+
+The skills-only ChatGPT plugin works from user-selected files and supports career
+review, a JD-free base resume, JD discovery, tailored resumes, source references and
+history. Projects are recommended for reuse and version management. After choosing
+a baseline or initial creation, users can work in the current chat without a project.
+Automatic project detection, creation, movement or storage is not assumed.
+The resume workflow uses no CareerGround server, DB or MCP.
+
+- [Development direction and goals v0.2](docs/CareerGround_Serverless_Plugin_Direction_v0.2_2026-10-09.md)
+- [Implementation comparison and staged work plan](PLAN-2026-10-09-serverless-plugin-transition.md)
+- [User-approved project recommendation policy](docs/serverless_project_recommendation_decision_20261010.md)
+
+Steps 01–07 are complete in the evaluated synthetic environment under the user's
+approved recommendation policy. The separate private trial is installed at **0.2.0**:
+10 current-policy cases and two supplementary responses passed, alongside 38 local
+tests and actual downloaded file/reference checks. Existing registrations and server
+code remain preserved. See the
+[current acceptance record](docs/serverless_plugin_acceptance_0.2.0_20261010.md),
+[structured results](docs/serverless_plugin_validation_0.2.0_20261010.json),
+[product contract](docs/serverless_plugin_contract_v1.md) and
+[package guide](plugins/careerground-portable/README.md).
+
+The original mandatory preparation gate failed in versions 0.1.2–0.1.6. Those
+[failures and remediation evidence](docs/serverless_preparation_gate_remediation_20261010.md)
+remain historical failures; the policy change does not establish a technical
+host-wide gate. Public deployment and the interview app are outside this acceptance.
+
+Step 08 has a separate Android development acceptance: actual Fold7 OIDC login,
+on-device Korean speech, bounded existing-login Codex inference, manual session/result
+files and ChatGPT Portable review. The synthetic roundtrip and foldable supplement
+passed, followed by one confirmed answer using selected personal files. The personal
+trial produced one evaluation and two pending candidates; five questions remain
+unanswered. New facts require separate review. Runtime/USB mappings and app RAM were
+cleared while original versions and manual files were preserved. Paid API and public
+deployment remain unexecuted.
+
+- [Android app and runtime usage](apps/mock-interview/README.md)
+- [Approved app plan](PLAN-2026-10-10-mock-interview-app.md)
+- [Synthetic app acceptance and environment limits](docs/mock_interview_app_acceptance_20261012.md)
+- [Personal first-answer roundtrip acceptance](docs/mock_interview_personal_roundtrip_20261012.md)
+
+Build a reviewable archive locally with:
+
+```bash
+.venv/bin/python scripts/build_chatgpt_plugin.py --variant portable --output /tmp/careerground-portable.zip
+```
+
+The existing builder default remains `legacy` for compatibility; select `portable`
+explicitly for the new package. This command does not install or publish it.
+
+## Existing server implementation status
 
 Career Graph v1 domain/schema validation, Career Profiling Protocol v1, approved
 text-MVP product policy, Schema v1.1 policy addendum, Plugin Functional Specification
@@ -29,11 +80,15 @@ Its product MCP independently validates OAuth against the same account database;
 live ChatGPT product scopes/consent have not been verified.
 Deletion previews remain `FOUNDATION_ONLY`, `ready_to_execute=false`. Full MCP
 contracts, production erasure/restore, accessibility and operations gates remain
-open. Managed signing and the Voice Interview App are not implemented. Identity,
+open. Managed signing and the legacy server-backed Voice Interview App are not implemented. Identity,
 LLM/realtime provider adoption and paid cloud resources remain separate decisions.
 
-## Core documents
+## Existing implementation and design documents
 
+The entries below describe the previous server-backed design and its implementation.
+For new work, review the direction and staged plan linked above first.
+
+- [Latest completed private synthetic MVP acceptance — 2026-10-08](docs/CareerGround_Phase_A_Private_MVP_Acceptance_2026-10-08.md)
 - [Career Graph Entity/Relationship Model v1](docs/career_graph_entity_relationship_model_v1.md)
 - [Career Graph Schema v1](docs/career_graph_schema_v1.md)
 - [Career Graph Schema Validation](docs/career_graph_schema_v1_validation.md)
@@ -66,7 +121,7 @@ LLM/realtime provider adoption and paid cloud resources remain separate decision
 - [Identity, Korean AI evaluation and operations preparation](docs/CareerGround_External_Gate_Preparation_2026-10-03.md)
 - [ChatGPT conversation and management browser journey](docs/CareerGround_ChatGPT_Management_Journey_2026-10-03.md)
 - [Existing ChatGPT account, local identity boundary and acceptance evidence](docs/CareerGround_Phase_A_Account_Quality_Release_2026-10-03.md)
-- [Latest: CareerGround Auth0 login, shared account and BrowserOS evidence](docs/CareerGround_Phase_A_Auth0_Login_2026-10-04.md)
+- [CareerGround Auth0 login, shared account and BrowserOS evidence](docs/CareerGround_Phase_A_Auth0_Login_2026-10-04.md)
 
 ## Core principle
 

@@ -1,0 +1,162 @@
+{
+  "date": "2026-10-12",
+  "status": "PASS_SYNTHETIC_UI_FILES_WITH_RECORDED_ENVIRONMENT_LIMITATIONS",
+  "app": "0.2.1-step03-voice code4 unchanged",
+  "emulator": "37.2.12 stable",
+  "image": "Android36 Google APIs x86_64 revision7",
+  "avd": "careerground-step04-foldable-api36 / 7.6in Foldable",
+  "scope": "actual AVD execution with synthetic owner and MockProvider; not actual AI or physical voice",
+  "checks": {
+    "instrumentation_on_installed_code4_before_pause": "PASS_9_TESTS_NOT_RERUN_AFTER_PAUSE",
+    "synthetic_runtime_auth_and_mock_ai_banner": "PASS_ACTUAL_AVD_UI_MOCK_PROVIDER",
+    "handoff_saf_import_review_pin_questions": "PASS",
+    "handoff_picker_cancel_existing_state": "PASS",
+    "cover_single_column_and_unfold_wide": "PASS_EXPLICIT_WM_SIZE_OVERRIDE_884x2208_AND_RESET_1768x2208",
+    "hinge_state": "PASS_SENSOR_CLOSED_15_DEG_OPENED_180_DEG",
+    "automatic_headless_cover_display_switch": "UNVERIFIED_HEADLESS_SENSOR_CHANGE_DID_NOT_RESIZE_DISPLAY",
+    "keyboard_visible_resize_preserves_unconfirmed_draft": "PASS_MINPUTSHOWN_TRUE_BEFORE_AND_AFTER",
+    "landscape_rotation_preserves_question_answer_fixed_hash": "PASS_2208x1768",
+    "actual_split_screen_preserves_answer": "PASS_MULTI_WINDOW_1768x1091_WITH_INSTALLED_TEST_EMPTY_ACTIVITY",
+    "answer_revision_invalidates_previous_feedback_candidates": "PASS_REVISION2_WITH_OLD_ANSWER_FEEDBACK_CANDIDATE_STALE",
+    "pause_continue": "PASS_PAUSED_TO_IN_PROGRESS",
+    "background_return": "PASS",
+    "force_stop_clears_ram_connection": "PASS_PID_ABSENT_AND_RELOGIN_SCREEN",
+    "manual_session_saf_export_and_cancel": "PASS",
+    "manual_active_session_restore_after_app_and_runtime_replacement": "PASS_FRESH_REVIEW_REQUIRED_THEN_READY_START_REVISION2",
+    "imported_ai_records_untrusted": "PASS_ALL_FEEDBACK_CANDIDATES_STALE_EVENTS_IMPORTED_UNVERIFIED",
+    "abort_preserves_current_answers": "PASS",
+    "terminal_aborted_session_saf_reimport": "PASS_ABORTED_NOT_RESURRECTED",
+    "aborted_result_saf_schema_reference_importer": "PASS_LATEST_ANSWER1_FEEDBACK0_CANDIDATES0",
+    "actual_emulator_korean_microphone_or_tts": "NOT_RUN_KOREAN_DEVICE_SERVICES_NOT_READY_NO_MODEL_DOWNLOAD",
+    "emulator_personal_oidc_login": "NOT_RUN_SYNTHETIC_AUTH_ONLY_PHYSICAL_OIDC_PREVIOUSLY_PASS",
+    "emulator_mock_result_chatgpt_host_review": "NOT_RUN_EXISTING_ACTUAL_PHONE_RESULT_HOST_ROUNDTRIP_ALREADY_PASS",
+    "cleanup": "PASS"
+  },
+  "files": {
+    "careerground-session-emulator-active-r1.json": {
+      "bytes": 13667,
+      "sha256": "943f19a19acaadb8cb3894375606b4e1e4b501f095ef7421b959e09e3bf50182"
+    },
+    "careerground-session-emulator-active-r2.json": {
+      "bytes": 16145,
+      "sha256": "0ce8343ccb42ffa9ae114f0082710d2e64ca0dc4edbe9e652a3533590d13156f"
+    },
+    "careerground-session-emulator-aborted-r1.json": {
+      "bytes": 16250,
+      "sha256": "3a51ad5cbe45dcf5cd10e9190a0b938d6818f1fa134cb32e1a9b3a840f3ba9d4"
+    },
+    "careerground-result-emulator-aborted-r2.json": {
+      "bytes": 516,
+      "sha256": "75dd25d5e772cb380bb8d1de784e5bd4f73dae43f760d931c0befdfb95e83a20"
+    },
+    "misnamed-export-preserved.json": {
+      "bytes": 516,
+      "sha256": "dff5a0b248887b28ddc8a727dbf5a4f893e6095f0d912c6d7322854a25dad48f"
+    }
+  },
+  "receipts": {
+    "active1": {
+      "name": "careerground-session-emulator-active-r1.json",
+      "bytes": 13667,
+      "sha256": "943f19a19acaadb8cb3894375606b4e1e4b501f095ef7421b959e09e3bf50182",
+      "state": "IN_PROGRESS",
+      "questions": 6,
+      "answers": 1,
+      "feedback": 1,
+      "candidates": 1,
+      "schema": "PASS",
+      "ai_evidence": "events; question provenance is not a session0.1 field",
+      "validator_first_attempt": "schema passed; harness then failed KeyError provenance; corrected to actual session fields",
+      "actual_ai_calls": 0,
+      "provider": "Mock",
+      "events_actual_all_false": true
+    },
+    "active2": {
+      "name": "careerground-session-emulator-active-r2.json",
+      "bytes": 16145,
+      "sha256": "0ce8343ccb42ffa9ae114f0082710d2e64ca0dc4edbe9e652a3533590d13156f",
+      "state": "IN_PROGRESS",
+      "questions": 7,
+      "answers": 2,
+      "feedback": 2,
+      "candidates": 2,
+      "stale_counts": {
+        "answers": 1,
+        "feedback": 1,
+        "candidates": 1
+      },
+      "schema": "PASS",
+      "revision_invalidation": "PASS",
+      "actual_ai_calls": 0
+    },
+    "aborted": {
+      "file": "careerground-session-emulator-aborted-r1.json",
+      "bytes": 16250,
+      "sha256": "3a51ad5cbe45dcf5cd10e9190a0b938d6818f1fa134cb32e1a9b3a840f3ba9d4",
+      "state": "ABORTED",
+      "schema": "PASS",
+      "questions_answers_preserved": "PASS",
+      "feedback_candidates_all_stale": "PASS",
+      "imported_events_unverified": "PASS",
+      "original_handoff_bytes_preserved": "PASS"
+    },
+    "result": {
+      "file": "careerground-result-emulator-aborted-r2.json",
+      "bytes": 516,
+      "sha256": "75dd25d5e772cb380bb8d1de784e5bd4f73dae43f760d931c0befdfb95e83a20",
+      "schema_reference_and_importer": "PASS",
+      "answers": 1,
+      "feedback": 0,
+      "candidates": 0,
+      "latest_revision_only": "PASS",
+      "imported_old_feedback_excluded": "PASS",
+      "original_handoff_ref": {
+        "id": "handoff-synthetic",
+        "sha256": "a1ca01fb34e8c6c8a5cf5a3bb2e54b32227d05d9076aa77d1de642b70fd1edd1"
+      },
+      "chatgpt_host_review_for_this_mock_result": "NOT_RUN_PRIOR_ACTUAL_PHONE_RESULT_HOST_ROUNDTRIP_PRESERVED"
+    },
+    "cleanup": {
+      "app_ram_disconnected": true,
+      "targeted_reverse_8765_removed_before_emulator_shutdown": true,
+      "runtime_stopped": true,
+      "port_8765_closed": true,
+      "emulator_graceful_shutdown": "PASS",
+      "window_override_reset": true,
+      "user_rotation_free_restored": true,
+      "hinge_unfold_restored": true,
+      "sdk_avd_files_preserved": true,
+      "physical_phone_settings_changed_this_resume": false,
+      "tracked_baseline_unchanged": {
+        ".github/workflows/ci.yml": true,
+        "README.md": true,
+        "scripts/build_chatgpt_plugin.py": true
+      },
+      "codex_ledger": {
+        "attempts": 11,
+        "limit": 12,
+        "auth_mode": "chatgpt",
+        "paid_api_calls": 0
+      }
+    }
+  },
+  "failed_attempts_and_remediation": [
+    "Initial picker file not listed: media scan of selected synthetic file resolved it; no app source change.",
+    "First Back moved picker to parent directory; second Back cancelled. Harness first cancellation assertion failed then observed correct cancellation.",
+    "Resize moved editor off screen: initial visibility assertion failed; scroll revealed preserved draft.",
+    "Extra Back after keyboard had closed finished activity and lost unsaved RAM. Guard now checks mInputShown; new synthetic session created.",
+    "Interrupted PTY runtime disappeared leaving selected AVD reverse; closed port verified, old test reverse removed, fresh dedicated driver restored saved session.",
+    "One-way scroll missed Start above current position; bidirectional search corrected. Transient empty UI hierarchy parsing failed; bounded retry added.",
+    "SAF filename typing before keyboard transition settled left previous session filename; actual result saved with suffix (1). Original retained, keyboard delay and exact field assertion produced correctly named r2 result.",
+    "PC harness referenced nonexistent question provenance and result model_feedback keys; schema checks passed, harness corrected to session events and result feedback. Initial KeyErrors preserved; not app contract failures."
+  ],
+  "new_actual_codex_calls": 0,
+  "actual_codex_calls_total": 11,
+  "approved_codex_limit": 12,
+  "new_chatgpt_host_calls_after_pause": 0,
+  "chatgpt_host_calls_total": 3,
+  "paid_api_calls": 0,
+  "source_or_apk_changes": false,
+  "physical_phone_changed_this_resume": false,
+  "evidence_root": "/home/inno/.local/share/careerground-android/artifacts/emulator-step04-20261012"
+}

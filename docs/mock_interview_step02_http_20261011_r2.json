@@ -1,0 +1,26 @@
+{
+  "recorded_at": "2026-10-11T00:33:33.297503+00:00",
+  "step": "02",
+  "scope": "actual_loopback_http_and_synthetic_manual_file_only",
+  "verdict": "PASS",
+  "auth": "synthetic_dev",
+  "ai_calls": 0,
+  "checks": [
+    "actual_http_import",
+    "start_before_review_rejected",
+    "review_start_pause",
+    "actual_manual_file_write_read_restore",
+    "logout_memory_cleared"
+  ],
+  "handoff_raw_sha256": "11bb6517369b8063b1afca03452e654b96440b1ade99023c9a657c36d8cb63a8",
+  "handoff_canonical_digest": "a1ca01fb34e8c6c8a5cf5a3bb2e54b32227d05d9076aa77d1de642b70fd1edd1",
+  "session_file_sha256": "25c72ce0db7d2fee26cc647c5b473f5a0e4ffc1c9088d4bd28e93df2ecec54c6",
+  "temporary_session_file_removed": true,
+  "android_build": "NOT_RUN",
+  "android_saf_roundtrip": "NOT_RUN",
+  "actual_oidc": "NOT_RUN",
+  "actual_voice": "NOT_RUN",
+  "actual_codex": "NOT_RUN",
+  "chatgpt_review": "NOT_RUN",
+  "package_complete": false
+}

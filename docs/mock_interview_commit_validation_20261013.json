@@ -1,0 +1,844 @@
+{
+  "date": "2026-10-13",
+  "status": "LOCAL_VALIDATION_PASS_FEATURE_COMMITS_PUSHED",
+  "branch": "codex/mvp-foundation-ci-20260923",
+  "starting_head": "9bd1009237f6486285ec8192086d286e0a5e94f2",
+  "user_authorized_commit_push": true,
+  "new_installs": 0,
+  "new_actual_ai_calls": 0,
+  "paid_api_calls": 0,
+  "checks": {
+    "related_pytest": {
+      "passed": 87,
+      "subtests_passed": 144
+    },
+    "full_unittest": {
+      "total": 559,
+      "passed": 522,
+      "skipped": 37,
+      "skip_reason": "PostgreSQL URL not configured",
+      "failed": 0,
+      "errors": 0
+    },
+    "legacy_launchers": {
+      "passed": 13
+    },
+    "portable_package": {
+      "status": "LOCAL_PASS",
+      "members": 73
+    },
+    "synthetic_loopback_smoke": {
+      "status": "PASS",
+      "checks": 5
+    },
+    "ruff": "PASS",
+    "android_offline_rerun": {
+      "status": "BUILD_SUCCESSFUL",
+      "tasks_executed": 84,
+      "jvm_tests": 10,
+      "lint_errors": 0,
+      "lint_warnings": 3,
+      "device_instrumentation": "NOT_RUN_THIS_COMMIT_PREPARATION"
+    },
+    "git_diff_check": "PASS_WITH_PRESERVED_PORTABLE_MARKDOWN_EOF_BLANK_AND_WINDOWS_WRAPPER_CRLF"
+  },
+  "privacy": {
+    "private_original_hashes_unchanged": true,
+    "private_career_answer_tokens_in_commit": false,
+    "public_oidc_config_only": true,
+    "wrapper_sha256": "81a82aaea5abcc8ff68b3dfcb58b3c3c429378efd98e7433460610fecd7ae45f"
+  },
+  "classification": [
+    {
+      "path": ".github/workflows/ci.yml",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "PLAN-2026-10-09-serverless-plugin-transition.md",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "PLAN-2026-10-10-mock-interview-app.md",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "PLAN-2026-10-10-project-preparation-recovery.md",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "PLAN-2026-10-12-mock-interview-personal-handoff.md",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "PLAN-2026-10-13-mock-interview-commit-push.md",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "README.md",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "apps/mock-interview/README.md",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "apps/mock-interview/android/.gitignore",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "apps/mock-interview/android/app/build.gradle.kts",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/androidTest/java/dev/careerground/interview/DeviceVoiceProbeTest.kt",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/androidTest/java/dev/careerground/interview/ImportUiTest.kt",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/androidTest/java/dev/careerground/interview/ManualSessionSnapshotTest.kt",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/androidTest/java/dev/careerground/interview/OidcBoundaryTest.kt",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/debug/AndroidManifest.xml",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/debug/res/xml/dev_network_security.xml",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/AndroidManifest.xml",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/DeviceVoice.kt",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/InterviewModel.kt",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/MainActivity.kt",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/ManualSessionSnapshot.kt",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/NativeOidc.kt",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/OidcChecks.kt",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/OidcRedirectActivity.kt",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/RuntimeClient.kt",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/SelectedFiles.kt",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/java/dev/careerground/interview/VoiceCapture.kt",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/res/drawable/ic_launcher.xml",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/main/res/xml/data_extraction_rules.xml",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/test/java/dev/careerground/interview/SelectedFilesTest.kt",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "apps/mock-interview/android/app/src/test/java/dev/careerground/interview/VoiceCaptureTest.kt",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "apps/mock-interview/android/build.gradle.kts",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "apps/mock-interview/android/gradle.properties",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "apps/mock-interview/android/gradle/wrapper/gradle-wrapper.jar",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "apps/mock-interview/android/gradle/wrapper/gradle-wrapper.properties",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "apps/mock-interview/android/gradlew",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "apps/mock-interview/android/gradlew.bat",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "apps/mock-interview/android/settings.gradle.kts",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "apps/mock-interview/config/auth0-dev.public.json",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "apps/mock-interview/contracts/session-0.1.schema.json",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "apps/mock-interview/runtime/cg_mock/__init__.py",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "apps/mock-interview/runtime/cg_mock/__main__.py",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "apps/mock-interview/runtime/cg_mock/api.py",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "apps/mock-interview/runtime/cg_mock/codex_local.py",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "apps/mock-interview/runtime/cg_mock/interview.py",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "apps/mock-interview/runtime/cg_mock/oidc.py",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "apps/mock-interview/runtime/cg_mock/provider.py",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "apps/mock-interview/runtime/cg_mock/session.py",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "apps/mock-interview/runtime/requirements.txt",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "apps/mock-interview/runtime/smoke_step02.py",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "docs/CareerGround_Serverless_Plugin_Direction_v0.2_2026-10-09.md",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "docs/mock_interview_android_build_20261011.json",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "docs/mock_interview_android_build_20261011.md",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "docs/mock_interview_android_setup_20261011.md",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "docs/mock_interview_app_acceptance_20261011.json",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "docs/mock_interview_app_acceptance_20261011.md",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "docs/mock_interview_app_acceptance_20261011_r2.json",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "docs/mock_interview_app_acceptance_20261011_r2.md",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "docs/mock_interview_app_acceptance_20261012.json",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "docs/mock_interview_app_acceptance_20261012.md",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "docs/mock_interview_auth0_registration_20261011.json",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "docs/mock_interview_auth0_registration_20261011.md",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "docs/mock_interview_commit_validation_20261013.md",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "docs/mock_interview_device_validation_20261011.json",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "docs/mock_interview_device_validation_20261011.md",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "docs/mock_interview_emulator_install_20261012.md",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "docs/mock_interview_emulator_validation_20261012.json",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "docs/mock_interview_emulator_validation_20261012.md",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "docs/mock_interview_host_validator_install_20261012.md",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "docs/mock_interview_oidc_device_20261011.json",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "docs/mock_interview_oidc_device_20261011.md",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "docs/mock_interview_oidc_implementation_20261011.json",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "docs/mock_interview_oidc_implementation_20261011.md",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "docs/mock_interview_oidc_setup_20261011.md",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "docs/mock_interview_pause_20261012.md",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "docs/mock_interview_personal_handoff_preparation_20261012.json",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "docs/mock_interview_personal_handoff_preparation_20261012.md",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "docs/mock_interview_personal_roundtrip_20261012.json",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "docs/mock_interview_personal_roundtrip_20261012.md",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "docs/mock_interview_step02_device_auth_20261011.md",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "docs/mock_interview_step02_http_20261011.json",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "docs/mock_interview_step02_http_20261011_r2.json",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "docs/mock_interview_step02_http_20261011_r3.json",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "docs/mock_interview_step03_progress_20261011.json",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "docs/mock_interview_step03_progress_20261011.md",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "docs/mock_interview_voice_continuation_20261011.json",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "docs/mock_interview_voice_continuation_20261011.md",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "docs/portable_files_v1.md",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "docs/portable_interview_exchange_v1.md",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "docs/serverless_onboarding_v1.md",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "docs/serverless_plugin_acceptance_0.2.0_20261010.md",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "docs/serverless_plugin_acceptance_20261009.md",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "docs/serverless_plugin_acceptance_20261010.md",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "docs/serverless_plugin_contract_v1.md",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "docs/serverless_plugin_failure_retest_20261010.json",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "docs/serverless_plugin_failure_retest_20261010.md",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "docs/serverless_plugin_host_attempt_20261009.json",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "docs/serverless_plugin_local_validation_0.1.1_20261009.json",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "docs/serverless_plugin_local_validation_20261009.json",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "docs/serverless_plugin_validation_0.2.0_20261010.json",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "docs/serverless_plugin_validation_20261010.json",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "docs/serverless_preparation_gate_remediation_20261010.json",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "docs/serverless_preparation_gate_remediation_20261010.md",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "docs/serverless_project_recommendation_decision_20261010.md",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "fixtures/portable/base-resume-v1.json",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "fixtures/portable/base-resume-v1.md",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "fixtures/portable/base-resume-v1.review.md",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "fixtures/portable/empty-v1.json",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "fixtures/portable/handoff-missing-source.json",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "fixtures/portable/handoff-v1.json",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "fixtures/portable/handoff-v1.md",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "fixtures/portable/host-evaluation-cases.json",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "fixtures/portable/profile-v1.json",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "fixtures/portable/project-recommended-host-cases.json",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "fixtures/portable/result-conflict.json",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "fixtures/portable/result-v1.json",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "fixtures/portable/result-v1.md",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "fixtures/portable/tailored-resume-v1.json",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "fixtures/portable/tailored-resume-v1.md",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "plugins/careerground-portable/README.md",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "plugins/careerground-portable/plugin.json",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "plugins/careerground-portable/references/exchange-contract.md",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "plugins/careerground-portable/references/exchange.py",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "plugins/careerground-portable/references/portable.py",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "plugins/careerground-portable/references/schemas/handoff-1.0.schema.json",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "plugins/careerground-portable/references/schemas/result-1.0.schema.json",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "plugins/careerground-portable/references/schemas/workspace-1.0.schema.json",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "plugins/careerground-portable/references/workflow.md",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "plugins/careerground-portable/references/workflow.py",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "plugins/careerground-portable/skills/base-resume/SKILL.md",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "plugins/careerground-portable/skills/career-collect/SKILL.md",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "plugins/careerground-portable/skills/career-review/SKILL.md",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "plugins/careerground-portable/skills/interview-export/SKILL.md",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "plugins/careerground-portable/skills/interview-review/SKILL.md",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "plugins/careerground-portable/skills/jd-discover/SKILL.md",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "plugins/careerground-portable/skills/resume-tailor/SKILL.md",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "plugins/careerground-portable/skills/setup/SKILL.md",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "plugins/careerground-portable/templates/jd-mapping.md",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "plugins/careerground-portable/templates/project-instructions.md",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "plugins/careerground-portable/templates/resume.md",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "plugins/careerground-portable/templates/workspace-review.md",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "scripts/build_chatgpt_plugin.py",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "scripts/check_portable_plugin.py",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "tests/test_mock_interview_codex.py",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "tests/test_mock_interview_engine.py",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "tests/test_mock_interview_import.py",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "tests/test_mock_interview_oidc.py",
+      "bucket": "commit",
+      "role": "app_or_closeout"
+    },
+    {
+      "path": "tests/test_portable_exchange.py",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "tests/test_portable_files.py",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "tests/test_portable_plugin_package.py",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "tests/test_portable_workflow.py",
+      "bucket": "commit",
+      "role": "portable"
+    },
+    {
+      "path": "docs/mock_interview_commit_validation_20261013.json",
+      "bucket": "commit",
+      "role": "closeout"
+    }
+  ],
+  "ignored_local_material_preserved": true,
+  "discarded_files": 0,
+  "needs_user_judgment": [],
+  "budget_unchanged": {
+    "attempts": 14,
+    "limit": 15
+  },
+  "remote_push": "PASS_FEATURE_HEAD_MATCHES_LOCAL_AND_ORIGIN",
+  "remote_ci": {
+    "status_at_recording": "IN_PROGRESS",
+    "url": "https://github.com/inhoinno86-hub/CareerGround/actions/runs/38393915531",
+    "conclusion": "NOT_YET_KNOWN"
+  },
+  "limitations": [
+    "PostgreSQL37 not run locally",
+    "new actual phone/ChatGPT/AI not run",
+    "full personal questionnaire not run",
+    "operating API/public deployment not run"
+  ],
+  "feature_commits": [
+    {
+      "sha": "bb30d49a35ea317db986267017be16ec519e866a",
+      "scope": "Portable"
+    },
+    {
+      "sha": "42645ef7211d3e44d89a39da93ca477640a215ff",
+      "scope": "Android app/runtime"
+    }
+  ],
+  "remote_verified_feature_head": "42645ef7211d3e44d89a39da93ca477640a215ff",
+  "closeout_record_push_verification": "VERIFY_AFTER_THIS_RECORD_COMMIT_IN_FINAL_RESPONSE"
+}

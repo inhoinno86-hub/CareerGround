@@ -1,0 +1,187 @@
+{
+  "status": "LOCAL_PASS",
+  "scope": "offline_schema_references_package_and_authored_synthetic_fixtures",
+  "inventory": [
+    {
+      "path": "README.md",
+      "bytes": 3181,
+      "sha256": "b46a9023dd9bf0fda1a04d3b53563e8814a6d3a5207b01e068ec0e021d063d92"
+    },
+    {
+      "path": "plugin.json",
+      "bytes": 903,
+      "sha256": "a06869a61482d8bbc4b9be30bbae4d6a26f67f6d6212964c9684bfe3dff20725"
+    },
+    {
+      "path": "references/exchange-contract.md",
+      "bytes": 2356,
+      "sha256": "2ab3f9879a1736e4ec394ac255330e5e7235a68b2d62e87e23bbbc89a08a41b8"
+    },
+    {
+      "path": "references/exchange.py",
+      "bytes": 9558,
+      "sha256": "27573eec4d5feecbcb13a08144c918a8d0f88e9030e42bd3a9ea08debfcbfee3"
+    },
+    {
+      "path": "references/portable.py",
+      "bytes": 14778,
+      "sha256": "32cc873c3f034a908fe5ffd25c9dc89e2b9a02a6e2101bded5dd9b1a208eb058"
+    },
+    {
+      "path": "references/schemas/handoff-1.0.schema.json",
+      "bytes": 20782,
+      "sha256": "5754c26aa9412acd127059b71ce52f77870b94fe50a714fdd94a03adf607e6a6"
+    },
+    {
+      "path": "references/schemas/result-1.0.schema.json",
+      "bytes": 3161,
+      "sha256": "e43793f4ba0c5a1187938f55f9d4053f4676cc1067c93041c9ca235c7d7e7e35"
+    },
+    {
+      "path": "references/schemas/workspace-1.0.schema.json",
+      "bytes": 17226,
+      "sha256": "4a0a133688a8b2d599e54b9b46f472ff72483a259987bf5f32e61a72b46fc5f0"
+    },
+    {
+      "path": "references/workflow.md",
+      "bytes": 3265,
+      "sha256": "5fb0e1740b3341507d2ec15391e85fcb59509be7e8e66a43c8444a31ffb43069"
+    },
+    {
+      "path": "references/workflow.py",
+      "bytes": 2238,
+      "sha256": "e0af52c5844ebe73a3534eb679bb3c14693c245719c93d3933bb0f2ff906be6c"
+    },
+    {
+      "path": "skills/base-resume/SKILL.md",
+      "bytes": 1663,
+      "sha256": "4ff6ebd84bfe537bcba7d0e2fd5bc6e42eb391d1434e8902d13b60de9430cbd3"
+    },
+    {
+      "path": "skills/career-collect/SKILL.md",
+      "bytes": 1386,
+      "sha256": "ee6600c2a72e1b535611c0f954283bc57ea48d253f4bf300c4000edf7c3d9dab"
+    },
+    {
+      "path": "skills/career-review/SKILL.md",
+      "bytes": 1689,
+      "sha256": "96e29a7994261e0d641a92829be000bc0711585a2dd6e756d29992f8a15f791d"
+    },
+    {
+      "path": "skills/interview-export/SKILL.md",
+      "bytes": 2097,
+      "sha256": "8a1a4ea1c9ca3969df244c56e9bc571949e3b3c3dd1a2083c17af07fd597a310"
+    },
+    {
+      "path": "skills/interview-review/SKILL.md",
+      "bytes": 1471,
+      "sha256": "1297050d49a8beea765406ed5dadabb6e8b310a50ad451a4669869f9b93be50c"
+    },
+    {
+      "path": "skills/jd-discover/SKILL.md",
+      "bytes": 1980,
+      "sha256": "8fc1d89478e1a9121e7e3cacaddc028213e34e474f1627d257c79ed5b1e9076e"
+    },
+    {
+      "path": "skills/resume-tailor/SKILL.md",
+      "bytes": 1546,
+      "sha256": "4932a3787fcc391e6b39209ff4be7148e308fc5fac4e1e09ac05b8d9d7fa8668"
+    },
+    {
+      "path": "skills/setup/SKILL.md",
+      "bytes": 1971,
+      "sha256": "7adba4486da94030fe7ddc8f74bfdfc9add7949e0ec214b43e9f33f7375a2ac8"
+    },
+    {
+      "path": "templates/jd-mapping.md",
+      "bytes": 588,
+      "sha256": "ed728f11f42085cd4abdc1e8981cd4e4806ed2dd67426f4e5f90bff596ff1d7c"
+    },
+    {
+      "path": "templates/project-instructions.md",
+      "bytes": 733,
+      "sha256": "4df3262d6db00bf8103eee9084caae4607baeaf0410cd03a692c38d3e72de443"
+    },
+    {
+      "path": "templates/resume.md",
+      "bytes": 643,
+      "sha256": "98461c7b4df3f44b5dfc61c54eea4e0e92a753a06f4ccdaf1684c08c9cc025bc"
+    },
+    {
+      "path": "templates/workspace-review.md",
+      "bytes": 876,
+      "sha256": "f7cea3bd86f5e08d0efedf2903c2a622b10376e8fdc37af15f075ead81965466"
+    }
+  ],
+  "fixture_checks": [
+    {
+      "file": "empty-v1.json",
+      "errors": [],
+      "passed": true
+    },
+    {
+      "file": "profile-v1.json",
+      "errors": [],
+      "passed": true
+    },
+    {
+      "file": "base-resume-v1.json",
+      "errors": [],
+      "passed": true
+    },
+    {
+      "file": "tailored-resume-v1.json",
+      "errors": [],
+      "passed": true
+    },
+    {
+      "file": "handoff-v1.json",
+      "errors": [],
+      "passed": true
+    },
+    {
+      "file": "result-v1.json",
+      "errors": [],
+      "passed": true
+    },
+    {
+      "file": "handoff-missing-source.json",
+      "errors": [
+        "MISSING_REFERENCE",
+        "SUMMARY_AS_EVIDENCE"
+      ],
+      "passed": true
+    },
+    {
+      "file": "result-conflict.json",
+      "errors": [
+        "HANDOFF_CONFLICT"
+      ],
+      "passed": true
+    }
+  ],
+  "career_backend_imports": false,
+  "server_bindings": false,
+  "installed_host_model_evaluation": "NOT_RUN",
+  "actual_chatgpt_installation": "NOT_RUN",
+  "actual_app_roundtrip": "NOT_RUN_STEP_08_EXCLUDED",
+  "product_acceptance": "PENDING_HOST_INSTALLATION_AND_EVALUATION",
+  "host_critical_failure_count": null,
+  "archive": "reports/serverless-plugin-transition-20261009/careerground-portable-0.1.0-reviewed.zip",
+  "archive_sha256": "2fe00e53909e37404987624164956ce52446dc00c7ffb2f71dc228cfa6705441",
+  "archive_bytes": 30392,
+  "archive_permissions": "0o600",
+  "archive_contents_verified_against_source_hashes": true,
+  "contract_and_package_tests": {
+    "passed": 32,
+    "failed": 0,
+    "skipped": 0
+  },
+  "legacy_signed_contract_regression": {
+    "passed": 28,
+    "failed": 0,
+    "skipped": 0
+  },
+  "skills_frontmatter_validated": 8,
+  "host_cases_prepared": 24
+}

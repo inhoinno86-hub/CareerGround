@@ -1,0 +1,78 @@
+{
+  "date": "2026-10-12",
+  "scope": "user-selected minimal personal handoff; first confirmed answer actual app/file/host roundtrip",
+  "actual_original_downloads": 10,
+  "host_requests": 2,
+  "original_workspace_schema": "PASS",
+  "original_workspace_integrity": [
+    "DUPLICATE_ID",
+    "ATTACHMENT_NOT_CHECKED"
+  ],
+  "consolidated_history_candidate_integrity": [
+    "ATTACHMENT_NOT_CHECKED"
+  ],
+  "minimal_reviewed_workspace": "PASS",
+  "handoff_validation": "PASS",
+  "user_content_review": "APPROVED",
+  "facts": 2,
+  "sources": 2,
+  "constraints": 4,
+  "selected_history_operations": 3,
+  "attachments": 0,
+  "resume_versions": {
+    "base": 2,
+    "tailored": 2
+  },
+  "jd_mapping": {
+    "partial": 2,
+    "gap": 7
+  },
+  "app_import": "PASS_ACTUAL_PHONE_NATIVE_SAF_OIDC",
+  "personal_ai": "PASS_ACTUAL_QUESTIONS_AND_ONE_CONFIRMED_ANSWER_EVALUATION",
+  "result_host_review": "PASS_EXACT_REFERENCE_EXECUTION_AND_ACTUAL_DOWNLOAD",
+  "device_status": "PHONE_STAGE_DONE_CLEANED",
+  "budget": {
+    "attempts": 14,
+    "limit": 15,
+    "new_codex_calls": 3,
+    "failed_attempts": 1,
+    "paid_api_calls": 0,
+    "same_approved_ledger": true
+  },
+  "offline_tests": {
+    "interview_engine": {
+      "passed": 11,
+      "actual_ai_calls": 0
+    }
+  },
+  "source_files_preserved": true,
+  "personal_raw_data_in_repo": false,
+  "global_profile_baseline_changed": false,
+  "new_installations": 0,
+  "connection_registration_changes": 0,
+  "deployment": "NOT_RUN",
+  "status": "PERSONAL_ONE_ANSWER_ROUNDTRIP_COMPLETE",
+  "fixed_session": "PASS_READY",
+  "session_saf_save": "PASS",
+  "embedded_handoff_bytes_equal": true,
+  "saved_session_bytes": 32196,
+  "local_reference_restore": "PASS_REVIEW_REQUIRED",
+  "actual_phone_restore": "PASS_READY_AND_COMPLETED",
+  "cleanup": {
+    "app_ram_cleared": true,
+    "app_stopped": true,
+    "reverse_8765_removed": true,
+    "runtime_stopped": true,
+    "files_preserved": true
+  },
+  "counts": {
+    "core_questions": 5,
+    "followups": 1,
+    "answered": 1,
+    "unanswered": 5,
+    "feedback": 1,
+    "pending_candidates": 2
+  },
+  "new_candidate_review": "NOT_RUN",
+  "operational_api_deployment": "NOT_RUN"
+}

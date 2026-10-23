@@ -1,0 +1,28 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "careerground-portable",
+  "version": "0.2.0",
+  "description": "File-based career review, base and tailored resumes, and portable interview files without a CareerGround server; projects are recommended.",
+  "author": {
+    "name": "CareerGround"
+  },
+  "repository": "https://github.com/inhoinno86-hub/CareerGround",
+  "keywords": [
+    "career",
+    "resume"
+  ],
+  "extensions": {
+    "com.openai": {
+      "onboardingSkill": "./skills/setup/SKILL.md",
+      "interface": {
+        "displayName": "CareerGround Portable",
+        "shortDescription": "선택한 파일로 경력과 이력서를 검토하고 이어갑니다.",
+        "defaultPrompt": [
+          "CareerGround 시작 방법과 프로젝트 권장 이유를 안내해줘.",
+          "선택한 기준 파일로 JD 없이 기본 이력서를 작성해줘."
+        ],
+        "developerName": "CareerGround"
+      }
+    }
+  }
+}

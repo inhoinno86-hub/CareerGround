@@ -1,0 +1,162 @@
+{
+  "date": "2026-10-11",
+  "timezone": "Asia/Seoul",
+  "step02_verdict": "PARTIAL",
+  "physical_device_checks": "PASS",
+  "data": "synthetic_fixture_only",
+  "auth_mode": "synthetic_dev",
+  "actual_ai_executed": false,
+  "device": {
+    "model": "SM-F966N",
+    "android_observed": "16",
+    "one_ui_user_reported": "8.5",
+    "serial_recorded": false
+  },
+  "app": {
+    "package": "dev.careerground.interview.dev",
+    "version": "0.1.0-step02",
+    "component": "dev.careerground.interview.dev/dev.careerground.interview.MainActivity",
+    "apk": "/home/inno/.local/share/careerground-android/artifacts/device-step02-20261011/scroll-fix/app-debug.apk",
+    "sha256": "9c0e8ac0e399bd27a289308712ca40aacb381d7a0476f93d54b5f3f3226ecfe2",
+    "test_apk_sha256": "8789fc02fbc9922c1e4948dbb0531d00749ed346b2c0c73b5c96b408608da5c7"
+  },
+  "instrumentation": {
+    "original_apk": {
+      "passed": 3,
+      "failed": 0
+    },
+    "scroll_fixed_apk": {
+      "passed": 3,
+      "failed": 0
+    }
+  },
+  "build": {
+    "offline": true,
+    "verdict": "PASS",
+    "lint_errors": 0,
+    "lint_existing_warnings": 6,
+    "jvm_tests": 2,
+    "jvm_task": "UP-TO-DATE"
+  },
+  "actual_checks": {
+    "native_handoff_open": "PASS",
+    "review_gate": "PASS",
+    "session_transitions": "PASS",
+    "native_create_document": "PASS",
+    "picker_and_save_cancellation": "PASS",
+    "saved_file_reimport_review_reset": "PASS",
+    "force_stop_then_manual_restore": "PASS",
+    "saved_file_contract_and_original_bytes": "PASS",
+    "landscape_after_fix": "PASS",
+    "split_screen": "PASS",
+    "physical_unfold_to_fold": "PASS",
+    "logout_cleanup": "PASS"
+  },
+  "files": {
+    "careerground-session-step02.json": {
+      "bytes": 9444,
+      "sha256": "f2557d2172c59775ecd6e6c40e42bae466237cacc92f748b57733ec636714b8d"
+    },
+    "careerground-session-step02-scrollfixed.json": {
+      "bytes": 9444,
+      "sha256": "68f5f883ffac39f5a44c2136273b39afc8b3336d19e1ffa484572bc696fd2e45"
+    }
+  },
+  "contract": {
+    "export_kind": "career-interview-session",
+    "schema_version": "0.1",
+    "result_generated": false,
+    "raw_sha256": "11bb6517369b8063b1afca03452e654b96440b1ade99023c9a657c36d8cb63a8",
+    "canonical_digest": "a1ca01fb34e8c6c8a5cf5a3bb2e54b32227d05d9076aa77d1de642b70fd1edd1",
+    "same_original_and_fixed_versions": true,
+    "fixed_refs": {
+      "profile-synthetic": 3,
+      "jd-synthetic": 1,
+      "resume-jd-synthetic": 1
+    },
+    "questions_answers_feedback_candidates_empty": true
+  },
+  "fold": {
+    "verdict": "PASS",
+    "from": "1968x2184 unfolded",
+    "to": "1080x2520 cover",
+    "actual_physical_transition": true,
+    "same_in_memory_paused_state": true,
+    "continue_and_pause_operable": true,
+    "canonical_digest_retained": true,
+    "raw_sha256_and_fixed_refs_retained": true
+  },
+  "fold_limit": "Initial cover-to-unfold was interrupted by runtime cleanup and manual reimport; continuous RAM retention verified from unfolded session to physical fold only.",
+  "split_screen_limit": "Two own-app tasks; not all third-party app combinations tested.",
+  "failures_preserved": [
+    {
+      "case": "initial_adb_timeout",
+      "resolution": "user_reconnected_and_allowed_pc"
+    },
+    {
+      "case": "runner_package_typo",
+      "kind": "command_error",
+      "resolution": "correct_runner_3_pass"
+    },
+    {
+      "case": "wide_session_controls_not_scrollable",
+      "kind": "actual_app_failure",
+      "resolution": "verticalScroll_added_offline_build_and_physical_device_retest_pass"
+    },
+    {
+      "case": "unsupported_split_command_option",
+      "kind": "command_error",
+      "resolution": "supported_flags_used"
+    },
+    {
+      "case": "expected_two_titles_in_active_window_dump",
+      "kind": "probe_error",
+      "resolution": "actual_active_bounds_retained_state_and_actions_verified"
+    }
+  ],
+  "cleanup": {
+    "verdict": "PASS",
+    "reverse_8765_absent": true,
+    "runtime_listener_closed": true,
+    "rotation_restored": "lock 0",
+    "own_app_force_stopped": true,
+    "adb_server_left_running": true,
+    "phone_usb_debugging": "USER_MANUAL_ACTION_REMAINS",
+    "apps_and_exported_files_preserved": true
+  },
+  "not_run": [
+    "actual_oidc_login",
+    "actual_other_account_isolation",
+    "korean_on_device_stt",
+    "local_tts",
+    "actual_codex_interview",
+    "result_1_0_export",
+    "chatgpt_host_roundtrip",
+    "emulator",
+    "openai_api",
+    "release_deployment"
+  ],
+  "step03": "NOT_RUN",
+  "step04": "NOT_RUN",
+  "external_auth_registration": "NOT_EXECUTED",
+  "evidence_root": "/home/inno/.local/share/careerground-android/artifacts/device-step02-20261011",
+  "evidence": [
+    "events.jsonl",
+    "ui-actions.jsonl",
+    "file-verification.json",
+    "final-file-verification.json",
+    "final-reimport-ui-verification.json",
+    "rotation-attempt-1.json",
+    "rotation-after-scroll-fix.json",
+    "split-screen-attempt-1.json",
+    "split-screen-attempt-2.json",
+    "split-screen-attempt-3.json",
+    "build-scroll-fix.log",
+    "scroll-fix/instrumentation.txt",
+    "fold/unfolded.json",
+    "fold/folded-before-continue.json",
+    "fold/fold-transition.json",
+    "fold/logout.json",
+    "fold/cleanup.json"
+  ]
+}

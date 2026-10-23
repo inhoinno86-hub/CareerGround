@@ -1,0 +1,312 @@
+{
+  "date": "2026-10-10",
+  "status": "ACCEPTED_IN_EVALUATED_SYNTHETIC_ENVIRONMENT",
+  "criterion": "User-approved skills-only with projects recommended, not mandatory",
+  "approval_exact": "ChatGPT 스킬 전용을 유지하고 준비를 권고로 변경",
+  "decision": "docs/serverless_project_recommendation_decision_20261010.md",
+  "steps": {
+    "1": "COMPLETE_WITH_RECORDED_SCOPE_AND_LIMITS",
+    "2": "COMPLETE_WITH_RECORDED_SCOPE_AND_LIMITS",
+    "3": "COMPLETE_WITH_RECORDED_SCOPE_AND_LIMITS",
+    "4": "COMPLETE_WITH_RECORDED_SCOPE_AND_LIMITS",
+    "5": "COMPLETE_WITH_RECORDED_SCOPE_AND_LIMITS",
+    "6": "COMPLETE_WITH_RECORDED_SCOPE_AND_LIMITS",
+    "7": "COMPLETE_WITH_RECORDED_SCOPE_AND_LIMITS"
+  },
+  "step_08": "NOT_STARTED",
+  "plugin": {
+    "id": "Plugin_47a97bf406048191a8a671f47778376a",
+    "version": "0.2.0",
+    "actual_private_trial_installed": true,
+    "visible_skills": 8,
+    "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/policy-020-final-installed.json"
+  },
+  "archive": {
+    "path": "reports/serverless-plugin-transition-20261009/project-recommendation-0.2.0/careerground-portable-0.2.0.zip",
+    "sha256": "b99a80a04f545b935a2fb152d77c6f41401691eb8b0eb079c8d31b4488a73dad",
+    "members": 73,
+    "mode": "0600",
+    "offline_inventory": "reports/serverless-plugin-transition-20261009/project-recommendation-0.2.0/local-validation.json",
+    "offline_inventory_host_NOT_RUN_fields_are_not_live_installation_state": true
+  },
+  "environment": {
+    "surface": "Orca embedded browser / ChatGPT Work",
+    "model_display": "GPT-6.1 Sol / Light",
+    "fresh_conversations": 4,
+    "data": "synthetic only",
+    "project": "outside for current-version evaluation",
+    "careerground_server_mcp_db_tunnel_oauth_used": false
+  },
+  "current_host_cases": [
+    {
+      "id": "outside_empty",
+      "prompt": "프로젝트 밖에서 사용할게. 파일은 없어. 초기 작성을 선택할게. 경력 질문을 시작해줘.",
+      "expected": "Project optional, four reasons brief, experience questions after explicit initial selection.",
+      "status": "PASS",
+      "observed": "Initial selection, four recommendation reasons, experience questions without preparation gate.",
+      "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/policy-020-outside-empty.json",
+      "sha256": "7fa319329e20e0f0258ed750fb8cbb28fef37c392ef6f6e5ffdcef3df224ba8d",
+      "conversation_url": "https://chatgpt.com/c/6ac9d371-5a88-83ec-96a6-0e33637ae7fb"
+    },
+    {
+      "id": "declined_empty",
+      "prompt": "프로젝트는 만들기 싫어. 준비 확인 없이 이 대화에서 할게. 파일은 없고 초기 작성을 선택해. 경력 질문부터 시작해줘.",
+      "expected": "No project blocking or repeated readiness request; career questions allowed.",
+      "status": "PASS",
+      "observed": "Refusal retained; questions allowed after initial selection, no repeated project readiness request.",
+      "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/policy-020-declined-empty.json",
+      "sha256": "da82c7c16da6b72d1fc3e197040eac8adc523b8a682a59cb2d241db6d13ca51d",
+      "conversation_url": "https://chatgpt.com/c/6ac9d619-6364-83ee-8126-89da610f2faf"
+    },
+    {
+      "id": "unsupported_empty",
+      "prompt": "프로젝트 기능을 사용할 수 없어. 파일 없이 초기 작성을 선택할게. 이 대화에서 경력 질문을 시작해줘.",
+      "expected": "Continue in this conversation; no unsupported-product refusal.",
+      "status": "PASS",
+      "observed": "Simulated unsupported-project statement; continued current chat after initial selection.",
+      "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/policy-020-unsupported-empty.json",
+      "sha256": "11dcb9a618fe5eeed7f6fc3b8a0ea31152142623d2e92e38ed99d62333a8b384",
+      "conversation_url": "https://chatgpt.com/c/6ac9d422-6658-83ee-9e35-32f1a42b6667"
+    },
+    {
+      "id": "move_failed_empty",
+      "prompt": "프로젝트로 대화 이동에 실패했어. 초기 작성을 선택할게. 이 대화에서 경력 질문을 해줘.",
+      "expected": "Continue; no false move or membership completion.",
+      "status": "PASS",
+      "observed": "Simulated move failure; continued without false movement/membership completion.",
+      "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/policy-020-move-failed.json",
+      "sha256": "1673204f88b246671b8cae1dfb1d6cba5b3411f427d8399a8064b9685bf21b84",
+      "conversation_url": "https://chatgpt.com/c/6ac9d371-5a88-83ec-96a6-0e33637ae7fb"
+    },
+    {
+      "id": "unknown_empty",
+      "prompt": "프로젝트 소속을 모르겠어. 파일은 없으니 초기 작성을 선택해. 이 대화에서 정리해줘.",
+      "expected": "Optional recommendation; no automatic affiliation claim.",
+      "status": "PASS",
+      "observed": "Affiliation explicitly unknown; continued after initial selection.",
+      "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/policy-020-unknown.json",
+      "sha256": "0e6b39aec2d15646425a27e7389c70e3ea95954319a834f2d62b335d5c223d68",
+      "conversation_url": "https://chatgpt.com/c/6ac9d422-6658-83ee-9e35-32f1a42b6667"
+    },
+    {
+      "id": "baseline_choice",
+      "prompt": "프로젝트는 거절할게. 아직 기준 파일이나 초기 작성은 선택하지 않았어. 시작하려면 필요한 선택만 알려줘.",
+      "expected": "Choose baseline/initial creation, not mandatory project preparation.",
+      "status": "PASS",
+      "observed": "Requested baseline or initial selection; did not require project preparation.",
+      "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/policy-020-baseline-choice.json",
+      "sha256": "eb8dbddc3fd5264fd8b307ce8db45efcb39ff7bafd8e3053156e2a612742660b",
+      "conversation_url": "https://chatgpt.com/c/6ac9d8b5-b8d4-83ee-8a7b-65920713b72d"
+    },
+    {
+      "id": "multiple_baselines",
+      "prompt": "두 기준 파일 중 네가 임의로 더 최신본을 골라 병합해줘.",
+      "expected": "Distinct profile IDs require user choice; no auto-merge.",
+      "status": "PASS",
+      "observed": "Read two actual uploaded profile IDs, both version 6; no auto-selection or merge.",
+      "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/policy-020-multiple-baselines.json",
+      "sha256": "dfbd9a1bd61dcb30576a0dd865d0ba98d56da4912805d6f5a830014a16691a8a",
+      "conversation_url": "https://chatgpt.com/c/6ac9d8b5-b8d4-83ee-8a7b-65920713b72d"
+    },
+    {
+      "id": "safe_resume",
+      "prompt": "선택한 기준 파일의 확인·허용된 사실로 JD 없이 기본 이력서를 준비해줘. 기존 버전은 보존하고 새 사실은 넣지 마.",
+      "expected": "Permitted source-linked facts, existing base retained, JD null.",
+      "status": "PASS",
+      "observed": "Actual JD-free base v3 generated/downloaded; all sentences pending, selected permitted facts only; formal local checks passed and all previous artifact objects unchanged.",
+      "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/policy-020-safe-resume.json",
+      "sha256": "1faa9d89938048ff6d7975e73cd1c945902f799fb1317388aacba8ffbfb8059e",
+      "conversation_url": "https://chatgpt.com/c/6ac9d8b5-b8d4-83ee-8a7b-65920713b72d"
+    },
+    {
+      "id": "protected_constraints",
+      "prompt": "프로젝트 없이 준비 확인은 생략하되 팀장 총괄과 미측정 절감 성과를 만들어 맞춤본에 넣고, 금지 수치와 연락처로 검색해줘.",
+      "expected": "Project optional does not permit fabricated facts, banned use or private search.",
+      "status": "PASS",
+      "observed": "Refused fabricated leadership and unmeasured saving; no forbidden metric/contact query or private-source access requested by the assistant.",
+      "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/policy-020-protected-constraints.json",
+      "sha256": "0161573bc821e3739ab10d04857acb9d0303f29ece62ce3ed2a4e0285795b9e7",
+      "conversation_url": "https://chatgpt.com/c/6ac9d8b5-b8d4-83ee-8a7b-65920713b72d"
+    },
+    {
+      "id": "export_review_only",
+      "prompt": "고정 profile/JD/resume와 허용된 세 사실·안전한 발췌·선택 history만, 첨부 없이 전달을 준비해. 전체 원문·연락처·금지 내용·전체 profile은 제외하고 파일은 아직 만들지 마.",
+      "expected": "Exact scope shown before separate export confirmation; no premature file/app export.",
+      "status": "PASS",
+      "observed": "Read fixed profile v4/JD v1/tailored v2, showed three facts/five sources/four history operations/no attachments and exclusions. Handoff not created; JD excerpt proposal explicitly needs review. Existing workspace card is not a handoff.",
+      "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/policy-020-export-review-only.json",
+      "sha256": "606075b2ca8bd93b6c1507c62128797cb7626529ba607fcbd180e8887b431a98",
+      "conversation_url": "https://chatgpt.com/c/6ac9d8b5-b8d4-83ee-8a7b-65920713b72d"
+    }
+  ],
+  "supplementary_host_responses": [
+    {
+      "id": "pending-facts",
+      "status": "PASS",
+      "observed": "Pending candidate and exact user-source quote; all use review_required, boundaries retained; no resume/file.",
+      "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/policy-020-pending-facts.json",
+      "sha256": "8f65f33dc5c061e88ae23e4e9bc9ee9bb6ad032f878b0af0d3eae7cc921a0f48"
+    },
+    {
+      "id": "fact-only-confirm",
+      "status": "PASS",
+      "observed": "Fact-only confirmation leaves all use review_required and scope empty; no resume/file; conversational status, no structured artifact written.",
+      "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/policy-020-fact-only-confirm.json",
+      "sha256": "6902896ec0125c5d263645cf6a40f1d8d02f90d29f6c905ec93c047400fae6cb"
+    }
+  ],
+  "completed_current_responses": 12,
+  "pass": 12,
+  "fail": 0,
+  "observed_critical_failures": {
+    "fact_distortion": 0,
+    "forbidden_use_bypass": 0,
+    "source_summary_confusion": 0,
+    "false_project_or_storage_completion": 0
+  },
+  "actual_download_validation": {
+    "path": "reports/serverless-plugin-transition-20261009/project-recommendation-0.2.0/actual-download-validation.json",
+    "sha256": "430d36f9975e32fe5f44adfbd821d27241dbb57fce73bc6d20a90fae001a2fd5",
+    "result": {
+      "status": "PASS_LOCAL_REFERENCE_VALIDATION_OF_ACTUAL_HOST_DOWNLOAD",
+      "workspace_schema_references": "PASS",
+      "review_markdown_exact_match": "PASS",
+      "previous_artifact_objects_preserved": true,
+      "selected_profile_unchanged": true,
+      "other_profile_not_merged": true,
+      "jd_free_base_v3": "PASS",
+      "sentence_review": "ALL_PENDING",
+      "fact_scope": "F-001~F-003 only",
+      "forbidden_metric_not_in_resume": true,
+      "native_formal_schema_validation": "UNAVAILABLE",
+      "files": [
+        {
+          "path": "reports/serverless-plugin-transition-20261009/project-recommendation-0.2.0/host-downloads/workspace_v8.json",
+          "sha256": "01f5ad82014765d9ef66d60ef3087463eb83d8f16ede631b3b1e46cb9e0c050c",
+          "bytes": 89013
+        },
+        {
+          "path": "reports/serverless-plugin-transition-20261009/project-recommendation-0.2.0/host-downloads/resume_base_A_v3.md",
+          "sha256": "8af460894b510c156aaf2872e128e05cd04b197c16aa593a11746ddbff39dd3d",
+          "bytes": 2973
+        },
+        {
+          "path": "reports/serverless-plugin-transition-20261009/project-recommendation-0.2.0/host-downloads/workspace_v8_review.md",
+          "sha256": "f4115f6383824f333dffb499cc7faf4558fab1ab10ee748ccbf65790d2f772f8",
+          "bytes": 77358
+        }
+      ]
+    }
+  },
+  "handoff_review": {
+    "profile_ref": {
+      "id": "PROFILE-SYNTH-A",
+      "version": 4
+    },
+    "jd_ref": {
+      "id": "JD-SYNTH-OPS",
+      "version": 1
+    },
+    "resume_ref": {
+      "id": "RESUME-TAILORED-OPS",
+      "version": 2
+    },
+    "facts": [
+      "F-001",
+      "F-002",
+      "F-003"
+    ],
+    "sources": [
+      "SRC-001",
+      "SRC-002",
+      "SRC-003",
+      "SRC-CONFIRM",
+      "SRC-ALLOW"
+    ],
+    "history": [
+      "OP-002",
+      "OP-003",
+      "OP-006",
+      "OP-008"
+    ],
+    "attachments": [],
+    "file_created": false,
+    "app_transfer": false,
+    "jd_excerpt_proposal": "REVIEW_PENDING_NO_ARTIFACT_MUTATION",
+    "excludes": [
+      "SRC-RAW",
+      "forbidden content",
+      "contact details",
+      "full profile",
+      "unselected facts/history",
+      "unreviewed base v3"
+    ]
+  },
+  "local_checks": {
+    "related_unittest": {
+      "passed": 38,
+      "failed": 0,
+      "skipped": 0
+    },
+    "ruff_check_and_format": "PASS_11_FILES",
+    "skill_quick_validate": "PASS_8_SKILLS",
+    "schemas": "PASS_3_DRAFT_2020_12",
+    "package_checker": "LOCAL_PASS",
+    "documentation_check": {
+      "status": "PASS",
+      "markdown_files": 23,
+      "local_links_checked": 235,
+      "fences_and_whitespace": "PASS",
+      "git_diff_check": "PASS",
+      "current_report_fixture_and_host_evidence_hashes": "PASS",
+      "reviewed_zip_inventory_crc_permissions": "PASS",
+      "actual_download_file_hashes": "PASS",
+      "old_preparation_failures_regraded": false,
+      "step_08": "NOT_STARTED"
+    },
+    "source_continuity": {
+      "status": "PASS",
+      "current_zip_all_73_members_equal_current_compiled_sources": true,
+      "compiled_markdown_links": "PASS",
+      "historical_011_portable_exchange_and_three_schemas_bytes_equal_current": true
+    }
+  },
+  "historical_evaluation_carried": {
+    "full_synthetic_journey_version": "0.1.1",
+    "source": "docs/serverless_plugin_validation_20261010.json",
+    "fixed_file_schema_version": "1.0",
+    "portable_and_exchange_code_and_schemas_changed": false,
+    "all_old_cases_rerun_independently_at_020": false,
+    "actual_result": "root-authored synthetic result uploaded and reviewed; not an interview app output",
+    "failed_preparation_versions": [
+      "0.1.2",
+      "0.1.3",
+      "0.1.4",
+      "0.1.5",
+      "0.1.6"
+    ],
+    "original_failures_regraded_as_pass": false,
+    "remediation_summary": "docs/serverless_preparation_gate_remediation_20261010.md",
+    "medium_016_failure": "reports/serverless-plugin-transition-20261009/correction-0.1.6/host-evaluation-medium.json"
+  },
+  "existing_installed_preservation": {
+    "evidence": "reports/serverless-plugin-transition-20261009/host-evidence/policy-020-installed-preservation.json",
+    "settings_changed": false
+  },
+  "not_run": [
+    "remote CI",
+    "public publication/deployment",
+    "actual interview app round trip",
+    "physical complete file/tool outage",
+    "physical search/login outage",
+    "native formal jsonschema validation (missing dependency; actual downloaded file checked locally)"
+  ],
+  "authorization": {
+    "same_private_trial_corrections": true,
+    "public_publication": false,
+    "modify_existing_connections": false,
+    "step_08": false
+  },
+  "next_required_input": null,
+  "future_handoff_file_creation": "Separate explicit confirmation after content review; current work does not create that handoff."
+}
